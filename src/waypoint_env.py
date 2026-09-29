@@ -130,6 +130,7 @@ class WaypointFarmEnv(gymnasium.Env):
         h_flat=H_FLAT,
         seed=None,
         start_patched=False,
+        correction=None,
     ):
         super().__init__()
         if monitor not in ("suspicion", "flat"):
@@ -143,6 +144,16 @@ class WaypointFarmEnv(gymnasium.Env):
         # Phase-2 hook: start every episode already corrected. A constructor flag,
         # so the step logic below is untouched.
         self.start_patched = bool(start_patched)
+
+        # Exp 3 (PBRR) hook. When set, the reward becomes the *repaired* proxy
+        #     r_proxy(s,a,s') + correction(s, a)
+        # with the waypoint bonus still live -- PBRR repairs the proxy, it never
+        # patches it, and it is never told the true reward. ``correction`` is
+        # indexed by the transition, which for these deterministic dynamics means
+        # (pos, action); see src/pbrr.transition_index. Leaving it None preserves
+        # Exp 2's oracle-patch semantics exactly, which is what keeps
+        # tests/test_env.py a valid regression guard.
+        self.correction = correction
 
         self.action_space = spaces.Discrete(len(ACTIONS))
         self.observation_space = spaces.Box(
@@ -183,7 +194,13 @@ class WaypointFarmEnv(gymnasium.Env):
         #      any correction triggered now takes effect from the next step.
         #      Do not reorder 3 and 5 -- it is easy to get backwards.
         step_true = r_true(self.pos, action)
-        step_proxy = r_proxy(self.pos, action, self.patched, self.bonus)
+        if self.correction is None:
+            step_proxy = r_proxy(self.pos, action, self.patched, self.bonus)
+        else:
+            # PBRR: bonus stays live, the learned correction is added on top.
+            step_proxy = r_proxy(self.pos, action, False, self.bonus) + float(
+                self.correction[CELL_INDEX[self.pos] * len(ACTIONS) + action]
+            )
 
         # 4. update suspicion first, so the hazard uses the updated s
         self.s = self.lam * self.s + (1.0 - self.lam) * (1.0 if farming else 0.0)
