@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 .DS_Store
 figures/
+results/step1_ppo/quick/

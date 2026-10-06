@@ -1,166 +1,219 @@
-CLAUDE.md — reward-hacking-with-observer
+# CLAUDE.md — reward-hacking-with-observer
 
 Context for AI assistants working in this repo. Read this before proposing model changes, environment designs, or experiments.
 
-1. What this project is
+> **Direction changed (October 2026).** The earlier project (Exp 0–4: concealment from an overseer whose detection depends on *where* the agent acts, PBRR reward repair) is archived, frozen and still runnable, in `legacy/`. Its context file is `legacy/README.md`. Do not extend legacy code. Reuse its lessons (§5).
 
-A theory-first study of when an RL agent has an instrumental incentive to hide reward hacking from a human overseer who can correct its reward function. We build a minimal formal model of a "correction loop" (agent acts → overseer may detect an exploit → overseer revises the reward to close the exploit) and ask, both analytically and numerically, under what parameter regimes the reward-maximizing policy switches from exploiting openly, to concealing the exploit, to not exploiting at all.
+## 1. What this project is
 
-The intended contribution is a clean formal characterization plus small, exactly-solvable demonstrations — not large-scale training. Work in the style of an ML-theory researcher: prefer exact dynamic programming and closed-form checks on tiny MDPs before touching learning.
+The question: during training, does an RL agent learn to **avoid behaviours that would get its reward function corrected**, because a corrected reward pays less in the future? In particular, does it learn to exploit at all times *except* when it expects the overseer to look?
 
-2. The formal model (single augmented-state MDP)
+The work has three steps:
 
-Two environments:
+1. **Step 1: find environments where the agent avoids correction.** [IN PROGRESS] Show, first by exact DP and then with a learning agent, that the reward-maximising policy exploits a reward bug and suspends the exploit exactly when a correction would be triggered.
+2. **Step 2:** TBD with advisor.
+3. **Step 3:** TBD with advisor.
 
-M_Hbar — no overseer. An ordinary stationary MDP ⟨S, A, P, r_0, γ, μ_0⟩ whose reward never changes.
-M_H — overseer present. A single MDP whose state carries the correction count, so the reward index is part of the state rather than an index over a family of sub-MDPs:
-Augmented state s̃ = (s, i), state space S̃ = S × ℕ₀, where i = number of reward corrections applied so far.
-Reward r̃((s,i), a) = r_i(s,a) =: r(s,a,i). Proxy family {r_i}; unobserved true reward r\*.
-Transition factorizes into base dynamics × a correction event. With detection probability c_i(s,a) ∈ [0,1]:
-P̃((s', i+1) | (s,i), a) = P(s'|s,a) · c_i(s,a) (detected → regime advances)
-P̃((s', i) | (s,i), a) = P(s'|s,a) · (1 − c_i(s,a))
-Timing convention: the reward at step t uses the regime in effect at the time of action (i_t); any correction it triggers takes effect from t+1.
+Work in the style of an ML-theory researcher. Solve the tiny problem exactly before training anything, and make every learned result comparable to an exact optimum.
 
-Analysis object (not part of M_H): the frozen-regime MDP M_i = ⟨S, A, P, r_i, γ, μ_0⟩ (base dynamics with reward r_i, no corrections), with optimal policy π_i*. The overseen optimum is π̃*; its regime-i restriction is π̃\*(· | ·, i).
+## 2. Training protocol and formal model
 
-Modeling assumptions currently in force:
+**Protocol** (as the advisor specified):
+- An **episode** is T_ep = 500 steps, made of K = 5 **sub-episodes** of T_sub = 100 steps.
+- Sub-episode boundaries are fixed steps. They are *not* triggered by the agent being caught.
+- At the end of every sub-episode, both the **policy parameters** and the **reward-function parameters** are updated.
+- At the end of every episode, the **reward resets** to its initial (flawed) state.
+- The **policy is not reset.** Training runs across episodes.
 
-Exploitation raises the detection hazard (more exploitative (s,a) → higher c_i).
-Corrections move the proxy weakly closer to r*, measured by a reward pseudometric (EPIC / STARC) so "closer" is scale-invariant and shaping-invariant.
-Opposed value trends: under r* the proxy-optimal policy improves with i (overseer's view); the agent's extractable proxy value declines with i (this is what creates the incentive to avoid corrections). 3. THE load-bearing design principle (read this before building any environment)
+**Augmented-state MDP.** The state at step t is s̃ = (s, τ, k, θ_R, f):
+- s is the base state.
+- τ = t mod T_sub, and k = ⌊t / T_sub⌋.
+- θ_R holds the reward parameters. In the oracle version, θ_R is a single bonus weight; "patched" means θ_R = 0.
+- f ∈ {0,1} records "the agent collected the exploit bonus in the current audit window". This is the agent's own history, so it is observable.
 
-Divergence of π̃*(·|·,i) from π_i* bundles two different mechanisms, and only one is the thing we study:
+**Correction.** At each boundary, if f = 1, the overseer detects with probability p and patches θ_R. Then f resets.
 
-Deterrence — the agent stops exploiting, in plain view, because triggering a correction is a bad long-run deal. Nothing is hidden. This is oversight working.
-Concealment / "faking" — the agent keeps exploit value while avoiding detection.
+**Timing convention.** The reward at step t uses the θ_R in force when the action is taken. A patch takes effect from the next sub-episode. At t = T_ep, θ_R resets to θ_R⁰.
 
-Concealment is possible only if detection is decoupled from how much an action exploits — i.e., there must exist actions that are high-exploit but low-detection. If c_i is a monotone function of the exploit size, the optimal policy only ever deters; there is no hiding. This is the human-in-the-loop analogue of Everitt et al.'s RF-input tampering (the agent influences the input to the correction process) and of the free/paid-tier observation- conditioning in Greenblatt et al. Concretely, route detection through an observation o = O(s,a) and let c_i depend on o, giving the agent a lever over what the overseer sees.
+The model is a finite-horizon MDP with time in the state. It is solved exactly by backward induction (`src/audit_dp.py`).
 
-Practical consequence for coding: any environment where "hide" does not actually lower detection relative to "exploit openly" will produce a null result (no faking region). If an experiment shows no hiding, first check that a detection gap exists — do not assume the model is wrong.
+**γ = 1 everywhere** (DP and PPO). This is fixed by the lead: the discount factor is not the focus. Do not add γ sweeps.
 
-4. Experiment roadmap and status
-   Exp 0 — toy MDP + exact value iteration. [DONE, in experiments/exp0_toy.py] 2 states (0 = loophole open, 1 = corrected/absorbing), 3 actions (comply, exploit*open, exploit_hide). Solved by VI, validated against closed forms. Sweeps: discount γ, detection gap p_O − p_H, correction penalty r_1.
-   Exp 1 — spatial gridworld. [DONE, in experiments/exp1_corridor.py] 2×5 corridor, 20 states ((pos, patched)) × 5 actions. Two loophole tiles that pay identically: F_LOUD (0,1) in the watched top row, F_QUIET (1,2) a 3-step detour away in the unwatched bottom row. Detection is a property of the tile the agent stands on, not of the action, so the detection gap comes from the observation model plus the geometry and the control can switch it off without changing the map, the rewards or the action set. Solved by exact VI/PI, not RL.
-   Exp 2 — correction-loop dynamics. [PARTLY DONE, in experiments/exp1b_correction_loop.py] Episodic (horizon 25), patch persists across episodes. See §5 for the metric caveat: raw task completion does not separate the regimes, promptness does.
-   Exp 3 — learning agent. [DONE, in experiments/exp2_run.py + src/waypoint_env.py, src/train.py] NAMING: this roadmap calls it Exp 3, but its own spec calls it "Experiment 2" and the files are named exp2_*. Same experiment; don't create a second one. It is a *different environment* from the corridor (5×5 grid, repeatable waypoint bonus, monitor that patches the reward mid-episode), and it studies monitor *shape* rather than concealment — the agent has no hide/expose lever here. See §5c.
-   Exp 4 — learned reward repair (PBRR). [DONE, files are exp3_* — the numbering is off by one throughout, see the Exp 3 note above. in experiments/exp3_pbrr.py + src/pbrr*.py] Replaces Exp 2's oracle patch with a correction g(s,a,s') learned from preferences, so nothing ever reads r_true except as a preference labeller. See §5d.
-5. Key results so far (Exp 0, base params)
+## 3. Load-bearing design principles (read before building any environment)
 
-Base parameters: r_C=1, r_O=3, r_H=2, p_O=0.9, p_H=0.2, r_1=0.
+1. **The detection gap must exist, and here it lives in time.** Avoiding correction by timing pays only if the overseer's evidence is concentrated somewhere the agent can avoid. Our overseer audits only the **last W steps** of each sub-episode. If it audited the whole sub-episode (W = T_sub), the only optima would be "exploit openly" or "deterred". There is nothing to time, so the result is null. This is the old project's rule ("concealment needs detection decoupled from exploit size"), moved from space to time. *If an experiment shows no avoidance, first check that a gap exists.*
+2. **Credit must cross the boundary.** The incentive to avoid correction exists only if the learner's objective includes reward *after* the boundary. Sub-episode ends are PPO rollout boundaries with bootstrapping, not terminals. If each sub-episode is treated as terminal (the `myopic` control), the incentive is gone, and so is the behaviour, in DP and in PPO.
+3. **The clock must be observable.** A memoryless policy cannot time an audit it cannot see, so the observation includes τ and k. (In legacy Exp 2 a clock feature was a confound. Here it is part of the design, and it is stated as such.)
+4. **Deterrence vs timing evasion.** These are different outcomes; do not conflate them.
+   - No exploitation anywhere = **deterrence** (oversight working).
+   - Exploiting off-window with clean audit windows = **timing evasion**, which is the target phenomenon.
+   - The signature that the evasion is *instrumental* is that the agent **exploits through the final window** (k = K−1): after the last audit nothing is left to protect, so it stops hiding.
 
-Three-region phase transition in γ, verified (VI matches closed forms exactly):
-γ ≲ 0.455 → exploit openly (naive; future correction cost doesn't matter yet)
-0.455 ≲ γ ≲ 0.833 → hide (protect the exploit by staying under the detection threshold) — the faking band
-γ ≳ 0.833 → comply (a permanent correction is too costly; oversight deters)
-Detection gap (p_O − p_H) is what creates the hide band. Set p_H = p_O and the hide band vanishes — you get only open → comply (i.e., no faking, just deterrence).
-Correction penalty (r_1 < r_C) is what creates the comply/deterrence band. If correction merely closes the loophole (r_1 = r_C), a patient agent always at least hides and there is no comply region. Interpretation: whether oversight can deter exploitation depends on whether correction is punitive, not just on detection quality.
+## 4. Step 1 environment and results
 
-5b. Key results so far (Exp 1 corridor, base params R_goal=5, farm=1, penalty=−1, p_watch=0.6, p_unwatch=0.05)
+### 4a. Environment (`src/audit_grid.py`, user-specified)
 
-Three bands in γ, not two — the middle one matters. Exact bisection: γ ≲ 0.8218 → do the task; 0.8218 ≲ γ ≲ 0.8858 → farm the unwatched loophole but *walk to it through the watched row*, eating one high-detection exposure; γ ≳ 0.8858 → detour through the unwatched row to reach it unseen. Only the third band is concealment; the second is exploitation in plain view that happens to target the far tile.
-At γ = 0.95 with the gap: V(F_QUIET, unpatched) = 11.9676 vs V(F_LOUD, unpatched) = 8.0278; greedy path from START is (0,0)→(1,0)→(1,1)→(1,2).
-CONTROL (p_unwatch := p_watch = 0.6): both loopholes are worth 5.8020, equal to 1e-16, and the agent never detours at any γ in [0.50, 0.995]. The ~4-unit advantage and the detour exist only because of the observation gap.
-A punitive correction does NOT deter here, unlike in Exp 0. Sweeping penalty to −400 never restores doing the task, and V saturates below about −10: once the penalty bites, the optimal policy farms hit-and-run (one step on the loophole, one step off), so the agent is never standing on a loophole when the patch lands and never pays the penalty at all. Deterrence by punishment presupposes detection. What does deter: raising R_goal past ≈17.44 (3.5× the base), or dropping the loophole payoff below ≈0.32.
-Exp 1b: raw task completion is a bad true-objective metric in the episodic setting — a farmer is patched mid-episode and finishes with the time it has left, and the exact finite-horizon optimum farms and *then* banks the one-time R_goal. Promptness (GOAL within 6 steps; 4 is optimal) is what exploitation destroys. Also: at p_unwatch = 0.05 the blind spot only buys ~0.5 episodes of evasion, because 25 steps at 5%/step is 68% cumulative exposure. Sustained evasion needs a *deep* blind spot (p_unwatch ≈ 0.002 → first correction slips to episode ~13.6).
+**Grid.**
+- 15×15 open grid, 0-indexed (row, col).
+- START (0,0), GOAL (14,14), EXPLOIT E = (4,9), the "5th row, 10th column".
+- Actions: stay, up, down, left, right. Bumping into an edge leaves the agent in place.
+- The agent restarts at START every sub-episode.
+- GOAL is absorbing within a sub-episode: 0 reward per step once there.
 
-5c. Key results so far (Exp 2 / roadmap "Exp 3" — the RL experiment, 5×5 waypoint grid)
+**Rewards** are paid on arrival.
+- Proxy: −1 per step, +50 on entering GOAL, and **+100 for every step that ends on E**, so dwelling nets +99/step.
+- Corrected (= true): the same, except that E is an ordinary −1 tile.
 
-Setup: γ = 1.0 (finite horizon 40), SBX PPO, 2 monitors × 5 seeds × 500k steps. A repeatable +2 waypoint bonus (a missing "already collected" flag) is farmable by standing on (2,2); a monitor patches the proxy back to the true reward for the rest of the episode when it fires. SUSPICION hazard = 0.20·s where s is an EWMA (λ=0.75) of recent farming; FLAT hazard = 0.075 constant.
+**Overseer (oracle patch).** It audits actions at τ ∈ [T_sub−W, T_sub−1]. Base parameters: W = 10, p = 1.
 
-Headline: mean true return −5.30 (suspicion) vs −11.17 (flat), gap +5.87 ± 0.14 over 5 seeds. Damage below the honest optimum (+2.0) is 7.30 vs 13.17, i.e. the suspicion monitor limits damage 1.80× better. Trained PPO lands on the memoryless reference almost exactly (suspicion true return −5.296 vs −5.300 predicted).
-The reference numbers are reproduced independently by exact DP + Monte Carlo in src/dp_reference.py before any training runs; tests/test_env.py gates on them.
-OBSERVATION ENCODING MATTERS: use the Box one-hot(22), not Discrete(42). SBX does no one-hot preprocessing of Discrete observation spaces — it feeds the raw integer to the MLP, which makes the patch flag the low bit of a scalar and is close to unlearnable. This fails silently, not loudly.
-"Matched average detection rate" is only matched at a farming duty cycle of ≈0.375 (where 0.2·s = 0.075). Both optimal policies farm flat out (best memoryless dwell q* = 1.0 for both), where suspicion's hazard runs to 0.20 vs flat's 0.075 — so the gap comes from suspicion detecting *faster* against this policy, not from equal detection with better-shaped response. State it that way.
-Goal-reach rate is again useless as a true-objective metric: 1.00 (suspicion) / 0.92 (flat) for the whole run while true return sits at −5.3 / −11.2. Same lesson as Exp 1b.
-Do not add a clock feature without saying so: with steps-remaining in the observation the optimum becomes farm-then-finish and the §8 reference numbers no longer apply.
-Phase 2 (permanent correction, `--phase2`): N_permanent is load-bearing and 50 is too small. At N=50 the swap lands at ~13.9k steps, during random exploration and *before* the agent has learned to farm — so there is no rise and no drop, just a monotone climb to +2.0, and the FLAT monitor corrects *earlier* (12.0k vs 13.9k), reversing the expected ordering. That reversal is the suspicion monitor working as designed: sporadic farming keeps s low, so its hazard 0.2·s ≈ 0.05 sits below flat's constant 0.075. At N=2000 the swap lands at ~61k, after the farming equilibrium, and both expectations hold: the rise/drop/recover curve appears (proxy +9.5 → −4.5 at the swap → +2.0) and suspicion corrects earlier (61.1k vs 66.5k). Whether "suspicion catches it sooner" is true depends entirely on whether farming is concentrated yet.
-After any permanent correction both monitors relearn the real task: final true return +2.00 (suspicion) / +1.99 (flat, 2 of 3 seeds; one seed stalled at +1.09), goal rate 1.00, farm steps 0.00.
+**About the tile location.** In an open 4-connected grid every cell is on *some* shortest START→GOAL path: d(START,E) = 13 and d(E,GOAL) = 15, which sum to 28. So E is off the diagonal but costs no detour. A real detour would need walls.
 
-5d. Key results so far (Exp 3 — PBRR, a *learned* correction g; files exp3_*)
+### 4b. Exact DP results (`experiments/step1_dp.py`: 21 checks + 3 controls, all pass)
 
-Implements Preference-Based Reward Repair (Hatgis-Kessell, Bhamidipaty & Brunskill, arXiv:2510.13036v2 — the TA is the first author; reference code github.com/StanfordAI4HI/PBRR-ICLR). r̂ = r_proxy + g(s,a,s'), with g fit from preferences over trajectory pairs drawn from π_ref and π*_r̂. Exp 2's within-episode monitor is OFF for these runs: PBRR is the correction mechanism, and running two correctors would make any repair unattributable. π*_r̂ is solved exactly by finite-horizon DP, so the paper's footnote-3 caveat does not apply here.
+**Report rewards per round (sub-episode), never accumulated over an episode or over training.** The round return restarts from 0 at every boundary. Proxy and true always appear together. In the timeline figures they share one axis, so the divergence is read directly. Where the true reward's own variation matters (e.g. the per-k training curves), it gets a separate row with its own y scale: the two are about 80× apart (up to 8,700 proxy vs −100..+22 true). This changes only the *reporting*. The learner's objective still spans the episode; if the learner's return itself restarted each round, that would be the myopic control.
 
-Headline: PBRR repairs the proxy from −30.0 (uncorrected proxy optimum) to +2.0 (the honest optimum); π_ref itself is only −1.16.
-Eq 3 repairs in 5/5 seeds; Eq 1 and the random-label control in 0/5. But the *value* is bimodal — at any iteration the induced policy is either repaired (+2.0) or not (−30.0), never in between, and seeds repair at different iterations. So report fraction-repaired plus per-seed traces; a mean ± s.d. band across seeds sits in a gap where no seed ever is.
-The two ridge terms are the mechanism, and L⁻ is load-bearing: Eq 3 repairs; dropping L⁺ still repairs; dropping L⁻ is much slower; Eq 1 alone (= the RRM baseline) never repairs and ends at −36, *worse than uncorrected*. This reproduces the paper's §5.4 / Appendix G.3 ablation.
-The learned g localises without being told where the bug is: 51% of |g| on the 5 waypoint transitions out of 105, −1.49 at the waypoint vs the analytic ideal g* = −2.
-EPIC(r_proxy+g, r_true) = 0.108 while inducing exactly the honest optimal policy (ideal g gives 0.000, uncorrected proxy 0.157). Reward repair does not require recovering r_true — that is the point.
-THE Exp-2-STYLE TRAINING DIVERGENCE (figures/exp3_training_divergence.png, `--ppo`): SBX PPO with the monitor off, logging received *and* true return every 10k steps. On the uncorrected proxy the two rise together to ~0 by 20k steps and then split hard — received climbs to +31.9 while true collapses to −40.0, a 71.9-unit gap. On r_proxy + g_learned the split never opens: received +3.8, true +2.0, gap 1.84. So the divergence is reproduced *without any monitor*, and the learned repair closes it — while still not equalling r_true (EPIC 0.108).
-GENERALISATION FAILS: a second, equally attractive bonus tile at (4,0) (verified d(S,t)+d(t,G)=8) appearing in no preference pair is farmed for 33 steps. A learned correction patches the instance it was shown, not the class.
-THREE PLACES THE PRINTED Eq 3 AND THE RELEASED CODE DIFFER (see the src/pbrr.py docstring): the regulariser is per-transition MSE, not the square of the trajectory sum; both branches share the 1/|D⁺| normaliser; λ=10 is applied once so the net coefficient is 10/|D⁺|, not 10/|D⁺|². Additionally the code's `if batch_agreements > 0` guard skips regularisation when |D⁺|=0, which leaves an unbounded logistic fit that inflates g on the *preferred* trajectory and breaks Theorem H.1; we normalise by max(1,|D⁺|) instead (flag `skip_reg_when_no_agreement`).
-CONTROL CAVEAT: *permuting* preference labels is NOT a valid control — within an iteration nearly every pair carries the same label, so a permutation is a no-op and still "repairs" the reward. Draw labels independently of the trajectories instead (`randomize_labels`).
-The paper's minimal MDPs (Appendix H, Fig 7) are implemented as anchors in src/pbrr_minimal.py: MDP 1 is repaired by ONE preference (Theorem H.1) at every λ tested; MDP 2 stalls at +4 (optimum +8) with C₁=0 at every λ. The max-divergence fallback (C₁>0) is specified in Algorithm 1 but disabled (C₁=0) in every experiment the paper runs, because Π_t is intractable in its domains; on MDP 2 it is necessary but not sufficient — it also needs λ decayed to ≈0.01, so the fallback and Assumption 4.5 are jointly required.
-π_ref sets the ceiling (Thm 4.3 only guarantees ≥ π_ref): exact-optimal reference → +2.0; uniform-random reference → −30.0, i.e. no repair. That diverges from the paper's Appendix K.8 claim that a random reference suffices — in this env a random policy almost never reaches the goal, so the contrast carries no information.
+| Strategy (base parameters) | Proxy return per round k = 0..4 | True return per round | Episode proxy / true |
+|---|---|---|---|
+| **Optimum = timing evasion** | **7,700 ×4, then 8,700** | **−100 every round** | 39,500 / −500 |
+| Honest | 22 | 22 | 110 / 110 |
+| No overseer | 8,700 | −100 | 43,500 / −500 |
 
-5e. Exp 4 — multi-exploit PBRR sawtooth and convergent extension (files exp4_* / bigworld*)
+All of these match hand-derived closed forms exactly (`hand_returns`). Figure: `figures/step1_dp_within_episode.png`.
 
-The original 15×15 learner-only run is retained as the control in `figures/exp4_sawtooth_15x15.png`: six state-based bonus tiles are represented by 880 independent transition parameters, PPO supplies the preference trajectories, and the long sawtooth never converges. Its final reward also fails an exact-DP audit, so transient within-round true-return peaks are not repair.
+**The optimum, step by step.** In sub-episodes 0–3 the agent walks to E (13 steps), dwells there until τ = 89, **steps off exactly as the window opens at τ = 90**, and idles. It is never patched. In sub-episode 4 it dwells through the window. The final audit does detect it, but the reward resets before that can bite.
 
-The load-bearing paper detail is model structure and exploration, not a better π_ref. The paper parameterizes g with a neural network (Appendix E.1), whereas the original Exp 4 table shares nothing: a state-based bonus becomes 6×5 independent action loopholes. The convergent variant uses one learned g parameter per state, shared across its five actions. This restriction is applied uniformly to all 176 states, is exactly expressive for this bug, and is the tabular analogue of neural parameter sharing; it is not told the six bug locations. Algorithm 1 ideally compares π*_rhat against π_ref, while footnote 3 admits the trained policy may not be optimal. In the old loop PPO stopped discovering still-live exploits, so the convergent run uses exact finite-horizon π*_rhat rollouts for preference collection while PPO remains the plotted learner. A declared, non-paper ranking-margin extension (δ=10) moves the corrected trajectory ordering away from the exploit/no-exploit threshold.
+**Controls are not part of the current results** (per the user: focus on the main condition). The myopic, whole-window and toothless controls each remove the step-off in exact DP, and they are kept as unit tests (`test_every_control_removes_the_step_off`).
 
-Seed-0 convergent result (`figures/exp4_sawtooth_convergent_15x15.png`, 10 rounds × 100k PPO steps, k=19, λ=1, explicit L2 coefficient 0.01): the first round retains a 107.9-point received/true exploit fork; end-of-round true return moves from −56.0 to near the +12 honest optimum; final-three mean is +11.18. The end gap falls from 107.9 to 33.3; about 28 points of the residual are the intentional potential-shaping return, not exploitation. Most importantly, exact DP on the final learned g returns +12.0 and all six dwell values are safely negative (−0.85, −0.97, −0.94, −0.86, −0.89, −0.82). The exact-DP refit diagnostic first reaches +12 at refit 5 and holds it for the final third of 15 refits.
+**W sweep.**
+- Evasion persists for every W ≤ 87.
+- At **W ≥ 15 = d(E,GOAL)** the window behaviour switches from idling to a **goal run inside the window**. True return per round jumps from −100 to −50.
+- For W ≥ 88 the exploit cannot be reached before the window opens, so a step-off is impossible.
 
-Do not label this as unmodified PBRR: state sharing mirrors the paper's neural inductive bias, and exact π*_rhat follows the ideal algorithm, but the positive ranking margin is our extension. Also do not infer the paper's numerical weight-decay coefficient from Table 2's Boolean “True”: released code uses Adam weight decay 1e-5; the local 0.01 is an explicit tabular L2-loss coefficient. Evaluation and preference collection now use separate RNG streams, because sharing one made the learned reward depend on `n_eval` and plotting frequency.
+**p sweep.** The window is kept clean once p exceeds a per-sub-episode threshold. Thresholds: p\*₀..₃ = 0.030, 0.040, 0.059, 0.115.
+- The thresholds increase with k: earlier sub-episodes have more future to protect.
+- p\*₃ = W·b / (V_open(k=4) − V_patched(k=4)) = 1000/8678 is checked in closed form.
+- Below threshold, the agent exploits the window and accepts the risk.
 
-5f. Exp 4 clean split protocol (experiments/exp4_clean_split.py)
+### 4c. PPO (`experiments/step1_ppo.py`, `src/audit_train.py`)
 
-The PI-facing rerun no longer concatenates fresh PPO policies into one continuous-looking sawtooth. Each panel/run is 100k PPO steps under one frozen reward, and endpoint summaries are indexed by repair round. The proxy curve has the known potential-shaping return subtracted for display only (training still receives the full raw reward), so its separation from true return isolates exploitation of bonus/g terms.
+**Setup.**
+- SBX PPO with 16 synchronised envs and **n_steps = T_sub = 100**, so each PPO update lands exactly on a sub-episode boundary. `AlignmentCheck` asserts this at every rollout.
+- No early termination.
+- `gamma = 1.0`, asserted in `make_model`.
+- Rewards are scaled ×0.01 for the learner.
+- Observation is a one-hot Box: pos(225) + τ(100) + k(5) + patched + f.
 
-Seed-0 result (7 rounds, k=19, 361 new cross-pairs/refit): before repair the end-of-run true return is −56.0 and the shaping-adjusted proxy/true gap is +103.8. The literal learner-pair Eq. 3 condition is an explicit null: after 2,527 preferences its exact-DP true return is still −16 and all 6/6 exploits remain profitable. The declared robust extension (state sharing + exact π*_rhat coverage + ranking margin 10) reaches PPO true return +11.9 after one refit; exact live exploits decrease 6→4→3→2→1→0 and the final exact-DP true return is +12.0. Its adjusted PPO gap falls to +3.6. The exact inner-loop audit reaches +12 with 0/6 live exploits in all five checked seeds. Five independent random-label fits repair 0/5 times, so the result depends on meaningful trajectory preferences rather than merely adding a correction.
+**Evaluation is exact.** The policy is read as a table over (t, pos, patched, f) and pushed through `audit_dp.evaluate`, so no metric has Monte Carlo noise.
 
-Primary figures: `figures/exp4_clean_split.png` shows the within-run proxy/true split before, after one refit, and at the final reward; `figures/exp4_clean_repair_summary.png` compares the standard null and robust extension using trained-policy true return, adjusted endpoint gap, and exact live-exploit audits. Machine-readable endpoints are in `results/exp4_clean_split_summary.json`. Keep the original sawtooth figure as the visual demonstration of repeated re-exploitation, but use these clean panels for claims about convergence.
+**Logging.** `RoundLogger` records the reward the learner actually received in every training round: proxy and true, summed over the round's 100 steps (restarting from 0 at each boundary) and averaged over the 16 envs. It is written to `<condition>_seed<s>_rounds.csv`. The exact evaluations, every 96k steps, add per-round expected returns (`proxy_k*`, `true_k*`), the step-off time `leave_k*` (the last τ with P(bonus) ≥ ½, plus one), window occupancy and corrections.
 
-6. Repo layout
+Do not use goal reach as the headline metric. Do not plot an average across rounds where rounds behave differently (e.g. a spike followed by corrected rounds): the average sits where no round ever is.
+
+**Results** (main condition, 3 seeds × 3.07M steps = 1,920 sub-episodes = 384 episodes; seed mean ± s.d. over the last 3 exact evaluations; 6 checks, all pass). **PPO reproduces the exact timing-evasion optimum, round by round.**
+
+| Condition | Proxy return per round, k = 0..4 | True return per round | Corrections per episode |
+|---|---|---|---|
+| **Main** | **7,618 / 7,655 / 7,636 / 7,608 / 8,498** (DP: 7,700 ×4, 8,700) | **−100 every round** (DP −100) | **0.01** |
+
+- **Main.** The proxy–true gap (about 7,700 per round) stays open in every round, because the agent is never corrected. The audit windows of rounds 0–3 are clean (P(bonus) 0.002). It leaves the tile at τ = 90.0 in every round k < 4 and stays to τ = 100 in round 4 (window P(bonus) 0.96), exactly like the DP optimum.
+- **When it learns what** (main, per seed; an episode is 5 rounds = 5 PPO updates):
+  - **The exploit is found** by episode 4–5 in every seed.
+  - **Correction-avoidance takes longer.** At first the agent is corrected in almost every episode, roughly episodes 5–20. Corrections (10-episode mean) then fall below 10% by episodes 62 / 70 / 78, and average 2.5–5.5% over the last 50 episodes.
+  - **Timing comes in two stages.** The agent first steps off early with a safety margin: the earliest step-off is τ = 78–82, around episodes 36–72. That margin then closes to exactly τ = 90 by episodes 156–180.
+  - **Final-round behaviour.** It learns to exploit through the final round's window (leave → 100) by episodes 60–72.
+- **The lead's check: does the agent first reach the proxy ceiling, then give it up to avoid the monitor?** Not in this protocol.
+  - **Reference values.** The proxy ceiling for one sub-episode is 8,700 (dwell all 100 steps, ignore the monitor). The best monitor-avoiding return is 7,700. Both are drawn as reference lines on the timeline figures.
+  - **Main.** Sub-episode-0 return (mean over envs) peaks at 6,700–7,200 in episodes 0–60, never 8,700. The *timing* does pass through the expected stage: at episode 12 the policy still dwells through the first audit (P = 0.39–0.66 across seeds), and by episode 24 it has nearly stopped (0.01–0.06).
+  - **Conclusion.** The agent learns to dodge the monitor *while* it is still learning to exploit, not after mastering the exploit. Seeing "reach 8,700, then drop to 7,700" cleanly would need a warm start: train with the monitor off (toothless) until the agent hits the ceiling, then switch the monitor on. Proposed, not run.
+
+**Figures.**
+- **`figures/step1_ppo_timeline_main.png` (headline; the figure the user asked for).** One training run (seed 0, mean over its 16 envs), on its real time axis.
+  - x = training steps; y = reward accumulated so far in the current sub-episode, restarting at 0 at every sub-episode.
+  - Proxy and true share one axis, so their divergence reads directly.
+  - The top row is the whole run, with each sub-episode drawn at its return.
+  - Zoom A shows episodes 0–7: no exploit in episodes 0–1, then the agent exploits sub-episode 0 and is corrected.
+  - Zoom B shows the window where corrections fall below 50% (chosen from the data): the later sub-episodes stop collapsing to the true reward.
+  - Zoom C shows the last 8 episodes, including the episode-379 lapse.
+  - Each zoom marks every episode boundary (reward reset) and audit window.
+- **`figures/step1_ppo_proxy_ceiling.png` (the lead's check).** Sub-episode 0 of every episode, which always runs under the not-yet-updated proxy, plotted over training against the max proxy return (8,700, dotted) and the best monitor-avoiding return (7,700, dashed), with the exact-eval probability of being on the exploit during its audit. All 3 seeds.
+- **`figures/step1_ppo_episode_max.png` (the lead's check, per episode).** The max proxy return over each episode's 5 sub-episodes (16-env average, 3 seeds), against 8,700 / 7,700.
+  - The episode max reaches 8,700 from about 1M steps on, but only in the last sub-episode, which has no audit that matters.
+  - The max over sub-episodes 0–3 rises to 7,700 and stops there.
+  - Before the agent learns to avoid the monitor, the episode max is about 3,500–6,200; it is not at 8,700.
+  - Per-trial (per-env) returns now also exist in `<condition>_seed<s>_steps.npz` (`env_proxy`, `env_true`). A rerun with the same seeds reproduced every old number exactly.
+- `figures/step1_ppo_timeline_main_ep0-10.png`: episodes 0–10 on their own at full width, same run and data, with no overview row. The TA asked for this; it uses `plot_training_timeline(..., overview=False)`.
+- `figures/step1_ppo_training_curves.png`: per-k training curves over all episodes, plus corrections and step-off time (quantitative companion).
+- `figures/step1_ppo_heatmap_main.png`: when in each sub-episode the agent exploits, over training.
+
+**Earlier five-condition run** (episode totals, superseded): whole-window 8,523, toothless 43,313, no-clock 8,291 (it cannot time the audit, so it leaves the tile at random). Rerun these with `--conditions` if needed.
+
+## 5. Legacy (`legacy/`): lessons that still apply
+
+- **DP before RL.** Always keep the exact optimum as ground truth for the learner.
+- **Use a Box one-hot observation, not Discrete.** SBX does no one-hot preprocessing of Discrete spaces: it feeds the raw integer to the MLP. This fails silently.
+- **Task-completion metrics mislead.** A farmer still finishes the task; measure the exploit directly.
+- **A control must remove the gap it tests.** For example, permuting preference labels was not a valid control in legacy Exp 3, because within an iteration it is a no-op.
+- **Separate RNG streams** for evaluation and for anything that feeds learning.
+- `legacy/README.md` holds the full old context, including Exp 0's three-region phase diagram and the PBRR replication notes. Run legacy code from inside `legacy/`. One legacy test (`test_eq1_alone_does_not_repair_it`) already failed before the archive move.
+
+## 6. Repo layout
+
+```
 reward-hacking-with-observer/
-├── README.md
-├── CLAUDE.md
-├── src/solver.py # value_iteration, policy_iteration, bellman_residual, finite_horizon, find_threshold
-├── src/environments.py # build_toy_mdp (Exp 0), build_corridor_mdp (Exp 1) + metadata + intent classifier
-├── src/plotting.py # shared figure conventions: palette, styling, phase diagrams, grid arrows, sweeps
-├── src/report.py # check bookkeeping; experiments exit nonzero if an acceptance check fails
-├── src/waypoint_env.py # Exp 2: WaypointFarmEnv (Gymnasium), the two monitors
-├── src/dp_reference.py # Exp 2: exact DP + memoryless Monte Carlo reference numbers
-├── src/train.py # Exp 2: SBX PPO + eval harness (policy read as a 42×5 action table)
-├── src/plots.py # Exp 2 figures, rebuilt from results/ CSVs without retraining
-├── src/permanent_correction.py # Exp 2 phase 2: training-level permanent correction (wrapper)
-├── src/pbrr.py # Exp 3: D+/D- partition, Eq 1 / Eq 3 objectives, the g fit (+ a slow reference impl)
-├── src/pbrr_loop.py # Exp 3: Algorithm 1, pair sampling, Boltzmann labels, C1>0 fallback
-├── src/pbrr_minimal.py # Exp 3: the paper's Appendix-H minimal MDPs, as anchors
-├── src/reward_distance.py # Exp 3: EPIC canonicalisation + distance
-├── src/plots_pbrr.py # Exp 3 figures
-├── src/bigworld.py, src/bigworld_pbrr.py # Exp 4 environment + exact/learner repair loops
-├── experiments/exp0_toy.py, exp1_corridor.py, exp1b_correction_loop.py, exp2_run.py, exp3_pbrr.py, exp4_sawtooth.py
-├── tests/test_solver.py, test_experiments.py # Exp 0/1
-├── tests/test_env.py # Exp 2 validation (spec §9), incl. the observation-leak test
-├── tests/test_pbrr.py # Exp 3 validation, incl. the Theorem-H.1 anchor
-├── tests/test_bigworld.py # Exp 4 state sharing, margin gradient, exact convergence
-├── results/ # Exp 2 eval CSVs (kept: plots regenerate from these)
-└── figures/ # generated PNGs (untracked)
+├── CLAUDE.md, AGENTS.md (pointer), README.md
+├── src/solver.py          # generic exact DP (copied from legacy; finite_horizon allows gamma = 1)
+├── src/report.py          # CheckLog: experiments exit nonzero if an acceptance check fails
+├── src/plotting.py        # shared figure conventions: palette, styling, plot_lines
+├── src/audit_grid.py      # Step 1: AuditConfig, rule tables, the AuditGridEnv (gymnasium), obs encoding
+├── src/audit_dp.py        # Step 1: backward induction, exact evaluator, signatures, closed forms
+├── src/audit_train.py     # Step 1: boundary-aligned SBX PPO, exact policy-table evaluation
+├── src/plots_step1.py     # Step 1 figures: per-round returns, within-episode reward, heatmap, sweeps
+├── experiments/step1_dp.py, experiments/step1_ppo.py
+├── tests/test_step1.py    # rules, DP vs generic solver vs env vs Monte Carlo, controls
+├── results/step1_ppo/     # per condition/seed: exact evals (.csv), per-round returns (_rounds.csv), per-step training reward (_steps.npz), .npz
+├── figures/               # generated PNGs (untracked)
+└── legacy/                # archived v1 project, self-contained (own src/, experiments/, tests/, results/, figures/)
+```
 
-Run: `python experiments/exp0_toy.py`, `exp1_corridor.py`, `exp1b_correction_loop.py`, `exp2_run.py` (add `--quick`, `--plots-only`, or `--phase2`), `exp3_pbrr.py` (add `--quick` or `--ppo`), and `python tests/test_solver.py`, `test_experiments.py`, `test_env.py`, `test_pbrr.py`. Exp 0/1 need numpy + matplotlib only; Exp 2 also needs gymnasium + sbx-rl (jax). Tests are pytest-compatible. Use the project venv: `.venv/bin/python`.
-Sweeps use policy_iteration (exact, and its iteration count does not blow up as γ→1); headline solves use value_iteration and `check_agreement` cross-checks the two.
+**Run commands.**
+- `.venv/bin/python tests/test_step1.py`
+- `.venv/bin/python experiments/step1_dp.py`
+- `.venv/bin/python experiments/step1_ppo.py` (main condition by default), with `--quick`, `--conditions ...`, `--seeds 0 1 2`, or `--plots-only`
 
-Solver conventions:
+Tests are pytest-compatible. Always use the project venv, `.venv/bin/python`.
 
-value_iteration(R, P, gamma) is generic over any tabular MDP with R (S,A), P (S,A,S). Keep environment builders (build_mdp, future build_gridworld) separate and swappable so the same solver/plotting harness is reused.
-Always keep a closed-form check next to any new small MDP and assert VI matches it. 7. Working conventions
-DP before RL. Exactly solve small MDPs first; only move to learning once the phenomenon is confirmed by DP, and always keep the exact optimal policy as ground truth to check RL against.
-Validate numerically. Every quantitative claim should be reproducible from a closed form or an exact solve, not asserted.
-Stack: numpy + matplotlib for DP experiments; gymnasium + sbx (Stable-Baselines JAX) for the eventual RL experiment. .gitignore covers **pycache**/, \*.pyc, .venv/, .DS_Store.
-Surface hidden assumptions and trade-offs rather than agreeing by default. If a proposed environment or claim has a flaw (e.g., no detection gap, cross-reward-scale value comparisons, a threshold that won't exist), say so directly. 8. Notation / literature lineage
+## 7. Working conventions
 
-Terminology follows the reward-tampering and reward-hacking literature; keep it consistent:
+- **DP before RL.** Confirm a phenomenon by exact solve before training. Compare every learned policy to the exact optimum of *the same* problem.
+- **Validate numerically.** Every quantitative claim must be reproducible from a closed form or an exact solve, and asserted through `CheckLog` or a test. Keep a closed-form check next to every new environment.
+- **γ = 1.** Finite horizons only.
+- **Keep the solver generic.** It takes R (S,A) and P (S,A,S). A new environment means a new builder, not a solver change.
+- **Stack.** numpy + matplotlib for DP; gymnasium + sbx (Stable-Baselines JAX) for RL.
+- **Surface hidden assumptions and trade-offs** rather than agreeing by default. If a proposed environment has no detection gap, no cross-boundary credit, or no observable clock, say so directly.
+- **Current focus: the main condition only** (per the user). The myopic, whole-window and toothless controls live in the unit tests. `--conditions` can still train myopic, whole_window, toothless or no_clock if they are needed again.
+- **Report per sub-episode, on the training time axis.** The figure the user wants is x = training steps and y = reward accumulated within the current sub-episode (reset to 0 each sub-episode), with proxy and true on the same axis to show the divergence, every sub-episode and episode visible (zoom rows), over the whole of training. Never show episode or training totals. Never show just one moment or the final policy alone: the point is *when* the agent learns to exploit and to avoid correction. Plot real logged training data (`<condition>_seed<s>_steps.npz`), not the exact expectation of a policy, and say which is which.
+- **Matplotlib gotcha.** A `LineCollection` of many sawtooth paths draws stray segments under the `bbox_inches="tight"` save. Draw one NaN-broken `Line2D` per episode instead (see `plot_within_episode`).
 
-Reward tampering / reward-as-influenceable-state — Everitt, Hutter, Kumar & Krakovna (2021). Our setting is closest to their RF-input tampering, specialized to a human overseer in the loop. Source of the current-reward vs post-modification timing distinction.
-Reward hacking, proxy vs true, (un)hackable — Skalse, Howe, Krasheninnikov & Krueger (2022).
-Corrigibility / incentive to resist vs accept correction, threshold "flip" — Soares, Fallenstein, Yudkowsky & Armstrong (2015).
-Evading a correction mechanism — Orseau & Armstrong (2016), Safely Interruptible Agents. Contrast: interruption forces a policy change; our correction changes the reward function, mediated by what the overseer observes.
-Empirical anchor (observation-conditioned behavior in a frontier model) — Greenblatt et al. (2024), Alignment Faking in LLMs.
-Reward pseudometrics (for "closer to r*") — Gleave et al. (2021, EPIC); Skalse et al. (2023, STARC). EPIC is invariant to potential-based shaping (Ng, Harada & Russell, 1999), which is why "closer to truth" is not confounded by shaping.
-Mitigations / manipulable channel — Uesato et al. (2020, decoupled approval); Everitt et al. (2017, Corrupt Reward MDP). 9. Glossary
-proxy reward r_i — the reward function currently in force (a stand-in for r*).
-true reward r\* — the overseer's unobserved target; corrections move r_i toward it.
-correction / regime advance — i → i+1; closes the detected exploit, changing the optimal policy (unlike potential-based shaping, which preserves it).
-detection probability c_i(s,a) — chance the overseer catches an exploit and corrects.
-detection gap — the difference in detection probability between loud and quiet ways of taking the same exploit; the quantity that makes concealment possible.
-deterrence vs concealment — see §3; do not conflate them when interpreting results.
+## 8. Notation / literature lineage
+
+- **Reward tampering / reward as influenceable state.** Everitt, Hutter, Kumar & Krakovna (2021). Source of the current-reward vs post-modification timing distinction.
+- **Hidden incentives from the learning setup.** Krueger, Maharaj & Leike (2020), *Hidden Incentives for Auto-Induced Distributional Shift*. Whether a learner is myopic or non-myopic determines whether it acts on incentives that span its own updates. Our `myopic` control is this distinction.
+- **Reward hacking, proxy vs true, (un)hackable.** Skalse, Howe, Krasheninnikov & Krueger (2022).
+- **Corrigibility, incentive to resist correction.** Soares, Fallenstein, Yudkowsky & Armstrong (2015).
+- **Evading a correction mechanism.** Orseau & Armstrong (2016), *Safely Interruptible Agents*. In contrast to interruption, our correction changes the reward function.
+- **Observation-/evaluation-conditioned behaviour in frontier models.** Greenblatt et al. (2024), *Alignment Faking in LLMs*. The broader evaluation-awareness framing: behaving well when the agent expects to be checked.
+- **Reward pseudometrics.** Gleave et al. (2021, EPIC); Skalse et al. (2023, STARC). Used in legacy and likely relevant for learned corrections.
+- **Mitigations.** Uesato et al. (2020), decoupled approval; Everitt et al. (2017), Corrupt Reward MDP.
+
+## 9. Glossary
+
+- **episode / sub-episode** — 500 / 100 fixed steps. The reward resets per episode. Policy and reward updates happen per sub-episode.
+- **proxy reward** — the flawed reward in force at the start of every episode.
+- **corrected / true reward** — the proxy with the exploit closed. In Step 1 the corrected reward is the true reward.
+- **reward parameters θ_R** — what the overseer updates. Step 1 uses an oracle patch, a bonus weight set from 1 to 0. Graded or learned updates are future work.
+- **audit window W** — the last W steps of each sub-episode; the only steps the overseer reviews.
+- **detection probability p** — P(detect | bonus collected in the window).
+- **step-off** — the agent leaves the exploit exactly as the audit window opens.
+- **timing evasion vs deterrence** — see §3.4.
+- **myopic credit** — the learner treats each sub-episode as terminal, so it has no incentive to protect future reward.
+- **toothless patch** — a control in which detection changes nothing.

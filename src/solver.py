@@ -33,8 +33,12 @@ __all__ = [
 ]
 
 
-def check_mdp(R, P, gamma):
-    """Validate the tabular MDP triple; raise on anything malformed."""
+def check_mdp(R, P, gamma, allow_undiscounted=False):
+    """Validate the tabular MDP triple; raise on anything malformed.
+
+    ``allow_undiscounted`` admits gamma == 1, which is well defined only for a
+    finite horizon (``finite_horizon`` passes it; the infinite-horizon solvers do not).
+    """
     R = np.asarray(R, dtype=float)
     P = np.asarray(P, dtype=float)
     if R.ndim != 2:
@@ -42,8 +46,9 @@ def check_mdp(R, P, gamma):
     n_s, n_a = R.shape
     if P.shape != (n_s, n_a, n_s):
         raise ValueError(f"P must be (S, A, S) = {(n_s, n_a, n_s)}; got {P.shape}")
-    if not 0.0 <= gamma < 1.0:
-        raise ValueError(f"gamma must lie in [0, 1); got {gamma}")
+    upper_ok = gamma <= 1.0 if allow_undiscounted else gamma < 1.0
+    if not (0.0 <= gamma and upper_ok):
+        raise ValueError(f"gamma must lie in [0, 1{']' if allow_undiscounted else ')'}; got {gamma}")
     if np.any(P < -1e-12):
         raise ValueError("P has negative entries")
     row_sums = P.sum(axis=2)
@@ -138,10 +143,11 @@ def finite_horizon(R, P, gamma, horizon, validate=True):
 
     Returns (V, policy) with V of shape (horizon + 1, S) and policy of shape
     (horizon, S); V[horizon] == 0 and policy[t] is optimal with t steps elapsed.
-    Used by Exp 1b as a principled cross-check on the episodic simulation.
+    gamma == 1 is allowed: the horizon makes the undiscounted return finite.
+    Step 1 uses it to cross-check the vectorised audit-grid DP (src/audit_dp.py).
     """
     if validate:
-        R, P = check_mdp(R, P, gamma)
+        R, P = check_mdp(R, P, gamma, allow_undiscounted=True)
     n_s, _ = R.shape
     V = np.zeros((horizon + 1, n_s))
     policy = np.zeros((horizon, n_s), dtype=int)
