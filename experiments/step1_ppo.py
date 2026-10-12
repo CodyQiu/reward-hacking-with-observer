@@ -30,7 +30,7 @@ from src.audit_dp import evaluate, greedy_probs, signatures, solve
 from src.audit_grid import BASE, manhattan
 from src.audit_train import CONDITIONS, N_ENVS, condition_setup, train_one
 from src.plots_step1 import (plot_episode_max, plot_proxy_ceiling, plot_training_curves, plot_training_heatmap,
-                              plot_training_timeline)
+                              plot_timeline_split, plot_training_timeline)
 from src.report import CheckLog
 
 RESULTS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -244,8 +244,9 @@ def make_figures(log, conditions, seeds, results_dir=RESULTS):
                       "the first audit of every episode, is corrected, and earns only the true reward "
                       "for the remaining sub-episodes, for the whole of training.",
         }.get(c, "")
-        log.figure(plot_training_timeline(
-            ecfg, run["steps"]["proxy"], run["steps"]["true"], windows,
+        log.figure(plot_timeline_split(
+            ecfg, run["steps"]["proxy"], run["steps"]["true"],
+            [row["detected"] for row in run["rounds"]], windows,
             f"step1_ppo_timeline_{c}.png",
             f"{LABEL[c]}: proxy vs true reward over training (seed {seed})",
             subtitle=f"{story} One SBX PPO training run; every value is the mean over its 16 parallel "

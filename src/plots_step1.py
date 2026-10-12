@@ -335,7 +335,8 @@ def _draw_overview(cfg, ax0, sp, st, edges, windows, per_round, refs=()):
 
 
 def plot_training_timeline(cfg, step_proxy, step_true, windows, filename, title, subtitle=None,
-                           steps_per_tick=1, overview=True, refs=()):
+                           steps_per_tick=1, overview=True, refs=(),
+                           received_label="proxy reward (what the agent receives)"):
     """The training run on its real time axis: x = training steps, y = reward
     accumulated within the current sub-episode (round), back to 0 at each boundary.
     Proxy and true share the y axis so their divergence is read directly.
@@ -400,7 +401,7 @@ def plot_training_timeline(cfg, step_proxy, step_true, windows, filename, title,
         ax.set_xlabel("training steps (thousands)")
         ax.text(0.0, 1.13, f"{'ABCDEFG'[i]}. {label}" if overview else label, transform=ax.transAxes,
                 ha="left", va="bottom", fontsize=9.5, color=INK)
-    handles = [Line2D([], [], color=PROXY_COLOR, lw=1.6, label="proxy reward (what the agent receives)"),
+    handles = [Line2D([], [], color=PROXY_COLOR, lw=1.6, label=received_label),
                Line2D([], [], color=TRUE_COLOR, lw=1.6, label="true reward"),
                Patch(color=WINDOW_FILL, label="audit window (last 10 steps of each sub-episode)"),
                Line2D([], [], color=INK_2, lw=0.9, ls=(0, (4, 3)), label="episode boundary: reward function reset")]
@@ -512,4 +513,105 @@ def plot_episode_max(steps, env_proxy, ceiling, avoid, filename, title, subtitle
     fig.suptitle(title, x=0.02, ha="left", va="bottom", color=INK, fontsize=11, y=1.03)
     fig.subplots_adjust(hspace=0.12, top=0.93)
     add_subtitle(ax2, subtitle, dy=-42, width=150)
+    return save_figure(fig, filename)
+
+
+TRIGGER_COLOR = "#cf3a3a"
+
+
+def plot_timeline_split(cfg, step_received, step_true, caught, windows, filename, title, subtitle=None,
+                        steps_per_tick=1, refs=(), received_label="proxy reward (what the agent receives)"):
+    """Variant of ``plot_training_timeline`` (mentor's request): received and true
+    reward on SEPARATE rows with their own y scales, and every audit window marked
+    by whether the reward-correcting monitor triggered there.
+
+    ``caught``: (n_rounds,) fraction of the parallel envs whose audit at the end of
+    that sub-episode triggered a correction. The final sub-episode's audit never
+    corrects (the reward resets), so it is always drawn as not triggering.
+    """
+    from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
+    from matplotlib.transforms import blended_transform_factory
+
+    K, T = cfg.n_sub, cfg.t_sub
+    sp, st = np.asarray(step_received, float), np.asarray(step_true, float)
+    caught = np.asarray(caught, float).copy()
+    caught[np.arange(len(caught)) % K == K - 1] = 0.0      # last audit: no correction
+    n_rounds = len(sp)
+    per_round = T * steps_per_tick
+    edges = np.arange(n_rounds + 1) * per_round
+    panels = [None] + list(windows)
+    fig = plt.figure(figsize=(11.5, 3.3 * len(panels) + 0.6))
+    outer = GridSpec(len(panels), 1, figure=fig, hspace=0.62)
+    pairs = []
+    for i in range(len(panels)):
+        inner = GridSpecFromSubplotSpec(2, 1, subplot_spec=outer[i], height_ratios=[1.0, 0.5], hspace=0.08)
+        a = fig.add_subplot(inner[0])
+        b = fig.add_subplot(inner[1], sharex=a)
+        a.tick_params(labelbottom=False)
+        pairs.append((style_axes(a, grid_axis="y"), style_axes(b, grid_axis="y")))
+
+    # whole run: one flat segment per sub-episode, triggered audits as a red rug
+    a, b = pairs[0]
+    a.stairs(sp.sum(axis=1), edges / 1e6, color=PROXY_COLOR, lw=0.9, rasterized=True)
+    b.stairs(st.sum(axis=1), edges / 1e6, color=TRUE_COLOR, lw=0.9, rasterized=True)
+    _draw_refs(a, refs)
+    trans = blended_transform_factory(a.transData, a.transAxes)
+    for r in np.flatnonzero(caught > 0):
+        a.plot([edges[r + 1] / 1e6] * 2, [0.9, 1.0], transform=trans, color=TRIGGER_COLOR,
+               lw=0.6, alpha=0.25 + 0.75 * caught[r], solid_capstyle="butt")
+    a.set_xlim(0, edges[-1] / 1e6)
+    b.set_xlabel("training steps (millions)")
+    _col_title(a, "Whole training run: each sub-episode drawn at its return (red ticks: monitor triggered)")
+    for ax, lab in ((a, "received return\nin the sub-episode"), (b, "true return")):
+        ax.set_ylabel(lab)
+        _thousands(ax)
+
+    L = T + 1
+    for i, (e0, n, label) in enumerate(windows):
+        a, b = pairs[i + 1]
+        r0, r1 = e0 * K, min((e0 + n) * K, n_rounds)
+        xs, yp, yt = [], [], []
+        for r in range(r0, r1):
+            x = (r * T + np.arange(L)) * steps_per_tick / 1e3
+            xs.append(np.append(x, np.nan))
+            yp.append(np.append(np.concatenate([[0.0], np.cumsum(sp[r])]), np.nan))
+            yt.append(np.append(np.concatenate([[0.0], np.cumsum(st[r])]), np.nan))
+            w0, w1 = (r * T + T - cfg.window) * steps_per_tick / 1e3, (r + 1) * T * steps_per_tick / 1e3
+            fc = tint(TRIGGER_COLOR, 0.2 + 0.6 * caught[r]) if caught[r] > 0 else WINDOW_FILL
+            for ax in (a, b):
+                ax.axvspan(w0, w1, color=fc, lw=0, zorder=0)
+        a.plot(np.concatenate(xs), np.concatenate(yp), color=PROXY_COLOR, lw=1.3, zorder=3)
+        b.plot(np.concatenate(xs), np.concatenate(yt), color=TRUE_COLOR, lw=1.3, zorder=3)
+        _draw_refs(a, refs)
+        for e in range(e0, e0 + n + 1):
+            xe = e * K * T * steps_per_tick / 1e3
+            for ax in (a, b):
+                ax.axvline(xe, color=INK_2, lw=0.9, ls=(0, (4, 3)), zorder=2)
+            if e < e0 + n:
+                a.text(xe + 0.5 * K * T * steps_per_tick / 1e3, 1.0, f"episode {e}",
+                       transform=a.get_xaxis_transform(), ha="center", va="bottom", fontsize=8, color=INK_2)
+        a.set_xlim(r0 * T * steps_per_tick / 1e3, r1 * T * steps_per_tick / 1e3)
+        b.set_xlabel("training steps (thousands)")
+        for ax, lab in ((a, "received reward so\nfar in the sub-episode"), (b, "true reward\nso far")):
+            ax.set_ylabel(lab)
+            _thousands(ax)
+        a.text(0.0, 1.16, f"{'ABCDEFG'[i]}. {label}", transform=a.transAxes, ha="left", va="bottom",
+               fontsize=9.5, color=INK)
+
+    handles = [Line2D([], [], color=PROXY_COLOR, lw=1.6, label=received_label),
+               Line2D([], [], color=TRUE_COLOR, lw=1.6, label="true reward (own scale, lower rows)"),
+               Patch(color=tint(TRIGGER_COLOR, 0.7), label="audit window: monitor TRIGGERED a correction "
+                                                           "(shade = fraction of the 16 envs caught)"),
+               Patch(color=WINDOW_FILL, label="audit window: monitor did not trigger"),
+               Line2D([], [], color=INK_2, lw=0.9, ls=(0, (4, 3)), label="episode boundary: reward function reset")]
+    handles += [Line2D([], [], color=INK, lw=1.0, ls=ls, label=lab) for (_, lab), ls in zip(refs, REF_STYLES)]
+    h = fig.get_figheight()
+    top_ax = 1.0 - 0.9 / h
+    fig.subplots_adjust(top=top_ax)
+    fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.06, top_ax + 0.42 / h), frameon=False,
+               fontsize=8.5, labelcolor=INK_2, ncol=2)
+    rows = -(-len(handles) // 2)
+    fig.suptitle(title, x=0.02, ha="left", va="bottom", color=INK, fontsize=11,
+                 y=top_ax + (0.5 + 0.25 * rows) / h)
+    add_subtitle(pairs[-1][1], subtitle, dy=-40, width=165)
     return save_figure(fig, filename)

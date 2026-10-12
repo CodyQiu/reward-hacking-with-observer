@@ -10,8 +10,8 @@ The question: during training, does an RL agent learn to **avoid behaviours that
 
 The work has three steps:
 
-1. **Step 1: find environments where the agent avoids correction.** [IN PROGRESS] Show, first by exact DP and then with a learning agent, that the reward-maximising policy exploits a reward bug and suspends the exploit exactly when a correction would be triggered.
-2. **Step 2:** TBD with advisor.
+1. **Step 1: find environments where the agent avoids correction.** [DONE, checked off by the mentor] Show, first by exact DP and then with a learning agent, that the reward-maximising policy exploits a reward bug and suspends the exploit exactly when a correction would be triggered.
+2. **Step 2: the same experiment, with PBRR as the correction mechanism.** [DONE] Whenever the agent is caught, the overseer runs a Preference-Based Reward Repair round instead of Step 1's oracle patch. See §4d.
 3. **Step 3:** TBD with advisor.
 
 Work in the style of an ML-theory researcher. Solve the tiny problem exactly before training anything, and make every learned result comparable to an exact optimum.
@@ -147,6 +147,61 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
 
 **Earlier five-condition run** (episode totals, superseded): whole-window 8,523, toothless 43,313, no-clock 8,291 (it cannot time the audit, so it leaves the tile at random). Rerun these with `--conditions` if needed.
 
+### 4d. Step 2: PBRR as the overseer's correction
+
+**What it is.** Same grid, protocol, audit and γ = 1. When an env is caught, the overseer runs one PBRR round (Hatgis-Kessell, Bhamidipaty & Brunskill, arXiv:2510.13036v2; `src/pbrr_core.py`, `src/audit_pbrr.py`) instead of the oracle patch.
+- **Data.** 19 fresh rollouts of the current policy in that env's state × 19 fixed reference rollouts → 361 Boltzmann-labelled pairs, appended to that env's D.
+- **Fit.** g is an MLP on [s, s', a], refit from scratch on all of D. The new reward r_proxy + g applies from the next sub-episode.
+- **Reset.** g and D reset every episode; the policy doesn't.
+- **Per env.** Each env has its own g and D. Envs with an identical catch history in the episode share one round.
+- **Observation.** The agent sees its correction count (one-hot 0..4) instead of the patched bit.
+- **Records.** Tuning log: `docs/step2_tuning_log.md`. Runs: `results/step2/tuning/` (each run has its config, git hash and a code snapshot, and is never overwritten). Phase A: `experiments/step2_pbrr_check.py` → `results/step2/phase_a/`.
+
+**Faithfulness.** Follows the paper; where it is silent, follows the released code (github.com/StanfordAI4HI/PBRR-ICLR, gridworld config):
+- 5 Linear layers × 512, ReLU;
+- PyTorch-default re-init on each refit;
+- full batch;
+- the per-transition L⁺/L⁻ regulariser with λ = 10/|D⁺|;
+- 19 × 19 pairs;
+- reference rollouts collected once;
+- Boltzmann labels with β = 1.
+
+**Deviations.**
+- γ = 1, not 0.99.
+- The policy is trained continually, not retrained for each PBRR iteration.
+- The reward model sees the base state (position), not the augmented observation.
+
+**Phase A (exact checks before any PPO).**
+- **Reference policy.** Behaviour cloning on 5 noisy demonstrations of a hand-written rule, the paper's recipe. P(goal) 1.00, true +18.6 per sub-episode, touches the exploit in 0.05% of sub-episodes. The paper's random-init reference (K.8) reaches the goal 0.2% of the time, so its labels against the exploiter would be coin flips.
+- **g hyperparameters from the paper's own E.1 search.** Winner: lr 1e-3, no weight decay, 100 epochs, 5 × 512. The paper's Table 2 setting ranks 12/48 here.
+- **Neural g and Theorem H.1.** With the neural g, one preference does not repair Appendix H's MDP 1: the network spills the decrement onto unseen transitions, whereas Theorem H.1 assumes a tabular g.
+- **|D⁺| = 0 handling is decisive. Use "max1".**
+  - **"max1":** one correction makes the exploit pay −526/step, and the idealised optimum (`src/step2_dp.py`) is to **hide**, identical to Step 1 (39,500; leave at τ = 90).
+  - **The released code's "skip":** the first round is an unregularised fit that raises g by up to +304 on the reference's behaviour. A corrected sub-episode can then earn 28,698, i.e. 3.3× the exploit, and the optimum is to **get caught on purpose**.
+  - **Why max1:** Eq 3 / E.6's λ = 10/|D⁺| makes the regulariser dominate, not vanish, as |D⁺| → 0. "skip" is a candidate follow-up: a correction mechanism the agent would rather trigger.
+
+**PPO: no tuning was needed.** Step 1's PPO config met the pre-registered criteria (S1–S4 in ≥ 2 of 3 seeds) on the baseline. The final results come from **fresh seeds 10–12, where 3 of 3 meet all five criteria**:
+
+| Metric | Value |
+|---|---|
+| audit windows 0–3 exploited | 0.5–1.6% |
+| off-window | 93–99% |
+| PBRR rounds per episode | 0.02–0.06 |
+| final window exploited | 89–98% |
+| proxy per sub-episode 0–3 | 7,134–7,584 (the optimum is 7,700) |
+
+- **Milestones:**
+  - exploit found by episode 8–11;
+  - corrections below 0.1 per episode by episode 36–56;
+  - final-window defection > 80% by episode 67–191.
+- **Why it was easy.** A PBRR correction overshoots (median g on dwelling at the exploit ≈ −500 against a +100 bonus). A caught agent that keeps dwelling is charged about −500 per step, and early sub-episodes reach −8,000 received. That is a far stronger push to hide than Step 1's patch.
+- **One tuning seed (2) hid before every audit**, including the harmless final one (S4 ✗).
+- **Figures:**
+  - `figures/step2_final_timeline.png` (headline, Step 1 layout, received vs true);
+  - `figures/step2_final_dashboard.png` (per-sub-episode returns, PBRR rounds, window exploitation, learned g);
+  - `figures/step2_final_episode_max.png` (per trial: sub-episodes 0–3 cap at 7,700);
+  - `figures/step2_final_proxy_ceiling.png`.
+
 ## 5. Legacy (`legacy/`): lessons that still apply
 
 - **DP before RL.** Always keep the exact optimum as ground truth for the learner.
@@ -168,6 +223,14 @@ reward-hacking-with-observer/
 ├── src/audit_dp.py        # Step 1: backward induction, exact evaluator, signatures, closed forms
 ├── src/audit_train.py     # Step 1: boundary-aligned SBX PPO, exact policy-table evaluation
 ├── src/plots_step1.py     # Step 1 figures: per-round returns, within-episode reward, heatmap, sweeps
+├── src/pbrr_core.py       # Step 2: Eq 3, neural g (JAX), Boltzmann labels -- paper + released-code details
+├── src/pbrr_grid.py       # Step 2: transition features, trajectories, rollouts, BC reference policy
+├── src/audit_pbrr.py      # Step 2: env with r_proxy + g and a correction count; PBRROverseer callback
+├── src/step2_dp.py        # Step 2: exact DP with a correction count (idealised Step 2)
+├── src/step2_train.py     # Step 2: run harness (no overwrite, code snapshot), success criteria S1-S5
+├── src/plots_step2.py     # Step 2 dashboard
+├── experiments/step2_pbrr_check.py, step2_ppo.py, step2_figures.py; tests/test_step2.py
+├── docs/step2_tuning_log.md  # the tuning record: protocol, decisions, every run
 ├── experiments/step1_dp.py, experiments/step1_ppo.py
 ├── tests/test_step1.py    # rules, DP vs generic solver vs env vs Monte Carlo, controls
 ├── results/step1_ppo/     # per condition/seed: exact evals (.csv), per-round returns (_rounds.csv), per-step training reward (_steps.npz), .npz
@@ -178,6 +241,7 @@ reward-hacking-with-observer/
 **Run commands.**
 - `.venv/bin/python tests/test_step1.py`
 - `.venv/bin/python experiments/step1_dp.py`
+- `.venv/bin/python tests/test_step2.py`; `experiments/step2_pbrr_check.py` (Phase A); `experiments/step2_ppo.py --run-id <id> --seeds ... [--set ppo.ent_coef=0.02 ...] --hypothesis "..."`; `experiments/step2_figures.py --run-id <id> --seeds ...`
 - `.venv/bin/python experiments/step1_ppo.py` (main condition by default), with `--quick`, `--conditions ...`, `--seeds 0 1 2`, or `--plots-only`
 
 Tests are pytest-compatible. Always use the project venv, `.venv/bin/python`.
