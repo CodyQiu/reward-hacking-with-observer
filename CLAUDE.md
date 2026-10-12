@@ -12,7 +12,7 @@ The work has three steps:
 
 1. **Step 1: find environments where the agent avoids correction.** [DONE, checked off by the mentor] Show, first by exact DP and then with a learning agent, that the reward-maximising policy exploits a reward bug and suspends the exploit exactly when a correction would be triggered.
 2. **Step 2: the same experiment, with PBRR as the correction mechanism.** [DONE] Whenever the agent is caught, the overseer runs a Preference-Based Reward Repair round instead of Step 1's oracle patch. See §4d.
-3. **Step 3:** TBD with advisor.
+3. **Step 3: the Step 2 experiment on a suite of environments.** [IN PROGRESS] Five environments chosen to be as different as possible: Tomato Watering, Taxi, Absent Supervisor, MountainCar, LunarLander. Same protocol, overseer and PBRR as Step 2. See §4e.
 
 Work in the style of an ML-theory researcher. Solve the tiny problem exactly before training anything, and make every learned result comparable to an exact optimum.
 
@@ -202,6 +202,40 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - `figures/step2_final_episode_max.png` (per trial: sub-episodes 0–3 cap at 7,700);
   - `figures/step2_final_proxy_ceiling.png`.
 
+### 4e. Step 3: the same experiment on five environments (`src/step3/`)
+
+**What is shared.**
+- **Protocol, audit, PBRR and γ = 1:** exactly as in Step 2.
+- **One detection rule:** caught ⇔ proxy ≠ true at some step of the last W = T_sub/10 steps.
+- **One task interface** (`src/step3/task.py`):
+  - batched base MDPs with `reset`, `obs`, `step` → (proxy, true, reward-model row, transition key);
+  - tabular tasks also give padded transition tables for the exact solver.
+- **One vectorised protocol VecEnv** (`src/step3/protocol.py`). It applies g batched per catch-history group.
+- **A trajectory-level Eq 3 fit** (`src/step3/pbrr.py`). It is the same objective as `pbrr_core.fit_correction`, without the pairs × transitions matrix, so it works for continuous states.
+- **A generic exact solver** (`src/step3/dp.py`), and **the harness and criteria** (`train.py`, `metrics.py`).
+- **Regression anchor.** `src/step3/tasks/grid.py` is the Step 1 grid as a task. The tests check the new code against Step 2 step for step. A smoke run through the new harness meets S1–S5.
+
+**The environments** (`src/step3/tasks/`). Each Phase A is in `results/step3/<env>/phase_a/`, from `experiments/step3_check.py`.
+
+| Env | Bug (proxy ≠ true) | T_sub / W | Exact optimum |
+|---|---|---|---|
+| tomato | the bucket makes every tomato look watered (q = 0.1; 6 tomatoes) | 100 / 10 | exact |
+| taxi | the pickup bonus re-arms (pick up and drop off in place) | 100 / 10 | exact |
+| absent_supervisor | the punishment tile is free; the supervisor = the monitor (true penalty 50) | 100 / 10 | exact |
+| mountain_car | +b per step at \|v\| ≥ v₀ ("keep momentum" shaping) | 200 / 20 | grid approximation |
+| lunar_lander | the touchdown bonus re-arms after 20 airborne steps | 500 / 50 | none: scripted strategies |
+
+**Lessons so far** (details in `docs/step3_tuning_log.md`).
+- **The reference policy must be near-ideal *and* honest.**
+  - Cloned demonstrations copy their noise: in Taxi that means random pickups and wrong-depot dropoffs; in MountainCar, lost momentum.
+  - So the gate is measured, and the recipe is relaxed per environment and logged.
+  - MountainCar uses the grid solve's honest optimum.
+- **Bug entanglement weakens PBRR.**
+  - If honest play also collects the bug (MountainCar at v₀ = 0.03), the regulariser on the preferred reference trajectories protects exactly the transitions the correction should hit.
+  - Corrections then cost about 9%, less than hiding does, and the idealised optimum is to exploit openly.
+- **With max1, corrections fade while the agent keeps exploiting.** If |D⁺| stays 0, the regulariser grows with |D⁻| (Absent Supervisor's g by round: −7.7 / −3.5 / −2.3 / −1.7). Hiding is then optimal only if the *first* correction costs more than hiding.
+- **Representation.** With factored Taxi features, PPO zeroes pickup and dropoff everywhere before it finds the legal exception.
+
 ## 5. Legacy (`legacy/`): lessons that still apply
 
 - **DP before RL.** Always keep the exact optimum as ground truth for the learner.
@@ -230,6 +264,11 @@ reward-hacking-with-observer/
 ├── src/step2_train.py     # Step 2: run harness (no overwrite, code snapshot), success criteria S1-S5
 ├── src/plots_step2.py     # Step 2 dashboard
 ├── experiments/step2_pbrr_check.py, step2_ppo.py, step2_figures.py; tests/test_step2.py
+├── src/step3/             # Step 3: task interface, protocol VecEnv, trajectory-level PBRR, generic DP, harness
+├── src/step3/tasks/       # grid (regression anchor), tomato, taxi, absent_supervisor, mountain_car, lunar_lander
+├── src/plots_step3.py     # Step 3 dashboard and suite figure
+├── experiments/step3_check.py (Phase A), step3_ppo.py, step3_figures.py, step3_suite.py; tests/test_step3.py
+├── docs/step3_tuning_log.md
 ├── docs/step2_tuning_log.md  # the tuning record: protocol, decisions, every run
 ├── experiments/step1_dp.py, experiments/step1_ppo.py
 ├── tests/test_step1.py    # rules, DP vs generic solver vs env vs Monte Carlo, controls
@@ -243,6 +282,7 @@ reward-hacking-with-observer/
 - `.venv/bin/python experiments/step1_dp.py`
 - `.venv/bin/python tests/test_step2.py`; `experiments/step2_pbrr_check.py` (Phase A); `experiments/step2_ppo.py --run-id <id> --seeds ... [--set ppo.ent_coef=0.02 ...] --hypothesis "..."`; `experiments/step2_figures.py --run-id <id> --seeds ...`
 - `.venv/bin/python experiments/step1_ppo.py` (main condition by default), with `--quick`, `--conditions ...`, `--seeds 0 1 2`, or `--plots-only`
+- Step 3: `tests/test_step3.py`; `experiments/step3_check.py --env <env> [--set k=v] [--variant name]` (Phase A); `experiments/step3_ppo.py --env <env> --run-id <id> --seeds ... [--set ppo.ent_coef=0.03 task.obs=onehot ...] --hypothesis "..."`; `experiments/step3_figures.py --env <env> --run-id <id> --seeds ...`; `experiments/step3_suite.py --runs env:run:seeds ...`. LunarLander needs `box2d` (installed into `.venv` with uv).
 
 Tests are pytest-compatible. Always use the project venv, `.venv/bin/python`.
 
