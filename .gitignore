@@ -4,3 +4,4 @@ __pycache__/
 .DS_Store
 figures/
 results/step1_ppo/quick/
+logs/

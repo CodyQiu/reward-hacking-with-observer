@@ -217,3 +217,48 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
     - Off-window exploitation is 0.72 of the ideal (S2 ✗ narrowly).
     - The final window is also 0% exploited (S4 ✗).
     - It hides even where hiding protects nothing: the same over-generalised hiding as Step 2's tuning seed 2 and LunarLander T0.
+
+## Moving to FarmShare (2026-10-12)
+
+**Where training runs.**
+- New tuning runs train on Stanford FarmShare's `normal` CPU partition, one Slurm job per run. Each job gets one core per seed plus one spare. See `scripts/farmshare/README.md`.
+- The four runs that were still in progress on the laptop finish there:
+  - LunarLander T0_step1_config and T1_scalarclock;
+  - MountainCar T1_scalarclock_ent03;
+  - Taxi T1_onehot_ent03.
+- FarmShare holds only placeholders for those four, so their run ids can't be reused.
+- Setting, code and package versions are identical on both machines (`scripts/farmshare/requirements.txt`), but floating-point results differ between arm64 and x86_64. A seed is reproducible within a machine, not across machines.
+
+**Procedure changes, made now, before any results from the new round.**
+1. **T1 now uses 3 seeds (0–2) per configuration, not 1.**
+   - Single-seed T1 picked a config that then went 1 of 3 on Tomato's fresh seeds; it was 3 of 6 overall.
+   - With dedicated cores the extra seeds cost no wall time.
+   - A T1 configuration that meets S1–S4 in ≥ 2 of 3 seeds counts as passing T2 as well.
+2. **Tomato's T3 seeds 10–12 are spent.** Its next T3 uses fresh seeds 20–22. Every other environment still uses 10–12.
+
+### Round T1b (submitted 2026-10-12, 3 seeds each)
+- **Tomato.**
+  - **Failure.** "Caught once, then honest" (seeds 10 and 12): the agent never learns that stepping out of the bucket in window 0 keeps four uncorrected sub-episodes.
+  - **Hypothesis.** A credit and exploration problem on that single decision.
+  - **Configurations:**
+    - `T1b_ent03_gae099`: entropy 0.03 + GAE 0.99, the two single-seed successes combined;
+    - `T1b_gae099`: GAE 0.99 alone, 3 seeds;
+    - `T1b_ent05`: entropy 0.05.
+- **Absent Supervisor.**
+  - **Failure.** At entropy 0.1, 2 of 3 seeds hide. Seed 1 was still converging at the end (windows 99% → 42% → 5%).
+  - **Configurations:**
+    - `T1b_ent1_ep768`: entropy 0.1, 768 episodes;
+    - `T1b_ent1_gae099`: entropy 0.1 + GAE 0.99;
+    - `T1b_ent05`: entropy 0.05.
+- **MountainCar (scalar clock).**
+  - **Failure.** It hides in the final window too (S4), with off-window exploitation at 0.72 of the ideal (S2 narrowly).
+  - **Hypothesis.** Final-window defection is learned late (Step 1: episodes 60–72), and the final sub-episode's advantage is about 20%.
+  - **Configurations:**
+    - `T1b_scalar_ep768`: 768 episodes;
+    - `T1b_scalar_net256`: [256, 256] network.
+- **LunarLander.**
+  - **Failure.** All four laptop runs hide in every window, including the final one (S4).
+  - **Configuration:** `T1b_scalar_ep768`, scalar clock with 768 episodes. T1_scalarclock already defects more in the final window than T0 (0.22 vs 0.03 at about 6.7M steps).
+- **Taxi (one-hot state).**
+  - `T1b_onehot_ent03_s12`: the laptop configuration on seeds 1 and 2;
+  - `T1b_onehot_ent05`: entropy 0.05, seeds 0–2.
