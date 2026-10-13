@@ -1,0 +1,77 @@
+{
+ "seed": 26,
+ "n_envs": 16,
+ "episodes": 768,
+ "ppo": {
+  "learning_rate": 0.0003,
+  "batch_size": 400,
+  "n_epochs": 10,
+  "gamma": 1.0,
+  "gae_lambda": 0.95,
+  "ent_coef": 0.03,
+  "net_arch": [
+   64,
+   64
+  ]
+ },
+ "pbrr": {
+  "k": 19,
+  "beta": 1.0,
+  "ref_seed": 0,
+  "n_demos": 5,
+  "noise": 0.1,
+  "steps": 500
+ },
+ "env": "tomato",
+ "protocol": {
+  "t_sub": 100,
+  "n_sub": 5,
+  "window": 10,
+  "p_detect": 1.0,
+  "show_monitor": false,
+  "clock": "onehot"
+ },
+ "reward_scale": 0.17,
+ "task": {
+  "q": 0.1
+ },
+ "g": {
+  "n_layers": 3,
+  "width": 256,
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "epochs": 50,
+  "push2zero": 10.0,
+  "no_agree": "max1",
+  "use_regularization": true,
+  "init": "torch_default",
+  "beta": 1.0
+ },
+ "refs": {
+  "offwindow_rate": 0.9444444444444458,
+  "proxy_0_3": 542.6626485581572,
+  "proxy_by_k": [
+   542.6626485581579,
+   542.6626485581572,
+   542.6626485581569,
+   542.6626485581569,
+   588.8374599999997
+  ],
+  "true_by_k": [
+   59.821684400146935,
+   59.821684400146864,
+   59.821684400146786,
+   59.82168440014676,
+   45.9987781756511
+  ],
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.9999999999999949
+  ]
+ },
+ "git": "74ead4c",
+ "started": "2026-10-13 09:59:58"
+}
