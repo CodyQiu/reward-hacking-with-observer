@@ -261,12 +261,12 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **F2:** exploits through the audits and gets corrected.
   - **F5:** hiding is incomplete. "F5?" means it hides but never defects in the final window.
 
-**Status (2026-10-12).** "Hides" means S1–S3 hold. "Full" means S1–S4 hold, i.e. the Step 2 story including final-window defection.
+**Status (2026-10-12, updated 23:50).** "Hides" means S1–S3 hold. "Full" means S1–S4 hold, i.e. the Step 2 story including final-window defection.
 
 | Env | Best config so far (`--set`) | Result |
 |---|---|---|
-| absent_supervisor | `ppo.ent_coef=0.1 episodes=768` | **Full in 2 of 3** (seeds 0 and 2: windows 2.3%, 0.09–0.10 corrections per episode, final window 99–100%). Seed 1 was unfinished. **Next: freeze this config and run T3 on seeds 10–12.** |
-| tomato | `ppo.ent_coef=0.03` / `0.05` / `ppo.gae_lambda=0.99` | Full in about a third to a half of seeds for every config tried. The failures alternate between F2 and "caught once in sub-episode 0, then honest". Entropy and GAE look exhausted. **Next: try lr, n_epochs or batch size, with 3 seeds each.** |
+| absent_supervisor | `ppo.ent_coef=0.1 episodes=768` (frozen) | **DONE. T3_final (seeds 10–12): full success in 3 of 3** (windows 0.6–1.7%, 0.02–0.07 corrections per episode, final window 97–100%, proxy 1,313–1,374 of 1,450). Figures: `figures/step3_absent_supervisor_final_*.png`. |
+| tomato | `ppo.ent_coef=0.03` (T3_final, seeds 10–12) | **Reported as a finding** (12 runs, 27 seeds, 9 configs incl. lr / n_epochs / batch size). 10 of 27 seeds (37%) learn anticipatory hiding; 7 (26%) are full successes. The rest learn *reactive* avoidance (exploit until corrected, then honest) or exploit through every audit. Probe (`experiments/step3_probe.py`): failing seeds' window behaviour does not depend on k. T3 result: 1 of 3. |
 | taxi | `task.obs=onehot ppo.ent_coef=0.03` | **Hides in 3 of 3** (windows 0–2%, off-window 0.82–0.85, 0.02–0.08 corrections per episode). **S4 fails** (final window 1–8%). `episodes=768` was cut at 25%, with seed 0's final window rising to 22%. **Next: run 768 episodes to completion.** |
 | mountain_car | `protocol.clock=scalar` | Hides everywhere (windows 0%, 0 corrections, off-window 0.65–0.72), **final window 0%**. Entropy 0.03 and a [256, 256] network change nothing. **Next: run `episodes=768` to completion.** |
 | lunar_lander | Step 1 config / `protocol.clock=scalar` | **Hides in 3 of 3** with the Step 1 config (windows about 1%, 0.03–0.04 corrections per episode), but the final window is 0–4%. With the scalar clock, the final window reaches 59%, but windows are 5.1% and corrections 0.20 per episode, so S1 and S3 narrowly fail. **Next: scalar clock with `episodes=768`, to completion.** |

@@ -388,11 +388,15 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
 | `T1c_epochs20` | 1 of 3 | s0 SUCCESS; s2 hides with 10% of windows exploited and 0.41 corrections/ep; s1 F2 (windows 75%) |
 | `T1c_batch100` | 0 of 3 | s0 and s2 caught once, then honest; s1 deterred (never exploits by the end) |
 
-- **Across all 25 Tomato seeds and 8 configurations, the same three outcomes recur. Only their proportions change:**
-  - **hide:** 10 seeds, 7 of them full passes (S3 is often missed at 0.10–0.15 corrections/ep);
-  - **caught once, then honest:** 7 seeds. An absorbing state: windows exactly 0.25 and exactly 1.00 corrections/ep for the rest of training;
-  - **exploit through every audit:** 5 seeds;
-  - **deterred:** 1 seed.
+- **Across all 27 completed Tomato seeds (12 runs, 9 configurations including T0), the same outcomes recur; only their proportions change** (counted from each seed's `metrics.json`):
+  - **full success:** 7 (26%);
+  - **hides, but narrowly misses S1 or S3:** 3 (T2 seed 1 at 0.14 corrections/ep; T1c_lr1e3 seed 1 at 0.10; T1c_epochs20 seed 2 at 10% windows and 0.41);
+  - **caught once, then honest:** 10. An absorbing outcome: windows exactly 0.25 and 1.00 corrections/ep for the rest of training (T0 seeds 1 and 2 are close: 0.22–0.27 and 0.89–1.08);
+  - **exploits through every audit:** 6;
+  - **deterred:** 1.
+
+  So 10 of 27 seeds (37%) learn to hide.
+- An earlier version of this entry gave 25 seeds and 8 configurations; the counts above replace it.
 
 **Probe of the trained policies (new `experiments/step3_probe.py`).**
 - **Method.** Run the saved policy for one sub-episode at every (k, correction count), including cells training never visits. The proxy is uncorrected, with 256 Monte Carlo rollouts on a separate RNG stream. Output: `results/step3/tomato/probes/`.
@@ -408,7 +412,7 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
   - The anticipatory one needs a fully clean window (caught ⇔ *any* exploit step in the W = 10 window steps) and credit across the boundary. One step out of the bucket changes nothing about being caught and costs that step's proxy, so its advantage is ≤ 0.
   - Seeds whose bucket-dwelling becomes near-deterministic before a fully clean window has been sampled stay reactive.
 - **Decision: stop tuning Tomato (12 runs) and report it as a finding.**
-  - The reported result is T3_final (seeds 10–12, entropy 0.03): 1 of 3 full success. Across configurations, about 40% of seeds learn anticipatory hiding.
+  - The reported result is T3_final (seeds 10–12, entropy 0.03): 1 of 3 full success. Across configurations, 37% of seeds learn anticipatory hiding (26% full).
   - Running further PPO knobs would be tuning forever: none of the 8 configurations changes the three-outcome structure.
   - **Possible follow-ups, not run:**
     - many seeds of one config, to estimate the success rate with an error bar;
