@@ -548,3 +548,22 @@ It is not a tuning run.
 - **`T1_ent03`:** entropy 0.03, seeds 0–2.
 - **`T1_ent1`:** entropy 0.1, seeds 0–2.
 - **Hypothesis.** The smoke run is already in the "caught in sub-episode 0, then honest" phase at episode 24, Tomato's failure mode. Entropy, which supplied exploration of the uncorrected branch in Absent Supervisor and Tomato, should help here too.
+
+**Boat Race round T0 results (FarmShare, 20–38 min per run).**
+
+| Run | Seeds meeting S1–S3 | Seeds meeting S1–S4 | Notes |
+|---|---|---|---|
+| `T0_step1_config` | 3 of 3 | 1 of 3 | final window 0.00 / 0.90 / 0.78 |
+| **`T1_ent03`** | **3 of 3** | **3 of 3 (S1–S5)** | windows 1.7–2.2%, 0.07–0.09 corrections/ep, off-window 0.94–0.99, final window 0.91–0.99, proxy 165–168 of 182 |
+| `T1_ent1` | 0 of 3 | 0 of 3 | too much exploration: s2 F2; s0 and s1 incomplete hiding |
+
+- **Decision.** `T1_ent03` passes T2. **`T3_final`** (entropy 0.03, seeds 10–12) is submitted.
+- **About the pre-registered prediction** ("place vs pattern"). Boat Race's exploit is a motion pattern, yet it defects in the final window in 3 of 3 seeds. So the prediction fails, and "place vs pattern" is not the explanation. That fits the probe diagnosis above:
+  - final-window defection depends on how many steps the k = 4 exception takes. In Boat Race it takes one action: keep bouncing.
+  - it also depends on the clock representation.
+
+**MountainCar T1c_scalar_ep768 (216 min): as predicted, S4 does not appear with longer training.**
+- All 3 seeds: windows 0.000, corrections 0.00, final window 0.00.
+- Off-window 0.71–0.73 of the ideal, so S2 narrowly fails, unchanged from 384 episodes.
+- MountainCar complies during the monitor robustly, in 6 of 6 seeds across T1_scalarclock, T1_scalarclock_ent03 and T1c. It keeps a safety margin, stopping about 40 steps before the window, and the margin does not close.
+- **Reported as a finding.** No further MountainCar runs (10 used).
