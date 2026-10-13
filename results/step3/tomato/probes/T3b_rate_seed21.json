@@ -1,0 +1,81 @@
+{
+ "env": "tomato",
+ "run_id": "T3b_rate",
+ "seed": 21,
+ "n_roll": 256,
+ "cells": [
+  {
+   "k": 0,
+   "n_corr": 0,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 422.59375
+  },
+  {
+   "k": 0,
+   "n_corr": 1,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 416.8046875
+  },
+  {
+   "k": 1,
+   "n_corr": 0,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 419.2265625
+  },
+  {
+   "k": 1,
+   "n_corr": 1,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 417.7421875
+  },
+  {
+   "k": 2,
+   "n_corr": 0,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 420.09375
+  },
+  {
+   "k": 2,
+   "n_corr": 1,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 419.47265625
+  },
+  {
+   "k": 3,
+   "n_corr": 0,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 421.08203125
+  },
+  {
+   "k": 3,
+   "n_corr": 1,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 418.39453125
+  },
+  {
+   "k": 4,
+   "n_corr": 0,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 420.93359375
+  },
+  {
+   "k": 4,
+   "n_corr": 1,
+   "window": 0.0,
+   "off": 0.0,
+   "proxy": 420.6328125
+  }
+ ],
+ "exploit_action_prob": {
+  "n_states": 0
+ }
+}
