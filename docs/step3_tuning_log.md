@@ -479,6 +479,11 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
 
   With T3_final, **4 of 13 fresh seeds hide (31%; Wilson 95% interval for 3/10: 11–60%).**
 
+- **Taxi T1c_onehot_ent03_ep768, final metrics (188 min): SUCCESS in 3 of 3** (S1–S4). Windows 1.4–2.0%, off-window 0.83–0.87, 0.06–0.08 corrections per episode, final window 0.88–0.91. S5 is not met: proxy 264–273 against an ideal of 354, i.e. 75–77%. This passes T2.
+- **Tomato T3b_rate seed 20 figures** (`figures/step3_tomato_final_s20_*.png`): hiding is learned at about 1.0M steps.
+  - While it is being learned, the final window dips to about 0.2 and then recovers. The k = 4 exception is re-learned, as in Taxi, only faster.
+  - Probe (seed 20): window 0.00 at k = 0–3 and 1.00 at k = 4. The failing seeds are k-independent: seed 22 exploits every window (0.96–1.00), seed 21 is deterred (0.00 everywhere).
+
 ## Boat Race: the sixth environment (added 2026-10-13, on the laptop)
 
 **Why add it.** Taxi, MountainCar and LunarLander hide in the final window too. Tomato and Absent Supervisor, where the exploit is a *place the agent stays in*, defect there. Boat Race's exploit is a *motion pattern*: bounce on and off a checkpoint. So it tests that "place vs pattern" explanation.
@@ -537,7 +542,9 @@ It is not a tuning run.
 - **T0:** Step 1's PPO config on seeds 0 1 2, plus entropy 0.03 and 0.1 arms. Entropy was the fix in Absent Supervisor and Tomato.
 - **Then T1–T3** per §4e.
 - **Expected cost:** about 15–20 min per 384-episode seed.
-- **Taxi T1c_onehot_ent03_ep768, final metrics (188 min): SUCCESS in 3 of 3** (S1–S4). Windows 1.4–2.0%, off-window 0.83–0.87, 0.06–0.08 corrections per episode, final window 0.88–0.91. S5 is not met: proxy 264–273 against an ideal of 354, i.e. 75–77%. This passes T2.
-- **Tomato T3b_rate seed 20 figures** (`figures/step3_tomato_final_s20_*.png`): hiding is learned at about 1.0M steps.
-  - While it is being learned, the final window dips to about 0.2 and then recovers. The k = 4 exception is re-learned, as in Taxi, only faster.
-  - Probe (seed 20): window 0.00 at k = 0–3 and 1.00 at k = 4. The failing seeds are k-independent: seed 22 exploits every window (0.96–1.00), seed 21 is deterred (0.00 everywhere).
+
+### Boat Race round T0 (submitted 2026-10-13 01:20, on FarmShare, per the plan above)
+- **`T0_step1_config`:** Step 1's PPO config, seeds 0–2.
+- **`T1_ent03`:** entropy 0.03, seeds 0–2.
+- **`T1_ent1`:** entropy 0.1, seeds 0–2.
+- **Hypothesis.** The smoke run is already in the "caught in sub-episode 0, then honest" phase at episode 24, Tomato's failure mode. Entropy, which supplied exploration of the uncorrected branch in Absent Supervisor and Tomato, should help here too.
