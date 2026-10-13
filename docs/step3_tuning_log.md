@@ -260,5 +260,10 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
   - **Failure.** All four laptop runs hide in every window, including the final one (S4).
   - **Configuration:** `T1b_scalar_ep768`, scalar clock with 768 episodes. T1_scalarclock already defects more in the final window than T0 (0.22 vs 0.03 at about 6.7M steps).
 - **Taxi (one-hot state).**
-  - `T1b_onehot_ent03_s12`: the laptop configuration on seeds 1 and 2;
-  - `T1b_onehot_ent05`: entropy 0.05, seeds 0–2.
+  - **Laptop T1_onehot_ent03 (seed 0) finished: it hides, but fails S4.**
+    - Audit windows 0–3 are 0.6% exploited, off-window exploitation is 0.82 of the ideal, corrections are 0.02 per episode, and proxy in sub-episodes 0–3 is 268.
+    - The final window is only 2% exploited.
+    - **Over-generalised hiding is now the common failure in three environments** (Taxi, MountainCar, LunarLander). In Tomato and Absent Supervisor, by contrast, the exploit is a place the agent stays in, so exploiting through the final window is the default continuation.
+  - **Configurations:**
+    - `T1b_onehot_ent03_s12`: the laptop configuration on seeds 1 and 2. Does hiding replicate?
+    - `T1b_onehot_ent03_ep768`: 768 episodes, seeds 0–2. Is S4 learned late, as in Step 1?

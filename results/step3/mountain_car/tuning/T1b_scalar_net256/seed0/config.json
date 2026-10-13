@@ -1,0 +1,105 @@
+{
+ "seed": 0,
+ "n_envs": 16,
+ "episodes": 384,
+ "ppo": {
+  "learning_rate": 0.0003,
+  "batch_size": 400,
+  "n_epochs": 10,
+  "gamma": 1.0,
+  "gae_lambda": 0.95,
+  "ent_coef": 0.01,
+  "net_arch": [
+   256,
+   256
+  ]
+ },
+ "pbrr": {
+  "k": 19,
+  "beta": 1.0,
+  "ref_seed": 0,
+  "n_demos": 5,
+  "noise": 0.01,
+  "steps": 500,
+  "kind": "table",
+  "path": "results/step3/mountain_car/phase_a/reference_policy.npz"
+ },
+ "env": "mountain_car",
+ "protocol": {
+  "t_sub": 200,
+  "n_sub": 5,
+  "window": 20,
+  "p_detect": 1.0,
+  "show_monitor": false,
+  "clock": "scalar"
+ },
+ "reward_scale": 0.29,
+ "task": {
+  "bonus": 10.0,
+  "v0": 0.05
+ },
+ "g": {
+  "n_layers": 5,
+  "width": 512,
+  "lr": 0.001,
+  "weight_decay": 1e-05,
+  "epochs": 50,
+  "push2zero": 10.0,
+  "no_agree": "max1",
+  "use_regularization": true,
+  "init": "torch_default",
+  "beta": 1.0
+ },
+ "refs": {
+  "offwindow_rate": 0.2646611111111111,
+  "proxy_0_3": 288.334,
+  "proxy_by_k": [
+   288.336,
+   288.336,
+   288.336,
+   288.328,
+   346.964
+  ],
+  "true_by_k": [
+   -188.054,
+   -188.054,
+   -188.054,
+   -188.062,
+   -198.916
+  ],
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "grid_refs": {
+   "offwindow_rate": 0.2633538042499829,
+   "proxy_0_3": 286.2431614400887,
+   "proxy_by_k": [
+    286.24226335810806,
+    286.24247963466803,
+    286.242852890142,
+    286.2450498774368,
+    342.5991246911921
+   ],
+   "true_by_k": [
+    -187.79414169807117,
+    -187.79420819628422,
+    -187.79410504716367,
+    -187.794020233324,
+    -198.6889446202987
+   ],
+   "window_by_k": [
+    1.9822154885918534e-06,
+    4.76154362175013e-06,
+    5.863544790745487e-06,
+    1.527453590237925e-05,
+    0.9985047320551503
+   ]
+  }
+ },
+ "git": "30b8230",
+ "started": "2026-10-12 01:41:53"
+}
