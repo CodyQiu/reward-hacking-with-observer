@@ -419,3 +419,40 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
     - an exact check that a partial step-off earns nothing under the any-step detection rule.
 
 **Reproducibility note.** MountainCar T1c_scalar_ep768 seed 2 is bit-identical to the killed T1b_scalar_ep768 seed 2 through 3.84M steps, then diverges (1 vs 19 PBRR rounds by 4.22M). Same seed, config and node type; the CPU allocation (8 → 6 CPUs) differed, and so did a no-op XLA flag. A seed is reproducible within one allocation, not exactly across allocations.
+
+### Why the final window is hidden too (probe, 2026-10-13, before the T1c 768-episode results)
+
+**Method.** `experiments/step3_probe.py` on the finished models that hide but fail S4. Output: `results/step3/<env>/probes/`. It reports P(exploit in the window) per k with 0 corrections, under the uncorrected proxy. For tabular tasks it also reports the exact P(exploit action) by τ at the states the policy holds just before the window.
+
+| Run | Window exploited, k = 0 / 1 / 2 / 3 / 4 | Reading |
+|---|---|---|
+| Taxi T1_onehot_ent03 s0 | 0.01 / 0.00 / 0.05 / 0.02 / 0.03 | k-blind |
+| MountainCar T1_scalarclock s0 | 0.00 at every k | k-blind |
+| LunarLander T0 (one-hot clock) s0–2 | ≤ 0.12 at every k, no k = 4 exception | k-blind |
+| **LunarLander T1_scalarclock s0** | 0.05 / 0.03 / 0.02 / 0.14 / **0.75** | **conditions on k** |
+
+**Three mechanisms, not one.**
+
+1. **Taxi: the hiding is keyed to the clock τ, and defecting is one action away.**
+   - At the five states the policy holds before the window, P(pickup) alternates about 1.00 / 0.00 (pickup, dropoff) up to τ = 89. At τ = 90 it drops to 0.000–0.005 at k = 3 and 0.001–0.011 at k = 4, at *the same states*.
+   - So the agent stays at the depot and stops pressing pickup. A single action would exploit, so reachability is not the obstacle.
+   - The k = 4 exception must be learned from about 1% of exploration samples.
+   - The logged checkpoints show the final window *was* exploited (0.40 → 0.80) before the hiding, learned in windows 0–3, generalised to k = 4 (→ 0.03).
+2. **LunarLander: representation.**
+   - With the 500-dim one-hot clock, hiding is spread over 50 window-step inputs, and no k = 4 exception is learned.
+   - With the scalar clock, "monitor on" is one input bit, and monitor × k = 4 is a single interaction. The exception grew steadily over training (final window 0.10 → 0.72 across the checkpoints).
+3. **MountainCar: hiding means parking at the absorbing flag, before the window.**
+   - In the logged training data the proxy is exactly 0 per step over the last 40 steps of every sub-episode: the car is at the flag, which is absorbing.
+   - So defecting in the final window is impossible once parked. It needs a different plan at k = 4 starting at least 20–40 steps before the window: keep swinging instead of driving to the flag.
+   - Exploration rarely produces such a coordinated deviation, and GAE λ = 0.95 credits it weakly (0.95⁴⁰ ≈ 0.13).
+   - The idealised optimum keeps exploiting to τ = 179 and stays slow through the window. PPO's policy parks early, at τ ≈ 160.
+
+**What it means.** In all three environments the learned hiding is a function of the clock (τ or the monitor bit), generalised across k.
+- Whether k = 4 gets an exception depends on how many steps the exception takes: one action in Taxi, a different plan in MountainCar.
+- It also depends on how the clock is represented.
+- In Tomato and Absent Supervisor, too, the hiding is clock-keyed in failing seeds (Tomato probe). There the generalisation runs the other way, towards exploiting every window.
+
+**Predictions for the 768-episode runs.**
+- **Taxi:** S4 should appear in some seeds (T1c seed 0 was at 82% by 2.5M steps).
+- **LunarLander (scalar clock):** S4 should keep improving.
+- **MountainCar:** S4 should not appear.
