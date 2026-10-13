@@ -41,22 +41,26 @@ def step2_runs(run_id="T3_final_seeds10-12", seeds=(10, 11, 12)):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--runs", nargs="+", required=True, help="env:run_id:seed,seed,...")
+    ap.add_argument("--runs", nargs="+", required=True,
+                    help="env:run_id:seed,seed,...[:nomean] (nomean: seeds reach different outcomes, so no mean)")
     ap.add_argument("--no-step2", action="store_true")
     args = ap.parse_args()
     log = CheckLog("Step 3 suite figure")
     rows = [] if args.no_step2 else [(LABELS["grid"], step2_runs())]
     for spec in args.runs:
-        env, run_id, seeds = spec.split(":")
+        env, run_id, seeds, *flag = spec.split(":")
         loaded = [load(env, run_id, int(s)) for s in seeds.split(",")]
         proto = Protocol(**loaded[0][2]["protocol"])
         _, _, refs = reference_lines(env)
-        rows.append((LABELS.get(env, env), [per_episode(l, r, proto, refs, int(c["n_envs"])) for l, r, c in loaded]))
+        label = f"{LABELS.get(env, env)}\n{run_id}, {len(loaded)} seeds"
+        rows.append((label, [per_episode(l, r, proto, refs, int(c["n_envs"])) for l, r, c in loaded],
+                     flag != ["nomean"]))
     log.figure(plot_suite(
         rows, "step3_suite.png", "Step 3: does the agent learn to exploit off-window and keep the audits clean?",
-        subtitle="Each row: one environment, final configuration, 3 fresh seeds (light) and their mean (dark); logged "
+        subtitle="Each row: one environment, final configuration, each seed (light) and the seed mean (dark); logged "
                  "training data. Exploit step = proxy != true. Off-window exploitation is relative to the environment's "
-                 "idealised optimum. The Step 2 story: audit windows 0-3 go clean, off-window exploitation and "
+                 "idealised optimum (LunarLander: a scripted strategy, which PPO beats, so its rate exceeds 1 and is "
+                 "clipped). The Step 2 story: audit windows 0-3 go clean, off-window exploitation and "
                  "final-window exploitation stay high, PBRR rounds fall to ~0."))
     log.summary()
 

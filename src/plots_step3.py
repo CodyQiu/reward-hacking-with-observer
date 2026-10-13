@@ -68,22 +68,28 @@ def plot_step3_dashboard(runs, n_sub, filename, title, subtitle=None, refs=()):
 def plot_suite(rows, filename, title, subtitle=None):
     """One row per environment: the three exploitation fractions and PBRR rounds per
     episode over training (seed mean, light lines per seed). ``rows``: list of
-    (label, runs) with runs as for ``plot_step3_dashboard``."""
-    fig, axes = plt.subplots(len(rows), 2, figsize=(12.5, 2.3 * len(rows) + 0.6), squeeze=False,
+    (label, runs) or (label, runs, show_mean) with runs as for ``plot_step3_dashboard``.
+    show_mean=False draws every seed in full colour and no mean: for runs whose seeds reach
+    different outcomes, where the mean sits where no seed is."""
+    height = 2.3 * len(rows) + 1.6
+    fig, axes = plt.subplots(len(rows), 2, figsize=(12.5, height), squeeze=False,
                              gridspec_kw=dict(width_ratios=[2.2, 1.0]))
-    for i, (label, runs) in enumerate(rows):
+    for i, (label, runs, *opt) in enumerate(rows):
+        show_mean = opt[0] if opt else True
         n = min(len(r["received"]) for r in runs)
         x = runs[0]["ep_steps"][:n] / 1e6
         ax, ax2 = style_axes(axes[i, 0], grid_axis="y"), style_axes(axes[i, 1], grid_axis="y")
         for key, c, _ in FRACTIONS:
             for r in runs:
-                ax.plot(x, r[key][:n], color=tint(c, 0.25), lw=0.6, zorder=2)
-            ax.plot(x, np.mean([r[key][:n] for r in runs], axis=0), color=c, lw=1.5, zorder=3)
+                ax.plot(x, r[key][:n], color=tint(c, 0.25 if show_mean else 0.75), lw=0.6, zorder=2)
+            if show_mean:
+                ax.plot(x, np.mean([r[key][:n] for r in runs], axis=0), color=c, lw=1.5, zorder=3)
         ax.set_ylim(-0.03, 1.13)
-        ax.set_ylabel(label, fontsize=9.5, color=INK)
+        ax.set_ylabel(label if show_mean else label + "\n(each seed, no mean)", fontsize=9.5, color=INK)
         for r in runs:
-            ax2.plot(x, r["rounds_per_ep"][:n], color=tint(INK_2, 0.3), lw=0.6)
-        ax2.plot(x, np.mean([r["rounds_per_ep"][:n] for r in runs], axis=0), color=INK_2, lw=1.4)
+            ax2.plot(x, r["rounds_per_ep"][:n], color=tint(INK_2, 0.3 if show_mean else 0.7), lw=0.6)
+        if show_mean:
+            ax2.plot(x, np.mean([r["rounds_per_ep"][:n] for r in runs], axis=0), color=INK_2, lw=1.4)
         ax2.set_ylim(-0.1, 4.2)
         if i == 0:
             ax.set_title("exploitation over training", fontsize=9.5, color=INK_2, loc="left")
@@ -92,9 +98,10 @@ def plot_suite(rows, filename, title, subtitle=None):
             ax.set_xlabel("training steps (millions)")
             ax2.set_xlabel("training steps (millions)")
     handles = [Line2D([], [], color=c, lw=1.5, label=lab) for _, c, lab in FRACTIONS]
-    fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.06, 1.0), frameon=False, fontsize=8.5,
-               labelcolor=INK_2, ncol=1)
-    fig.suptitle(title, x=0.02, ha="left", va="bottom", color=INK, fontsize=11, y=1.07)
-    fig.subplots_adjust(hspace=0.25, wspace=0.18)
+    top = 1 - 1.15 / height                                     # fixed 1.15 in for the title and legend
+    fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.06, top + 0.3 / height), frameon=False,
+               fontsize=8.5, labelcolor=INK_2, ncol=1)
+    fig.suptitle(title, x=0.02, ha="left", va="top", color=INK, fontsize=11, y=1 - 0.05 / height)
+    fig.subplots_adjust(hspace=0.25, wspace=0.18, top=top, bottom=0.9 / height)
     add_subtitle(axes[-1, 0], subtitle, dy=-40, width=170)
     return save_figure(fig, filename)
