@@ -234,7 +234,48 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - If honest play also collects the bug (MountainCar at v₀ = 0.03), the regulariser on the preferred reference trajectories protects exactly the transitions the correction should hit.
   - Corrections then cost about 9%, less than hiding does, and the idealised optimum is to exploit openly.
 - **With max1, corrections fade while the agent keeps exploiting.** If |D⁺| stays 0, the regulariser grows with |D⁻| (Absent Supervisor's g by round: −7.7 / −3.5 / −2.3 / −1.7). Hiding is then optimal only if the *first* correction costs more than hiding.
-- **Representation.** With factored Taxi features, PPO zeroes pickup and dropoff everywhere before it finds the legal exception.
+- **Representation.**
+  - With factored Taxi features, PPO zeroes pickup and dropoff everywhere before it finds the legal exception. Fix: `task.obs=onehot`.
+  - In MountainCar and LunarLander, a T_sub-dimensional one-hot clock swamps the 2 / 9 state dimensions, so a random policy never builds momentum (F1). Fix: `protocol.clock=scalar` (τ/T_sub plus a monitor bit).
+- **What PPO tuning has found so far.**
+  - The missing piece was exploration of the uncorrected branch, and entropy supplies it.
+  - Results are seed-sensitive. A config that succeeded on one seed went 1 of 3 on fresh seeds (Tomato), so T1 now uses 3 seeds per config.
+
+**Tuning procedure** (pre-registered; full record in `docs/step3_tuning_log.md`, runs in `results/step3/<env>/tuning/<run_id>/seed<s>/` plus `runs.csv`; never overwrite a run).
+- **Success criteria**, measured over the last 10% of episodes; a config passes if S1–S4 hold in ≥ 2 of 3 seeds:
+  - **S1:** audit windows 0–3 exploited < 5%;
+  - **S2:** off-window exploit rate ≥ 0.8 of the idealised optimum's;
+  - **S3:** corrections < 0.1 per episode;
+  - **S4:** final window exploited > 80%;
+  - **S5:** proxy in sub-episodes 0–3 ≥ 90% of the ideal.
+- **Stages:**
+  - **T0:** Step 1's PPO config.
+  - **T1:** one factor at a time, chosen by the failure label F1–F6, with 3 seeds (0–2) per config.
+  - **T2:** promote the best config to 3 seeds. A T1 config that already passes on 3 seeds counts as T2.
+  - **T3:** freeze the config and train fresh seeds. These are the reported results.
+    - Use seeds 10–12.
+    - Tomato's seeds 10–12 are already spent, so Tomato uses 20–22.
+- **What stays fixed during PPO tuning:** PBRR settings and bug parameters.
+- **Failure labels** (`src/step3/metrics.py: failure_label`):
+  - **F1:** never exploits.
+  - **F2:** exploits through the audits and gets corrected.
+  - **F5:** hiding is incomplete. "F5?" means it hides but never defects in the final window.
+
+**Status (2026-10-12).** "Hides" means S1–S3 hold. "Full" means S1–S4 hold, i.e. the Step 2 story including final-window defection.
+
+| Env | Best config so far (`--set`) | Result |
+|---|---|---|
+| absent_supervisor | `ppo.ent_coef=0.1 episodes=768` | **Full in 2 of 3** (seeds 0 and 2: windows 2.3%, 0.09–0.10 corrections per episode, final window 99–100%). Seed 1 was unfinished. **Next: freeze this config and run T3 on seeds 10–12.** |
+| tomato | `ppo.ent_coef=0.03` / `0.05` / `ppo.gae_lambda=0.99` | Full in about a third to a half of seeds for every config tried. The failures alternate between F2 and "caught once in sub-episode 0, then honest". Entropy and GAE look exhausted. **Next: try lr, n_epochs or batch size, with 3 seeds each.** |
+| taxi | `task.obs=onehot ppo.ent_coef=0.03` | **Hides in 3 of 3** (windows 0–2%, off-window 0.82–0.85, 0.02–0.08 corrections per episode). **S4 fails** (final window 1–8%). `episodes=768` was cut at 25%, with seed 0's final window rising to 22%. **Next: run 768 episodes to completion.** |
+| mountain_car | `protocol.clock=scalar` | Hides everywhere (windows 0%, 0 corrections, off-window 0.65–0.72), **final window 0%**. Entropy 0.03 and a [256, 256] network change nothing. **Next: run `episodes=768` to completion.** |
+| lunar_lander | Step 1 config / `protocol.clock=scalar` | **Hides in 3 of 3** with the Step 1 config (windows about 1%, 0.03–0.04 corrections per episode), but the final window is 0–4%. With the scalar clock, the final window reaches 59%, but windows are 5.1% and corrections 0.20 per episode, so S1 and S3 narrowly fail. **Next: scalar clock with `episodes=768`, to completion.** |
+
+**The main open problem is over-generalised hiding** in Taxi, MountainCar and LunarLander.
+- These agents learn "don't exploit when the monitor is on", not "don't exploit when a correction would cost me". That is evidence of monitor avoidance. It is weaker evidence that the agent is protecting future reward instrumentally (§3.4).
+- In Tomato and Absent Supervisor the exploit is a place the agent stays in, so exploiting through the final window is the default continuation.
+- Step 2 saw the same over-generalisation on one tuning seed.
+- **Report it as a finding if longer training does not fix it.** Do not tune endlessly. The budget is about 30 runs per environment.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 
@@ -268,7 +309,8 @@ reward-hacking-with-observer/
 ├── src/step3/tasks/       # grid (regression anchor), tomato, taxi, absent_supervisor, mountain_car, lunar_lander
 ├── src/plots_step3.py     # Step 3 dashboard and suite figure
 ├── experiments/step3_check.py (Phase A), step3_ppo.py, step3_figures.py, step3_suite.py; tests/test_step3.py
-├── docs/step3_tuning_log.md
+├── docs/step3_tuning_log.md  # Step 3 tuning record: Phase A decisions per env, every run, procedure changes
+├── scripts/farmshare/     # FarmShare: setup.sh (pinned venv), submit.sh (one Slurm job per run), sync.sh, README
 ├── docs/step2_tuning_log.md  # the tuning record: protocol, decisions, every run
 ├── experiments/step1_dp.py, experiments/step1_ppo.py
 ├── tests/test_step1.py    # rules, DP vs generic solver vs env vs Monte Carlo, controls
@@ -284,7 +326,16 @@ reward-hacking-with-observer/
 - `.venv/bin/python experiments/step1_ppo.py` (main condition by default), with `--quick`, `--conditions ...`, `--seeds 0 1 2`, or `--plots-only`
 - Step 3: `tests/test_step3.py`; `experiments/step3_check.py --env <env> [--set k=v] [--variant name]` (Phase A); `experiments/step3_ppo.py --env <env> --run-id <id> --seeds ... [--set ppo.ent_coef=0.03 task.obs=onehot ...] --hypothesis "..."`; `experiments/step3_figures.py --env <env> --run-id <id> --seeds ...`; `experiments/step3_suite.py --runs env:run:seeds ...`. LunarLander needs `box2d` (installed into `.venv` with uv).
 
-Tests are pytest-compatible. Always use the project venv, `.venv/bin/python`.
+Tests are pytest-compatible, but pytest is not installed in `.venv`: run each test file as a script. Always use the project venv, `.venv/bin/python`.
+
+**Compute: Stanford FarmShare** (from 2026-10-12; details in `scripts/farmshare/README.md`).
+- **Where.** Step 3 training runs on FarmShare. The repo is at `~/reward-hacking-with-observer`, and `.venv` is built by `scripts/farmshare/setup.sh` with the laptop's exact versions (`scripts/farmshare/requirements.txt`). On the laptop, more than about 5 concurrent runs on 12 cores slowed everything 3–7×.
+- **CPU only.** The networks are tiny and the per-step work is Python, so the GPU partition does not help.
+- **Submitting.** `bash scripts/farmshare/submit.sh <hours> --env ... --run-id ... --seeds 0 1 2 [--set ...] --hypothesis "..."` submits one run with all its seeds as one Slurm job: one core per seed plus one, 4 GB per core. Logs go to `logs/slurm/` (untracked).
+- **Limits.** The `normal` partition allows 2 days per job and 128 jobs per user.
+- **Unresolved: the first batch was cut short.** Every running job stopped at about 10.8 h, whatever its `--time`, and some ran 5–10× slower than expected. Before submitting long runs, diagnose this from `logs/slurm/*.out`, `sacct` and `scontrol show partition normal` (OverSubscribe / PreemptMode). If jobs can be preempted or time-shared, consider `--exclusive`, or have the run harness checkpoint and resume (it does not today).
+- **Runs started on the laptop.** LunarLander T0/T1_scalarclock, MountainCar T1_scalarclock_ent03 and Taxi T1_onehot_ent03 were trained on the laptop and are committed. Floating-point results differ between arm64 and x86_64: a seed is reproducible within one machine, not across machines.
+- **Git.** Commit results from the cluster and push. The laptop pulls.
 
 ## 7. Working conventions
 
