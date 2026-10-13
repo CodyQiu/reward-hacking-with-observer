@@ -67,8 +67,9 @@ def main():
         sys.exit(f"{run_root} exists: pick a new --run-id (results are never overwritten)")
     os.makedirs(run_root)
     t0 = time.time()
-    # one core per seed: no XLA / BLAS thread pools fighting over the machine
-    env = {**os.environ, "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+    # one core per seed: no XLA / BLAS thread pools fighting over the machine. JAX sizes its own pools
+    # from the CPU affinity mask, so inside a Slurm cgroup a worker has ~12 threads (257 on a bare node).
+    env = {**os.environ, "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false",
            "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "VECLIB_MAXIMUM_THREADS": "1",
            "MKL_NUM_THREADS": "1"}
     procs = []

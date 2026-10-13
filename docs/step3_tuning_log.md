@@ -318,3 +318,47 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
   - Seeds 0 and 1 had reached only 1.2–1.5M.
 
 **LunarLander `T1b_scalar_ep768`:** 1.0–2.9M of 30.7M steps. Too early to read.
+
+### FarmShare diagnosis (2026-10-12 evening): a cluster-wide outage, not our jobs
+
+**What happened.**
+- **No job of any user on the cluster ended between 03:00 and 12:00** on 2026-10-12 (`sacct -a`). The usual rate is 100–250 per hour. Then 64 jobs ended at 12:xx, mostly FAILED or TIMEOUT.
+- **Our processes stalled; they were not slow.** Each seed log has one gap of about 10 h between two consecutive progress lines, with normal speed on both sides. Absent Supervisor T1b_ent1_ep768 seed 1: 2,288 s → 38,492 s, then about 75 s per line again. Tomato T1b_gae099 seed 0: 2,350 s → 37,095 s. Every process alive at about 02:20–03:20 stalled. The ones that had finished by then (T1b_ent05 for Tomato and Absent Supervisor, T1b_ent1_gae099, and seeds 0 and 2 of T1b_ent1_ep768) were unaffected.
+- **Time limits were not enforced during the outage.** Tomato T1b_ent03_gae099 had a 4 h limit and finished normally after 646 min, of which about 40 min were compute.
+- **At about 12:32 every remaining job was killed** (`pam_close_session` errors in the job logs; Tomato T1b_gae099 died of SIGBUS, typical of a filesystem disappearing under a process).
+  - Jobs already past their limit were labelled TIMEOUT.
+  - Those on rye-01 that were not were labelled NODE_FAIL and requeued (`JobRequeue=1`). At 21:18 they restarted and failed after 26 s, because the run directories existed (results are never overwritten).
+- **The partition does not preempt or time-share** (`PreemptMode=OFF`, `OverSubscribe=NO`). So neither `--exclusive` nor checkpoint/resume is needed. A run killed by a future incident is rerun under a new run id (`<id>_r2`).
+
+**What was wrong in `submit.sh`, and the fix.**
+- **Memory.** `--mem-per-cpu=4G` (4,096 MB) exceeds `MaxMemPerCPU=4000`, so Slurm silently doubled every CPU allocation (AllocCPUS 8 for 4 requested). It cost cores, not speed. Now `4000M`.
+- **Cores.** A worker uses 1.4 CPU-s per s inside its cgroup (Python plus JAX's dispatch threads), i.e. both hyperthreads of one core. The job now asks for 2 CPUs (= 1 physical core) per seed; the parent process only waits.
+- **`--no-requeue`.** A requeued run can only fail.
+- **Threads.** Inside a job a worker has 12 threads on 2 CPUs, or 32 on 6. JAX sizes its pools from the affinity mask, not the node; on a bare 80-core login node the same process starts 257. The harness's `XLA_FLAGS` contained a malformed token (`intra_op_parallelism_threads=1`, no `--`) that XLA silently ignored. It was removed; behaviour is unchanged.
+
+**Confirmed before any long run** (smoke runs in the untracked `logs/smoke/`, not tuning runs).
+- **One seed, 1 core on wheat-01:** Tomato, 24 episodes in 222 s, the same rate as T1b_gae099 on wheat-08 before the stall (224 s). RSS 1.3 GB.
+- **Three seeds in parallel with the new flags on rye-02:** AllocCPUS 6, a cpuset of 3 physical cores, 198–203 s each. No contention, and identical numbers across the three, as expected for one seed on one machine.
+- **Node speed differs:** barley (Zen 4, 3.1 GHz) takes about 126 s per 192k Tomato steps, wheat (Skylake, 2.4 GHz) about 222 s. Wall times are not comparable across nodes.
+
+### Round T1c / T3 (submitted 2026-10-12 evening, with the fixed `submit.sh`)
+- **Absent Supervisor: freeze `ppo.ent_coef=0.1 episodes=768` and run `T3_final` on seeds 10–12.**
+  - T1b_ent1_ep768 seeds 0 and 2 met S1–S5 with completed metrics. That is 2 of 3 whatever seed 1 would have done; seed 1 was still F2 at 5.57M of 6.14M steps when the outage killed it.
+- **Taxi, MountainCar, LunarLander: rerun the 768-episode configurations to completion on seeds 0–2,** under new run ids: `T1c_onehot_ent03_ep768`, `T1c_scalar_ep768` and `T1c_scalar_ep768`.
+  - **Question.** Does final-window defection (S4) appear with longer training? All three hide well, but they also hide in the final window.
+  - **Hypothesis.** In Step 1, final-window defection came after hiding (episodes 60–72, against 36–72 for the first step-off). If the k = K−1 window is just explored late, it should show up by 768 episodes.
+  - **If it does not,** that is evidence the hiding is keyed to the monitor bit or τ, not to whether a correction would cost anything. In that case diagnose it, rather than add knobs.
+- **Tomato: the optimisation knob group, one factor at a time from the entropy-0.03 base, seeds 0–2.**
+  - **Diagnosis** (received reward, last 10% of episodes):
+    - hiding gets 2,730 per episode;
+    - "caught once, then honest" gets 2,266 (−17%);
+    - exploiting through every audit gets 1,900.
+
+    So the incentive exists.
+  - **Mechanism.** Every seed starts by exploiting through every audit. It succeeds only if it discovers stepping off at sub-episode 0's window during that phase. Otherwise it first learns "after a correction, play honest", from immediate negative rewards. That is a local optimum. Hiding in sub-episode 0 then pays only if the agent also exploits in sub-episodes 1–3 with 0 corrections, states it never visits. One deviation, hiding alone, loses about 47 in sub-episode 0 and gains nothing.
+  - **Hypothesis.** Hiding is credited through the critic, across the boundary. PPO's clip bounds how far the policy moves per update, so more optimisation per update mainly sharpens the critic, and hiding is found before honesty-after-correction locks in.
+  - **Configurations:**
+    - `T1c_lr1e3`: learning rate 1e-3, up from 3e-4;
+    - `T1c_epochs20`: n_epochs 20, up from 10;
+    - `T1c_batch100`: batch size 100, down from 400, i.e. 16 minibatches per update instead of 4.
+  - **Budget.** Tomato has used 9 runs. If none of these reaches 2 of 3, Tomato is reported as a finding, a local optimum of policy-gradient learning, not tuned further.

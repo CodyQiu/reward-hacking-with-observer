@@ -331,9 +331,14 @@ Tests are pytest-compatible, but pytest is not installed in `.venv`: run each te
 **Compute: Stanford FarmShare** (from 2026-10-12; details in `scripts/farmshare/README.md`).
 - **Where.** Step 3 training runs on FarmShare. The repo is at `~/reward-hacking-with-observer`, and `.venv` is built by `scripts/farmshare/setup.sh` with the laptop's exact versions (`scripts/farmshare/requirements.txt`). On the laptop, more than about 5 concurrent runs on 12 cores slowed everything 3–7×.
 - **CPU only.** The networks are tiny and the per-step work is Python, so the GPU partition does not help.
-- **Submitting.** `bash scripts/farmshare/submit.sh <hours> --env ... --run-id ... --seeds 0 1 2 [--set ...] --hypothesis "..."` submits one run with all its seeds as one Slurm job: one core per seed plus one, 4 GB per core. Logs go to `logs/slurm/` (untracked).
+- **Submitting.** `bash scripts/farmshare/submit.sh <hours> --env ... --run-id ... --seeds 0 1 2 [--set ...] --hypothesis "..."` submits one run with all its seeds as one Slurm job: one physical core (2 CPUs = its two hyperthreads) and 8 GB per seed, `--no-requeue`. Logs go to `logs/slurm/` (untracked).
 - **Limits.** The `normal` partition allows 2 days per job and 128 jobs per user.
-- **Unresolved: the first batch was cut short.** Every running job stopped at about 10.8 h, whatever its `--time`, and some ran 5–10× slower than expected. Before submitting long runs, diagnose this from `logs/slurm/*.out`, `sacct` and `scontrol show partition normal` (OverSubscribe / PreemptMode). If jobs can be preempted or time-shared, consider `--exclusive`, or have the run harness checkpoint and resume (it does not today).
+- **The first batch was cut short by a FarmShare-wide outage, not by our jobs** (diagnosed 2026-10-12; `docs/step3_tuning_log.md`, "FarmShare diagnosis").
+  - No job of any user ended between 03:00 and 12:00 on 2026-10-12. Our processes stalled for about 10 h, resumed at normal speed, and were killed at 12:32. Time limits were not enforced during the outage, so "TIMEOUT" and "5–10× slower" are artefacts of wall time that includes the stall.
+  - The partition is `OverSubscribe=NO`, `PreemptMode=OFF`: no preemption or time-sharing, so no `--exclusive` and no checkpointing are needed.
+  - **If a run is killed by a cluster incident,** rerun it under a new run id (`<id>_r2`) and log it. A requeued job can only fail, since runs are never overwritten, hence `--no-requeue`.
+  - **`--mem-per-cpu` must stay ≤ `MaxMemPerCPU` (4000 MB).** Above it, Slurm silently adds CPUs.
+  - **Threads.** Inside a job's cgroup a worker has about 12–32 threads and uses 1.4 CPU-s per s, i.e. one physical core. JAX sizes its pools from the affinity mask; on a bare login node the same process starts 257 threads.
 - **Runs started on the laptop.** LunarLander T0/T1_scalarclock, MountainCar T1_scalarclock_ent03 and Taxi T1_onehot_ent03 were trained on the laptop and are committed. Floating-point results differ between arm64 and x86_64: a seed is reproducible within one machine, not across machines.
 - **Git.** Commit results from the cluster and push. The laptop pulls.
 
