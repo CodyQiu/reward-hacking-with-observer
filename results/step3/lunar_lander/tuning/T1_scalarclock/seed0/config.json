@@ -1,0 +1,79 @@
+{
+ "seed": 0,
+ "n_envs": 16,
+ "episodes": 384,
+ "ppo": {
+  "learning_rate": 0.0003,
+  "batch_size": 400,
+  "n_epochs": 10,
+  "gamma": 1.0,
+  "gae_lambda": 0.95,
+  "ent_coef": 0.01,
+  "net_arch": [
+   64,
+   64
+  ]
+ },
+ "pbrr": {
+  "k": 19,
+  "beta": 1.0,
+  "ref_seed": 0,
+  "n_demos": 40,
+  "noise": 0.1,
+  "steps": 500,
+  "kind": "bc"
+ },
+ "env": "lunar_lander",
+ "protocol": {
+  "t_sub": 500,
+  "n_sub": 5,
+  "window": 50,
+  "p_detect": 1.0,
+  "show_monitor": false,
+  "clock": "scalar"
+ },
+ "reward_scale": 0.11,
+ "task": {
+  "bonus": 150.0,
+  "rearm": 20
+ },
+ "g": {
+  "n_layers": 3,
+  "width": 256,
+  "lr": 0.001,
+  "weight_decay": 1e-05,
+  "epochs": 200,
+  "push2zero": 10.0,
+  "no_agree": "max1",
+  "use_regularization": true,
+  "init": "torch_default",
+  "beta": 1.0
+ },
+ "refs": {
+  "offwindow_rate": 0.007877777777777779,
+  "proxy_0_3": 890.9740370021126,
+  "proxy_by_k": [
+   890.9740370021126,
+   890.9740370021126,
+   890.9740370021126,
+   890.9740370021126,
+   947.9376394874911
+  ],
+  "window_by_k": [
+   0.045,
+   0.045,
+   0.045,
+   0.045,
+   0.585
+  ],
+  "true_by_k": [
+   352.47403700211254,
+   352.47403700211254,
+   352.47403700211254,
+   352.47403700211254,
+   264.6876394874912
+  ]
+ },
+ "git": "4d9d412",
+ "started": "2026-10-11 22:25:38"
+}
