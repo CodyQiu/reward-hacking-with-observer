@@ -86,6 +86,8 @@ def main():
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--seeds", nargs="+", type=int, default=[0])
     ap.add_argument("--tag", default=None)
+    ap.add_argument("--all-timelines", action="store_true",
+                    help="one timeline per seed (step3_<env>_<tag>_seed<s>_timeline.png), not just the first seed's")
     args = ap.parse_args()
     tag = args.tag or args.run_id
     env = args.env
@@ -133,26 +135,28 @@ def main():
         ceiling_label=ceiling_label, ref_names=names,
         window_label="audit-window exploitation (logged)",
         window_ylabel="fraction exploiting during\nthe audit of sub-episode 0"))
-    l0 = loaded[0][0]
-    corrected = runs[0]["rounds_per_ep"]
-    smooth = np.convolve(corrected, np.ones(10) / 10, mode="valid")
-    # zoom B: where corrections fall back below half their peak (and below 0.5 per episode), after the peak --
-    # not before the exploit is found, when there is nothing to correct yet (Taxi: no exploit for ~0.3M steps)
-    peak = int(np.argmax(smooth))
-    thr = min(0.5, 0.5 * smooth[peak])
-    after = (smooth < thr) & (np.arange(len(smooth)) > peak)
-    cross = int(np.argmax(after)) if smooth[peak] > 0 and after.any() else len(smooth) // 2
-    n_ep = len(runs[0]["received"])
-    windows = [(0, 8, "start of training"), (max(8, cross - 3), 8, "learning to avoid correction"),
-               (n_ep - 8, 8, "end of training")]
-    log.figure(plot_timeline_split(
-        proto, l0["step_received"], l0["step_true"], l0["caught"].mean(axis=1), windows,
-        f"step3_{env}_{tag}_timeline.png",
-        f"Step 3, {name} ({args.run_id}, seed {args.seeds[0]}): received vs true reward over training",
-        subtitle=f"One training run, mean over {n_envs} envs of the reward actually received (original proxy + the "
-                 f"PBRR correction in force) and the true reward; y = reward so far in the current {proto.t_sub}-step "
-                 "sub-episode. The reward function and the preference data reset at every dashed episode boundary.",
-        steps_per_tick=n_envs, refs=refs_lines, received_label="received reward (proxy + PBRR correction)"))
+    for i in (range(len(loaded)) if args.all_timelines else [0]):
+        seed = args.seeds[i]
+        l0 = loaded[i][0]
+        corrected = runs[i]["rounds_per_ep"]
+        smooth = np.convolve(corrected, np.ones(10) / 10, mode="valid")
+        # zoom B: where corrections fall back below half their peak (and below 0.5 per episode), after the peak --
+        # not before the exploit is found, when there is nothing to correct yet (Taxi: no exploit for ~0.3M steps)
+        peak = int(np.argmax(smooth))
+        thr = min(0.5, 0.5 * smooth[peak])
+        after = (smooth < thr) & (np.arange(len(smooth)) > peak)
+        cross = int(np.argmax(after)) if smooth[peak] > 0 and after.any() else len(smooth) // 2
+        n_ep = len(runs[i]["received"])
+        windows = [(0, 8, "start of training"), (max(8, cross - 3), 8, "learning to avoid correction"),
+                   (n_ep - 8, 8, "end of training")]
+        fname = f"step3_{env}_{tag}_seed{seed}_timeline.png" if args.all_timelines else f"step3_{env}_{tag}_timeline.png"
+        log.figure(plot_timeline_split(
+            proto, l0["step_received"], l0["step_true"], l0["caught"].mean(axis=1), windows, fname,
+            f"Step 3, {name} ({args.run_id}, seed {seed}): received vs true reward over training",
+            subtitle=f"One training run, mean over {n_envs} envs of the reward actually received (original proxy + the "
+                     f"PBRR correction in force) and the true reward; y = reward so far in the current {proto.t_sub}-step "
+                     "sub-episode. The reward function and the preference data reset at every dashed episode boundary.",
+            steps_per_tick=n_envs, refs=refs_lines, received_label="received reward (proxy + PBRR correction)"))
     log.summary()
 
 
