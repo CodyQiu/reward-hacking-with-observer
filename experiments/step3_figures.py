@@ -118,7 +118,12 @@ def main():
     l0 = loaded[0][0]
     corrected = runs[0]["rounds_per_ep"]
     smooth = np.convolve(corrected, np.ones(10) / 10, mode="valid")
-    cross = int(np.argmax((smooth < 0.5) & (np.arange(len(smooth)) > 5))) if (smooth < 0.5).any() else len(smooth) // 2
+    # zoom B: where corrections fall back below half their peak (and below 0.5 per episode), after the peak --
+    # not before the exploit is found, when there is nothing to correct yet (Taxi: no exploit for ~0.3M steps)
+    peak = int(np.argmax(smooth))
+    thr = min(0.5, 0.5 * smooth[peak])
+    after = (smooth < thr) & (np.arange(len(smooth)) > peak)
+    cross = int(np.argmax(after)) if smooth[peak] > 0 and after.any() else len(smooth) // 2
     n_ep = len(runs[0]["received"])
     windows = [(0, 8, "start of training"), (max(8, cross - 3), 8, "learning to avoid correction"),
                (n_ep - 8, 8, "end of training")]
