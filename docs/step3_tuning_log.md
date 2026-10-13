@@ -625,3 +625,8 @@ It is not a tuning run.
 - S5 not met in any seed (74–84% of the ideal), as in T1c.
 - Seed 12 finished earlier than my 00:30 estimate; it learned to hide late, as in T3_final, and then defected in the final window like the others.
 - **Decision.** This is Taxi's T3 result: the frozen T2 config (T1c_onehot_ent03_ep768, 3/3) reproduces on fresh seeds. The 384-episode `T3_final` (2/3 hide, 1/3 full) is its prefix and is superseded. The over-generalised hiding in Taxi was a training-length effect: the k = 4 exception is learned between episodes 384 and 768.
+
+**Tomato `T3c_rate_ep768` (submitted 09:50, job 1840167): diagnostic, not a new config search.**
+- Hypothesis: Tomato's low success rate (2/13 under S1–S3 at 384 episodes) is a training-length effect, as Taxi's missing S4 was. Tomato was never trained past 384 episodes.
+- Design: the T3b_rate seeds (20–29) with `ppo.ent_coef=0.03 episodes=768`. With a constant schedule the 384-episode run is its prefix, so each failing seed is compared with its own continuation.
+- Decision rule: if failing seeds go on to hide, report Tomato's result at 768 episodes and confirm on fresh seeds. If they stay where they were, the failure is a stable local optimum (reactive avoidance), and Tomato stays a finding.
