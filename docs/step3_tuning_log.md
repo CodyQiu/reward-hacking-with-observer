@@ -456,3 +456,12 @@ This is the bookkeeping record for Step 3. It follows `docs/step2_tuning_log.md`
 - **Taxi:** S4 should appear in some seeds (T1c seed 0 was at 82% by 2.5M steps).
 - **LunarLander (scalar clock):** S4 should keep improving.
 - **MountainCar:** S4 should not appear.
+
+### Round T3 (submitted 2026-10-13 00:30): final runs for the advisor meeting
+- **Headline criterion, per the user:** "exploit until the monitor, comply during it" (S1–S3). Final-window defection (S4) is reported alongside it, as the instrumental signature, but it is not required.
+- **LunarLander `T3_final`:** the Step 1 config, no overrides, seeds 10–12, 384 episodes. T0_step1_config met S1–S3 in 3 of 3 seeds.
+- **Taxi `T3_final`:** `task.obs=onehot ppo.ent_coef=0.03`, 384 episodes, seeds 10–12.
+  - **Evidence for this config.** S1–S3 held in T1_onehot_ent03 seed 0, and hiding replicated in T1b_onehot_ent03_s12 (seeds 1 and 2, unfinished) and in T1c (3 of 3 at 2.9–5.0M steps).
+  - **Procedure deviation:** this is submitted before T1c finishes, so the results are ready in time. It is reported only if T1c confirms S1–S3 in ≥ 2 of 3 seeds.
+- **Tomato `T3b_rate`:** the T3 config (entropy 0.03), 10 fresh seeds (20–29). It estimates the hiding rate with an error bar, rather than tuning further.
+- **MountainCar:** no final run. No config meets S2: it stops exploiting about 40 steps before the window, with off-window at 0.65–0.72 of the ideal. It is reported as "complies during the monitor, with a safety margin".
