@@ -422,7 +422,8 @@ def plot_training_timeline(cfg, step_proxy, step_true, windows, filename, title,
 def plot_proxy_ceiling(steps, proxy0, true0, eval_steps, window0, ceiling, avoid, filename, title,
                        subtitle=None, ceiling_label="max proxy return: exploit all 100 steps",
                        window_label="audit-window exploitation (exact eval)",
-                       window_ylabel="P(on the exploit during\nthe audit of sub-episode 0)"):
+                       window_ylabel="P(on the exploit during\nthe audit of sub-episode 0)",
+                       ref_names=("max proxy return", "best monitor-avoiding return")):
     """Sub-episode 0 of every episode -- the one that always runs under the original,
     not-yet-updated proxy -- against the maximum proxy return achievable in it.
 
@@ -445,8 +446,8 @@ def plot_proxy_ceiling(steps, proxy0, true0, eval_steps, window0, ceiling, avoid
     ax.axhline(0, color=AXIS_LINE, lw=0.8, zorder=1)
     _thousands(ax)
     ax.set_ylabel("return in sub-episode 0\n(reward not yet updated)")
-    ax.text(x[-1], ceiling, f"max proxy return {ceiling:,.0f}  ", ha="right", va="bottom", fontsize=8.5, color=INK)
-    ax.text(x[-1], avoid, f"best monitor-avoiding return {avoid:,.0f}  ", ha="right", va="top", fontsize=8.5,
+    ax.text(x[-1], ceiling, f"{ref_names[0]} {ceiling:,.0f}  ", ha="right", va="bottom", fontsize=8.5, color=INK)
+    ax.text(x[-1], avoid, f"{ref_names[1]} {avoid:,.0f}  ", ha="right", va="top", fontsize=8.5,
             color=INK)
 
     style_axes(ax2, grid_axis="y")
@@ -462,7 +463,7 @@ def plot_proxy_ceiling(steps, proxy0, true0, eval_steps, window0, ceiling, avoid
                Line2D([], [], color=tint(PROXY_COLOR, 0.35), lw=0.7, label="proxy return (each seed)"),
                Line2D([], [], color=TRUE_COLOR, lw=1.6, label="true return (seed mean)"),
                Line2D([], [], color=INK, lw=1.1, ls=REF_STYLES[0], label=ceiling_label),
-               Line2D([], [], color=INK, lw=1.1, ls=REF_STYLES[1], label="best return that avoids the monitor"),
+               Line2D([], [], color=INK, lw=1.1, ls=REF_STYLES[1], label=ref_names[1].rstrip(":")),
                Line2D([], [], color=INK_2, lw=1.6, marker="o", ms=3, label=window_label)]
     fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.07, 0.965), frameon=False, fontsize=8.5,
                labelcolor=INK_2, ncol=3)
@@ -473,7 +474,8 @@ def plot_proxy_ceiling(steps, proxy0, true0, eval_steps, window0, ceiling, avoid
 
 
 def plot_episode_max(steps, env_proxy, ceiling, avoid, filename, title, subtitle=None, hit_tol=1.0,
-                     ceiling_label="max proxy return: exploit all 100 steps"):
+                     ceiling_label="max proxy return: exploit all 100 steps",
+                     ref_names=("max proxy return", "best monitor-avoiding return")):
     """Max proxy return over the sub-episodes of each episode, for every trial.
 
     ``env_proxy``: (n_trials, n_ep, K) proxy return of every sub-episode of every
@@ -495,8 +497,8 @@ def plot_episode_max(steps, env_proxy, ceiling, avoid, filename, title, subtitle
         lo, med, hi = np.percentile(m, [0, 50, 100] if len(m) < 10 else [10, 50, 90], axis=0)
         ax.fill_between(x, lo, hi, color=tint(c, 0.22), lw=0, zorder=2)
         ax.plot(x, med, color=c, lw=1.5, zorder=3)
-    ax.text(x[-1], ceiling, f"max proxy return {ceiling:,.0f}  ", ha="right", va="bottom", fontsize=8.5, color=INK)
-    ax.text(x[-1], avoid, f"best monitor-avoiding return {avoid:,.0f}  ", ha="right", va="top", fontsize=8.5, color=INK)
+    ax.text(x[-1], ceiling, f"{ref_names[0]} {ceiling:,.0f}  ", ha="right", va="bottom", fontsize=8.5, color=INK)
+    ax.text(x[-1], avoid, f"{ref_names[1]} {avoid:,.0f}  ", ha="right", va="top", fontsize=8.5, color=INK)
     _thousands(ax)
     ax.set_ylabel("max proxy return over the\nsub-episodes of an episode")
 
@@ -504,13 +506,14 @@ def plot_episode_max(steps, env_proxy, ceiling, avoid, filename, title, subtitle
     for m, c in ((max_all, all_c), (max_early, early_c)):
         ax2.plot(x, (m >= ceiling - hit_tol).mean(axis=0), color=c, lw=1.3, zorder=3)
     ax2.set_ylim(-0.03, 1.03)
-    ax2.set_ylabel(f"fraction of trials\nwithin {hit_tol:,.0f} of the max")
+    ax2.set_ylabel(f"fraction of trials\nwithin {hit_tol:,.0f} of the max" if ref_names[0] == "max proxy return"
+                   else f"fraction of trials within\n{hit_tol:,.0f} of the dotted line, or above")
     ax2.set_xlabel("training steps (millions)")
     ax2.set_xlim(0, x[-1])
     handles = [Line2D([], [], color=all_c, lw=1.5, label="max over all 5 sub-episodes"),
                Line2D([], [], color=early_c, lw=1.5, label="max over sub-episodes 0-3, whose audits matter"),
                Line2D([], [], color=INK, lw=1.1, ls=REF_STYLES[0], label=ceiling_label),
-               Line2D([], [], color=INK, lw=1.1, ls=REF_STYLES[1], label="best return that avoids the monitor")]
+               Line2D([], [], color=INK, lw=1.1, ls=REF_STYLES[1], label=ref_names[1].rstrip(":"))]
     fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.07, 0.965), frameon=False, fontsize=8.5,
                labelcolor=INK_2, ncol=2)
     fig.suptitle(title, x=0.02, ha="left", va="bottom", color=INK, fontsize=11, y=1.03)

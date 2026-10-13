@@ -70,6 +70,16 @@ def reference_lines(env):
     return ceiling, avoid, pa["refs"]
 
 
+def reference_names(env):
+    """Names of the two reference lines. A scripted Phase A (LunarLander: no exact solve) gives the
+    returns of two scripted strategies, which a learned policy can beat: not a maximum."""
+    if env != "grid":
+        with open(phase_a_path(env)) as fh:
+            if "proxy_opt_proxy" not in json.load(fh)["a1"]:
+                return "scripted exploiter, ignores the monitor:", "scripted exploiter that hides from the audit:"
+    return "max proxy return", "best monitor-avoiding return"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--env", required=True)
@@ -85,8 +95,15 @@ def main():
     proto = Protocol(**cfg["protocol"])
     n_envs = int(cfg["n_envs"])
     ceiling, avoid, refs = reference_lines(env)
-    refs_lines = [(ceiling, f"max proxy return in a sub-episode ({ceiling:,.0f}): exploit throughout, ignore the monitor"),
-                  (avoid, f"best monitor-avoiding return ({avoid:,.0f}): stop exploiting before the audit")]
+    names = reference_names(env)
+    if names[0].startswith("scripted"):
+        refs_lines = [(ceiling, f"scripted exploiter that ignores the monitor ({ceiling:,.0f}; not a maximum)"),
+                      (avoid, f"scripted exploiter that stops before the audit ({avoid:,.0f})")]
+    else:
+        refs_lines = [(ceiling, f"max proxy return in a sub-episode ({ceiling:,.0f}): exploit throughout, ignore the monitor"),
+                      (avoid, f"best monitor-avoiding return ({avoid:,.0f}): stop exploiting before the audit")]
+    ceiling_label = (f"max proxy return: exploit all {proto.t_sub} steps" if not names[0].startswith("scripted")
+                     else "scripted exploiter that ignores the monitor (not a maximum)")
     runs = [per_episode(l, r, proto, refs, n_envs) for l, r, _ in loaded]
     name = env.replace("_", " ")
     log.figure(plot_step3_dashboard(
@@ -104,15 +121,16 @@ def main():
         subtitle=f"{trials.shape[0]} trials, each trial's own sub-episode returns under the ORIGINAL proxy. Dark: the "
                  "best sub-episode of the episode; orange: the best of sub-episodes 0-3, whose audits can trigger a "
                  "PBRR round.", hit_tol=0.02 * abs(ceiling),
-        ceiling_label=f"max proxy return: exploit all {proto.t_sub} steps"))
+        ceiling_label=ceiling_label, ref_names=names))
     log.figure(plot_proxy_ceiling(
         runs[0]["ep_steps"][:n], [r["proxy"][:n, 0] for r in runs], [r["true"][:n, 0] for r in runs],
         runs[0]["ep_steps"][:n], [r["win_0"][:n] for r in runs], ceiling, avoid,
         f"step3_{env}_{tag}_proxy_ceiling.png",
-        f"{name}: sub-episode 0 of every episode (reward not yet updated) vs the maximum proxy return",
+        f"{name}: sub-episode 0 of every episode (reward not yet updated) vs the "
+        + ("maximum proxy return" if not names[0].startswith("scripted") else "scripted strategies' proxy returns"),
         subtitle="Logged training data, mean over envs per seed. Bottom: fraction of envs that exploit during "
                  "sub-episode 0's audit (logged, not an exact evaluation).",
-        ceiling_label=f"max proxy return: exploit all {proto.t_sub} steps",
+        ceiling_label=ceiling_label, ref_names=names,
         window_label="audit-window exploitation (logged)",
         window_ylabel="fraction exploiting during\nthe audit of sub-episode 0"))
     l0 = loaded[0][0]
