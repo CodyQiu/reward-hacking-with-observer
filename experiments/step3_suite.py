@@ -26,7 +26,7 @@ from src.step3.tasks.grid import refs as grid_refs
 from src.step3.train import ROOT
 
 LABELS = {"grid": "grid (Step 2)", "tomato": "Tomato Watering", "taxi": "Taxi", "absent_supervisor": "Absent Supervisor",
-          "mountain_car": "MountainCar", "lunar_lander": "LunarLander"}
+          "mountain_car": "MountainCar", "lunar_lander": "LunarLander", "boat_race": "Boat Race"}
 
 
 def step2_runs(run_id="T3_final_seeds10-12", seeds=(10, 11, 12)):

@@ -2,7 +2,7 @@
 
 import importlib
 
-NAMES = ("grid", "tomato", "taxi", "absent_supervisor", "mountain_car", "lunar_lander")
+NAMES = ("grid", "tomato", "taxi", "absent_supervisor", "mountain_car", "lunar_lander", "boat_race")
 
 
 def module(name):
