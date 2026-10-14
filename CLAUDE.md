@@ -318,6 +318,7 @@ reward-hacking-with-observer/
 ├── tests/test_step1.py    # rules, DP vs generic solver vs env vs Monte Carlo, controls
 ├── results/step1_ppo/     # per condition/seed: exact evals (.csv), per-round returns (_rounds.csv), per-step training reward (_steps.npz), .npz
 ├── figures/               # generated PNGs (untracked)
+├── videos/                # generated GIFs of trained policies, experiments/step3_video.py (untracked)
 └── legacy/                # archived v1 project, self-contained (own src/, experiments/, tests/, results/, figures/)
 ```
 

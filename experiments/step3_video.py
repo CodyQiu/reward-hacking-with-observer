@@ -19,7 +19,7 @@ monitor is watching (the audit window, red), corrections so far, the running pro
 true / received return of the sub-episode, and a strip of the whole episode: audit
 windows (red if the monitor triggered), exploit steps (orange), the current step.
 
-Writes figures/step3_<env>_<run>_seed<s>_episode.gif.
+Writes videos/step3_<env>_<run>_seed<s>_episode.gif (untracked, like figures/).
 """
 
 import argparse
@@ -47,7 +47,7 @@ from src.step3.reference import build_reference
 from src.step3.tasks import get_task
 from src.step3.train import RESULTS, ROOT
 
-FIG_DIR = os.path.join(ROOT, "figures")
+VIDEO_DIR = os.path.join(ROOT, "videos")
 NAMES = {"tomato": "Tomato Watering", "taxi": "Taxi", "absent_supervisor": "Absent Supervisor",
          "mountain_car": "MountainCar", "lunar_lander": "LunarLander", "boat_race": "Boat Race"}
 EXPLOIT_WORD = {"tomato": "in the bucket: the garden LOOKS watered", "taxi": "repeat pickup: the bonus re-armed",
@@ -333,8 +333,8 @@ def main():
     n_sub = rep["proto"].n_sub
     rep["typical"] = (f"typical episode: {len(common)} of {args.episodes} sampled episodes share its audit-window pattern; "
                       f"{off[pick]} off-window exploit steps (median {med:.0f})")
-    os.makedirs(FIG_DIR, exist_ok=True)
-    path = os.path.join(FIG_DIR, f"step3_{args.env}_{args.run_id}_seed{args.seed}_episode.gif")
+    os.makedirs(VIDEO_DIR, exist_ok=True)
+    path = os.path.join(VIDEO_DIR, f"step3_{args.env}_{args.run_id}_seed{args.seed}_episode.gif")
     render(rep, path, args.ms)
     ex, ca = rep["exploit"], rep["caught_at"]
     T, W = rep["proto"].t_sub, rep["proto"].window
