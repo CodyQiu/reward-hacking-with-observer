@@ -4,7 +4,8 @@
 #   bash scripts/farmshare/step4_jobs.sh submit     # submit them (skips runs that already exist)
 # Each task uses its frozen Step 3 PPO config (CLAUDE.md 4e) and seeds 10-12, so every run pairs with
 # the Step 3 baseline on the same seeds. Hours = about 2x the Step 3 wall time of the same config.
-# The short tasks (grid, absent_supervisor, boat_race) run on the laptop.
+# The short tasks (grid, absent_supervisor, boat_race) run on the laptop. g is fitted for 1000 epochs
+# (Step 3's E.1 choice, 50-200, under-fits the swap's raise: results/step4/<env>/phase_a/*_ep1000).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 MODE=${1:-dry}
@@ -18,9 +19,9 @@ TASKS=(
 )
 # variant | PBRR overrides | what it tests
 VARIANTS=(
-  "P2swap|g.l_minus_on=dispreferred|mentor's swap: L- on the dispreferred trajectory, L+ kept"
-  "P2swapNoLplus|g.l_minus_on=dispreferred g.l_plus=False|the swap without L+"
-  "P1eq1|g.use_regularization=False|no regulariser at all (Eq 1)"
+  "P2swap_ep1000|g.l_minus_on=dispreferred g.epochs=1000|mentor's swap: L- on the dispreferred trajectory, L+ kept; g fit 1000 epochs"
+  "P2swapNoLplus_ep1000|g.l_minus_on=dispreferred g.l_plus=False g.epochs=1000|the swap without L+; g fit 1000 epochs"
+  "P1eq1_ep1000|g.use_regularization=False g.epochs=1000|no regulariser at all (Eq 1); g fit 1000 epochs"
 )
 
 for t in "${TASKS[@]}"; do
