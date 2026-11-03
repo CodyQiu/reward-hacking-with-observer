@@ -64,7 +64,7 @@ def readout(seed_dir, frac=0.10):
          "p_corrected_by_round_k": [float((first <= k).mean()) for k in range(K - 1)],
          "true_after_first_correction": float(tr[after].mean()) if after.any() else None,
          "honest_true": c["honest_true"], "exploit_true": c["exploit_true"], "R4_bar": r4_bar,
-         "n_episodes": int(on.shape[0])}
+         "n_episodes": int(on.shape[0]), "n_episodes_total": n_ep}
     m["R1"] = 0.8 <= m["corrections_per_ep"] <= 1.2
     m["R2"] = m["window_by_k"][0] >= 0.8
     m["R3"] = max(m["window_by_k"][1:K - 1]) < 0.1
@@ -81,16 +81,17 @@ def main():
                 print(f"{run}/{s}: no logs.npz yet")
                 continue
             m = out[s] = readout(os.path.join(run, s))
+            m["finished"] = os.path.exists(os.path.join(run, s, "metrics.json"))   # else: a checkpoint
             ta = m["true_after_first_correction"]
             print(f"{os.path.basename(run)} {s}: corr/ep {m['corrections_per_ep']:.2f}  window by k "
                   f"{np.round(m['window_by_k'], 2).tolist()}  true by k {np.round(m['true_by_k'], 1).tolist()}"
                   f"  (honest {m['honest_true']:g}, exploiting {m['exploit_true']:g})  true after 1st corr "
                   f"{'-' if ta is None else round(ta, 1)}  | "
-                  + " ".join(f"{r}={'Y' if m[r] else 'n'}" for r in ("R1", "R2", "R3", "R4")))
-        # derived from the (immutable) logs: rewritten only when more seeds have finished
+                  + " ".join(f"{r}={'Y' if m[r] else 'n'}" for r in ("R1", "R2", "R3", "R4"))
+                  + ("" if m["finished"] else f"  [UNFINISHED: checkpoint at {m['n_episodes_total']} episodes]"))
+        # derived from the run's logs (seeds may still be checkpointing): recomputed on every call
         path = os.path.join(run, "step4_readout.json")
-        old = json.load(open(path)) if os.path.exists(path) else {}
-        if out and set(out) > set(old):
+        if out:
             with open(path, "w") as fh:
                 json.dump(out, fh, indent=1)
 

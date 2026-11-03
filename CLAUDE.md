@@ -399,6 +399,7 @@ Tests are pytest-compatible, but pytest is not installed in `.venv`: run each te
   - The partition is `OverSubscribe=NO`, `PreemptMode=OFF`: no preemption or time-sharing, so no `--exclusive` and no checkpointing are needed.
   - **If a run is killed by a cluster incident,** rerun it under a new run id (`<id>_r2`) and log it. A requeued job can only fail, since runs are never overwritten, hence `--no-requeue`.
   - **`--mem-per-cpu` must stay ≤ `MaxMemPerCPU` (4000 MB).** Above it, Slurm silently adds CPUs.
+  - **Checkpoints (from 2026-11-03).** Step 3 / Step 4 runs (`src/step3/train.py`) rewrite `logs.npz`, the round CSVs, the model and `progress.json` every 24 episodes, atomically. A run killed by its time limit therefore keeps everything up to its last checkpoint. `metrics.json` exists only for finished runs. Runs started before this date saved only at the end.
   - **Threads.** Inside a job's cgroup a worker has about 12–32 threads and uses 1.4 CPU-s per s, i.e. one physical core. JAX sizes its pools from the affinity mask; on a bare login node the same process starts 257 threads.
 - **Runs started on the laptop.** LunarLander T0/T1_scalarclock, MountainCar T1_scalarclock_ent03 and Taxi T1_onehot_ent03 were trained on the laptop and are committed. Floating-point results differ between arm64 and x86_64: a seed is reproducible within one machine, not across machines.
 - **Git.** Commit results from the cluster and push. The laptop pulls.

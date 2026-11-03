@@ -103,6 +103,31 @@ def _snapshot(run_dir):
             shutil.copy(os.path.join(exp, name), os.path.join(snap, "experiments", name))
 
 
+def _save_logs(run_dir, overseer, model):
+    """Write logs.npz, the round CSVs and the model (rewritten at every checkpoint of the same run;
+    each file goes through a temporary name, so a kill mid-write leaves the previous checkpoint)."""
+    on = np.array(overseer.on_exploit, np.uint8)
+    ca = np.array(overseer.caught, np.uint8)
+    px = np.array(overseer.env_proxy, np.float32)
+    np.savez_compressed(os.path.join(run_dir, "logs.tmp.npz"),
+                        env_received=np.array(overseer.env_received, np.float32), env_proxy=px,
+                        env_true=np.array(overseer.env_true, np.float32), on_exploit=on, caught=ca,
+                        step_received=np.array(overseer.step_received, np.float32),
+                        step_proxy=np.array(overseer.step_proxy, np.float32),
+                        step_true=np.array(overseer.step_true, np.float32))
+    os.replace(os.path.join(run_dir, "logs.tmp.npz"), os.path.join(run_dir, "logs.npz"))
+    for name, rows in (("rounds_training.csv", overseer.rows), ("pbrr_rounds.csv", overseer.rounds)):
+        if rows:
+            with open(os.path.join(run_dir, name + ".tmp"), "w", newline="") as fh:
+                w = csv.DictWriter(fh, fieldnames=list(rows[0]))
+                w.writeheader()
+                w.writerows(rows)
+            os.replace(os.path.join(run_dir, name + ".tmp"), os.path.join(run_dir, name))
+    model.save(os.path.join(run_dir, "model.tmp.zip"))
+    os.replace(os.path.join(run_dir, "model.tmp.zip"), os.path.join(run_dir, "model.zip"))
+    return on, ca, px
+
+
 def train_run(run_dir, config, verbose=True):
     """Train one seed. Refuses to touch an existing ``run_dir``."""
     if os.path.exists(run_dir):
@@ -145,24 +170,14 @@ def train_run(run_dir, config, verbose=True):
                   f"off {m['offwindow_rel']:.2f}  corr/ep {m['corrections_per_ep']:.2f}  winF "
                   f"{m['window_final']:.2f}  proxy0-3 {m['proxy_0_3']:8.1f}  rounds {len(overseer.rounds)}  "
                   f"({time.time() - t0:.0f}s)", flush=True)
+        # checkpoint: a run killed by a time limit keeps everything up to here (no metrics.json = unfinished)
+        on, ca, px = _save_logs(run_dir, overseer, model)
+        with open(os.path.join(run_dir, "progress.json"), "w") as fh:
+            json.dump({"timesteps": int(model.num_timesteps), "of": timesteps,
+                       "episodes": len(overseer.caught) // proto.n_sub, "seconds": time.time() - t0}, fh)
     wall = time.time() - t0
 
-    on = np.array(overseer.on_exploit, np.uint8)
-    ca = np.array(overseer.caught, np.uint8)
-    px = np.array(overseer.env_proxy, np.float32)
-    np.savez_compressed(os.path.join(run_dir, "logs.npz"),
-                        env_received=np.array(overseer.env_received, np.float32), env_proxy=px,
-                        env_true=np.array(overseer.env_true, np.float32), on_exploit=on, caught=ca,
-                        step_received=np.array(overseer.step_received, np.float32),
-                        step_proxy=np.array(overseer.step_proxy, np.float32),
-                        step_true=np.array(overseer.step_true, np.float32))
-    for name, rows in (("rounds_training.csv", overseer.rows), ("pbrr_rounds.csv", overseer.rounds)):
-        if rows:
-            with open(os.path.join(run_dir, name), "w", newline="") as fh:
-                w = csv.DictWriter(fh, fieldnames=list(rows[0]))
-                w.writeheader()
-                w.writerows(rows)
-    model.save(os.path.join(run_dir, "model"))
+    on, ca, px = _save_logs(run_dir, overseer, model)
     final = metrics_from_logs(on, ca, px, proto, refs)
     n_ep = len(ca) // proto.n_sub
     ckpts = [metrics_from_logs(on, ca, px, proto, refs, ep_slice=slice(max(0, e - n_ep // 10), e))
