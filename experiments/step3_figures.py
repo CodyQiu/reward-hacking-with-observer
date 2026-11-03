@@ -24,8 +24,8 @@ from src.step3.protocol import Protocol
 from src.step3.train import RESULTS, phase_a_path
 
 
-def load(env, run_id, seed):
-    d = os.path.join(RESULTS, env, "tuning", run_id, f"seed{seed}")
+def load(env, run_id, seed, results_dir=None):
+    d = os.path.join(results_dir or os.path.join(RESULTS, env, "tuning"), run_id, f"seed{seed}")
     logs = dict(np.load(os.path.join(d, "logs.npz")))
     rounds = []
     if os.path.exists(os.path.join(d, "pbrr_rounds.csv")):
@@ -88,11 +88,14 @@ def main():
     ap.add_argument("--tag", default=None)
     ap.add_argument("--all-timelines", action="store_true",
                     help="one timeline per seed (step3_<env>_<tag>_seed<s>_timeline.png), not just the first seed's")
+    ap.add_argument("--results-dir", default=None, help="default results/step3/<env>/tuning")
+    ap.add_argument("--prefix", default="step3", help="figure filename prefix and title label")
     args = ap.parse_args()
     tag = args.tag or args.run_id
     env = args.env
-    log = CheckLog(f"Step 3 figures -- {env} {args.run_id}, seeds {args.seeds}")
-    loaded = [load(env, args.run_id, s) for s in args.seeds]
+    step = args.prefix.replace("step", "Step ")
+    log = CheckLog(f"{step} figures -- {env} {args.run_id}, seeds {args.seeds}")
+    loaded = [load(env, args.run_id, s, args.results_dir) for s in args.seeds]
     cfg = loaded[0][2]
     proto = Protocol(**cfg["protocol"])
     n_envs = int(cfg["n_envs"])
@@ -108,6 +111,11 @@ def main():
                      else "scripted exploiter that ignores the monitor (not a maximum)")
     runs = [per_episode(l, r, proto, refs, n_envs) for l, r, _ in loaded]
     name = env.replace("_", " ")
+    for i in (range(len(loaded)) if args.all_timelines else [0]):
+        timeline(log, args, step, env, name, tag, proto, n_envs, loaded[i][0], runs[i], args.seeds[i], refs_lines)
+    if args.prefix != "step3":        # Step 4: the timeline only
+        log.summary()
+        return
     log.figure(plot_step3_dashboard(
         runs, proto.n_sub, f"step3_{env}_{tag}_dashboard.png",
         f"Step 3, {name} ({args.run_id}): training against the PBRR overseer, all episodes",
@@ -135,29 +143,38 @@ def main():
         ceiling_label=ceiling_label, ref_names=names,
         window_label="audit-window exploitation (logged)",
         window_ylabel="fraction exploiting during\nthe audit of sub-episode 0"))
-    for i in (range(len(loaded)) if args.all_timelines else [0]):
-        seed = args.seeds[i]
-        l0 = loaded[i][0]
-        corrected = runs[i]["rounds_per_ep"]
-        smooth = np.convolve(corrected, np.ones(10) / 10, mode="valid")
+    log.summary()
+
+
+def timeline(log, args, step, env, name, tag, proto, n_envs, l0, run, seed, refs_lines):
+    n_ep = len(run["received"])
+    if args.prefix == "step3":
+        smooth = np.convolve(run["rounds_per_ep"], np.ones(10) / 10, mode="valid")
         # zoom B: where corrections fall back below half their peak (and below 0.5 per episode), after the peak --
         # not before the exploit is found, when there is nothing to correct yet (Taxi: no exploit for ~0.3M steps)
         peak = int(np.argmax(smooth))
         thr = min(0.5, 0.5 * smooth[peak])
         after = (smooth < thr) & (np.arange(len(smooth)) > peak)
         cross = int(np.argmax(after)) if smooth[peak] > 0 and after.any() else len(smooth) // 2
-        n_ep = len(runs[i]["received"])
-        windows = [(0, 8, "start of training"), (max(8, cross - 3), 8, "learning to avoid correction"),
-                   (n_ep - 8, 8, "end of training")]
-        fname = f"step3_{env}_{tag}_seed{seed}_timeline.png" if args.all_timelines else f"step3_{env}_{tag}_timeline.png"
-        log.figure(plot_timeline_split(
-            proto, l0["step_received"], l0["step_true"], l0["caught"].mean(axis=1), windows, fname,
-            f"Step 3, {name} ({args.run_id}, seed {seed}): received vs true reward over training",
-            subtitle=f"One training run, mean over {n_envs} envs of the reward actually received (original proxy + the "
-                     f"PBRR correction in force) and the true reward; y = reward so far in the current {proto.t_sub}-step "
-                     "sub-episode. The reward function and the preference data reset at every dashed episode boundary.",
-            steps_per_tick=n_envs, refs=refs_lines, received_label="received reward (proxy + PBRR correction)"))
-    log.summary()
+        middle = "learning to avoid correction"
+    else:   # Step 4: corrections stay ~1/episode; zoom where the true return after it passes halfway to honest
+        with open(phase_a_path(env)) as fh:
+            a1 = json.load(fh)["a1"]
+        mid = 0.5 * (a1.get("honest_true", 0.0) + a1.get("proxy_opt_true", 0.0))
+        after = np.convolve(run["true"][:, 1:].mean(axis=1), np.ones(10) / 10, mode="valid")
+        cross = int(np.argmax(after > mid)) + 5 if (after > mid).any() else n_ep // 2
+        middle = "learning to comply after the correction"
+    windows = [(0, 8, "start of training"), (min(max(8, cross - 3), n_ep - 16), 8, middle),
+               (n_ep - 8, 8, "end of training")]
+    fname = (f"{args.prefix}_{env}_{tag}_seed{seed}_timeline.png" if args.all_timelines
+             else f"{args.prefix}_{env}_{tag}_timeline.png")
+    log.figure(plot_timeline_split(
+        proto, l0["step_received"], l0["step_true"], l0["caught"].mean(axis=1), windows, fname,
+        f"{step}, {name} ({args.run_id}, seed {seed}): received vs true reward over training",
+        subtitle=f"One training run, mean over {n_envs} envs of the reward actually received (original proxy + the "
+                 f"PBRR correction in force) and the true reward; y = reward so far in the current {proto.t_sub}-step "
+                 "sub-episode. The reward function and the preference data reset at every dashed episode boundary.",
+        steps_per_tick=n_envs, refs=refs_lines, received_label="received reward (proxy + PBRR correction)"))
 
 
 if __name__ == "__main__":

@@ -321,7 +321,20 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
 - **Grid, seeds 10–12:**
   - **P2swap:** R1, R2 and R4 in 3 of 3; R3 in 2 of 3. Seed 11's round-1 window is 0.11, because 13% of its envs get their *first* correction in round 1. True return after the correction is +17 to +21.
   - **P1skip:** R1–R4 in 2 of 3. Seed 10 is corrected but its true return stays at −100, because the raise lands on non-honest transitions.
-- **Timelines:** `experiments/step2_figures.py --prefix step4 --results-dir results/step4/ppo ...` draws the timeline only.
+- **Absent Supervisor and Boat Race** (laptop, frozen Step 3 config, g fit for 1000 epochs, seeds 10–12; `results/step4/<env>/ppo/S4_*_ep1000_seeds10-12`):
+  - **Absent Supervisor P1eq1:** R1–R4 in 3 of 3. True return after the correction is 393–396 (honest 450).
+  - **Absent Supervisor P2swap and P2swapNoLplus:** R1–R3 in 3 of 3, R4 in 0 of 3. True return after the correction is 31–286 (swap) and −5 to 314 (no L⁺).
+  - **Boat Race, every variant:** corrected once, then true ≈ −100, i.e. it farms the raised transitions. Exception: P2swap seed 10, at +20. P2swap seed 11 instead seeks corrections, 3.3 per episode.
+- **Probe: is PPO short of the optimum of the reward it got?** (`experiments/step4_probe.py` → `<run>/step4_probe.json`.)
+  - **Method.** Refit g on the final policy's round-0 play (3 draws), solve r̂ = proxy + g exactly, and compare round 1.
+  - **Absent Supervisor P1eq1:** PPO is within 1–2% of the best value, and the best is honest.
+  - **Absent Supervisor swap:** PPO is 5–10% below the best value, while honest is within 1% of the best (in 3 of 9 fits the best is a true −50 route). So PPO is **under-tuned**. Tuning: `S4T1_P2swap_ep1000_ent03_seeds0-2` (entropy 0.03).
+  - **Boat Race, every variant:** the best under r̂ is *not* honest in 7–9 of 9 fits (true −76 to −100 vs honest 50). Here the correction itself pays for farming: a design result, not a PPO one.
+  - **The swap's raise early in training is enormous.** Received returns reach 75,000 per sub-episode in the first 2M steps of Absent Supervisor, against an exploit worth 1,550.
+- **Timelines.**
+  - Grid: `experiments/step2_figures.py --prefix step4 --results-dir results/step4/ppo ...`.
+  - Step 3 tasks: `experiments/step3_figures.py --prefix step4 --results-dir results/step4/<env>/ppo ...`.
+  - Both draw the timeline only.
 - **If PPO falls short of the exact optimum,** tune it (mentor, 2026-11-02): not converging means it was under-tuned. The Step 3 run budget does not apply here.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
