@@ -3,7 +3,8 @@
 #   bash scripts/farmshare/step4_jobs.sh            # dry run: print the submit commands
 #   bash scripts/farmshare/step4_jobs.sh submit     # submit them (skips runs that already exist)
 # Each task uses its frozen Step 3 PPO config (CLAUDE.md 4e) and seeds 10-12, so every run pairs with
-# the Step 3 baseline on the same seeds. Hours = about 2x the Step 3 wall time of the same config.
+# the Step 3 baseline on the same seeds. Hours: generous (1000-epoch fits make PBRR rounds slower;
+# the partition allows 48 h and does not preempt).
 # The short tasks (grid, absent_supervisor, boat_race) run on the laptop. g is fitted for 1000 epochs
 # (Step 3's E.1 choice, 50-200, under-fits the swap's raise: results/step4/<env>/phase_a/*_ep1000).
 set -euo pipefail
@@ -12,10 +13,10 @@ MODE=${1:-dry}
 
 # task | hours | frozen Step 3 overrides
 TASKS=(
-  "taxi|12|task.obs=onehot ppo.ent_coef=0.03 episodes=768"
-  "tomato|6|ppo.ent_coef=0.03"
-  "mountain_car|8|protocol.clock=scalar episodes=768"
-  "lunar_lander|8|"
+  "taxi|40|task.obs=onehot ppo.ent_coef=0.03 episodes=768"
+  "tomato|16|ppo.ent_coef=0.03"
+  "mountain_car|30|protocol.clock=scalar episodes=768"
+  "lunar_lander|24|"
 )
 # variant | PBRR overrides | what it tests
 VARIANTS=(
