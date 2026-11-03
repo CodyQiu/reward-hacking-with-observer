@@ -657,3 +657,10 @@ It is not a tuning run.
 
 - The scalar clock still trades hiding for final-window exploitation. S1/S3 fail in 3/3 (seed 2 meets S1 but misses S3 at 0.12), and S4 fails in 3/3.
 - Longer training does not fix it. LunarLander's result stays T3_final with the Step 1 config.
+
+**Step 4 FarmShare jobs replaced by checkpointing versions (2026-11-03).**
+- The original Step 4 jobs on taxi, mountain_car and lunar_lander (`S4_{P2swap,P2swapNoLplus,P1eq1}_ep1000_seeds10-12`, submitted 2026-11-03 01:10) saved logs only at the end. They were projected to exceed their limits: taxi 44–65 h vs 40, lunar_lander 27–48 h vs 24, mountain_car ~285 h vs 30.
+- Cancelled at 11:40 (8 jobs, 10.5 h in). Resubmitted the unfinished seeds as `S4_<variant>_ep1000_r2_s<seeds>` with 48 h and checkpoints every 24 episodes (commit 1d2e3a4): jobs 1928834–1928841.
+- Already finished and not rerun: all of tomato; lunar_lander P1eq1 (3 seeds), P2swap s10/s12, P2swapNoLplus s10; taxi P1eq1/P2swapNoLplus s11; mountain_car P1eq1 s12.
+- The unfinished seed directories of the old runs (config, code snapshot, progress log) are kept as a record.
+- mountain_car is not expected to finish 768 episodes in 48 h. Its checkpoints are the result; it is not resubmitted.
