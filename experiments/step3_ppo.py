@@ -52,10 +52,13 @@ def main():
     ap.add_argument("--seeds", nargs="+", type=int, default=[0])
     ap.add_argument("--set", nargs="*", default=[])
     ap.add_argument("--hypothesis", default="")
+    ap.add_argument("--results-dir", default=None,
+                    help="parent of the run directory and runs.csv (default results/step3/<env>/tuning; "
+                         "Step 4: results/step4/<env>/ppo)")
     ap.add_argument("--worker-seed", type=int, default=None, help=argparse.SUPPRESS)
     args = ap.parse_args()
     overrides = parse_sets(args.set)
-    tuning = os.path.join(RESULTS, args.env, "tuning")
+    tuning = args.results_dir or os.path.join(RESULTS, args.env, "tuning")
     run_root = os.path.join(tuning, args.run_id)
 
     if args.worker_seed is not None:                       # one seed, in this process
@@ -76,7 +79,7 @@ def main():
     for s in args.seeds:
         log = open(os.path.join(run_root, f"seed{s}.log"), "w")
         cmd = [sys.executable, os.path.abspath(__file__), "--env", args.env, "--run-id", args.run_id,
-               "--worker-seed", str(s), "--set", *args.set]
+               "--worker-seed", str(s), "--results-dir", tuning, "--set", *args.set]
         procs.append((s, subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env), log))
     for s, p, log in procs:
         p.wait()

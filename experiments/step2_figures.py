@@ -1,6 +1,8 @@
 """Step 2 figures for one tuning/final run, from its logged training data.
 
     .venv/bin/python experiments/step2_figures.py --run-id T0_step1_config --seeds 0 [--tag T0]
+    .venv/bin/python experiments/step2_figures.py --results-dir results/step4/ppo --prefix step4 \
+        --run-id S4_P2swap_seeds10-12 --seeds 10 --tag P2swap_s10      (Step 4 runs, same harness)
 
 Writes figures/step2_<tag>_dashboard.png, _episode_max.png, _proxy_ceiling.png and,
 when per-step logs exist (runs started after per-step logging was added),
@@ -27,8 +29,8 @@ REFS = [(CEILING, f"max proxy return in a sub-episode ({CEILING:,.0f}): exploit 
         (AVOID, f"best monitor-avoiding return ({AVOID:,.0f}): step off before the audit")]
 
 
-def load(run_id, seed):
-    d = os.path.join(ROOT, "results", "step2", "tuning", run_id, f"seed{seed}")
+def load(run_id, seed, results_dir=None):
+    d = os.path.join(results_dir or os.path.join(ROOT, "results", "step2", "tuning"), run_id, f"seed{seed}")
     logs = dict(np.load(os.path.join(d, "logs.npz")))
     with open(os.path.join(d, "pbrr_rounds.csv")) as fh:
         rounds = list(csv.DictReader(fh))
@@ -58,48 +60,58 @@ def main():
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--seeds", nargs="+", type=int, default=[0])
     ap.add_argument("--tag", default=None)
+    ap.add_argument("--results-dir", default=None, help="default results/step2/tuning")
+    ap.add_argument("--prefix", default="step2", help="figure filename prefix and title label")
     args = ap.parse_args()
-    tag = args.tag or args.run_id
-    log = CheckLog(f"Step 2 figures -- {args.run_id}, seeds {args.seeds}")
-    loaded = [load(args.run_id, s) for s in args.seeds]
+    tag = f"{args.prefix}_{args.tag or args.run_id}"
+    step = args.prefix.replace("step", "Step ")
+    log = CheckLog(f"{step} figures -- {args.run_id}, seeds {args.seeds}")
+    loaded = [load(args.run_id, s, args.results_dir) for s in args.seeds]
     runs = [per_episode(l, r) for l, r in loaded]
     n_seeds = len(runs)
-    log.figure(plot_step2_dashboard(
-        runs, BASE.n_sub, f"step2_{tag}_dashboard.png",
-        f"Step 2 ({args.run_id}): training against the PBRR overseer, all episodes",
-        subtitle=f"SBX PPO, {n_seeds} seed(s) x 16 parallel envs; every value is from the logged training "
-                 "data (mean over envs, per episode). Received reward = original proxy + the PBRR "
-                 "correction in force. Dotted: max proxy return in a sub-episode (8,700); dashed: best "
-                 "monitor-avoiding return (7,700). Bottom: the learned correction on dwelling at the "
-                 "exploit tile after each PBRR round.",
-        refs=REFS))
-    n = min(len(r["received"]) for r in runs)
-    trials = np.concatenate([r["env_proxy"][:n].transpose(2, 0, 1) for r in runs])   # (trials, ep, K)
-    log.figure(plot_episode_max(
-        runs[0]["ep_steps"][:n], trials, CEILING, AVOID, f"step2_{tag}_episode_max.png",
-        "Max proxy return over the sub-episodes of each episode, per trial, vs the proxy maximum",
-        subtitle=f"{trials.shape[0]} trials ({n_seeds} seed(s) x 16 parallel envs), each trial's own "
-                 "sub-episode returns under the ORIGINAL proxy. Dark: the best sub-episode of the "
-                 "episode; orange: the best of sub-episodes 0-3, whose audits can trigger a PBRR round."))
-    log.figure(plot_proxy_ceiling(
-        runs[0]["ep_steps"][:n], [r["proxy"][:n, 0] for r in runs], [r["true"][:n, 0] for r in runs],
-        runs[0]["ep_steps"][:n], [r["win_0"][:n] for r in runs], CEILING, AVOID,
-        f"step2_{tag}_proxy_ceiling.png",
-        "Sub-episode 0 of every episode (reward not yet updated) vs the maximum proxy return",
-        subtitle="Logged training data, mean over 16 envs per seed. Bottom: fraction of envs on the "
-                 "exploit during sub-episode 0's audit (logged, not an exact evaluation)."))
+    if args.prefix == "step2":        # Step 4: the timeline only
+        log.figure(plot_step2_dashboard(
+            runs, BASE.n_sub, f"{tag}_dashboard.png",
+            f"{step} ({args.run_id}): training against the PBRR overseer, all episodes",
+            subtitle=f"SBX PPO, {n_seeds} seed(s) x 16 parallel envs; every value is from the logged training "
+                     "data (mean over envs, per episode). Received reward = original proxy + the PBRR "
+                     "correction in force. Dotted: max proxy return in a sub-episode (8,700); dashed: best "
+                     "monitor-avoiding return (7,700). Bottom: the learned correction on dwelling at the "
+                     "exploit tile after each PBRR round.",
+            refs=REFS))
+        n = min(len(r["received"]) for r in runs)
+        trials = np.concatenate([r["env_proxy"][:n].transpose(2, 0, 1) for r in runs])   # (trials, ep, K)
+        log.figure(plot_episode_max(
+            runs[0]["ep_steps"][:n], trials, CEILING, AVOID, f"{tag}_episode_max.png",
+            "Max proxy return over the sub-episodes of each episode, per trial, vs the proxy maximum",
+            subtitle=f"{trials.shape[0]} trials ({n_seeds} seed(s) x 16 parallel envs), each trial's own "
+                     "sub-episode returns under the ORIGINAL proxy. Dark: the best sub-episode of the "
+                     "episode; orange: the best of sub-episodes 0-3, whose audits can trigger a PBRR round."))
+        log.figure(plot_proxy_ceiling(
+            runs[0]["ep_steps"][:n], [r["proxy"][:n, 0] for r in runs], [r["true"][:n, 0] for r in runs],
+            runs[0]["ep_steps"][:n], [r["win_0"][:n] for r in runs], CEILING, AVOID,
+            f"{tag}_proxy_ceiling.png",
+            "Sub-episode 0 of every episode (reward not yet updated) vs the maximum proxy return",
+            subtitle="Logged training data, mean over 16 envs per seed. Bottom: fraction of envs on the "
+                     "exploit during sub-episode 0's audit (logged, not an exact evaluation)."))
     l0 = loaded[0][0]
     if "step_received" in l0:
         corrected = runs[0]["rounds_per_ep"]
         smooth = np.convolve(corrected, np.ones(10) / 10, mode="valid")
-        cross = int(np.argmax((smooth < 0.5) & (np.arange(len(smooth)) > 5)))
         n_ep = len(runs[0]["received"])
-        windows = [(0, 8, "start of training"), (max(8, cross - 3), 8, "learning to avoid correction"),
+        if args.prefix == "step2":
+            cross = int(np.argmax((smooth < 0.5) & (np.arange(len(smooth)) > 5)))
+            middle = "learning to avoid correction"
+        else:   # Step 4: corrections stay ~1/episode; zoom where honesty after the correction sets in
+            after = np.convolve(runs[0]["true"][:, 1:].mean(axis=1), np.ones(10) / 10, mode="valid")
+            cross = int(np.argmax(after > -40)) + 5
+            middle = "learning to comply after the correction"
+        windows = [(0, 8, "start of training"), (min(max(8, cross - 3), n_ep - 16), 8, middle),
                    (n_ep - 8, 8, "end of training")]
         log.figure(plot_timeline_split(
             BASE, l0["step_received"], l0["step_true"], l0["caught"].mean(axis=1), windows,
-            f"step2_{tag}_timeline.png",
-            f"Step 2 ({args.run_id}, seed {args.seeds[0]}): received vs true reward over training",
+            f"{tag}_timeline.png",
+            f"{step} ({args.run_id}, seed {args.seeds[0]}): received vs true reward over training",
             subtitle="One training run, mean over 16 envs of the reward actually received (original "
                      "proxy + the PBRR correction in force) and the true reward; y = reward so far in "
                      "the current 100-step sub-episode. The reward function and the preference data "

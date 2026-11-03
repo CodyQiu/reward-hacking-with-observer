@@ -27,7 +27,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.step2_train import CRITERIA, ROOT, resolve_config, train_run
 
 TUNING = os.path.join(ROOT, "results", "step2", "tuning")
-RUNS_CSV = os.path.join(TUNING, "runs.csv")
 
 
 def parse_sets(items):
@@ -69,10 +68,12 @@ def main():
     ap.add_argument("--seeds", nargs="+", type=int, default=[0])
     ap.add_argument("--set", nargs="*", default=[])
     ap.add_argument("--hypothesis", default="")
+    ap.add_argument("--results-dir", default=TUNING,
+                    help="parent of the run directory and runs.csv (Step 4: results/step4/ppo)")
     ap.add_argument("--worker-seed", type=int, default=None, help=argparse.SUPPRESS)
     args = ap.parse_args()
     overrides = parse_sets(args.set)
-    run_root = os.path.join(TUNING, args.run_id)
+    run_root = os.path.join(args.results_dir, args.run_id)
 
     if args.worker_seed is not None:                       # one seed, in this process
         cfg = resolve_config({**overrides, "seed": args.worker_seed})
@@ -88,7 +89,7 @@ def main():
     for s in args.seeds:
         log = open(os.path.join(run_root, f"seed{s}.log"), "w")
         cmd = [sys.executable, os.path.abspath(__file__), "--run-id", args.run_id,
-               "--worker-seed", str(s), "--set", *args.set]
+               "--worker-seed", str(s), "--results-dir", args.results_dir, "--set", *args.set]
         procs.append((s, subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env), log))
     for s, p, log in procs:
         p.wait()
@@ -118,8 +119,9 @@ def main():
     row["per_seed"] = " ;; ".join(summaries)
     fields = ["run_id", "finished", "git", "seeds", "timesteps", "overrides", "hypothesis",
               "wall_min", "n_hide", "per_seed"]
-    exists = os.path.exists(RUNS_CSV)
-    with open(RUNS_CSV, "a", newline="") as fh:
+    runs_csv = os.path.join(args.results_dir, "runs.csv")
+    exists = os.path.exists(runs_csv)
+    with open(runs_csv, "a", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
         if not exists:
             w.writeheader()

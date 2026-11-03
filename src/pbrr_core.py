@@ -33,6 +33,13 @@ and -- where the paper leaves a detail open -- the released code
 * ``no_agree``: what to do when |D+| = 0, which Eq 3 / E.6 leave undefined.
   "skip" (code) drops the regulariser; "max1" normalises by max(1, |D+|) so L- is
   active from the first preference. ``experiments/step2_pbrr_check.py`` tests both.
+* Step 4 variants (defaults = the paper): ``l_minus_on="dispreferred"`` moves L- onto
+  the DISPREFERRED trajectory of each D- pair, so the fit repairs a ranking by raising
+  the preferred trajectory instead of lowering the dispreferred one; ``l_plus=False``
+  drops L+; ``g_floor`` makes g >= 0 everywhere: "softplus" fits g = softplus(MLP)
+  (on the grid the fit collapses to g = 0: the exploit-side penalty drives the shared
+  pre-activation negative and softplus' gradient vanishes), "clip" fits the plain MLP
+  and applies max(g, 0).
 
 Computational note (exact, not an approximation): a trajectory's correction is
 sum_t g(s_t, a_t, s_t+1) = counts(tau) . g over the finite transition set, so every
@@ -55,6 +62,7 @@ __all__ = [
     "build_design",
     "loss_numpy",
     "fit_correction",
+    "fit_correction_tabular",
     "mlp_init",
     "mlp_apply",
 ]
@@ -72,6 +80,9 @@ class GConfig:
     use_regularization: bool = True   # False = Eq 1 (plain preference loss)
     init: str = "torch_default"  # refit init: "torch_default" (code) | "zero_last"
     beta: float = 1.0            # Boltzmann label inverse temperature
+    l_minus_on: str = "preferred"     # D- pairs: regularise the "preferred" (paper) | "dispreferred" one
+    l_plus: bool = True               # False = drop L+ (the D+ term)
+    g_floor: str = "none"             # "none" | "softplus" | "clip" (g >= 0 on every transition)
 
     def with_(self, **kw):
         return replace(self, **kw)
@@ -106,9 +117,17 @@ class Design:
     A: np.ndarray                # (P, T) counts(tau2) - counts(tau1)
     dproxy: np.ndarray           # (P,)
     y: np.ndarray                # (P,) labels, 1 = tau2 preferred
-    reg: np.ndarray              # (T,) summed per-transition regulariser weights
+    reg: np.ndarray              # (T,) summed per-transition regulariser weights (paper: L+ and L-)
     n_agree: int
     n_pairs: int
+    reg_plus: np.ndarray = None  # (T,) L+ weights: both trajectories of D+ pairs
+    reg_pref: np.ndarray = None  # (T,) L- weights on the preferred trajectory of D- pairs (paper)
+    reg_disp: np.ndarray = None  # (T,) the same on the dispreferred trajectory (Step 4 swap)
+
+    def reg_for(self, cfg):
+        """Regulariser weights for ``cfg``'s choice of L- side and L+."""
+        lm = {"preferred": self.reg_pref, "dispreferred": self.reg_disp}[cfg.l_minus_on]
+        return lm + self.reg_plus if cfg.l_plus else lm
 
 
 def build_design(pairs):
@@ -124,7 +143,7 @@ def build_design(pairs):
     A = np.zeros((P, len(present)))
     dproxy = np.zeros(P)
     y = np.zeros(P)
-    reg = np.zeros(len(present))
+    reg_plus, reg_pref, reg_disp = (np.zeros(len(present)) for _ in range(3))
     n_agree = 0
     for k, (t1, t2, lab) in enumerate(pairs):
         c1, c2 = t1.counts[present], t2.counts[present]
@@ -133,12 +152,14 @@ def build_design(pairs):
         y[k] = lab
         det = int(np.argmax([t1.proxy, t2.proxy]))     # code: argmax, ties -> 0
         if det == int(lab):                             # D+: the proxy already agrees
-            reg += c1 / t1.length + c2 / t2.length
+            reg_plus += c1 / t1.length + c2 / t2.length
             n_agree += 1
-        else:                                           # D-: regularise the preferred one
-            pref = t1 if lab == 0 else t2
-            reg += pref.counts[present] / pref.length
-    return Design(present, A, dproxy, y, reg, n_agree, P)
+        else:                                           # D-: paper regularises the preferred one
+            pref, disp = (t1, t2) if lab == 0 else (t2, t1)
+            reg_pref += pref.counts[present] / pref.length
+            reg_disp += disp.counts[present] / disp.length
+    return Design(present, A, dproxy, y, reg_plus + reg_pref, n_agree, P,
+                  reg_plus, reg_pref, reg_disp)
 
 
 def _reg_coef(design, cfg):
@@ -154,7 +175,7 @@ def loss_numpy(g_present, design, cfg):
     (without weight decay, which acts on network parameters). Reference for tests."""
     d = design.dproxy + design.A @ g_present
     bce = np.mean(np.logaddexp(0.0, d) - design.y * d)
-    return float(bce + _reg_coef(design, cfg) * np.sum(design.reg * g_present ** 2))
+    return float(bce + _reg_coef(design, cfg) * np.sum(design.reg_for(cfg) * g_present ** 2))
 
 
 # ---------------------------------------------------------------------------------
@@ -188,11 +209,12 @@ def mlp_init(key, sizes, init):
     return params
 
 
-def mlp_apply(params, x):
+def mlp_apply(params, x, floor="none"):
     for W, b in params[:-1]:
         x = jax.nn.relu(x @ W + b)
     W, b = params[-1]
-    return (x @ W + b)[:, 0]
+    out = (x @ W + b)[:, 0]
+    return jax.nn.softplus(out) if floor == "softplus" else out
 
 
 def _bucket(n, sizes=(64, 128, 256, 512, 1024, 2048, 4096, 8192)):
@@ -206,14 +228,14 @@ _FIT_CACHE = {}
 
 
 def _compiled_fit(cfg):
-    key = (cfg.lr, cfg.weight_decay, cfg.epochs)
+    key = (cfg.lr, cfg.weight_decay, cfg.epochs, cfg.g_floor)
     if key in _FIT_CACHE:
         return _FIT_CACHE[key]
     tx = optax.chain(optax.add_decayed_weights(cfg.weight_decay), optax.adam(cfg.lr)) \
         if cfg.weight_decay > 0 else optax.adam(cfg.lr)
 
     def loss(params, X, A, dproxy, y, pmask, reg, coef, n_pairs):
-        g = mlp_apply(params, X)
+        g = mlp_apply(params, X, cfg.g_floor)
         d = dproxy + A @ g
         bce = jnp.sum(pmask * (jnp.logaddexp(0.0, d) - y * d)) / n_pairs
         return bce + coef * jnp.sum(reg * g * g)
@@ -257,14 +279,16 @@ def fit_correction(pairs, X_all, cfg=GConfig(), seed=0, init=None):
     pmask = np.zeros(Pp, np.float32)
     pmask[:P] = 1.0
     reg = np.zeros(Tp, np.float32)
-    reg[:T] = design.reg
+    reg[:T] = design.reg_for(cfg)
     coef = np.float32(_reg_coef(design, cfg))
 
     sizes = [X_all.shape[1]] + [cfg.width] * (cfg.n_layers - 1) + [1]
     params = mlp_init(jax.random.PRNGKey(seed), sizes, init or cfg.init)
     params, final_loss = _compiled_fit(cfg)(
         params, X, A, dproxy, y, pmask, reg, coef, np.float32(P))
-    g_all = np.asarray(mlp_apply(params, jnp.asarray(X_all, jnp.float32)), dtype=float)
+    g_all = np.asarray(mlp_apply(params, jnp.asarray(X_all, jnp.float32), cfg.g_floor), dtype=float)
+    if cfg.g_floor == "clip":
+        g_all = np.maximum(g_all, 0.0)
     info = {
         "loss": float(final_loss),
         "loss_eq3_check": loss_numpy(g_all[design.present], design, cfg),
@@ -274,4 +298,37 @@ def fit_correction(pairs, X_all, cfg=GConfig(), seed=0, init=None):
         "reg_coef": float(coef),
         "n_present": T,
     }
+    return g_all, info
+
+
+def fit_correction_tabular(pairs, n_transitions, cfg=GConfig(), ridge=1e-3):
+    """Eq 3 with a TABULAR g (Theorem H.1's assumption: uncompared transitions keep
+    g = 0), solved to convergence with L-BFGS-B. ``g_floor != "none"`` becomes the
+    bound g >= 0. Eq 3 alone has no minimiser whenever a transition that only the
+    unregularised side of the pairs visits can move freely (the BCE keeps falling as
+    the margin grows), so a small ridge on every present transition picks the
+    minimal change; the network's version of this limit is its finite optimiser budget.
+    Returns (g on every transition, info)."""
+    from scipy.optimize import minimize
+
+    design = build_design(pairs)
+    coef = _reg_coef(design, cfg)
+    w = coef * design.reg_for(cfg) + ridge
+    A, dproxy, y, P = design.A, design.dproxy, design.y, design.n_pairs
+
+    def f(g):
+        d = dproxy + A @ g
+        s = 1.0 / (1.0 + np.exp(-np.clip(d, -500, 500)))
+        val = np.mean(np.logaddexp(0.0, d) - y * d) + np.sum(w * g * g)
+        return val, A.T @ (s - y) / P + 2 * w * g
+
+    T = len(design.present)
+    bounds = [(0.0, None)] * T if cfg.g_floor != "none" else None
+    res = minimize(f, np.zeros(T), jac=True, method="L-BFGS-B", bounds=bounds,
+                   options={"maxiter": 20_000, "ftol": 1e-15, "gtol": 1e-10})
+    g_all = np.zeros(n_transitions)
+    g_all[design.present] = res.x
+    info = {"loss": float(res.fun), "loss_eq3": loss_numpy(res.x, design, cfg), "converged": bool(res.success),
+            "n_iter": int(res.nit), "n_pairs": P, "n_agree": design.n_agree, "reg_coef": float(coef),
+            "ridge": ridge, "n_present": T}
     return g_all, info

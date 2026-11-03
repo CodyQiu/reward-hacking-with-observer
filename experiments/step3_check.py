@@ -26,6 +26,7 @@ nearest grid node (``batch.s``).
 """
 
 import argparse
+import ast
 import itertools
 import json
 import os
@@ -282,11 +283,23 @@ def main():
     ap.add_argument("--quick", action="store_true", help="small E.1 grid (development only)")
     ap.add_argument("--variant", default=None,
                     help="exploratory bug-parameter setting: write to phase_a_variants/<name>/, not phase_a/")
+    ap.add_argument("--g-set", nargs="*", default=[],
+                    help="Step 4: PBRR (GConfig) overrides, e.g. l_minus_on=dispreferred l_plus=False. Reuses the "
+                         "env's Step 3 g config (no E.1 search) and writes to results/step4/<env>/phase_a/<variant>/")
     args = ap.parse_args()
     env = args.env
     mod = module(env)
     params = {**mod.DEFAULTS.get("task", {}), **{k: float(v) for k, v in (s.split("=") for s in args.set)}}
-    out_dir = os.path.join(RESULTS, env, "phase_a" if args.variant is None else os.path.join("phase_a_variants", args.variant))
+    g_set = {k: ast.literal_eval(v) if v not in ("preferred", "dispreferred", "none", "skip", "max1") else v
+             for k, v in (s.split("=", 1) for s in args.g_set)}
+    if g_set:
+        if args.variant is None:
+            ap.error("--g-set needs --variant <name>")
+        if getattr(mod, "SCRIPTED", False):
+            ap.error(f"{env} has no exact solve (scripted Phase A): no Step 4 exact check")
+        out_dir = os.path.join(ROOT, "results", "step4", env, "phase_a", args.variant)
+    else:
+        out_dir = os.path.join(RESULTS, env, "phase_a" if args.variant is None else os.path.join("phase_a_variants", args.variant))
     os.makedirs(out_dir, exist_ok=True)
     _keep_previous(out_dir)
     log = CheckLog(f"Step 3 Phase A -- {env} {params}")
@@ -388,32 +401,40 @@ def main():
     perm = rng.permutation(len(data))
     n_tr = int(0.8 * len(data))
     train, held = [data[i] for i in perm[:n_tr]], [data[i] for i in perm[n_tr:]]
-    grid = list(itertools.product([1e-3, 1e-4], [True, False], [50, 100, 200], [3, 5], [256, 512]))
-    if args.quick:
-        grid = [(1e-3, False, 100, 5, 512), (1e-4, True, 200, 5, 512), (1e-3, False, 50, 3, 256)]
-    rows, t0 = [], time.time()
-    for lr, wd, ep, nl, w in grid:
-        gc = GConfig(lr=lr, weight_decay=1e-5 if wd else 0.0, epochs=ep, n_layers=nl, width=w, no_agree="max1")
-        t1 = time.time()
-        p, _ = fit_correction_rows(train, task, gc, seed=0)
-        rows.append({"lr": lr, "weight_decay": wd, "epochs": ep, "n_layers": nl, "width": w,
-                     "held_out_loss": held_out_loss(p, held, task), "fit_seconds": time.time() - t1})
-    rows.sort(key=lambda r: r["held_out_loss"])
-    # continuous tasks: the best configuration whose fit takes <= 10 s (logged deviation;
-    # the paper's own Traffic setting is 3 x 256, 50 epochs)
-    eligible = rows if task.tabular else [r for r in rows if r["fit_seconds"] <= 10.0] or rows
-    best = eligible[0]
-    gcfg = GConfig(lr=best["lr"], weight_decay=1e-5 if best["weight_decay"] else 0.0, epochs=best["epochs"],
-                   n_layers=best["n_layers"], width=best["width"], no_agree="max1")
-    summary["e1_search"] = {"best": best, "all": rows, "seconds": time.time() - t0}
-    summary["g_config"] = {k: v for k, v in gcfg.__dict__.items()}
-    if best is not rows[0]:
-        log.note(f"A3 the overall winner ({rows[0]['n_layers']} x {rows[0]['width']}, {rows[0]['epochs']} epochs) fits "
-                 f"in {rows[0]['fit_seconds']:.1f}s > 10s; using the best within the time budget")
-    log.check(f"A3 E.1 search ran over all {len(grid)} configurations", len(rows) == len(grid),
-              f"{time.time() - t0:.0f}s; best lr {best['lr']}, wd {best['weight_decay']}, epochs {best['epochs']}, "
-              f"{best['n_layers']} x {best['width']} (held-out loss {best['held_out_loss']:.4f}, fit "
-              f"{best['fit_seconds']:.1f}s)")
+    if g_set:                                    # Step 4: the env's Step 3 g config + the variant
+                                                 # (same draws as Step 3's Phase A, no E.1 search)
+        with open(os.path.join(RESULTS, env, "phase_a", "summary.json")) as fh:
+            gcfg = GConfig(**{**json.load(fh)["g_config"], "no_agree": "max1", **g_set})
+        summary["g_config"] = dict(gcfg.__dict__)
+        summary["g_set"] = g_set
+        log.note(f"A3 skipped (Step 4 variant): Step 3's g config with {g_set}")
+    else:
+        grid = list(itertools.product([1e-3, 1e-4], [True, False], [50, 100, 200], [3, 5], [256, 512]))
+        if args.quick:
+            grid = [(1e-3, False, 100, 5, 512), (1e-4, True, 200, 5, 512), (1e-3, False, 50, 3, 256)]
+        rows, t0 = [], time.time()
+        for lr, wd, ep, nl, w in grid:
+            gc = GConfig(lr=lr, weight_decay=1e-5 if wd else 0.0, epochs=ep, n_layers=nl, width=w, no_agree="max1")
+            t1 = time.time()
+            p, _ = fit_correction_rows(train, task, gc, seed=0)
+            rows.append({"lr": lr, "weight_decay": wd, "epochs": ep, "n_layers": nl, "width": w,
+                         "held_out_loss": held_out_loss(p, held, task), "fit_seconds": time.time() - t1})
+        rows.sort(key=lambda r: r["held_out_loss"])
+        # continuous tasks: the best configuration whose fit takes <= 10 s (logged deviation;
+        # the paper's own Traffic setting is 3 x 256, 50 epochs)
+        eligible = rows if task.tabular else [r for r in rows if r["fit_seconds"] <= 10.0] or rows
+        best = eligible[0]
+        gcfg = GConfig(lr=best["lr"], weight_decay=1e-5 if best["weight_decay"] else 0.0, epochs=best["epochs"],
+                       n_layers=best["n_layers"], width=best["width"], no_agree="max1")
+        summary["e1_search"] = {"best": best, "all": rows, "seconds": time.time() - t0}
+        summary["g_config"] = {k: v for k, v in gcfg.__dict__.items()}
+        if best is not rows[0]:
+            log.note(f"A3 the overall winner ({rows[0]['n_layers']} x {rows[0]['width']}, {rows[0]['epochs']} epochs) fits "
+                     f"in {rows[0]['fit_seconds']:.1f}s > 10s; using the best within the time budget")
+        log.check(f"A3 E.1 search ran over all {len(grid)} configurations", len(rows) == len(grid),
+                  f"{time.time() - t0:.0f}s; best lr {best['lr']}, wd {best['weight_decay']}, epochs {best['epochs']}, "
+                  f"{best['n_layers']} x {best['width']} (held-out loss {best['held_out_loss']:.4f}, fit "
+                  f"{best['fit_seconds']:.1f}s)")
 
     # ---- A4: canonical PBRR corrections --------------------------------------------------
     refs_fixed = rollouts(task.make_batch(K, seed=123), ref, proto, np.random.default_rng(123))
@@ -479,10 +500,17 @@ def main():
         log.note(f"A5 in the real dynamics: proxy per sub-episode {[round(s['proxy'], 1) for s in sim]}, true "
                  f"{[round(s['true'], 1) for s in sim]}, P(window exploited) {np.round(window, 3).tolist()}")
     summary["refs"] = refs
-    log.check("A5 hiding is optimal: windows 0-3 clean, final window exploited, never corrected",
+    # Step 4: whether the optimum still hides is the result, not an acceptance check
+    check = (lambda name, ok, detail="": log.finding(f"{name}: {'YES' if ok else 'NO'} -- {detail}")) \
+        if g_set else log.check
+    if g_set:
+        log.finding(f"Step 4 variant {args.variant} {g_set}: idealised optimum true per sub-episode "
+                    f"{np.round(ev['true'], 1).tolist()}, P(corrected) {np.round(ev['corrected'], 3).tolist()}, "
+                    f"honest optimum true {gt_true:.1f}")
+    check("A5 hiding is optimal: windows 0-3 clean, final window exploited, never corrected",
               max(window[:-1]) < 0.05 and window[-1] > 0.5 and corrected < 0.05,
               f"windows {np.round(window, 3).tolist()}, corrections {corrected:.3f}")
-    log.check("A5 the hiding optimum exploits off-window and beats honest play",
+    check("A5 the hiding optimum exploits off-window and beats honest play",
               refs["offwindow_rate"] > 0.1 and refs["proxy_0_3"] > gt_proxy,
               f"off-window exploit rate {refs['offwindow_rate']:.2f}; proxy per sub-episode 0-3 "
               f"{refs['proxy_0_3']:.1f} vs honest {gt_proxy:.1f} vs open exploiter {px_proxy:.1f}")
@@ -493,7 +521,7 @@ def main():
     cost_corr = px_grid - r1["best_value_rhat"]
     cost_hide = px_grid - av_proxy                    # best monitor-avoiding sub-episode under the proxy
     summary["a4_costs"] = {"correction": cost_corr, "hiding": cost_hide}
-    log.check("A4 one correction costs more than hiding (per sub-episode: best value under the proxy vs under "
+    check("A4 one correction costs more than hiding (per sub-episode: best value under the proxy vs under "
               "r_hat after one round, vs the idealised hide)", cost_corr > cost_hide,
               f"correction costs {cost_corr:.1f} ({cost_corr / px_grid:.0%} of {px_grid:.1f}); hiding costs "
               f"{cost_hide:.1f} ({cost_hide / px_grid:.0%})")

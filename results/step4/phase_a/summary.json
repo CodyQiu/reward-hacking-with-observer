@@ -1,0 +1,4885 @@
+{
+ "g_base": {
+  "n_layers": 5,
+  "width": 512,
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "epochs": 100,
+  "push2zero": 10.0,
+  "no_agree": "max1",
+  "use_regularization": true,
+  "init": "torch_default",
+  "beta": 1.0
+ },
+ "ridge": 0.001,
+ "n_seeds": 3,
+ "variants": {
+  "base": {
+   "gconfig": {},
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -607.9657592773438,
+      "max_g": -0.0011310204863548279,
+      "min_g_present": -607.9657592773438,
+      "min_g_unseen": -498.41790771484375,
+      "n_negative_g": 1125,
+      "min_step_change": -607.9657592773438,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -607.9657592773438,
+      "rhat_dwell_E": -508.96575927734375,
+      "best_subepisode_rhat": 21.588047720491886,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8678.411952279508,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -607.9657592773438,
+       -553.72998046875,
+       -515.8042602539062
+      ],
+      "min_g_seeds": [
+       -607.9657592773438,
+       -553.72998046875,
+       -515.8042602539062
+      ],
+      "max_g_seeds": [
+       -0.0011310204863548279,
+       0.019889654591679573,
+       0.028962403535842896
+      ]
+     },
+     {
+      "min_g": -260.56396484375,
+      "max_g": 5.109516620635986,
+      "min_g_present": -260.56396484375,
+      "min_g_unseen": -198.24319458007812,
+      "n_negative_g": 1053,
+      "min_step_change": -8.91664969921112,
+      "n_step_decreases": 18,
+      "g_dwell_E": -260.56396484375,
+      "rhat_dwell_E": -161.56396484375,
+      "best_subepisode_rhat": 410.95166206359863,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8289.048337936401,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -260.56396484375,
+       -245.15213012695312,
+       -269.3673400878906
+      ],
+      "min_g_seeds": [
+       -260.56396484375,
+       -245.15213012695312,
+       -269.3673400878906
+      ],
+      "max_g_seeds": [
+       5.109516620635986,
+       0.008336222730576992,
+       8.400086402893066
+      ]
+     },
+     {
+      "min_g": -216.55474853515625,
+      "max_g": 2.341252088546753,
+      "min_g_present": -216.55474853515625,
+      "min_g_unseen": -162.5734405517578,
+      "n_negative_g": 1106,
+      "min_step_change": -5.146852970123291,
+      "n_step_decreases": 95,
+      "g_dwell_E": -216.55474853515625,
+      "rhat_dwell_E": -117.55474853515625,
+      "best_subepisode_rhat": 51.20091016404331,
+      "best_subepisode_true": -50.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8648.799089835957,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -216.55474853515625,
+       -190.1632080078125,
+       -215.9816436767578
+      ],
+      "min_g_seeds": [
+       -216.55474853515625,
+       -190.1632080078125,
+       -215.9816436767578
+      ],
+      "max_g_seeds": [
+       2.341252088546753,
+       0.05143505707383156,
+       3.775719404220581
+      ]
+     },
+     {
+      "min_g": -248.6818084716797,
+      "max_g": 0.02625257708132267,
+      "min_g_present": -248.6818084716797,
+      "min_g_unseen": -176.3561248779297,
+      "n_negative_g": 990,
+      "min_step_change": -32.12705993652344,
+      "n_step_decreases": 114,
+      "g_dwell_E": -248.6818084716797,
+      "rhat_dwell_E": -149.6818084716797,
+      "best_subepisode_rhat": 23.423914209008217,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8676.576085790992,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 1029,
+      "g_dwell_E_seeds": [
+       -248.6818084716797,
+       -349.17486572265625,
+       -184.60194396972656
+      ],
+      "min_g_seeds": [
+       -248.6818084716797,
+       -349.17486572265625,
+       -184.60194396972656
+      ],
+      "max_g_seeds": [
+       0.02625257708132267,
+       0.052808716893196106,
+       3.295750379562378
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -111.90607694712271,
+      "max_g": 0.0002091984005867643,
+      "min_g_present": -111.90607694712271,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 25,
+      "min_step_change": -111.90607694712271,
+      "n_step_decreases": 25,
+      "g_dwell_E": -111.90607694712271,
+      "rhat_dwell_E": -12.906076947122713,
+      "best_subepisode_rhat": 4074.4667277341287,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4625.533272265871,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -108.27294668420167,
+      "max_g": 0.00017031915345700475,
+      "min_g_present": -108.27294668420167,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 44,
+      "min_step_change": -55.41543344993304,
+      "n_step_decreases": 41,
+      "g_dwell_E": -108.27294668420167,
+      "rhat_dwell_E": -9.27294668420167,
+      "best_subepisode_rhat": 3848.826609796951,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4851.173390203049,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -104.88705520730208,
+      "max_g": 0.00014187088378421874,
+      "min_g_present": -104.88705520730208,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 43,
+      "min_step_change": -48.42034741543368,
+      "n_step_decreases": 57,
+      "g_dwell_E": -104.88705520730208,
+      "rhat_dwell_E": -5.887055207302083,
+      "best_subepisode_rhat": 3179.973888420132,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -5520.026111579868,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -103.66633597620954,
+      "max_g": 0.00012068941977132361,
+      "min_g_present": -103.66633597620954,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 156,
+      "min_step_change": -39.11819970138988,
+      "n_step_decreases": 157,
+      "g_dwell_E": -103.66633597620954,
+      "rhat_dwell_E": -4.666335976209538,
+      "best_subepisode_rhat": 2402.1834963367287,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -6297.816503663271,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -610.042724609375,
+      "max_g": 0.006202144548296928,
+      "min_g_present": -610.042724609375,
+      "min_g_unseen": -484.0970764160156,
+      "n_negative_g": 1074,
+      "min_step_change": -610.042724609375,
+      "n_step_decreases": 1074,
+      "g_dwell_E": -610.042724609375,
+      "rhat_dwell_E": -511.042724609375,
+      "best_subepisode_rhat": 22.24909256771207,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8677.750907432288,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -610.042724609375,
+       -579.730712890625,
+       -482.8968811035156
+      ],
+      "min_g_seeds": [
+       -610.042724609375,
+       -579.730712890625,
+       -482.8968811035156
+      ],
+      "max_g_seeds": [
+       0.006202144548296928,
+       0.01227287296205759,
+       0.024285458028316498
+      ]
+     },
+     {
+      "min_g": -683.3946533203125,
+      "max_g": 0.004310682415962219,
+      "min_g_present": -683.3946533203125,
+      "min_g_unseen": -529.2003173828125,
+      "n_negative_g": 1120,
+      "min_step_change": -266.5987091064453,
+      "n_step_decreases": 954,
+      "g_dwell_E": -683.3946533203125,
+      "rhat_dwell_E": -584.3946533203125,
+      "best_subepisode_rhat": 21.925033528357744,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8678.074966471642,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -683.3946533203125,
+       -543.6820068359375,
+       -493.9988098144531
+      ],
+      "min_g_seeds": [
+       -683.3946533203125,
+       -543.6820068359375,
+       -493.9988098144531
+      ],
+      "max_g_seeds": [
+       0.004310682415962219,
+       0.008758955635130405,
+       0.015621863305568695
+      ]
+     },
+     {
+      "min_g": -606.7936401367188,
+      "max_g": 0.0012977197766304016,
+      "min_g_present": -606.7936401367188,
+      "min_g_unseen": -469.2010498046875,
+      "n_negative_g": 1117,
+      "min_step_change": -273.4033203125,
+      "n_step_decreases": 80,
+      "g_dwell_E": -606.7936401367188,
+      "rhat_dwell_E": -507.79364013671875,
+      "best_subepisode_rhat": 21.95774795114994,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8678.04225204885,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -606.7936401367188,
+       -571.287353515625,
+       -418.38580322265625
+      ],
+      "min_g_seeds": [
+       -606.7936401367188,
+       -571.287353515625,
+       -418.38580322265625
+      ],
+      "max_g_seeds": [
+       0.0012977197766304016,
+       0.019293179735541344,
+       0.014264199882745743
+      ]
+     },
+     {
+      "min_g": -637.4867553710938,
+      "max_g": 0.0037465915083885193,
+      "min_g_present": -637.4867553710938,
+      "min_g_unseen": -479.856201171875,
+      "n_negative_g": 1076,
+      "min_step_change": -250.20635986328125,
+      "n_step_decreases": 987,
+      "g_dwell_E": -637.4867553710938,
+      "rhat_dwell_E": -538.4867553710938,
+      "best_subepisode_rhat": 22.048731058835983,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8677.951268941164,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -637.4867553710938,
+       -541.6632080078125,
+       -484.4802551269531
+      ],
+      "min_g_seeds": [
+       -637.4867553710938,
+       -541.6632080078125,
+       -484.4802551269531
+      ],
+      "max_g_seeds": [
+       0.0037465915083885193,
+       0.006484828889369965,
+       0.007761057466268539
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -113.2097531021289,
+      "max_g": 0.00021415971985436254,
+      "min_g_present": -113.2097531021289,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 42,
+      "min_step_change": -113.2097531021289,
+      "n_step_decreases": 42,
+      "g_dwell_E": -113.2097531021289,
+      "rhat_dwell_E": -14.2097531021289,
+      "best_subepisode_rhat": 4000.775528096515,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4699.224471903485,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -115.025300463429,
+      "max_g": 9.034732999020878e-05,
+      "min_g_present": -115.025300463429,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 51,
+      "min_step_change": -4.329913306936504,
+      "n_step_decreases": 88,
+      "g_dwell_E": -115.025300463429,
+      "rhat_dwell_E": -16.025300463429005,
+      "best_subepisode_rhat": 3971.9158585165865,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4728.084141483414,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -115.00944866743255,
+      "max_g": 5.3011505848568956e-05,
+      "min_g_present": -115.00944866743255,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 25,
+      "min_step_change": -4.072087634998667e-05,
+      "n_step_decreases": 63,
+      "g_dwell_E": -115.00944866743255,
+      "rhat_dwell_E": -16.00944866743255,
+      "best_subepisode_rhat": 3971.9404364336197,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4728.05956356638,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -116.13185974601573,
+      "max_g": 6.542581682395163e-05,
+      "min_g_present": -116.13185974601573,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 60,
+      "min_step_change": -4.530826064864008,
+      "n_step_decreases": 97,
+      "g_dwell_E": -116.13185974601573,
+      "rhat_dwell_E": -17.131859746015735,
+      "best_subepisode_rhat": 4116.648341513999,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4583.351658486001,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   }
+  },
+  "P1-skip": {
+   "gconfig": {
+    "no_agree": "skip"
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -449.994140625,
+      "max_g": 304.85040283203125,
+      "min_g_present": -449.994140625,
+      "min_g_unseen": -372.3587341308594,
+      "n_negative_g": 672,
+      "min_step_change": -449.994140625,
+      "n_step_decreases": 672,
+      "g_dwell_E": -449.994140625,
+      "rhat_dwell_E": -350.994140625,
+      "best_subepisode_rhat": 28971.869720458984,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20271.869720458984,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "min_g_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "max_g_seeds": [
+       304.85040283203125,
+       454.0115661621094,
+       354.2391052246094
+      ]
+     },
+     {
+      "min_g": -310.3256530761719,
+      "max_g": 4.701528549194336,
+      "min_g_present": -310.3256530761719,
+      "min_g_unseen": -237.4219970703125,
+      "n_negative_g": 1089,
+      "min_step_change": -304.88985566422343,
+      "n_step_decreases": 640,
+      "g_dwell_E": -310.3256530761719,
+      "rhat_dwell_E": -211.32565307617188,
+      "best_subepisode_rhat": 370.1528549194336,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8329.847145080566,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -310.3256530761719,
+       -252.09422302246094,
+       -288.8475036621094
+      ],
+      "min_g_seeds": [
+       -310.3256530761719,
+       -252.09422302246094,
+       -288.8475036621094
+      ],
+      "max_g_seeds": [
+       4.701528549194336,
+       0.04053120315074921,
+       8.270454406738281
+      ]
+     },
+     {
+      "min_g": -255.3662872314453,
+      "max_g": 1.0590420961380005,
+      "min_g_present": -255.3662872314453,
+      "min_g_unseen": -190.53009033203125,
+      "n_negative_g": 1080,
+      "min_step_change": -4.770546123385429,
+      "n_step_decreases": 43,
+      "g_dwell_E": -255.3662872314453,
+      "rhat_dwell_E": -156.3662872314453,
+      "best_subepisode_rhat": 23.95266753435135,
+      "best_subepisode_true": 20.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8676.047332465649,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -255.3662872314453,
+       -223.90670776367188,
+       -151.3092498779297
+      ],
+      "min_g_seeds": [
+       -255.3662872314453,
+       -223.90670776367188,
+       -151.3092498779297
+      ],
+      "max_g_seeds": [
+       1.0590420961380005,
+       0.13639289140701294,
+       2.1645658016204834
+      ]
+     },
+     {
+      "min_g": -362.1829833984375,
+      "max_g": 1.1263858079910278,
+      "min_g_present": -362.1829833984375,
+      "min_g_unseen": -272.90081787109375,
+      "n_negative_g": 1030,
+      "min_step_change": -106.81669616699219,
+      "n_step_decreases": 945,
+      "g_dwell_E": -362.1829833984375,
+      "rhat_dwell_E": -263.1829833984375,
+      "best_subepisode_rhat": 25.56323782261461,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8674.436762177385,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 995,
+      "g_dwell_E_seeds": [
+       -362.1829833984375,
+       -368.7653503417969,
+       -248.5037841796875
+      ],
+      "min_g_seeds": [
+       -362.1829833984375,
+       -368.7653503417969,
+       -248.5037841796875
+      ],
+      "max_g_seeds": [
+       1.1263858079910278,
+       0.11987506598234177,
+       4.073840141296387
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      28971.869720458984,
+      28971.869720458984,
+      28971.869720458984,
+      28971.869720458984
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124587.47888183594
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -77.66974654004314,
+      "max_g": 46.83028844723419,
+      "min_g_present": -77.66974654004314,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 20,
+      "min_step_change": -77.66974654004314,
+      "n_step_decreases": 20,
+      "g_dwell_E": -77.66974654004314,
+      "rhat_dwell_E": 21.330253459956865,
+      "best_subepisode_rhat": 4332.610059562071,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4367.389940437929,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -69.27219044668382,
+      "max_g": 58.13342492948131,
+      "min_g_present": -69.27219044668382,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 26,
+      "min_step_change": -17.27609073071841,
+      "n_step_decreases": 15,
+      "g_dwell_E": -69.27219044668382,
+      "rhat_dwell_E": 29.727809553316177,
+      "best_subepisode_rhat": 4324.091498071423,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": -4375.908501928577,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -108.72145279441362,
+      "max_g": 0.15568174782059505,
+      "min_g_present": -108.72145279441362,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 110,
+      "min_step_change": -58.14380949256297,
+      "n_step_decreases": 139,
+      "g_dwell_E": -108.72145279441362,
+      "rhat_dwell_E": -9.721452794413622,
+      "best_subepisode_rhat": 3866.6674716409952,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4833.332528359005,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 151,
+      "converged": true
+     },
+     {
+      "min_g": -106.8248092748396,
+      "max_g": 0.0935531798838027,
+      "min_g_present": -106.8248092748396,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 122,
+      "min_step_change": -96.5498855839501,
+      "n_step_decreases": 73,
+      "g_dwell_E": -106.8248092748396,
+      "rhat_dwell_E": -7.824809274839595,
+      "best_subepisode_rhat": 2981.7811211793037,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -5718.218878820697,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 151,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -469.9394226074219,
+      "max_g": 304.8209228515625,
+      "min_g_present": -469.9394226074219,
+      "min_g_unseen": -379.1636047363281,
+      "n_negative_g": 727,
+      "min_step_change": -469.9394226074219,
+      "n_step_decreases": 727,
+      "g_dwell_E": -469.9394226074219,
+      "rhat_dwell_E": -370.9394226074219,
+      "best_subepisode_rhat": 28890.49298095703,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20190.49298095703,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "min_g_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "max_g_seeds": [
+       304.8209228515625,
+       433.9876403808594,
+       351.6680603027344
+      ]
+     },
+     {
+      "min_g": -456.89471435546875,
+      "max_g": 303.6330261230469,
+      "min_g_present": -456.89471435546875,
+      "min_g_unseen": -362.03668212890625,
+      "n_negative_g": 713,
+      "min_step_change": -216.44318389892578,
+      "n_step_decreases": 377,
+      "g_dwell_E": -456.89471435546875,
+      "rhat_dwell_E": -357.89471435546875,
+      "best_subepisode_rhat": 28740.51547241211,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20040.51547241211,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "min_g_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "max_g_seeds": [
+       303.6330261230469,
+       447.5640869140625,
+       354.5012512207031
+      ]
+     },
+     {
+      "min_g": -465.8365478515625,
+      "max_g": 308.6795654296875,
+      "min_g_present": -465.8365478515625,
+      "min_g_unseen": -358.2012023925781,
+      "n_negative_g": 697,
+      "min_step_change": -266.8248596191406,
+      "n_step_decreases": 145,
+      "g_dwell_E": -465.8365478515625,
+      "rhat_dwell_E": -366.8365478515625,
+      "best_subepisode_rhat": 29265.424850463867,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20565.424850463867,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "min_g_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "max_g_seeds": [
+       308.6795654296875,
+       439.9150390625,
+       349.4436340332031
+      ]
+     },
+     {
+      "min_g": -466.07269287109375,
+      "max_g": 302.2875671386719,
+      "min_g_present": -466.07269287109375,
+      "min_g_unseen": -346.4163818359375,
+      "n_negative_g": 724,
+      "min_step_change": -226.6598129272461,
+      "n_step_decreases": 1124,
+      "g_dwell_E": -466.07269287109375,
+      "rhat_dwell_E": -367.07269287109375,
+      "best_subepisode_rhat": 28620.871574401855,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 19920.871574401855,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "min_g_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "max_g_seeds": [
+       302.2875671386719,
+       440.9782409667969,
+       352.0241394042969
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      28890.49298095703,
+      28890.49298095703,
+      28890.49298095703,
+      28890.49298095703
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124261.97192382812
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -78.31936723460333,
+      "max_g": 47.926784294467,
+      "min_g_present": -78.31936723460333,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 23,
+      "min_step_change": -78.31936723460333,
+      "n_step_decreases": 23,
+      "g_dwell_E": -78.31936723460333,
+      "rhat_dwell_E": 20.680632765396666,
+      "best_subepisode_rhat": 4230.501925700734,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4469.498074299266,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -77.55860404094356,
+      "max_g": 48.44822956607071,
+      "min_g_present": -77.55860404094356,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 28,
+      "min_step_change": -1.0283990140415256,
+      "n_step_decreases": 26,
+      "g_dwell_E": -77.55860404094356,
+      "rhat_dwell_E": 21.441395959056436,
+      "best_subepisode_rhat": 4160.7472881266385,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4539.2527118733615,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -77.30501564690037,
+      "max_g": 48.810527914765515,
+      "min_g_present": -77.30501564690037,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 29,
+      "min_step_change": -0.32081936640319464,
+      "n_step_decreases": 28,
+      "g_dwell_E": -77.30501564690037,
+      "rhat_dwell_E": 21.694984353099628,
+      "best_subepisode_rhat": 4136.250580388601,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4563.749419611399,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -76.89619163541019,
+      "max_g": 49.36554522549562,
+      "min_g_present": -76.89619163541019,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 34,
+      "min_step_change": -0.5329792188432894,
+      "n_step_decreases": 24,
+      "g_dwell_E": -76.89619163541019,
+      "rhat_dwell_E": 22.10380836458981,
+      "best_subepisode_rhat": 4093.61322532989,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4606.38677467011,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   }
+  },
+  "P1-eq1": {
+   "gconfig": {
+    "use_regularization": false
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -449.994140625,
+      "max_g": 304.85040283203125,
+      "min_g_present": -449.994140625,
+      "min_g_unseen": -372.3587341308594,
+      "n_negative_g": 672,
+      "min_step_change": -449.994140625,
+      "n_step_decreases": 672,
+      "g_dwell_E": -449.994140625,
+      "rhat_dwell_E": -350.994140625,
+      "best_subepisode_rhat": 28971.869720458984,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20271.869720458984,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "min_g_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "max_g_seeds": [
+       304.85040283203125,
+       454.0115661621094,
+       354.2391052246094
+      ]
+     },
+     {
+      "min_g": -397.82440185546875,
+      "max_g": 204.68898010253906,
+      "min_g_present": -397.82440185546875,
+      "min_g_unseen": -283.25274658203125,
+      "n_negative_g": 169,
+      "min_step_change": -124.42915344238281,
+      "n_step_decreases": 78,
+      "g_dwell_E": -397.82440185546875,
+      "rhat_dwell_E": -298.82440185546875,
+      "best_subepisode_rhat": 19794.873916625977,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 11094.873916625977,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -397.82440185546875,
+       -310.192626953125,
+       -297.2801818847656
+      ],
+      "min_g_seeds": [
+       -397.82440185546875,
+       -310.192626953125,
+       -297.2801818847656
+      ],
+      "max_g_seeds": [
+       204.68898010253906,
+       392.8656005859375,
+       371.7878723144531
+      ]
+     },
+     {
+      "min_g": -397.1605529785156,
+      "max_g": 228.96969604492188,
+      "min_g_present": -397.1605529785156,
+      "min_g_unseen": -281.4017028808594,
+      "n_negative_g": 171,
+      "min_step_change": -72.35439872741699,
+      "n_step_decreases": 222,
+      "g_dwell_E": -397.1605529785156,
+      "rhat_dwell_E": -298.1605529785156,
+      "best_subepisode_rhat": 21907.688690185547,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 13207.688690185547,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -397.1605529785156,
+       -333.6336975097656,
+       -329.097900390625
+      ],
+      "min_g_seeds": [
+       -397.1605529785156,
+       -333.6336975097656,
+       -329.097900390625
+      ],
+      "max_g_seeds": [
+       228.96969604492188,
+       417.56402587890625,
+       337.01544189453125
+      ]
+     },
+     {
+      "min_g": -398.86004638671875,
+      "max_g": 198.87017822265625,
+      "min_g_present": -398.86004638671875,
+      "min_g_unseen": -290.69366455078125,
+      "n_negative_g": 203,
+      "min_step_change": -65.93206787109375,
+      "n_step_decreases": 1115,
+      "g_dwell_E": -398.86004638671875,
+      "rhat_dwell_E": -299.86004638671875,
+      "best_subepisode_rhat": 18375.450607299805,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 9675.450607299805,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 1029,
+      "g_dwell_E_seeds": [
+       -398.86004638671875,
+       -330.3193054199219,
+       -327.9333190917969
+      ],
+      "min_g_seeds": [
+       -398.86004638671875,
+       -330.3193054199219,
+       -327.9333190917969
+      ],
+      "max_g_seeds": [
+       198.87017822265625,
+       390.9492492675781,
+       294.6866760253906
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      28971.869720458984,
+      28971.869720458984,
+      28971.869720458984,
+      28971.869720458984
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124587.47888183594
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -77.66974654004314,
+      "max_g": 46.83028844723419,
+      "min_g_present": -77.66974654004314,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 20,
+      "min_step_change": -77.66974654004314,
+      "n_step_decreases": 20,
+      "g_dwell_E": -77.66974654004314,
+      "rhat_dwell_E": 21.330253459956865,
+      "best_subepisode_rhat": 4332.610059562071,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4367.389940437929,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -69.27219044668382,
+      "max_g": 58.13342492948131,
+      "min_g_present": -69.27219044668382,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 26,
+      "min_step_change": -17.27609073071841,
+      "n_step_decreases": 15,
+      "g_dwell_E": -69.27219044668382,
+      "rhat_dwell_E": 29.727809553316177,
+      "best_subepisode_rhat": 4324.091498071423,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": -4375.908501928577,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -82.00845065319368,
+      "max_g": 33.01538426797475,
+      "min_g_present": -82.00845065319368,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 79,
+      "min_step_change": -28.864863865455593,
+      "n_step_decreases": 82,
+      "g_dwell_E": -82.00845065319368,
+      "rhat_dwell_E": 16.991549346806323,
+      "best_subepisode_rhat": 4026.867466434375,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4673.132533565626,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 151,
+      "converged": true
+     },
+     {
+      "min_g": -74.18020459417357,
+      "max_g": 40.8461021593149,
+      "min_g_present": -74.18020459417357,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 68,
+      "min_step_change": -19.605341239985393,
+      "n_step_decreases": 72,
+      "g_dwell_E": -74.18020459417357,
+      "rhat_dwell_E": 24.819795405826426,
+      "best_subepisode_rhat": 3941.228275963741,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4758.771724036259,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 151,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -469.9394226074219,
+      "max_g": 304.8209228515625,
+      "min_g_present": -469.9394226074219,
+      "min_g_unseen": -379.1636047363281,
+      "n_negative_g": 727,
+      "min_step_change": -469.9394226074219,
+      "n_step_decreases": 727,
+      "g_dwell_E": -469.9394226074219,
+      "rhat_dwell_E": -370.9394226074219,
+      "best_subepisode_rhat": 28890.49298095703,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20190.49298095703,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "min_g_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "max_g_seeds": [
+       304.8209228515625,
+       433.9876403808594,
+       351.6680603027344
+      ]
+     },
+     {
+      "min_g": -456.89471435546875,
+      "max_g": 303.6330261230469,
+      "min_g_present": -456.89471435546875,
+      "min_g_unseen": -362.03668212890625,
+      "n_negative_g": 713,
+      "min_step_change": -216.44318389892578,
+      "n_step_decreases": 377,
+      "g_dwell_E": -456.89471435546875,
+      "rhat_dwell_E": -357.89471435546875,
+      "best_subepisode_rhat": 28740.51547241211,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20040.51547241211,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "min_g_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "max_g_seeds": [
+       303.6330261230469,
+       447.5640869140625,
+       354.5012512207031
+      ]
+     },
+     {
+      "min_g": -465.8365478515625,
+      "max_g": 308.6795654296875,
+      "min_g_present": -465.8365478515625,
+      "min_g_unseen": -358.2012023925781,
+      "n_negative_g": 697,
+      "min_step_change": -266.8248596191406,
+      "n_step_decreases": 145,
+      "g_dwell_E": -465.8365478515625,
+      "rhat_dwell_E": -366.8365478515625,
+      "best_subepisode_rhat": 29265.424850463867,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20565.424850463867,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "min_g_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "max_g_seeds": [
+       308.6795654296875,
+       439.9150390625,
+       349.4436340332031
+      ]
+     },
+     {
+      "min_g": -466.07269287109375,
+      "max_g": 302.2875671386719,
+      "min_g_present": -466.07269287109375,
+      "min_g_unseen": -346.4163818359375,
+      "n_negative_g": 724,
+      "min_step_change": -226.6598129272461,
+      "n_step_decreases": 1124,
+      "g_dwell_E": -466.07269287109375,
+      "rhat_dwell_E": -367.07269287109375,
+      "best_subepisode_rhat": 28620.871574401855,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 19920.871574401855,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "min_g_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "max_g_seeds": [
+       302.2875671386719,
+       440.9782409667969,
+       352.0241394042969
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      28890.49298095703,
+      28890.49298095703,
+      28890.49298095703,
+      28890.49298095703
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124261.97192382812
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -78.31936723460333,
+      "max_g": 47.926784294467,
+      "min_g_present": -78.31936723460333,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 23,
+      "min_step_change": -78.31936723460333,
+      "n_step_decreases": 23,
+      "g_dwell_E": -78.31936723460333,
+      "rhat_dwell_E": 20.680632765396666,
+      "best_subepisode_rhat": 4230.501925700734,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4469.498074299266,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -77.55860404094356,
+      "max_g": 48.44822956607071,
+      "min_g_present": -77.55860404094356,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 28,
+      "min_step_change": -1.0283990140415256,
+      "n_step_decreases": 26,
+      "g_dwell_E": -77.55860404094356,
+      "rhat_dwell_E": 21.441395959056436,
+      "best_subepisode_rhat": 4160.7472881266385,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4539.2527118733615,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -77.30501564690037,
+      "max_g": 48.810527914765515,
+      "min_g_present": -77.30501564690037,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 29,
+      "min_step_change": -0.32081936640319464,
+      "n_step_decreases": 28,
+      "g_dwell_E": -77.30501564690037,
+      "rhat_dwell_E": 21.694984353099628,
+      "best_subepisode_rhat": 4136.250580388601,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4563.749419611399,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -76.89619163541019,
+      "max_g": 49.36554522549562,
+      "min_g_present": -76.89619163541019,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 34,
+      "min_step_change": -0.5329792188432894,
+      "n_step_decreases": 24,
+      "g_dwell_E": -76.89619163541019,
+      "rhat_dwell_E": 22.10380836458981,
+      "best_subepisode_rhat": 4093.61322532989,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4606.38677467011,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   }
+  },
+  "P2-swap": {
+   "gconfig": {
+    "l_minus_on": "dispreferred"
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -0.006143826991319656,
+      "max_g": 360.9751281738281,
+      "min_g_present": -0.006143826991319656,
+      "min_g_unseen": -0.004883486777544022,
+      "n_negative_g": 23,
+      "min_step_change": -0.006143826991319656,
+      "n_step_decreases": 23,
+      "g_dwell_E": 0.0006825514137744904,
+      "rhat_dwell_E": 99.00068255141377,
+      "best_subepisode_rhat": 33875.8456283994,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 25175.845628399402,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0006825514137744904,
+       0.0003361143171787262,
+       -0.0002428777515888214
+      ],
+      "min_g_seeds": [
+       -0.006143826991319656,
+       -0.0031440965831279755,
+       -0.004546400159597397
+      ],
+      "max_g_seeds": [
+       360.9751281738281,
+       493.36138916015625,
+       462.8082275390625
+      ]
+     },
+     {
+      "min_g": -2.1839394569396973,
+      "max_g": 1.4064222574234009,
+      "min_g_present": -2.1625640392303467,
+      "min_g_unseen": -2.1839394569396973,
+      "n_negative_g": 956,
+      "min_step_change": -359.9261553287506,
+      "n_step_decreases": 1117,
+      "g_dwell_E": -2.1222782135009766,
+      "rhat_dwell_E": 96.87772178649902,
+      "best_subepisode_rhat": 8521.376042068005,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -178.6239579319954,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -2.1222782135009766,
+       -2.1344552040100098,
+       -2.1332197189331055
+      ],
+      "min_g_seeds": [
+       -2.1839394569396973,
+       -2.1826889514923096,
+       -2.2192492485046387
+      ],
+      "max_g_seeds": [
+       1.4064222574234009,
+       1.35248863697052,
+       1.447896957397461
+      ]
+     },
+     {
+      "min_g": -1.692046880722046,
+      "max_g": 2.5647878646850586,
+      "min_g_present": -1.4678013324737549,
+      "min_g_unseen": -1.692046880722046,
+      "n_negative_g": 860,
+      "min_step_change": -2.193550705909729,
+      "n_step_decreases": 153,
+      "g_dwell_E": -1.4206135272979736,
+      "rhat_dwell_E": 97.57938647270203,
+      "best_subepisode_rhat": 8575.321928322315,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -124.67807167768478,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -1.4206135272979736,
+       -1.415583848953247,
+       -1.4177430868148804
+      ],
+      "min_g_seeds": [
+       -1.692046880722046,
+       -1.7173892259597778,
+       -1.571363925933838
+      ],
+      "max_g_seeds": [
+       2.5647878646850586,
+       2.539004325866699,
+       2.558377742767334
+      ]
+     },
+     {
+      "min_g": -1.297966480255127,
+      "max_g": 3.228569507598877,
+      "min_g_present": -1.1027511358261108,
+      "min_g_unseen": -1.297966480255127,
+      "n_negative_g": 688,
+      "min_step_change": -1.6243221163749695,
+      "n_step_decreases": 82,
+      "g_dwell_E": -1.0641933679580688,
+      "rhat_dwell_E": 97.93580663204193,
+      "best_subepisode_rhat": 8605.754743561149,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -94.24525643885136,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -1.0641933679580688,
+       -1.0645931959152222,
+       -1.0598543882369995
+      ],
+      "min_g_seeds": [
+       -1.297966480255127,
+       -1.258034110069275,
+       -1.2244646549224854
+      ],
+      "max_g_seeds": [
+       3.228569507598877,
+       3.18376088142395,
+       3.137366771697998
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      33875.8456283994,
+      33875.8456283994,
+      33875.8456283994,
+      33875.8456283994
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 144203.3825135976
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -0.00022688640167711115,
+      "max_g": 169.37095588367615,
+      "min_g_present": -0.00022688640167711115,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 26,
+      "min_step_change": -0.0002268864016770067,
+      "n_step_decreases": 26,
+      "g_dwell_E": -0.00012281645179287949,
+      "rhat_dwell_E": 98.99987718354821,
+      "best_subepisode_rhat": 12389.852854231358,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3689.852854231358,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -1.2672253475230237,
+      "max_g": 3.8956527836460744,
+      "min_g_present": -1.2672253475230237,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 113,
+      "min_step_change": -168.70821976080703,
+      "n_step_decreases": 150,
+      "g_dwell_E": -1.2672253475230237,
+      "rhat_dwell_E": 97.73277465247698,
+      "best_subepisode_rhat": 8596.196883897012,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -103.8031161029885,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 183,
+      "converged": true
+     },
+     {
+      "min_g": -0.8448457517454018,
+      "max_g": 4.4265239939058585,
+      "min_g_present": -0.8448457517454018,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 144,
+      "min_step_change": -2.290383036553205,
+      "n_step_decreases": 51,
+      "g_dwell_E": -0.8448457517454018,
+      "rhat_dwell_E": 98.1551542482546,
+      "best_subepisode_rhat": 8627.586111752295,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -72.41388824770547,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 183,
+      "converged": true
+     },
+     {
+      "min_g": -0.6336416299384813,
+      "max_g": 4.6519028507009805,
+      "min_g_present": -0.6336416299384813,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 159,
+      "min_step_change": -0.630086636017918,
+      "n_step_decreases": 31,
+      "g_dwell_E": -0.6336416299384813,
+      "rhat_dwell_E": 98.36635837006152,
+      "best_subepisode_rhat": 8645.001415901412,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -54.99858409858825,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 183,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12389.852854231358,
+      12389.852854231358,
+      12389.852854231358,
+      12389.852854231358
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 58259.41141692548
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -0.033024225383996964,
+      "max_g": 449.9683532714844,
+      "min_g_present": -0.033024225383996964,
+      "min_g_unseen": -0.0238678939640522,
+      "n_negative_g": 17,
+      "min_step_change": -0.033024225383996964,
+      "n_step_decreases": 17,
+      "g_dwell_E": 0.0005305483937263489,
+      "rhat_dwell_E": 99.00053054839373,
+      "best_subepisode_rhat": 42159.06997260079,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 33459.06997260079,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0005305483937263489,
+       0.002985231578350067,
+       -0.000794537365436554
+      ],
+      "min_g_seeds": [
+       -0.033024225383996964,
+       0.0007529258728027344,
+       -0.007237685844302177
+      ],
+      "max_g_seeds": [
+       449.9683532714844,
+       334.51361083984375,
+       491.2168884277344
+      ]
+     },
+     {
+      "min_g": -0.010178815573453903,
+      "max_g": 209.93447875976562,
+      "min_g_present": -0.010178815573453903,
+      "min_g_unseen": -0.010021485388278961,
+      "n_negative_g": 122,
+      "min_step_change": -240.03387451171875,
+      "n_step_decreases": 1111,
+      "g_dwell_E": 0.003998905420303345,
+      "rhat_dwell_E": 99.0039989054203,
+      "best_subepisode_rhat": 19567.561105865985,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 10867.561105865985,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.003998905420303345,
+       0.0018158778548240662,
+       0.00036385469138622284
+      ],
+      "min_g_seeds": [
+       -0.010178815573453903,
+       -0.1446894258260727,
+       -0.000888872891664505
+      ],
+      "max_g_seeds": [
+       209.93447875976562,
+       395.0245056152344,
+       474.1655578613281
+      ]
+     },
+     {
+      "min_g": -0.007397349923849106,
+      "max_g": 477.28619384765625,
+      "min_g_present": -0.007397349923849106,
+      "min_g_unseen": -0.0069329701364040375,
+      "n_negative_g": 75,
+      "min_step_change": -13.830234073102474,
+      "n_step_decreases": 19,
+      "g_dwell_E": -0.0013357661664485931,
+      "rhat_dwell_E": 98.99866423383355,
+      "best_subepisode_rhat": 44578.593371693045,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 35878.593371693045,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -0.0013357661664485931,
+       0.0007353499531745911,
+       -0.0007900577038526535
+      ],
+      "min_g_seeds": [
+       -0.007397349923849106,
+       -0.0050271376967430115,
+       -0.002732114866375923
+      ],
+      "max_g_seeds": [
+       477.28619384765625,
+       500.242919921875,
+       510.2099914550781
+      ]
+     },
+     {
+      "min_g": -0.006421435624361038,
+      "max_g": 403.3655090332031,
+      "min_g_present": -0.004986349493265152,
+      "min_g_unseen": -0.006421435624361038,
+      "n_negative_g": 61,
+      "min_step_change": -95.5981272533536,
+      "n_step_decreases": 1060,
+      "g_dwell_E": -0.001826789230108261,
+      "rhat_dwell_E": 98.99817321076989,
+      "best_subepisode_rhat": 37874.244540628046,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 29174.244540628046,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -0.001826789230108261,
+       -0.0005278326570987701,
+       0.0004720594733953476
+      ],
+      "min_g_seeds": [
+       -0.006421435624361038,
+       -0.006537590175867081,
+       -0.0009458083659410477
+      ],
+      "max_g_seeds": [
+       403.3655090332031,
+       498.73504638671875,
+       589.3367919921875
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      42159.06997260079,
+      42159.06997260079,
+      42159.06997260079,
+      42159.06997260079
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 177336.27989040315
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -0.0013873414244140606,
+      "max_g": 167.42725158030078,
+      "min_g_present": -0.0013873414244140606,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 28,
+      "min_step_change": -0.0013873414244141014,
+      "n_step_decreases": 28,
+      "g_dwell_E": -0.0001252292300963779,
+      "rhat_dwell_E": 98.9998747707699,
+      "best_subepisode_rhat": 12249.167669244738,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3549.167669244738,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -0.0002428963475625085,
+      "max_g": 168.3725648594604,
+      "min_g_present": -0.0002428963475625085,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 27,
+      "min_step_change": -1.1197765319510804,
+      "n_step_decreases": 11,
+      "g_dwell_E": -6.333333483658931e-05,
+      "rhat_dwell_E": 98.99993666666516,
+      "best_subepisode_rhat": 12318.137093046043,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3618.1370930460434,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -0.00016195397160454186,
+      "max_g": 168.74612182297807,
+      "min_g_present": -0.00016195397160454186,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 31,
+      "min_step_change": -0.9383854731195775,
+      "n_step_decreases": 36,
+      "g_dwell_E": -4.209984270810341e-05,
+      "rhat_dwell_E": 98.9999579001573,
+      "best_subepisode_rhat": 12344.994583463003,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3644.9945834630034,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -9.768481838014299e-05,
+      "max_g": 168.89357982856762,
+      "min_g_present": -9.768481838014299e-05,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 37,
+      "min_step_change": -0.475909958659372,
+      "n_step_decreases": 39,
+      "g_dwell_E": -3.1689665985583976e-05,
+      "rhat_dwell_E": 98.99996831033401,
+      "best_subepisode_rhat": 12355.574662644922,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3655.574662644922,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12249.167669244738,
+      12249.167669244738,
+      12249.167669244738,
+      12249.167669244738
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 57696.67067697935
+    }
+   }
+  },
+  "P2-swap-noLplus": {
+   "gconfig": {
+    "l_minus_on": "dispreferred",
+    "l_plus": false
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -0.006143826991319656,
+      "max_g": 360.9751281738281,
+      "min_g_present": -0.006143826991319656,
+      "min_g_unseen": -0.004883486777544022,
+      "n_negative_g": 23,
+      "min_step_change": -0.006143826991319656,
+      "n_step_decreases": 23,
+      "g_dwell_E": 0.0006825514137744904,
+      "rhat_dwell_E": 99.00068255141377,
+      "best_subepisode_rhat": 33875.8456283994,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 25175.845628399402,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0006825514137744904,
+       0.0003361143171787262,
+       -0.0002428777515888214
+      ],
+      "min_g_seeds": [
+       -0.006143826991319656,
+       -0.0031440965831279755,
+       -0.004546400159597397
+      ],
+      "max_g_seeds": [
+       360.9751281738281,
+       493.36138916015625,
+       462.8082275390625
+      ]
+     },
+     {
+      "min_g": -2.2421717643737793,
+      "max_g": 43.02104568481445,
+      "min_g_present": -2.2101805210113525,
+      "min_g_unseen": -2.2421717643737793,
+      "n_negative_g": 436,
+      "min_step_change": -350.39648628234863,
+      "n_step_decreases": 1117,
+      "g_dwell_E": -2.122826337814331,
+      "rhat_dwell_E": 96.87717366218567,
+      "best_subepisode_rhat": 8645.841241121292,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -54.158758878707886,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -2.122826337814331,
+       -2.119495153427124,
+       -2.1229965686798096
+      ],
+      "min_g_seeds": [
+       -2.2421717643737793,
+       -2.240302562713623,
+       -2.2562954425811768
+      ],
+      "max_g_seeds": [
+       43.02104568481445,
+       43.718997955322266,
+       41.81540298461914
+      ]
+     },
+     {
+      "min_g": -1.5192729234695435,
+      "max_g": 114.48616790771484,
+      "min_g_present": -1.466374397277832,
+      "min_g_unseen": -1.5192729234695435,
+      "n_negative_g": 594,
+      "min_step_change": -44.09991765022278,
+      "n_step_decreases": 361,
+      "g_dwell_E": -1.398813009262085,
+      "rhat_dwell_E": 97.60118699073792,
+      "best_subepisode_rhat": 8633.733717858791,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -66.26628214120865,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -1.398813009262085,
+       -1.4078353643417358,
+       -1.426347255706787
+      ],
+      "min_g_seeds": [
+       -1.5192729234695435,
+       -1.5534566640853882,
+       -1.9009079933166504
+      ],
+      "max_g_seeds": [
+       114.48616790771484,
+       105.29985809326172,
+       114.82476806640625
+      ]
+     },
+     {
+      "min_g": -1.1320743560791016,
+      "max_g": 162.29087829589844,
+      "min_g_present": -1.1320743560791016,
+      "min_g_unseen": -1.0993093252182007,
+      "n_negative_g": 439,
+      "min_step_change": -74.07453155517578,
+      "n_step_decreases": 427,
+      "g_dwell_E": -1.0731767416000366,
+      "rhat_dwell_E": 97.92682325839996,
+      "best_subepisode_rhat": 10488.106169760227,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 1788.1061697602272,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -1.0731767416000366,
+       -1.056636095046997,
+       -1.0643247365951538
+      ],
+      "min_g_seeds": [
+       -1.1320743560791016,
+       -1.295371651649475,
+       -1.2230113744735718
+      ],
+      "max_g_seeds": [
+       162.29087829589844,
+       148.5242156982422,
+       153.93475341796875
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      33875.8456283994,
+      33875.8456283994,
+      33875.8456283994,
+      33875.8456283994
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 144203.3825135976
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -0.00022688640167711115,
+      "max_g": 169.37095588367615,
+      "min_g_present": -0.00022688640167711115,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 26,
+      "min_step_change": -0.0002268864016770067,
+      "n_step_decreases": 26,
+      "g_dwell_E": -0.00012281645179287949,
+      "rhat_dwell_E": 98.99987718354821,
+      "best_subepisode_rhat": 12389.852854231358,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3689.852854231358,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -1.2672252412367055,
+      "max_g": 142.65918032623048,
+      "min_g_present": -1.2672252412367055,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 53,
+      "min_step_change": -166.98230307946972,
+      "n_step_decreases": 76,
+      "g_dwell_E": -1.2672252412367055,
+      "rhat_dwell_E": 97.7327747587633,
+      "best_subepisode_rhat": 8622.113704884767,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": -77.88629511523322,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 183,
+      "converged": true
+     },
+     {
+      "min_g": -0.8448460322596657,
+      "max_g": 305.63263495564104,
+      "min_g_present": -0.8448460322596657,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 90,
+      "min_step_change": -15.586919007373957,
+      "n_step_decreases": 105,
+      "g_dwell_E": -0.8448460322596657,
+      "rhat_dwell_E": 98.15515396774033,
+      "best_subepisode_rhat": 16667.70324645123,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 7967.70324645123,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 183,
+      "converged": true
+     },
+     {
+      "min_g": -75.57605770437685,
+      "max_g": 219.18277998963893,
+      "min_g_present": -75.57605770437685,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 109,
+      "min_step_change": -191.45804663040434,
+      "n_step_decreases": 123,
+      "g_dwell_E": -1.8834603373343322,
+      "rhat_dwell_E": 97.11653966266567,
+      "best_subepisode_rhat": 11569.388582630982,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 2869.3885826309815,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 544,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2], keeps exploiting",
+     "n_corrections": 3,
+     "caught_after_rounds": [
+      0,
+      1,
+      2
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      3
+     ],
+     "received_by_k": [
+      8700.0,
+      8732.49898672282,
+      8622.113704884767,
+      16667.70324645123,
+      16667.70324645123
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      88,
+      88,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      10,
+      10,
+      0,
+      0
+     ],
+     "V0": 59390.019184509765
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -0.033024225383996964,
+      "max_g": 449.9683532714844,
+      "min_g_present": -0.033024225383996964,
+      "min_g_unseen": -0.0238678939640522,
+      "n_negative_g": 17,
+      "min_step_change": -0.033024225383996964,
+      "n_step_decreases": 17,
+      "g_dwell_E": 0.0005305483937263489,
+      "rhat_dwell_E": 99.00053054839373,
+      "best_subepisode_rhat": 42159.06997260079,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 33459.06997260079,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0005305483937263489,
+       0.002985231578350067,
+       -0.000794537365436554
+      ],
+      "min_g_seeds": [
+       -0.033024225383996964,
+       0.0007529258728027344,
+       -0.007237685844302177
+      ],
+      "max_g_seeds": [
+       449.9683532714844,
+       334.51361083984375,
+       491.2168884277344
+      ]
+     },
+     {
+      "min_g": -0.010178815573453903,
+      "max_g": 209.93447875976562,
+      "min_g_present": -0.010178815573453903,
+      "min_g_unseen": -0.010021485388278961,
+      "n_negative_g": 122,
+      "min_step_change": -240.03387451171875,
+      "n_step_decreases": 1111,
+      "g_dwell_E": 0.003998905420303345,
+      "rhat_dwell_E": 99.0039989054203,
+      "best_subepisode_rhat": 19567.561105865985,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 10867.561105865985,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.003998905420303345,
+       0.0018158778548240662,
+       0.00036385469138622284
+      ],
+      "min_g_seeds": [
+       -0.010178815573453903,
+       -0.1446894258260727,
+       -0.000888872891664505
+      ],
+      "max_g_seeds": [
+       209.93447875976562,
+       395.0245056152344,
+       474.1655578613281
+      ]
+     },
+     {
+      "min_g": -0.007397349923849106,
+      "max_g": 477.28619384765625,
+      "min_g_present": -0.007397349923849106,
+      "min_g_unseen": -0.0069329701364040375,
+      "n_negative_g": 75,
+      "min_step_change": -13.830234073102474,
+      "n_step_decreases": 19,
+      "g_dwell_E": -0.0013357661664485931,
+      "rhat_dwell_E": 98.99866423383355,
+      "best_subepisode_rhat": 44578.593371693045,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 35878.593371693045,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -0.0013357661664485931,
+       0.0007353499531745911,
+       -0.0007900577038526535
+      ],
+      "min_g_seeds": [
+       -0.007397349923849106,
+       -0.0050271376967430115,
+       -0.002732114866375923
+      ],
+      "max_g_seeds": [
+       477.28619384765625,
+       500.242919921875,
+       510.2099914550781
+      ]
+     },
+     {
+      "min_g": -0.006421435624361038,
+      "max_g": 403.3655090332031,
+      "min_g_present": -0.004986349493265152,
+      "min_g_unseen": -0.006421435624361038,
+      "n_negative_g": 61,
+      "min_step_change": -95.5981272533536,
+      "n_step_decreases": 1060,
+      "g_dwell_E": -0.001826789230108261,
+      "rhat_dwell_E": 98.99817321076989,
+      "best_subepisode_rhat": 37874.244540628046,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 29174.244540628046,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -0.001826789230108261,
+       -0.0005278326570987701,
+       0.0004720594733953476
+      ],
+      "min_g_seeds": [
+       -0.006421435624361038,
+       -0.006537590175867081,
+       -0.0009458083659410477
+      ],
+      "max_g_seeds": [
+       403.3655090332031,
+       498.73504638671875,
+       589.3367919921875
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      42159.06997260079,
+      42159.06997260079,
+      42159.06997260079,
+      42159.06997260079
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 177336.27989040315
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -0.0013873414244140606,
+      "max_g": 167.42725158030078,
+      "min_g_present": -0.0013873414244140606,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 28,
+      "min_step_change": -0.0013873414244141014,
+      "n_step_decreases": 28,
+      "g_dwell_E": -0.0001252292300963779,
+      "rhat_dwell_E": 98.9998747707699,
+      "best_subepisode_rhat": 12249.167669244738,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3549.167669244738,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -0.0002428963475625085,
+      "max_g": 168.3725648594604,
+      "min_g_present": -0.0002428963475625085,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 27,
+      "min_step_change": -1.1197765319510804,
+      "n_step_decreases": 11,
+      "g_dwell_E": -6.333333483658931e-05,
+      "rhat_dwell_E": 98.99993666666516,
+      "best_subepisode_rhat": 12318.137093046043,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3618.1370930460434,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -0.00016195397160454186,
+      "max_g": 168.74612182297807,
+      "min_g_present": -0.00016195397160454186,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 31,
+      "min_step_change": -0.9383854731195775,
+      "n_step_decreases": 36,
+      "g_dwell_E": -4.209984270810341e-05,
+      "rhat_dwell_E": 98.9999579001573,
+      "best_subepisode_rhat": 12344.994583463003,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3644.9945834630034,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -9.768481838014299e-05,
+      "max_g": 168.89357982856762,
+      "min_g_present": -9.768481838014299e-05,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 37,
+      "min_step_change": -0.475909958659372,
+      "n_step_decreases": 39,
+      "g_dwell_E": -3.1689665985583976e-05,
+      "rhat_dwell_E": 98.99996831033401,
+      "best_subepisode_rhat": 12355.574662644922,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3655.574662644922,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12249.167669244738,
+      12249.167669244738,
+      12249.167669244738,
+      12249.167669244738
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 57696.67067697935
+    }
+   }
+  },
+  "P2-floor": {
+   "gconfig": {
+    "l_minus_on": "dispreferred",
+    "g_floor": "clip"
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 360.9751281738281,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0006825514137744904,
+      "rhat_dwell_E": 99.00068255141377,
+      "best_subepisode_rhat": 33875.84941101074,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 25175.849411010742,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0006825514137744904,
+       0.0003361143171787262,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       360.9751281738281,
+       493.36138916015625,
+       462.8082275390625
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 1.4064222574234009,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -359.9261553287506,
+      "n_step_decreases": 1095,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8710.770912468433,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 10.77091246843338,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       1.4064222574234009,
+       1.35248863697052,
+       1.447896957397461
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 2.5400807857513428,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -1.1163524389266968,
+      "n_step_decreases": 92,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8704.786478042603,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 4.786478042602539,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       2.5400807857513428,
+       2.5712716579437256,
+       2.569298028945923
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 3.238823890686035,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.9966352581977844,
+      "n_step_decreases": 56,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8703.881016254425,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 3.881016254425049,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       3.238823890686035,
+       3.1938729286193848,
+       3.143977165222168
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      33875.84941101074,
+      33875.84941101074,
+      33875.84941101074,
+      33875.84941101074
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 144203.39764404297
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 169.37119487300382,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12389.870277977087,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3689.8702779770865,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 3.65220729282075,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -168.6697293116249,
+      "n_step_decreases": 37,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8708.840704107883,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 8.84070410788263,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 195,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 4.148151748800049,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -2.1818755295667,
+      "n_step_decreases": 29,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8703.562288108695,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 3.562288108694702,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 195,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 4.395877122373458,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.35544386542342554,
+      "n_step_decreases": 27,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8701.874649489419,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 1.8746494894185162,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 195,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12389.870277977087,
+      12389.870277977087,
+      12389.870277977087,
+      12389.870277977087
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 58259.481111908535
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 449.9683532714844,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0005305483937263489,
+      "rhat_dwell_E": 99.00053054839373,
+      "best_subepisode_rhat": 42159.10299682617,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 33459.10299682617,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0005305483937263489,
+       0.002985231578350067,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0007529258728027344,
+       0.0
+      ],
+      "max_g_seeds": [
+       449.9683532714844,
+       334.51361083984375,
+       491.2168884277344
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 209.93447875976562,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -240.03387451171875,
+      "n_step_decreases": 1106,
+      "g_dwell_E": 0.003998905420303345,
+      "rhat_dwell_E": 99.0039989054203,
+      "best_subepisode_rhat": 19567.570755004883,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 10867.570755004883,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.003998905420303345,
+       0.0018158778548240662,
+       0.00036385469138622284
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       209.93447875976562,
+       395.0245056152344,
+       474.1655578613281
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 477.28619384765625,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -13.830234073102474,
+      "n_step_decreases": 15,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 44578.60076904297,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 35878.60076904297,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0007353499531745911,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       477.28619384765625,
+       500.242919921875,
+       510.2099914550781
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 403.3655090332031,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -95.5981272533536,
+      "n_step_decreases": 1029,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 37874.24952697754,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 29174.24952697754,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0004720594733953476
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       403.3655090332031,
+       498.73504638671875,
+       589.3367919921875
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      42159.10299682617,
+      42159.10299682617,
+      42159.10299682617,
+      42159.10299682617
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 177336.4119873047
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 167.42760590255307,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12249.193468203006,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3549.193468203006,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.37268269957679,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -1.1198034283314493,
+      "n_step_decreases": 4,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12318.145691036176,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3618.145691036176,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.74620126660963,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.9384129645816941,
+      "n_step_decreases": 32,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12345.000382861252,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3645.0003828612516,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.89365392329475,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.4759173311856095,
+      "n_step_decreases": 33,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12355.580035820485,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3655.580035820485,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12249.193468203006,
+      12249.193468203006,
+      12249.193468203006,
+      12249.193468203006
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 57696.773872812024
+    }
+   }
+  },
+  "P2-floor-noLplus": {
+   "gconfig": {
+    "l_minus_on": "dispreferred",
+    "l_plus": false,
+    "g_floor": "clip"
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 360.9751281738281,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0006825514137744904,
+      "rhat_dwell_E": 99.00068255141377,
+      "best_subepisode_rhat": 33875.84941101074,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 25175.849411010742,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0006825514137744904,
+       0.0003361143171787262,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       360.9751281738281,
+       493.36138916015625,
+       462.8082275390625
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 43.02104568481445,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -350.39648628234863,
+      "n_step_decreases": 1095,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8837.02740931511,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 137.02740931510925,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       43.02104568481445,
+       43.718997955322266,
+       41.81540298461914
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 116.76612854003906,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -43.02104568481445,
+      "n_step_decreases": 294,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8761.4852912426,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 61.48529124259949,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       116.76612854003906,
+       114.3228759765625,
+       115.57500457763672
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 153.8736572265625,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -76.0112075805664,
+      "n_step_decreases": 426,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 10198.396290913224,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 1498.3962909132242,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       153.8736572265625,
+       141.799560546875,
+       156.86892700195312
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      33875.84941101074,
+      33875.84941101074,
+      33875.84941101074,
+      33875.84941101074
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 144203.39764404297
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 169.37119487300382,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12389.870277977087,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3689.8702779770865,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 66.3241857570936,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -166.62294403371075,
+      "n_step_decreases": 23,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8733.497572498449,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 33.49757249844879,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 195,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 148.14681758541994,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -15.340317474502296,
+      "n_step_decreases": 78,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 9157.166868822549,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 457.1668688225491,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 195,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 158.3967064066084,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -108.01479544667473,
+      "n_step_decreases": 11,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8759.753485956666,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 78,
+      "overshoot": 59.75348595666583,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 556,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12389.870277977087,
+      12389.870277977087,
+      12389.870277977087,
+      12389.870277977087
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 58259.481111908535
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 449.9683532714844,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0005305483937263489,
+      "rhat_dwell_E": 99.00053054839373,
+      "best_subepisode_rhat": 42159.10299682617,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 33459.10299682617,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0005305483937263489,
+       0.002985231578350067,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0007529258728027344,
+       0.0
+      ],
+      "max_g_seeds": [
+       449.9683532714844,
+       334.51361083984375,
+       491.2168884277344
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 209.93447875976562,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -240.03387451171875,
+      "n_step_decreases": 1106,
+      "g_dwell_E": 0.003998905420303345,
+      "rhat_dwell_E": 99.0039989054203,
+      "best_subepisode_rhat": 19567.570755004883,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 10867.570755004883,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.003998905420303345,
+       0.0018158778548240662,
+       0.00036385469138622284
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       209.93447875976562,
+       395.0245056152344,
+       474.1655578613281
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 477.28619384765625,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -13.830234073102474,
+      "n_step_decreases": 15,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 44578.60076904297,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 35878.60076904297,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0007353499531745911,
+       0.0
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       477.28619384765625,
+       500.242919921875,
+       510.2099914550781
+      ]
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 403.3655090332031,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -95.5981272533536,
+      "n_step_decreases": 1029,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 37874.24952697754,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 29174.24952697754,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       0.0,
+       0.0,
+       0.0004720594733953476
+      ],
+      "min_g_seeds": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_g_seeds": [
+       403.3655090332031,
+       498.73504638671875,
+       589.3367919921875
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      42159.10299682617,
+      42159.10299682617,
+      42159.10299682617,
+      42159.10299682617
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 177336.4119873047
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 167.42760590255307,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12249.193468203006,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3549.193468203006,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.37268269957679,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -1.1198034283314493,
+      "n_step_decreases": 4,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12318.145691036176,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3618.145691036176,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.74620126660963,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.9384129645816941,
+      "n_step_decreases": 32,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12345.000382861252,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3645.0003828612516,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.89365392329475,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.4759173311856095,
+      "n_step_decreases": 33,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12355.580035820485,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3655.580035820485,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12249.193468203006,
+      12249.193468203006,
+      12249.193468203006,
+      12249.193468203006
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 57696.773872812024
+    }
+   }
+  },
+  "P2-softplus": {
+   "gconfig": {
+    "l_minus_on": "dispreferred",
+    "g_floor": "softplus"
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": 6.0887885814990025e-24,
+      "max_g": 1.6098745163617423e-06,
+      "min_g_present": 6.0887885814990025e-24,
+      "min_g_unseen": 9.851874008304428e-24,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 6.0887885814990025e-24,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.000000176897,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 1.7689671949483454e-07,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       6.0887885814990025e-24,
+       2.88332662223324e-15,
+       6.1998237042486454e-21
+      ],
+      "min_g_seeds": [
+       6.0887885814990025e-24,
+       1.7582577570206758e-15,
+       8.411187371410008e-22
+      ],
+      "max_g_seeds": [
+       1.6098745163617423e-06,
+       0.016202803701162338,
+       6.339049377857009e-06
+      ]
+     },
+     {
+      "min_g": 1.453030942866572e-26,
+      "max_g": 5.8254670420865295e-08,
+      "min_g_present": 1.453030942866572e-26,
+      "min_g_unseen": 1.978255458009095e-25,
+      "n_negative_g": 0,
+      "min_step_change": -1.551619845940877e-06,
+      "n_step_decreases": 1,
+      "g_dwell_E": 1.1795996120545998e-25,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.0,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 0.0,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       1.1795996120545998e-25,
+       3.212352046586691e-23,
+       1.7720466503905468e-24
+      ],
+      "min_g_seeds": [
+       1.453030942866572e-26,
+       2.0143750569283526e-24,
+       3.182039326746475e-26
+      ],
+      "max_g_seeds": [
+       5.8254670420865295e-08,
+       3.9839878240854887e-07,
+       7.509377120129557e-09
+      ]
+     },
+     {
+      "min_g": 2.5557399743404886e-25,
+      "max_g": 8.754039981795358e-08,
+      "min_g_present": 2.5557399743404886e-25,
+      "min_g_unseen": 4.1673312812291435e-24,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 2.947919560269366e-24,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.0,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 0.0,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       2.947919560269366e-24,
+       2.708396461439662e-23,
+       9.653175526282133e-25
+      ],
+      "min_g_seeds": [
+       2.5557399743404886e-25,
+       5.357492631469005e-25,
+       6.874636980997371e-27
+      ],
+      "max_g_seeds": [
+       8.754039981795358e-08,
+       2.3274969862541184e-07,
+       3.2810358874257872e-09
+      ]
+     },
+     {
+      "min_g": 4.789156837041274e-27,
+      "max_g": 2.1449425346986573e-08,
+      "min_g_present": 4.789156837041274e-27,
+      "min_g_unseen": 9.819709117014463e-26,
+      "n_negative_g": 0,
+      "min_step_change": -6.609097447096701e-08,
+      "n_step_decreases": 0,
+      "g_dwell_E": 8.030312506393518e-26,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.0,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 0.0,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       8.030312506393518e-26,
+       1.6068585457485427e-23,
+       6.467992835347385e-25
+      ],
+      "min_g_seeds": [
+       4.789156837041274e-27,
+       2.857220179083967e-25,
+       4.347836923632739e-27
+      ],
+      "max_g_seeds": [
+       2.1449425346986573e-08,
+       1.5934486441437912e-07,
+       2.2926869291950425e-09
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2, 3], keeps exploiting",
+     "n_corrections": 4,
+     "caught_after_rounds": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "received_by_k": [
+      8700.0,
+      8700.000000176897,
+      8700.0,
+      8700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      88,
+      88,
+      88,
+      88
+     ],
+     "window_on_E_by_k": [
+      10,
+      10,
+      10,
+      10,
+      10
+     ],
+     "V0": 43500.00000017689
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 169.37119487300382,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12389.870277977087,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3689.8702779770865,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 3.65220729282075,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -168.6697293116249,
+      "n_step_decreases": 37,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8708.840704107883,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 8.84070410788263,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 195,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 4.148151748800049,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -2.1818755295667,
+      "n_step_decreases": 29,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8703.562288108695,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 3.562288108694702,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 195,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 4.395877122373458,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.35544386542342554,
+      "n_step_decreases": 27,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8701.874649489419,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 1.8746494894185162,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 195,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12389.870277977087,
+      12389.870277977087,
+      12389.870277977087,
+      12389.870277977087
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 58259.481111908535
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": 6.294276986547761e-24,
+      "max_g": 1.1877425549755571e-06,
+      "min_g_present": 6.294276986547761e-24,
+      "min_g_unseen": 2.197706528516942e-23,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 6.294276986547761e-24,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.000000218268,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 2.182678144890815e-07,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       6.294276986547761e-24,
+       9.67753010631739e-21,
+       4.782304523745374e-22
+      ],
+      "min_g_seeds": [
+       6.294276986547761e-24,
+       1.1110796616563105e-21,
+       2.1817769024856332e-23
+      ],
+      "max_g_seeds": [
+       1.1877425549755571e-06,
+       7.86837117630057e-05,
+       1.970362745851162e-06
+      ]
+     },
+     {
+      "min_g": 6.00844105219427e-26,
+      "max_g": 8.895576542045092e-08,
+      "min_g_present": 6.00844105219427e-26,
+      "min_g_unseen": 3.1835724286119655e-24,
+      "n_negative_g": 0,
+      "min_step_change": -1.0987867895551062e-06,
+      "n_step_decreases": 1,
+      "g_dwell_E": 2.3645117092677974e-25,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.000000017164,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 1.7163984011858702e-08,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       2.3645117092677974e-25,
+       6.051889237159499e-20,
+       2.7514553295458835e-24
+      ],
+      "min_g_seeds": [
+       6.00844105219427e-26,
+       2.040884792334899e-21,
+       2.2118494979966806e-26
+      ],
+      "max_g_seeds": [
+       8.895576542045092e-08,
+       4.635327968571801e-06,
+       1.6254306345331315e-08
+      ]
+     },
+     {
+      "min_g": 1.1563403352123126e-22,
+      "max_g": 5.12635892846447e-07,
+      "min_g_present": 1.1563403352123126e-22,
+      "min_g_unseen": 1.5685718317350268e-21,
+      "n_negative_g": 0,
+      "min_step_change": -6.661338147750939e-16,
+      "n_step_decreases": 0,
+      "g_dwell_E": 5.966950955285444e-22,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.000000166337,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 1.6633748600725085e-07,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       5.966950955285444e-22,
+       6.232270255424055e-11,
+       1.339699598370593e-24
+      ],
+      "min_g_seeds": [
+       1.1563403352123126e-22,
+       7.59695691771034e-12,
+       6.325438027683929e-27
+      ],
+      "max_g_seeds": [
+       5.12635892846447e-07,
+       0.0010696988319978118,
+       7.330108076075703e-09
+      ]
+     },
+     {
+      "min_g": 4.9603878017228436e-27,
+      "max_g": 2.211696781273531e-08,
+      "min_g_present": 4.9603878017228436e-27,
+      "min_g_unseen": 4.886489422940958e-25,
+      "n_negative_g": 0,
+      "min_step_change": -4.905189250337116e-07,
+      "n_step_decreases": 0,
+      "g_dwell_E": 5.0696032058975616e-26,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 8700.000000005468,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 88,
+      "overshoot": 5.4678821470588446e-09,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       5.0696032058975616e-26,
+       2.3646134032992417e-23,
+       1.021868032695113e-24
+      ],
+      "min_g_seeds": [
+       4.9603878017228436e-27,
+       1.6563595330384966e-25,
+       4.486485390701154e-27
+      ],
+      "max_g_seeds": [
+       2.211696781273531e-08,
+       1.9467451295440696e-07,
+       4.90286655718819e-09
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2, 3], keeps exploiting",
+     "n_corrections": 4,
+     "caught_after_rounds": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "received_by_k": [
+      8700.0,
+      8700.000000218268,
+      8700.000000017164,
+      8700.000000166337,
+      8700.000000005468
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      88,
+      88,
+      88,
+      88
+     ],
+     "window_on_E_by_k": [
+      10,
+      10,
+      10,
+      10,
+      10
+     ],
+     "V0": 43500.00000040723
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": 0.0,
+      "max_g": 167.42760590255307,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": 0.0,
+      "n_step_decreases": 0,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12249.193468203006,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3549.193468203006,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.37268269957679,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -1.1198034283314493,
+      "n_step_decreases": 4,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12318.145691036176,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3618.145691036176,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.74620126660963,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.9384129645816941,
+      "n_step_decreases": 32,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12345.000382861252,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3645.0003828612516,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": 0.0,
+      "max_g": 168.89365392329475,
+      "min_g_present": 0.0,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 0,
+      "min_step_change": -0.4759173311856095,
+      "n_step_decreases": 33,
+      "g_dwell_E": 0.0,
+      "rhat_dwell_E": 99.0,
+      "best_subepisode_rhat": 12355.580035820485,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 3655.580035820485,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      12249.193468203006,
+      12249.193468203006,
+      12249.193468203006,
+      12249.193468203006
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      1,
+      1
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 57696.773872812024
+    }
+   }
+  }
+ }
+}

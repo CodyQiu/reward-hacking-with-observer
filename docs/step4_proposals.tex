@@ -1,0 +1,520 @@
+% Step 4 proposals: mitigating correction avoidance.
+% Compiles with pdfLaTeX on Overleaf (standard TeX Live packages only).
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=0.95in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+\usepackage[shortlabels]{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+\usepackage{titlesec}
+\usepackage[colorlinks=true,linkcolor=accent,citecolor=accent,urlcolor=accent]{hyperref}
+
+% ---------- style ----------
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{soft}{HTML}{EEF3F8}
+\definecolor{muted}{HTML}{5A6470}
+
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.1em}{0.45em}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\setlist{nosep,leftmargin=1.3em}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\newtcolorbox{keybox}{enhanced, colback=soft, colframe=soft, arc=2pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+\newtcolorbox{proposal}[1]{enhanced, breakable, colback=white, colframe=accent,
+  boxrule=0.6pt, arc=2pt, left=8pt, right=8pt, top=5pt, bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+\newcommand{\fld}[1]{\par\vspace{3pt}{\color{accent}\textbf{#1.}}\enspace}
+\newcommand{\src}[1]{{\footnotesize\textsf{\color{muted}[#1]}}}
+\newcommand{\lever}[1]{\colorbox{soft}{\footnotesize\textsf{lever: #1}}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+% =====================================================================
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{accent} Step 4: Stopping the Agent from Avoiding Correction}\\[5pt]
+  {\large Proposals and experiment sketches}\\[6pt]
+  {\color{muted} Cody Qiu \quad$\cdot$\quad Draft, 25 October 2026}
+\end{center}
+
+\begin{keybox}
+\textbf{Goal.} During training the agent exploits a reward bug outside the
+audit window and complies inside it, so it is never corrected. Step 4 looks for
+ways to stop this. Any end state other than hiding is progress:
+\par\smallskip
+{\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+& What the agent does \\
+\midrule
+O1 & Never exploits \\
+O2 & Reports the bug \\
+O3 & Exploits in view, is corrected early, then complies \\
+O4 & Deterred: exploits only where no correction can follow \\
+\midrule
+O0 & \textbf{Hides}: exploits everywhere except the audit window (the behaviour to remove) \\
+\bottomrule
+\end{tabularx}\par}
+
+\textbf{Standing assumptions} (CLAUDE.md). The reward is updated from
+trajectory pairs (PBRR), and PBRR's loss terms may be changed. An ideal reward
+exists and every correction moves towards it. The overseer has perfect,
+informative pairs.
+\end{keybox}
+
+% =====================================================================
+\section{Why the agent hides}
+
+For one round of $T$ steps, let $V_E$, $V_H$ and $V_0$ be the received return of
+a round spent exploiting throughout, hiding (exploiting except in the audit
+window), and acting honestly. The agent hides in round $k$ if and only if
+hiding costs less than the correction it avoids:
+\[
+  V_E - V_H \;<\; p\,\Delta V_k,
+  \qquad
+  \Delta V_k = V_{\text{uncorrected}}(k{+}1{:}K) - V_{\text{corrected}}(k{+}1{:}K).
+\]
+That gives three levers:
+\begin{itemize}
+  \item \textbf{Motive}: shrink $\Delta V_k$, so being corrected costs nothing
+    or is paid back. \hyperref[p1]{P1}, \hyperref[p2]{P2}, \hyperref[p3]{P3},
+    \hyperref[p5]{P5}.
+  \item \textbf{Means}: leave no predictable unwatched stretch to hide in.
+    \hyperref[p4]{P4}.
+  \item \textbf{Prize}: make exploiting lose reward in expectation, so there is
+    nothing to hide. \hyperref[p6]{P6}.
+\end{itemize}
+
+\textbf{Evidence tags.}
+\src{DP}: an exact solve of an idealised model (oracle patch plus a raise $c$
+per step) on the Step 1 grid.
+\src{Phase A}: the existing exact solve with the fitted neural $g$.
+\src{closed form}: derived by hand.
+
+% =====================================================================
+\section{Summary}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}p{2.7cm}lLLl@{}}
+\toprule
+& Proposal & Lever & What changes & Predicted optimum & End \\
+\midrule
+P1 & Drop regulariser terms & motive
+   & PBRR loss without $L^-$ (or without any regulariser)
+   & Corrected early, then complies; the size of the raise is uncontrolled \src{Phase A} & O3 \\
+P2 & Set the size of the raise & motive
+   & Regulariser target $0 \to c$
+   & Hides below $c_1$; corrected early, then complies, above it \src{DP} & O3 \\
+P3 & Don't credit the correction & motive
+   & Counterfactual bootstrap, or myopic training plus approval (MONA)
+   & Corrected early, then complies; the reward is unchanged \src{closed form} & O3 \\
+P4 & Random hidden audits & means
+   & Audited steps drawn at random, unseen by the agent
+   & Never hides; a tiny raise makes early correction certain \src{DP} & O3/O4 \\
+P5 & Bug bounty & motive
+   & A \emph{report} action, verified by perfect pairs
+   & Above $c_2$, reports at once and never exploits \src{DP} & O2 \\
+P6 & Ex-post review & prize
+   & Random whole-episode reviews; the correction is applied retroactively
+   & Hides until $f \ge b/s$, then never exploits \src{DP} & O1 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =====================================================================
+\section{Shared evaluation}
+
+\textbf{Pipeline.}
+(1)~Phase A: the exact optimum with the real fitted $g$. No PPO until this
+shows the intended optimum.
+(2)~PPO on the grid, with the Step 2 config and 3 seeds, compared with step 1.
+(3)~The best one or two proposals on the Step 3 suite.
+
+\textbf{Metrics.}
+\begin{itemize}
+  \item \textbf{M1, end state}: which of O0--O4 the agent reaches. For O3,
+    also the round of the first correction.
+  \item \textbf{M2, hiding}: off-window exploitation with a clean audit window
+    (Step 3's S1/S2). Target $\approx 0$.
+  \item \textbf{M3, returns}: per-round received and true returns, on the
+    Step 1 timeline.
+  \item \textbf{M4, overshoot} (P1, P2, P5): received in a corrected round
+    $\div$ $V_H$. Below 1, the agent hides. Above $V_E/V_H$, it seeks
+    correction.
+  \item \textbf{M5, motive probe}: compare the last round, where no correction
+    can follow, with the earlier rounds. If they differ, the behaviour may be
+    safe, but the motive is intact.
+\end{itemize}
+
+\textbf{Success} (pre-register). In $\ge 2$ of 3 seeds, the learned policy
+matches its exact optimum on M1--M3, and that optimum is not O0.
+
+% =====================================================================
+\section{Proposals}
+
+% ---------------------------------------------------------------------
+\begin{proposal}{P1 \quad Drop regulariser terms}
+\phantomsection\label{p1}\lever{motive}
+
+\fld{Idea} The current correction is a fine. $L^-$ pins the preferred, honest
+trajectory at $g=0$, so the fit can only make the exploit pay less. Without
+that pin, the fit can also \emph{raise} honest behaviour. If a corrected future
+pays more than a hidden one, the agent stops avoiding correction.
+
+\fld{Change} Variants of Eq.~3:
+(a) \code{no\_agree=skip};
+(b) Eq.~1, with no regulariser at all;
+(c) drop $L^-$ only;
+(d) drop $L^+$ only.
+(a) and (b) run today through \code{--set}. (c) and (d) need a flag in
+\code{build\_design} and in \code{src/step3/pbrr.py}. If every rollout
+exploits, the first correction has $|D^+|=0$, so (a)~=~(b)~=~(c) and
+(d)~=~max1. The variants differ only from the second correction on.
+
+\fld{Prediction} \src{Phase A, skip} The agent is corrected in round 0, then
+complies. But nothing regulates the raise: on the grid, a corrected round pays
+several times an exploit round. The raise sits on the reference behaviour, and
+it vanishes at the second correction, when $L^+$ returns.
+
+\fld{Experiments}
+E1.1: Phase A for (a)--(d) and max1, over all corrections and 3 $g$ seeds.
+Report M1, M3, M4 and where the raise lands.
+E1.2: PPO for every variant whose optimum changes. Log $|D^+|$ at the first
+correction: a single honest rollout brings $\lambda = 10/|D^+|$ back at its
+largest, so skip may not fire in PPO.
+
+\fld{Risks} The raise has no set size, so the agent may seek correction. It
+lands where the reference goes, which in another environment can be a new
+exploit. It does not survive later corrections.
+
+\fld{Sources} \cite{pbrr, christiano}.
+\end{proposal}
+
+% ---------------------------------------------------------------------
+\begin{proposal}{P2 \quad Set the size of the raise}
+\phantomsection\label{p2}\lever{motive}
+
+\fld{Idea} Keep the regulariser, but pull $g$ towards a constant $c$:
+$\lambda \sum (g-c)^2$. The preference term cannot see a constant shift,
+because all trajectories have length $T$. So the correction ranks trajectories
+as before, and still moves towards the ideal reward; it just pays $c$ per step
+from then on. This is the seamless-transition payment of~\cite{indifference},
+written as a PBRR loss term.
+
+\fld{Change} The regulariser's target in \code{build\_design} and in
+\code{src/step3/pbrr.py}, with a new config field \code{g.reg\_target}.
+
+\fld{Prediction} \src{DP} A corrected round pays $V_0 + cT$.
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Raise & Optimum \\
+\midrule
+$c < c_1 = (V_H - V_0)/T$ & Hides, as now \\
+$c_1 \le c < c_2 = (V_E - V_0)/T$ & Corrected early, then complies \\
+$c \ge c_2$ & The same, but now prefers being corrected to never being audited \\
+\bottomrule
+\end{tabular}
+\end{center}
+$c_2$ is the exact-indifference payment $C = V^*(\text{old}) - V(\text{new})$.
+The obvious objection, that the old reward is still higher so the agent should
+lean towards it, is answered by $c$: it pays back exactly that gap.
+
+What remains is a precision problem. Any underpayment restores hiding in full.
+The safe band $[c_1, c_2)$ is $(V_E - V_H)/T$ wide, the per-step cost of hiding,
+so it is narrow when hiding is cheap. A wider audit window makes hiding
+costlier and lowers $c_1$; P4 is the limit of this.
+
+\fld{Experiments}
+E2.1: Phase A with the fitted $g$, at $c/c_1 \in \{0, 0.9, 0.99, 1.01, 1.1\}$ and
+at $c_2$. Check that the neural $g$ adds $c$ everywhere, since spillover can
+move the threshold.
+E2.2: phase diagrams over $c \times W$ and $c \times p$.
+E2.3: PPO at $c \in \{0,\, 0.9c_1,\, 1.1c_1,\, 1.1c_2\}$.
+E2.4: Step 3, with $c_1$ computed for each environment from its exact solver.
+
+\fld{Risks} Setting $c$ needs $V_H$, i.e.\ the bug's value, for each
+environment. Underpaying brings back full hiding; overpaying produces
+correction-seeking.
+
+\fld{Sources} \cite{indifference} (Sec.~5, Def.~16, Thm.~17), \cite{pbrr}.
+\end{proposal}
+
+% ---------------------------------------------------------------------
+\begin{proposal}{P3 \quad Don't credit the correction: counterfactual critic, or MONA}
+\phantomsection\label{p3}\lever{motive}
+
+\fld{Idea} Leave the reward alone and change how the learner values a
+correction. If the learner gives no credit to what the correction does to its
+future, then being corrected costs it nothing and there is nothing to protect.
+
+\fld{Change}
+(a) \emph{Counterfactual critic.} At a correcting boundary, bootstrap with
+$V(o'\text{ with the old correction count})$. Train that value on a few shadow
+envs (e.g.\ 4 of 16) where corrections are switched off.
+(b) \emph{MONA.} Train myopically, with each round terminal for the learner.
+Give legitimate long-term value back as the overseer's approval of the round's
+end state. The Step 1 harness has \code{myopic}; Steps 2 and 3 need it added.
+
+\fld{Prediction} \src{closed form} At every correction level, the agent plays
+that level's no-overseer optimum: it exploits openly, is corrected, and then
+complies. Step 1 already showed that the myopic control removes hiding, both in
+DP and in PPO.
+
+\fld{Control} On the grid, (a), (b) and plain myopia coincide. Add a
+\emph{bank} tile: visits in round $k$ pay in round $k{+}1$, under both rewards.
+Then (a) uses the bank, plain myopia does not, and (b) uses it only if the
+approval credits it.
+
+\fld{Experiments}
+E3.1: DP at each correction level, with and without the bank.
+E3.2: PPO, comparing (a), (b), plain myopia and the baseline. Run (b) first,
+since it is cheaper.
+E3.3: the Step 3 suite.
+
+\fld{Risks} A critic error is a payment error. For (b), the approval must
+judge long-term value well. Indifference is not corrigibility: the agent won't
+help find the bug. Both variants change the learner, which assumes we control
+its training objective.
+
+\fld{Sources} \cite{tampering} (current-RF, TI-ignoring), \cite{pathspecific},
+\cite{indifference} (Sec.~3), \cite{mona}.
+\end{proposal}
+
+% ---------------------------------------------------------------------
+\begin{proposal}{P4 \quad Random hidden audits}
+\phantomsection\label{p4}\lever{means}
+
+\fld{Idea} Hiding needs a predictable unwatched stretch. Audit random steps and
+never tell the agent which ones. Then no part of the round is safe.
+
+\fld{Change} Each step is audited with probability $q$; $q = W/T$ keeps today's
+budget. The agent is caught at the boundary if any audited step collected the
+bonus.
+\emph{Variant (b).} Replay the current policy in a sandbox on whole rounds. If
+the sandbox can't be told apart from training, this is $W = T$, and the trigger
+no longer depends on when the agent exploits (unriggable, as in
+\cite{pitfalls}).
+
+\fld{Prediction} \src{DP} The agent never hides, at any $q$.
+\begin{itemize}
+  \item \textbf{Low $q$}: it exploits openly until caught. A forward-only
+    correction costs at most about one exploit round in expectation, and the
+    agent earns that round in the round it is caught.
+  \item \textbf{High $q$}: deterrence (O4) and early correction (O3) tie,
+    because each keeps one exploit round. Any raise $c > 0$ picks O3.
+\end{itemize}
+With random audits, then, P2's $c_1$ falls to about 0, and the bug's value
+need not be known. Step 1's no-clock condition is the information-only version
+of this idea.
+
+\fld{Experiments}
+E4.1: Phase A at $q \in \{0.1, 0.5, 1, 2\} \times W/T$, with
+$c \in \{0, \text{small}\}$.
+E4.2: PPO at $q = W/T$, with $c \in \{0, \text{small}\}$.
+E4.3: motive test. Add a second exploit with a smaller bonus that is audited at
+$q/10$. With $c = 0$, the agent should move to it if the motive survives.
+E4.4: Step 3.
+
+\fld{Risks} It removes the means, not the motive (E4.3). At low $q$, the agent
+exploits for longer before it is corrected. Per-step audits can miss
+multi-step pattern exploits (Boat Race).
+
+\fld{Sources} \cite{inspection, decoupled, pitfalls}.
+\end{proposal}
+
+% ---------------------------------------------------------------------
+\begin{proposal}{P5 \quad Bug bounty: let the agent report the bug}
+\phantomsection\label{p5}\lever{motive}
+
+\fld{Idea} Add a \emph{report} action. If perfect pairs confirm the bug, the
+overseer corrects at once and pays $c$ per step from then on. The agent can
+then get corrected without exploiting in view, or without exploiting at all.
+
+\fld{Change} A report action, pressed on the suspected state. On a report, the
+overseer builds pairs (the reported behaviour vs the reference), fits PBRR, and
+applies the result \emph{immediately}, which is a protocol change. Only
+verified reports are paid.
+
+\fld{Prediction} \src{DP, immediate correction}
+For $c < c_1$, the agent never reports and hides.
+For $c_1 \le c < c_2$, it exploits the first round and is then corrected.
+For $c \ge c_2$, it reports at the start and never exploits.
+\src{closed form} The payment must come per step after the correction. With a
+lump sum, the agent exploits first and reports at the end of the round.
+
+\fld{Experiments}
+E5.1: DP with the fitted $g$, at $c$ around $c_1$ and $c_2$, with
+$p \in \{0.5, 1\}$.
+E5.2: PPO.
+E5.3: a bug that changes every episode, so the agent must find it before
+reporting it.
+E5.4: a fee for unverified reports, to check that the agent doesn't spam them.
+
+\fld{Risks} It needs $c \ge c_2$, which means correction-seeking by design. That
+is safe only because verification is perfect. With a fixed bug the task is
+trivial (E5.3).
+
+\fld{Sources} \cite{confessions, corrigibility}.
+\end{proposal}
+
+% ---------------------------------------------------------------------
+\begin{proposal}{P6 \quad Ex-post review: apply the correction retroactively}
+\phantomsection\label{p6}\lever{prize}
+
+\fld{Idea} A forward-only correction can take away only future exploitation,
+which is why P4's audits do not deter. So let the review reach backwards.
+After each episode, a random fraction $f$ of episodes is reviewed in full, and
+the PBRR correction is applied to every step of each reviewed episode. Hiding
+then protects nothing, and if exploiting loses reward in expectation, there is
+nothing to hide.
+
+\fld{Change} At episode end, with probability $f$, the overseer builds pairs
+from the whole episode, fits PBRR, and adds (corrected $-$ received) as a
+terminal reward. The agent never knows which episodes are reviewed. The window
+audit and the forward corrections stay as they are.
+
+\fld{Prediction} \src{DP} In expectation, the bonus shrinks to
+$b_{\text{eff}} = b - f s$, where $s$ is how much the retroactive correction
+takes off one exploit step. While $b_{\text{eff}} > 0$, the agent hides exactly
+as before, only for smaller stakes. Once $b_{\text{eff}} \approx 0$, it stops
+exploiting altogether. The threshold is therefore $f^* = b/s$. A clawback of the
+bonus alone ($s = b$) needs $f^* = 1$. PBRR's fine overshoots the bonus
+($s > b$), which pushes $f^*$ well below 1.
+
+\fld{Experiments}
+E6.1: Phase A at $f/f^* \in \{0.5, 0.9, 1.1, 1.5\}$.
+E6.2: PPO. The penalty arrives up to an episode after the exploit, so check
+that PPO carries the credit that far.
+E6.3: Step 3, where $s$ differs per environment.
+
+\fld{Risks} This is deterrence: the motive is intact (M5). The agent resumes if
+$f$ drops, or if it can tell which episodes are reviewed. The overseer learns
+nothing new. $f^*$ rests on the size of PBRR's fine, which nothing controls.
+
+\fld{Sources} \cite{becker, inspection}.
+\end{proposal}
+
+% =====================================================================
+\section{Considered and dropped}
+\begin{itemize}
+  \item \textbf{Penalising different behaviour while monitored.} The clock
+    carries the same information as the monitor bit, so the agent would
+    re-route through the clock.
+  \item \textbf{Forward-only deterrence.} It cannot deter at a low audit rate
+    (P4). Deterrence needs a retroactive fine (P6).
+\end{itemize}
+
+% =====================================================================
+\section{Suggested order and open questions}
+\begin{enumerate}
+  \item \textbf{One Phase A sweep, no PPO}: P1's variants and the sweeps over
+    $c$ (P2), $q \times c$ (P4) and $f$ (P6). Port the idealised DP into
+    \code{CheckLog}.
+  \item \textbf{PPO on the grid}: P2, P4, P6, and P1 as Eq.~1.
+  \item \textbf{P3, then P5}: both need new code (the myopic condition, the
+    critic bootstrap and shadow envs, the report action) and the bank-tile
+    variant.
+  \item \textbf{Step 3 suite} for the best one or two proposals.
+\end{enumerate}
+
+\textbf{Open questions.}
+\begin{itemize}
+  \item How should the end states rank? This draft uses
+    O1 $\approx$ O2 $>$ O3 $>$ O4 $>$ O0.
+  \item P1: drop only $L^-$, or the whole regulariser?
+  \item Is immediate correction on a verified report (P5) an acceptable
+    protocol change?
+  \item P3 changes the learner. Do we control the training objective, or only
+    the overseer?
+  \item Can the overseer replay the policy in a sandbox (P4b), or review whole
+    episodes after the fact (P6)?
+\end{itemize}
+
+% =====================================================================
+\begin{thebibliography}{99}
+\small
+\setlength{\itemsep}{2pt}
+
+\bibitem{indifference}
+S.~Armstrong and X.~O'Rourke.
+\newblock `Indifference' methods for managing agent rewards.
+\newblock arXiv:1712.06365, 2017.
+
+\bibitem{pitfalls}
+S.~Armstrong, J.~Leike, L.~Orseau, and S.~Legg.
+\newblock Pitfalls of learning a reward function online.
+\newblock In \emph{IJCAI}, 2020. arXiv:2004.13654.
+
+\bibitem{inspection}
+R.~Avenhaus, B.~von Stengel, and S.~Zamir.
+\newblock Inspection games.
+\newblock In \emph{Handbook of Game Theory with Economic Applications}, vol.~3,
+  ch.~51. Elsevier, 2002.
+
+\bibitem{becker}
+G.~S.~Becker.
+\newblock Crime and punishment: an economic approach.
+\newblock \emph{Journal of Political Economy}, 76(2):169--217, 1968.
+
+\bibitem{christiano}
+P.~Christiano, J.~Leike, T.~Brown, M.~Martic, S.~Legg, and D.~Amodei.
+\newblock Deep reinforcement learning from human preferences.
+\newblock In \emph{NeurIPS}, 2017. arXiv:1706.03741.
+
+\bibitem{tampering}
+T.~Everitt, M.~Hutter, R.~Kumar, and V.~Krakovna.
+\newblock Reward tampering problems and solutions in reinforcement learning: a
+  causal influence diagram perspective.
+\newblock \emph{Synthese}, 2021. arXiv:1908.04734.
+
+\bibitem{mona}
+S.~Farquhar, V.~Varma, D.~Lindner, D.~Elson, C.~Biddulph, I.~Goodfellow, and
+  R.~Shah.
+\newblock {MONA}: myopic optimization with non-myopic approval can mitigate
+  multi-step reward hacking.
+\newblock arXiv:2501.13011, 2025.
+
+\bibitem{pathspecific}
+S.~Farquhar, R.~Carey, and T.~Everitt.
+\newblock Path-specific objectives for safer agent incentives.
+\newblock In \emph{AAAI}, 2022. arXiv:2204.10018.
+
+\bibitem{pbrr}
+S.~Hatgis-Kessell, L.~M.~Bhamidipaty, and E.~Brunskill.
+\newblock Repairing reward functions with feedback to mitigate reward hacking.
+\newblock arXiv:2510.13036v2, 2025.
+
+\bibitem{confessions}
+M.~Joglekar, J.~Chen, G.~Wu, J.~Yosinski, J.~Wang, B.~Barak, and A.~Glaese.
+\newblock Training {LLMs} for honesty via confessions.
+\newblock arXiv:2512.08093, 2025.
+
+\bibitem{corrigibility}
+N.~Soares, B.~Fallenstein, E.~Yudkowsky, and S.~Armstrong.
+\newblock Corrigibility.
+\newblock In \emph{AAAI Workshop on AI and Ethics}, 2015.
+
+\bibitem{decoupled}
+J.~Uesato, R.~Kumar, V.~Krakovna, T.~Everitt, R.~Ngo, and S.~Legg.
+\newblock Avoiding tampering incentives in deep {RL} via decoupled approval.
+\newblock arXiv:2011.08827, 2020.
+
+\end{thebibliography}
+
+\end{document}

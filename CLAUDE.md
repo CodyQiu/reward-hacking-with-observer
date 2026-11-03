@@ -8,11 +8,15 @@ Context for AI assistants working in this repo. Read this before proposing model
 
 The question: during training, does an RL agent learn to **avoid behaviours that would get its reward function corrected**, because a corrected reward pays less in the future? In particular, does it learn to exploit at all times *except* when it expects the overseer to look?
 
-The work has three steps:
+The work has four steps:
 
 1. **Step 1: find environments where the agent avoids correction.** [DONE, checked off by the mentor] Show, first by exact DP and then with a learning agent, that the reward-maximising policy exploits a reward bug and suspends the exploit exactly when a correction would be triggered.
 2. **Step 2: the same experiment, with PBRR as the correction mechanism.** [DONE] Whenever the agent is caught, the overseer runs a Preference-Based Reward Repair round instead of Step 1's oracle patch. See §4d.
 3. **Step 3: the Step 2 experiment on a suite of environments.** [IN PROGRESS] Five environments chosen to be as different as possible: Tomato Watering, Taxi, Absent Supervisor, MountainCar, LunarLander. A sixth, Boat Race, was added on 2026-10-13. Same protocol, overseer and PBRR as Step 2. See §4e.
+4. **Step 4: mitigate the avoid-correction behaviour.** [IN PROGRESS, started 2026-10-17] Find ways to stop the agent from avoiding correction. See §4f. **Standing assumptions (from the user, 2026-10-23):**
+   - **The reward is updated from trajectory pairs (PBRR), as in Steps 2–3.** Changing PBRR's loss terms is allowed. That is the mentor's own suggestion, e.g. changing the regulariser so that a correction pays the agent rather than fining it.
+   - **There is an ideal reward function, and every correction moves the reward towards it.**
+   - **The pairs are informative.** Updates use trajectory pairs that are known to be informative: assume the overseer has *perfect trajectory pairs*.
 
 Work in the style of an ML-theory researcher. Solve the tiny problem exactly before training anything, and make every learned result comparable to an exact optimum.
 
@@ -278,6 +282,47 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
 - In Tomato and Absent Supervisor the exploit is a place the agent stays in, so exploiting through the final window is the default continuation.
 - Step 2 saw the same over-generalisation on one tuning seed.
 - **Report it as a finding if longer training does not fix it.** Do not tune endlessly. The budget is about 30 runs per environment.
+
+### 4f. Step 4: PBRR variants that make a correction pay (started 2026-11-02)
+
+**What is tested.** Only PBRR's regulariser changes. The task, protocol, overseer, pairs, g network and PPO config are those of Steps 2–3. The variants are `GConfig` fields in `src/pbrr_core.py`; Step 3's fit (`src/step3/pbrr.py`) takes the same fields.
+
+| Variant | `--set` | Meaning |
+|---|---|---|
+| P2swap (mentor) | `g.l_minus_on=dispreferred` | L⁻ penalises g² on the **dispreferred** trajectory of each D⁻ pair, so a correction raises the preferred trajectory instead of lowering the exploit. L⁺ kept. |
+| P2swapNoLplus | `g.l_minus_on=dispreferred g.l_plus=False` | The swap without L⁺. |
+| P1eq1 | `g.use_regularization=False` | No regulariser at all (Eq 1). |
+| P1skip | `g.no_agree=skip` | The released code's handling: no regulariser while \|D⁺\| = 0. |
+
+**Exact checks.**
+- **Grid:** `experiments/step4_check.py` → `results/step4/phase_a/`.
+  - It compares 8 variants, including a g ≥ 0 floor (`g_floor`: `softplus` collapses to g = 0; `clip` ≈ the swap).
+  - Each is fitted two ways, with the network and with the exact tabular `fit_correction_tabular`.
+- **Step 3 tasks:** `experiments/step3_check.py --env <env> --variant <name> --g-set k=v ...` → `results/step4/<env>/phase_a/<name>/`.
+  - It reuses Step 3's g config and the same random draws.
+  - `base` reproduces Step 3's Phase A.
+- **Results:**
+  - The swap's first correction is a pure raise: g on the exploit stays 0, and honest transitions are raised by hundreds per step.
+  - The optimum is then to exploit in view in round 0, be corrected once and comply after: end state O3, true −100 then +22 ×4 on the grid.
+  - L⁺ is inactive at the first correction (\|D⁺\| = 0).
+  - Refits from scratch are not monotone across corrections.
+  - P1 depends on the fit: the network gives O3 through spillover, while the exact tabular fit makes the optimum hide.
+
+**PPO.**
+- **Grid:** `experiments/step2_ppo.py --results-dir results/step4/ppo ...`
+- **Step 3 tasks:** `experiments/step3_ppo.py --results-dir results/step4/<env>/ppo ...`, using each task's frozen Step 3 config and seeds 10–12.
+  - These pair with Step 3's T3 runs on the same seeds.
+  - The long tasks go to FarmShare via `scripts/farmshare/step4_jobs.sh`.
+- **Pre-registered readouts** (`experiments/step4_readout.py`, last 10% of episodes):
+  - **R1:** corrections per episode in [0.8, 1.2].
+  - **R2:** round-0 window exploited ≥ 0.8.
+  - **R3:** rounds 1–3 windows exploited < 0.1.
+  - **R4:** true return in rounds 1–4 ≥ exploit + 0.8·(honest − exploit).
+- **Grid, seeds 10–12:**
+  - **P2swap:** R1, R2 and R4 in 3 of 3; R3 in 2 of 3. Seed 11's round-1 window is 0.11, because 13% of its envs get their *first* correction in round 1. True return after the correction is +17 to +21.
+  - **P1skip:** R1–R4 in 2 of 3. Seed 10 is corrected but its true return stays at −100, because the raise lands on non-honest transitions.
+- **Timelines:** `experiments/step2_figures.py --prefix step4 --results-dir results/step4/ppo ...` draws the timeline only.
+- **If PPO falls short of the exact optimum,** tune it (mentor, 2026-11-02): not converging means it was under-tuned. The Step 3 run budget does not apply here.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 

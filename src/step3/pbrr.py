@@ -196,13 +196,17 @@ def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
     y = np.array([lab for _, _, lab in pairs], float)
     proxy = np.array([t.proxy for t in trajs])
     length = np.array([t.length for t in trajs], float)
+    if cfg.g_floor != "none":
+        raise NotImplementedError("g_floor: the protocol applies the raw MLP (protocol.g_apply)")
     n_reg = np.zeros(n_tr)
     det = (proxy[i2] > proxy[i1]).astype(float)          # code: argmax([p1, p2]), ties -> tau1
     agree = det == y
-    np.add.at(n_reg, i1[agree], 1.0)
-    np.add.at(n_reg, i2[agree], 1.0)
-    pref = np.where(y == 1.0, i2, i1)[~agree]
-    np.add.at(n_reg, pref, 1.0)
+    if cfg.l_plus:
+        np.add.at(n_reg, i1[agree], 1.0)
+        np.add.at(n_reg, i2[agree], 1.0)
+    # D-: the paper regularises the preferred trajectory; Step 4's swap the dispreferred one
+    side = {"preferred": y == 1.0, "dispreferred": y != 1.0}[cfg.l_minus_on]
+    np.add.at(n_reg, np.where(side, i2, i1)[~agree], 1.0)
     n_agree = int(agree.sum())
     reg = np.bincount(row, weights=cnt * n_reg[traj] / length[traj], minlength=len(X))
     if not cfg.use_regularization:

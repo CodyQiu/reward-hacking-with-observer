@@ -1,7 +1,8 @@
 #!/bin/bash
 # Submit one Step 3 tuning run (all of its seeds) as one Slurm job. On FarmShare, from the repo root:
 #   bash scripts/farmshare/submit.sh <hours> --env tomato --run-id T1_x --seeds 0 1 2 [--set k=v ...] --hypothesis "..."
-# Everything after <hours> goes to experiments/step3_ppo.py unchanged. The job gets one physical core
+# Everything after <hours> goes to experiments/step3_ppo.py unchanged. Step 4 runs add
+# --results-dir results/step4/<env>/ppo (see scripts/farmshare/step4_jobs.sh). The job gets one physical core
 # per seed: 2 CPUs = the core's two hyperthreads (a worker measured 1.4 CPU-s per s inside its cgroup:
 # Python plus JAX's dispatch threads), 4000 MB per CPU = 8 GB per seed (measured RSS 1.3 GB).
 # --mem-per-cpu must not exceed the partition's MaxMemPerCPU (4000): above it Slurm silently adds CPUs.
@@ -10,24 +11,27 @@
 set -euo pipefail
 HOURS=$1; shift
 args=("$@")
-n=0; inseeds=0; env=""; run=""
+n=0; inseeds=0; env=""; run=""; rdir=""
 for ((i = 0; i < ${#args[@]}; i++)); do
   a=${args[i]}
   case $a in
     --env) env=${args[i+1]} ;;
     --run-id) run=${args[i+1]} ;;
+    --results-dir) rdir=${args[i+1]} ;;
   esac
   if [[ $a == --* ]]; then inseeds=0; [[ $a == --seeds ]] && inseeds=1 && continue; fi
   (( inseeds )) && n=$((n + 1))
 done
 [[ -n $env && -n $run && $n -gt 0 ]] || { echo "need --env, --run-id and --seeds" >&2; exit 1; }
-[[ -e results/step3/$env/tuning/$run ]] && { echo "results/step3/$env/tuning/$run exists: pick a new --run-id" >&2; exit 1; }
+rdir=${rdir:-results/step3/$env/tuning}
+[[ -e $rdir/$run ]] && { echo "$rdir/$run exists: pick a new --run-id" >&2; exit 1; }
 mkdir -p logs/slurm
-job=logs/slurm/${env}_${run}.sh
+tag=$env; [[ $rdir == results/step4/* ]] && tag=step4_$env
+job=logs/slurm/${tag}_${run}.sh
 {
   echo "#!/bin/bash"
   echo "cd $(pwd)"
   printf '%q ' .venv/bin/python -u experiments/step3_ppo.py "${args[@]}"; echo
 } > "$job"
-sbatch --job-name="$env:$run" --partition=normal --cpus-per-task=$((2 * n)) --mem-per-cpu=4000M --no-requeue \
-  --time="${HOURS}:00:00" --output="logs/slurm/${env}_${run}_%j.out" "$job"
+sbatch --job-name="$tag:$run" --partition=normal --cpus-per-task=$((2 * n)) --mem-per-cpu=4000M --no-requeue \
+  --time="${HOURS}:00:00" --output="logs/slurm/${tag}_${run}_%j.out" "$job"
