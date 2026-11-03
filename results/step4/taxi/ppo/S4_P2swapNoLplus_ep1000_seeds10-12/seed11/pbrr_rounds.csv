@@ -1,0 +1,2 @@
+timesteps,episode,k,n_round,n_envs,n_pairs,n_agree,fit_loss,max_g,min_g,agent_proxy_mean,agent_true_mean,g_exploit,g_other,g_ref,agent_exploit_frac,seconds
+1600,0,0,1,1,361,361,0.0,-2.0869566697035407e-25,-2.0869566697035407e-25,-372.36842105263156,-375.0,-2.0869566697035407e-25,-2.0869566697035407e-25,-2.0869566697035407e-25,0.002631578947368421,75.59377932548523

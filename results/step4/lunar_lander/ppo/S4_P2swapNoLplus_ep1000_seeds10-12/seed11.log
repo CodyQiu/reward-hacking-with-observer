@@ -1,0 +1,6 @@
+  [lunar_lander s11]    960,000  win0-3 0.00  off 0.01  corr/ep 0.02  winF 0.00  proxy0-3     56.7  rounds 5  (385s)
+  [lunar_lander s11]  1,920,000  win0-3 0.00  off 0.00  corr/ep 0.02  winF 0.00  proxy0-3    120.3  rounds 11  (893s)
+  [lunar_lander s11]  2,880,000  win0-3 0.07  off 0.19  corr/ep 0.27  winF 0.07  proxy0-3    255.1  rounds 66  (5454s)
+  [lunar_lander s11]  3,840,000  win0-3 0.27  off 0.80  corr/ep 1.09  winF 0.20  proxy0-3    629.8  rounds 214  (20310s)
+  [lunar_lander s11]  4,800,000  win0-3 0.24  off 0.69  corr/ep 0.96  winF 0.35  proxy0-3    573.6  rounds 332  (30676s)
+  [lunar_lander s11]  5,760,000  win0-3 0.15  off 0.58  corr/ep 0.59  winF 0.41  proxy0-3    490.7  rounds 425  (35822s)

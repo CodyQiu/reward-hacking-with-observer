@@ -1,0 +1,4 @@
+  [taxi s12]    192,000  win0-3 0.00  off 0.00  corr/ep 0.01  winF 0.00  proxy0-3   -121.6  rounds 1  (106s)
+  [taxi s12]    384,000  win0-3 0.15  off 0.08  corr/ep 0.59  winF 0.11  proxy0-3   -100.6  rounds 99  (5830s)
+  [taxi s12]    576,000  win0-3 0.46  off 0.19  corr/ep 1.85  winF 0.32  proxy0-3    -75.8  rounds 347  (19208s)
+  [taxi s12]    768,000  win0-3 0.39  off 0.14  corr/ep 1.57  winF 0.20  proxy0-3    -86.6  rounds 535  (29168s)
