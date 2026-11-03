@@ -87,8 +87,10 @@ def main():
                   f"  (honest {m['honest_true']:g}, exploiting {m['exploit_true']:g})  true after 1st corr "
                   f"{'-' if ta is None else round(ta, 1)}  | "
                   + " ".join(f"{r}={'Y' if m[r] else 'n'}" for r in ("R1", "R2", "R3", "R4")))
+        # derived from the (immutable) logs: rewritten only when more seeds have finished
         path = os.path.join(run, "step4_readout.json")
-        if out and not os.path.exists(path):
+        old = json.load(open(path)) if os.path.exists(path) else {}
+        if out and set(out) > set(old):
             with open(path, "w") as fh:
                 json.dump(out, fh, indent=1)
 

@@ -1,0 +1,42 @@
+{
+ "seed12": {
+  "corrections_per_ep": 0.0,
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_by_k": [
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0
+  ],
+  "received_by_k": [
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0
+  ],
+  "p_corrected_by_round_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_after_first_correction": null,
+  "honest_true": -98.738,
+  "exploit_true": -198.92,
+  "R4_bar": -118.77439999999999,
+  "n_episodes": 77,
+  "R1": false,
+  "R2": false,
+  "R3": true,
+  "R4": false,
+  "all": false
+ }
+}
