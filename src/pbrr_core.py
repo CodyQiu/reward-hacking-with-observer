@@ -83,6 +83,11 @@ class GConfig:
     l_minus_on: str = "preferred"     # D- pairs: regularise the "preferred" (paper) | "dispreferred" one
     l_plus: bool = True               # False = drop L+ (the D+ term)
     g_floor: str = "none"             # "none" | "softplus" | "clip" (g >= 0 on every transition)
+    # Step 4 level offset (applied by the overseer, not the fit): after correction k every step also pays
+    # c_k = ([V_before - V_ref_after]^+ + offset_margin |V_before|) / T_sub, where V_before is the caught
+    # agent rollouts' mean return under r_hat_{k-1} and V_ref_after the reference rollouts' under proxy + g_k
+    offset: bool = False
+    offset_margin: float = 0.02
 
     def with_(self, **kw):
         return replace(self, **kw)

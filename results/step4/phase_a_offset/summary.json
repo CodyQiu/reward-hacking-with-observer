@@ -1,0 +1,2548 @@
+{
+ "g_base": {
+  "n_layers": 5,
+  "width": 512,
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "epochs": 100,
+  "push2zero": 10.0,
+  "no_agree": "max1",
+  "use_regularization": true,
+  "init": "torch_default",
+  "beta": 1.0
+ },
+ "ridge": 0.001,
+ "n_seeds": 3,
+ "variants": {
+  "P1-eq1": {
+   "gconfig": {
+    "use_regularization": false
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -449.994140625,
+      "max_g": 304.85040283203125,
+      "min_g_present": -449.994140625,
+      "min_g_unseen": -372.3587341308594,
+      "n_negative_g": 672,
+      "min_step_change": -449.994140625,
+      "n_step_decreases": 672,
+      "g_dwell_E": -449.994140625,
+      "rhat_dwell_E": -350.994140625,
+      "best_subepisode_rhat": 28971.869720458984,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20271.869720458984,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "min_g_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "max_g_seeds": [
+       304.85040283203125,
+       454.0115661621094,
+       354.2391052246094
+      ]
+     },
+     {
+      "min_g": -397.82440185546875,
+      "max_g": 204.68898010253906,
+      "min_g_present": -397.82440185546875,
+      "min_g_unseen": -283.25274658203125,
+      "n_negative_g": 169,
+      "min_step_change": -124.42915344238281,
+      "n_step_decreases": 78,
+      "g_dwell_E": -397.82440185546875,
+      "rhat_dwell_E": -298.82440185546875,
+      "best_subepisode_rhat": 19794.873916625977,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 11094.873916625977,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -397.82440185546875,
+       -310.192626953125,
+       -297.2801818847656
+      ],
+      "min_g_seeds": [
+       -397.82440185546875,
+       -310.192626953125,
+       -297.2801818847656
+      ],
+      "max_g_seeds": [
+       204.68898010253906,
+       392.8656005859375,
+       371.7878723144531
+      ]
+     },
+     {
+      "min_g": -397.1605529785156,
+      "max_g": 228.96969604492188,
+      "min_g_present": -397.1605529785156,
+      "min_g_unseen": -281.4017028808594,
+      "n_negative_g": 171,
+      "min_step_change": -72.35439872741699,
+      "n_step_decreases": 222,
+      "g_dwell_E": -397.1605529785156,
+      "rhat_dwell_E": -298.1605529785156,
+      "best_subepisode_rhat": 21907.688690185547,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 13207.688690185547,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -397.1605529785156,
+       -333.6336975097656,
+       -329.097900390625
+      ],
+      "min_g_seeds": [
+       -397.1605529785156,
+       -333.6336975097656,
+       -329.097900390625
+      ],
+      "max_g_seeds": [
+       228.96969604492188,
+       417.56402587890625,
+       337.01544189453125
+      ]
+     },
+     {
+      "min_g": -398.86004638671875,
+      "max_g": 198.87017822265625,
+      "min_g_present": -398.86004638671875,
+      "min_g_unseen": -290.69366455078125,
+      "n_negative_g": 203,
+      "min_step_change": -65.93206787109375,
+      "n_step_decreases": 1115,
+      "g_dwell_E": -398.86004638671875,
+      "rhat_dwell_E": -299.86004638671875,
+      "best_subepisode_rhat": 18375.450607299805,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 9675.450607299805,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 1029,
+      "g_dwell_E_seeds": [
+       -398.86004638671875,
+       -330.3193054199219,
+       -327.9333190917969
+      ],
+      "min_g_seeds": [
+       -398.86004638671875,
+       -330.3193054199219,
+       -327.9333190917969
+      ],
+      "max_g_seeds": [
+       198.87017822265625,
+       390.9492492675781,
+       294.6866760253906
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      28971.869720458984,
+      28971.869720458984,
+      28971.869720458984,
+      28971.869720458984
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124587.47888183594
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -77.66974654004314,
+      "max_g": 46.83028844723419,
+      "min_g_present": -77.66974654004314,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 20,
+      "min_step_change": -77.66974654004314,
+      "n_step_decreases": 20,
+      "g_dwell_E": -77.66974654004314,
+      "rhat_dwell_E": 21.330253459956865,
+      "best_subepisode_rhat": 4332.610059562071,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4367.389940437929,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -69.27219044668382,
+      "max_g": 58.13342492948131,
+      "min_g_present": -69.27219044668382,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 26,
+      "min_step_change": -17.27609073071841,
+      "n_step_decreases": 15,
+      "g_dwell_E": -69.27219044668382,
+      "rhat_dwell_E": 29.727809553316177,
+      "best_subepisode_rhat": 4324.091498071423,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": -4375.908501928577,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -82.00845065319368,
+      "max_g": 33.01538426797475,
+      "min_g_present": -82.00845065319368,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 79,
+      "min_step_change": -28.864863865455593,
+      "n_step_decreases": 82,
+      "g_dwell_E": -82.00845065319368,
+      "rhat_dwell_E": 16.991549346806323,
+      "best_subepisode_rhat": 4026.867466434375,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4673.132533565626,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 151,
+      "converged": true
+     },
+     {
+      "min_g": -74.18020459417357,
+      "max_g": 40.8461021593149,
+      "min_g_present": -74.18020459417357,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 68,
+      "min_step_change": -19.605341239985393,
+      "n_step_decreases": 72,
+      "g_dwell_E": -74.18020459417357,
+      "rhat_dwell_E": 24.819795405826426,
+      "best_subepisode_rhat": 3941.228275963741,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4758.771724036259,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 151,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -469.9394226074219,
+      "max_g": 304.8209228515625,
+      "min_g_present": -469.9394226074219,
+      "min_g_unseen": -379.1636047363281,
+      "n_negative_g": 727,
+      "min_step_change": -469.9394226074219,
+      "n_step_decreases": 727,
+      "g_dwell_E": -469.9394226074219,
+      "rhat_dwell_E": -370.9394226074219,
+      "best_subepisode_rhat": 28890.49298095703,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20190.49298095703,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "min_g_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "max_g_seeds": [
+       304.8209228515625,
+       433.9876403808594,
+       351.6680603027344
+      ]
+     },
+     {
+      "min_g": -456.89471435546875,
+      "max_g": 303.6330261230469,
+      "min_g_present": -456.89471435546875,
+      "min_g_unseen": -362.03668212890625,
+      "n_negative_g": 713,
+      "min_step_change": -216.44318389892578,
+      "n_step_decreases": 377,
+      "g_dwell_E": -456.89471435546875,
+      "rhat_dwell_E": -357.89471435546875,
+      "best_subepisode_rhat": 28740.51547241211,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20040.51547241211,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "min_g_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "max_g_seeds": [
+       303.6330261230469,
+       447.5640869140625,
+       354.5012512207031
+      ]
+     },
+     {
+      "min_g": -465.8365478515625,
+      "max_g": 308.6795654296875,
+      "min_g_present": -465.8365478515625,
+      "min_g_unseen": -358.2012023925781,
+      "n_negative_g": 697,
+      "min_step_change": -266.8248596191406,
+      "n_step_decreases": 145,
+      "g_dwell_E": -465.8365478515625,
+      "rhat_dwell_E": -366.8365478515625,
+      "best_subepisode_rhat": 29265.424850463867,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20565.424850463867,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "min_g_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "max_g_seeds": [
+       308.6795654296875,
+       439.9150390625,
+       349.4436340332031
+      ]
+     },
+     {
+      "min_g": -466.07269287109375,
+      "max_g": 302.2875671386719,
+      "min_g_present": -466.07269287109375,
+      "min_g_unseen": -346.4163818359375,
+      "n_negative_g": 724,
+      "min_step_change": -226.6598129272461,
+      "n_step_decreases": 1124,
+      "g_dwell_E": -466.07269287109375,
+      "rhat_dwell_E": -367.07269287109375,
+      "best_subepisode_rhat": 28620.871574401855,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 19920.871574401855,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "min_g_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "max_g_seeds": [
+       302.2875671386719,
+       440.9782409667969,
+       352.0241394042969
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      28890.49298095703,
+      28890.49298095703,
+      28890.49298095703,
+      28890.49298095703
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124261.97192382812
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -78.31936723460333,
+      "max_g": 47.926784294467,
+      "min_g_present": -78.31936723460333,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 23,
+      "min_step_change": -78.31936723460333,
+      "n_step_decreases": 23,
+      "g_dwell_E": -78.31936723460333,
+      "rhat_dwell_E": 20.680632765396666,
+      "best_subepisode_rhat": 4230.501925700734,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4469.498074299266,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -77.55860404094356,
+      "max_g": 48.44822956607071,
+      "min_g_present": -77.55860404094356,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 28,
+      "min_step_change": -1.0283990140415256,
+      "n_step_decreases": 26,
+      "g_dwell_E": -77.55860404094356,
+      "rhat_dwell_E": 21.441395959056436,
+      "best_subepisode_rhat": 4160.7472881266385,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4539.2527118733615,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -77.30501564690037,
+      "max_g": 48.810527914765515,
+      "min_g_present": -77.30501564690037,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 29,
+      "min_step_change": -0.32081936640319464,
+      "n_step_decreases": 28,
+      "g_dwell_E": -77.30501564690037,
+      "rhat_dwell_E": 21.694984353099628,
+      "best_subepisode_rhat": 4136.250580388601,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4563.749419611399,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -76.89619163541019,
+      "max_g": 49.36554522549562,
+      "min_g_present": -76.89619163541019,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 34,
+      "min_step_change": -0.5329792188432894,
+      "n_step_decreases": 24,
+      "g_dwell_E": -76.89619163541019,
+      "rhat_dwell_E": 22.10380836458981,
+      "best_subepisode_rhat": 4093.61322532989,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -4606.38677467011,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   }
+  },
+  "P1-eq1-offset": {
+   "gconfig": {
+    "use_regularization": false,
+    "offset": true
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -449.994140625,
+      "max_g": 304.85040283203125,
+      "min_g_present": -449.994140625,
+      "min_g_unseen": -372.3587341308594,
+      "n_negative_g": 672,
+      "min_step_change": -448.41940378289473,
+      "n_step_decreases": 667,
+      "g_dwell_E": -449.994140625,
+      "rhat_dwell_E": -349.41940378289473,
+      "best_subepisode_rhat": 29129.343404669584,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20429.343404669584,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "min_g_seeds": [
+       -449.994140625,
+       -367.0283203125,
+       -369.5485534667969
+      ],
+      "max_g_seeds": [
+       304.85040283203125,
+       454.0115661621094,
+       354.2391052246094
+      ],
+      "offset_c": 1.5747368421052632,
+      "offset_v_before": 7873.684210526316,
+      "offset_v_ref_after": 28435.041964079206
+     },
+     {
+      "min_g": -397.82440185546875,
+      "max_g": 204.68898010253906,
+      "min_g_present": -397.82440185546875,
+      "min_g_unseen": -283.25274658203125,
+      "n_negative_g": 169,
+      "min_step_change": -17.49865636093739,
+      "n_step_decreases": 2,
+      "g_dwell_E": -397.82440185546875,
+      "rhat_dwell_E": -190.3191679319181,
+      "best_subepisode_rhat": 30645.397308981075,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 21945.397308981075,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -397.82440185546875,
+       -310.192626953125,
+       -297.2801818847656
+      ],
+      "min_g_seeds": [
+       -397.82440185546875,
+       -310.192626953125,
+       -297.2801818847656
+      ],
+      "max_g_seeds": [
+       204.68898010253906,
+       392.8656005859375,
+       371.7878723144531
+      ],
+      "offset_c": 108.50523392355066,
+      "offset_v_before": 28277.04738210377,
+      "offset_v_ref_after": 17992.06493739078
+     },
+     {
+      "min_g": -397.1605529785156,
+      "max_g": 228.96969604492188,
+      "min_g_present": -397.1605529785156,
+      "min_g_unseen": -281.4017028808594,
+      "n_negative_g": 171,
+      "min_step_change": -67.65139709660798,
+      "n_step_decreases": 50,
+      "g_dwell_E": -397.1605529785156,
+      "rhat_dwell_E": -184.95231742415595,
+      "best_subepisode_rhat": 33228.51224562155,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 24528.512245621547,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -397.1605529785156,
+       -333.6336975097656,
+       -329.097900390625
+      ],
+      "min_g_seeds": [
+       -397.1605529785156,
+       -333.6336975097656,
+       -329.097900390625
+      ],
+      "max_g_seeds": [
+       228.96969604492188,
+       417.56402587890625,
+       337.01544189453125
+      ],
+      "offset_c": 113.20823555435967,
+      "offset_v_before": 30251.75884711517,
+      "offset_v_ref_after": 19535.970468621505
+     },
+     {
+      "min_g": -398.86004638671875,
+      "max_g": 198.87017822265625,
+      "min_g_present": -398.86004638671875,
+      "min_g_unseen": -290.69366455078125,
+      "n_negative_g": 203,
+      "min_step_change": -24.257820224592933,
+      "n_step_decreases": 4,
+      "g_dwell_E": -398.86004638671875,
+      "rhat_dwell_E": -144.97756318585823,
+      "best_subepisode_rhat": 33863.698927385914,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 25163.698927385914,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 1029,
+      "g_dwell_E_seeds": [
+       -398.86004638671875,
+       -330.3193054199219,
+       -327.9333190917969
+      ],
+      "min_g_seeds": [
+       -398.86004638671875,
+       -330.3193054199219,
+       -327.9333190917969
+      ],
+      "max_g_seeds": [
+       198.87017822265625,
+       390.9492492675781,
+       294.6866760253906
+      ],
+      "offset_c": 154.88248320086052,
+      "offset_v_before": 32795.90246887367,
+      "offset_v_ref_after": 17963.57219816509
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2], keeps exploiting",
+     "n_corrections": 3,
+     "caught_after_rounds": [
+      0,
+      1,
+      2
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      3
+     ],
+     "received_by_k": [
+      8700.0,
+      26398.21512122851,
+      29808.772109186306,
+      33228.51224562155,
+      33228.51224562155
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      1,
+      1,
+      0,
+      0
+     ],
+     "V0": 131364.0117216578
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -77.66974654004314,
+      "max_g": 46.83028844723419,
+      "min_g_present": -77.66974654004314,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 20,
+      "min_step_change": -23.883216040729906,
+      "n_step_decreases": 1,
+      "g_dwell_E": -77.66974654004314,
+      "rhat_dwell_E": 75.1167839592701,
+      "best_subepisode_rhat": 9711.26310949339,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": 1011.2631094933895,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 53.78653049931323,
+      "offset_v_before": 7873.684210526316,
+      "offset_v_ref_after": 2652.504844805519
+     },
+     {
+      "min_g": -69.27219118337928,
+      "max_g": 58.13342429904703,
+      "min_g_present": -69.27219118337928,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 26,
+      "min_step_change": -9.999366107597893,
+      "n_step_decreases": 2,
+      "g_dwell_E": -69.27219118337928,
+      "rhat_dwell_E": 90.7910646359215,
+      "best_subepisode_rhat": 10430.417035124316,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 1,
+      "overshoot": 1730.4170351243156,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 61.06325581930078,
+      "offset_v_before": 9200.057847121298,
+      "offset_v_ref_after": 3277.733422133646
+     },
+     {
+      "min_g": -82.00845122448459,
+      "max_g": 33.01538454456965,
+      "min_g_present": -82.00845122448459,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 81,
+      "min_step_change": -9.90367586005155,
+      "n_step_decreases": 1,
+      "g_dwell_E": -82.00845122448459,
+      "rhat_dwell_E": 97.0159919887748,
+      "best_subepisode_rhat": 12029.311819420469,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": 3329.311819420469,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 151,
+      "converged": true,
+      "offset_c": 80.02444321325939,
+      "offset_v_before": 9895.965359979402,
+      "offset_v_ref_after": 2091.440345853051
+     },
+     {
+      "min_g": -74.51280065246382,
+      "max_g": 40.5868408246704,
+      "min_g_present": -74.51280065246382,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 69,
+      "min_step_change": -7.181703988497645,
+      "n_step_decreases": 2,
+      "g_dwell_E": -74.51280065246382,
+      "rhat_dwell_E": 116.81431585264917,
+      "best_subepisode_rhat": 13157.838689346087,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": 4457.8386893460865,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 151,
+      "converged": true,
+      "offset_c": 92.327116505113,
+      "offset_v_before": 11584.459678917778,
+      "offset_v_ref_after": 2583.4372219848333
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2, 3], keeps exploiting",
+     "n_corrections": 4,
+     "caught_after_rounds": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "received_by_k": [
+      8700.0,
+      9711.26310949339,
+      10306.875104901143,
+      12029.311819420473,
+      13157.838689346087
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      45,
+      45,
+      45,
+      45
+     ],
+     "window_on_E_by_k": [
+      10,
+      5,
+      5,
+      6,
+      5
+     ],
+     "V0": 53905.28872316135
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -469.9394226074219,
+      "max_g": 304.8209228515625,
+      "min_g_present": -469.9394226074219,
+      "min_g_unseen": -379.1636047363281,
+      "n_negative_g": 727,
+      "min_step_change": -468.3910015547903,
+      "n_step_decreases": 708,
+      "g_dwell_E": -469.9394226074219,
+      "rhat_dwell_E": -369.3910015547903,
+      "best_subepisode_rhat": 29045.335086220144,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20345.335086220144,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "min_g_seeds": [
+       -469.9394226074219,
+       -376.6900939941406,
+       -398.62811279296875
+      ],
+      "max_g_seeds": [
+       304.8209228515625,
+       433.9876403808594,
+       351.6680603027344
+      ],
+      "offset_c": 1.548421052631579,
+      "offset_v_before": 7742.105263157895,
+      "offset_v_ref_after": 28306.736523276883
+     },
+     {
+      "min_g": -456.89471435546875,
+      "max_g": 303.6330261230469,
+      "min_g_present": -456.89471435546875,
+      "min_g_unseen": -362.03668212890625,
+      "n_negative_g": 713,
+      "min_step_change": -210.9170192859047,
+      "n_step_decreases": 58,
+      "g_dwell_E": -456.89471435546875,
+      "rhat_dwell_E": -350.8201286898161,
+      "best_subepisode_rhat": 29447.974038977412,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20747.974038977412,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "min_g_seeds": [
+       -456.89471435546875,
+       -361.8263244628906,
+       -383.9333801269531
+      ],
+      "max_g_seeds": [
+       303.6330261230469,
+       447.5640869140625,
+       354.5012512207031
+      ],
+      "offset_c": 7.074585665652625,
+      "offset_v_before": -35372.92832826313,
+      "offset_v_ref_after": 28151.36937834087
+     },
+     {
+      "min_g": -465.8365478515625,
+      "max_g": 308.6795654296875,
+      "min_g_present": -465.8365478515625,
+      "min_g_unseen": -358.2012023925781,
+      "n_negative_g": 697,
+      "min_step_change": -267.140701847237,
+      "n_step_decreases": 147,
+      "g_dwell_E": -465.8365478515625,
+      "rhat_dwell_E": -360.07780441400627,
+      "best_subepisode_rhat": 29941.299194219504,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 21241.299194219504,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "min_g_seeds": [
+       -465.8365478515625,
+       -380.31256103515625,
+       -403.9553527832031
+      ],
+      "max_g_seeds": [
+       308.6795654296875,
+       439.9150390625,
+       349.4436340332031
+      ],
+      "offset_c": 6.758743437556213,
+      "offset_v_before": -33793.71718778107,
+      "offset_v_ref_after": 28665.484418367083
+     },
+     {
+      "min_g": -466.07269287109375,
+      "max_g": 302.2875671386719,
+      "min_g_present": -466.07269287109375,
+      "min_g_unseen": -346.4163818359375,
+      "n_negative_g": 724,
+      "min_step_change": -226.5052973904427,
+      "n_step_decreases": 1123,
+      "g_dwell_E": -466.07269287109375,
+      "rhat_dwell_E": -360.15943389673413,
+      "best_subepisode_rhat": 29312.197471837862,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": 20612.197471837862,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "min_g_seeds": [
+       -466.07269287109375,
+       -378.08349609375,
+       -399.2904968261719
+      ],
+      "max_g_seeds": [
+       302.2875671386719,
+       440.9782409667969,
+       352.0241394042969
+      ],
+      "offset_c": 6.913258974359611,
+      "offset_v_before": -34566.294871798054,
+      "offset_v_ref_after": 28033.79104333175
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      29045.335086220144,
+      29045.335086220144,
+      29045.335086220144,
+      29045.335086220144
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 124881.34034488132
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -78.31936723460333,
+      "max_g": 47.926784294467,
+      "min_g_present": -78.31936723460333,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 23,
+      "min_step_change": -26.49156959629984,
+      "n_step_decreases": 1,
+      "g_dwell_E": -78.31936723460333,
+      "rhat_dwell_E": 72.50843040370016,
+      "best_subepisode_rhat": 9413.281689531088,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": 713.281689531088,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 51.827797638303494,
+      "offset_v_before": 7742.105263157895,
+      "offset_v_ref_after": 2714.1676045907034
+     },
+     {
+      "min_g": -77.55860404094356,
+      "max_g": 48.44822956607071,
+      "min_g_present": -77.55860404094356,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 28,
+      "min_step_change": -5.682016182672044,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -77.55860404094356,
+      "rhat_dwell_E": 68.61557642872943,
+      "best_subepisode_rhat": 8878.165335093938,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": 178.16533509393776,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 47.17418046967299,
+      "offset_v_before": 7313.102530745872,
+      "offset_v_ref_after": 2741.946534393491
+     },
+     {
+      "min_g": -77.30501564690037,
+      "max_g": 48.810527914765515,
+      "min_g_present": -77.30501564690037,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 29,
+      "min_step_change": -5.221369200438573,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -77.30501564690037,
+      "rhat_dwell_E": 63.96861498873724,
+      "best_subepisode_rhat": 8363.613643952349,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -336.38635604765113,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 42.27363063563761,
+      "offset_v_before": 6850.598891359721,
+      "offset_v_ref_after": 2760.247805623155
+     },
+     {
+      "min_g": -76.89619163541019,
+      "max_g": 49.36554522549562,
+      "min_g_present": -76.89619163541019,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 34,
+      "min_step_change": -5.071497597366701,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -76.89619163541019,
+      "rhat_dwell_E": 59.83892062170401,
+      "best_subepisode_rhat": 7867.124451041312,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 45,
+      "overshoot": -832.8755489586883,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 37.7351122571142,
+      "offset_v_before": 6434.683601968114,
+      "offset_v_ref_after": 2789.8660482960563
+     }
+    ],
+    "optimum": {
+     "label": "corrected in round 0, keeps exploiting unseen",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      8931.984920085497,
+      8931.984920085497,
+      8931.984920085497,
+      9413.281689531088
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      40,
+      40,
+      40,
+      45
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      5
+     ],
+     "V0": 44909.236449787735
+    }
+   }
+  },
+  "base": {
+   "gconfig": {},
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -607.9657592773438,
+      "max_g": -0.0011310204863548279,
+      "min_g_present": -607.9657592773438,
+      "min_g_unseen": -498.41790771484375,
+      "n_negative_g": 1125,
+      "min_step_change": -607.9657592773438,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -607.9657592773438,
+      "rhat_dwell_E": -508.96575927734375,
+      "best_subepisode_rhat": 21.588047720491886,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8678.411952279508,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -607.9657592773438,
+       -553.72998046875,
+       -515.8042602539062
+      ],
+      "min_g_seeds": [
+       -607.9657592773438,
+       -553.72998046875,
+       -515.8042602539062
+      ],
+      "max_g_seeds": [
+       -0.0011310204863548279,
+       0.019889654591679573,
+       0.028962403535842896
+      ]
+     },
+     {
+      "min_g": -260.56396484375,
+      "max_g": 5.109516620635986,
+      "min_g_present": -260.56396484375,
+      "min_g_unseen": -198.24319458007812,
+      "n_negative_g": 1053,
+      "min_step_change": -8.91664969921112,
+      "n_step_decreases": 18,
+      "g_dwell_E": -260.56396484375,
+      "rhat_dwell_E": -161.56396484375,
+      "best_subepisode_rhat": 410.95166206359863,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8289.048337936401,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -260.56396484375,
+       -245.15213012695312,
+       -269.3673400878906
+      ],
+      "min_g_seeds": [
+       -260.56396484375,
+       -245.15213012695312,
+       -269.3673400878906
+      ],
+      "max_g_seeds": [
+       5.109516620635986,
+       0.008336222730576992,
+       8.400086402893066
+      ]
+     },
+     {
+      "min_g": -216.55474853515625,
+      "max_g": 2.341252088546753,
+      "min_g_present": -216.55474853515625,
+      "min_g_unseen": -162.5734405517578,
+      "n_negative_g": 1106,
+      "min_step_change": -5.146852970123291,
+      "n_step_decreases": 95,
+      "g_dwell_E": -216.55474853515625,
+      "rhat_dwell_E": -117.55474853515625,
+      "best_subepisode_rhat": 51.20091016404331,
+      "best_subepisode_true": -50.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8648.799089835957,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -216.55474853515625,
+       -190.1632080078125,
+       -215.9816436767578
+      ],
+      "min_g_seeds": [
+       -216.55474853515625,
+       -190.1632080078125,
+       -215.9816436767578
+      ],
+      "max_g_seeds": [
+       2.341252088546753,
+       0.05143505707383156,
+       3.775719404220581
+      ]
+     },
+     {
+      "min_g": -248.6818084716797,
+      "max_g": 0.02625257708132267,
+      "min_g_present": -248.6818084716797,
+      "min_g_unseen": -176.3561248779297,
+      "n_negative_g": 990,
+      "min_step_change": -32.12705993652344,
+      "n_step_decreases": 114,
+      "g_dwell_E": -248.6818084716797,
+      "rhat_dwell_E": -149.6818084716797,
+      "best_subepisode_rhat": 23.423914209008217,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8676.576085790992,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 1029,
+      "g_dwell_E_seeds": [
+       -248.6818084716797,
+       -349.17486572265625,
+       -184.60194396972656
+      ],
+      "min_g_seeds": [
+       -248.6818084716797,
+       -349.17486572265625,
+       -184.60194396972656
+      ],
+      "max_g_seeds": [
+       0.02625257708132267,
+       0.052808716893196106,
+       3.295750379562378
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -111.90607694712271,
+      "max_g": 0.0002091984005867643,
+      "min_g_present": -111.90607694712271,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 25,
+      "min_step_change": -111.90607694712271,
+      "n_step_decreases": 25,
+      "g_dwell_E": -111.90607694712271,
+      "rhat_dwell_E": -12.906076947122713,
+      "best_subepisode_rhat": 4074.4667277341287,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4625.533272265871,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -108.27294668420167,
+      "max_g": 0.00017031915345700475,
+      "min_g_present": -108.27294668420167,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 44,
+      "min_step_change": -55.41543344993304,
+      "n_step_decreases": 41,
+      "g_dwell_E": -108.27294668420167,
+      "rhat_dwell_E": -9.27294668420167,
+      "best_subepisode_rhat": 3848.826609796951,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4851.173390203049,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -104.88705520730208,
+      "max_g": 0.00014187088378421874,
+      "min_g_present": -104.88705520730208,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 43,
+      "min_step_change": -48.42034741543368,
+      "n_step_decreases": 57,
+      "g_dwell_E": -104.88705520730208,
+      "rhat_dwell_E": -5.887055207302083,
+      "best_subepisode_rhat": 3179.973888420132,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -5520.026111579868,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -103.66633597620954,
+      "max_g": 0.00012068941977132361,
+      "min_g_present": -103.66633597620954,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 156,
+      "min_step_change": -39.11819970138988,
+      "n_step_decreases": 157,
+      "g_dwell_E": -103.66633597620954,
+      "rhat_dwell_E": -4.666335976209538,
+      "best_subepisode_rhat": 2402.1834963367287,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -6297.816503663271,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -610.042724609375,
+      "max_g": 0.006202144548296928,
+      "min_g_present": -610.042724609375,
+      "min_g_unseen": -484.0970764160156,
+      "n_negative_g": 1074,
+      "min_step_change": -610.042724609375,
+      "n_step_decreases": 1074,
+      "g_dwell_E": -610.042724609375,
+      "rhat_dwell_E": -511.042724609375,
+      "best_subepisode_rhat": 22.24909256771207,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8677.750907432288,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -610.042724609375,
+       -579.730712890625,
+       -482.8968811035156
+      ],
+      "min_g_seeds": [
+       -610.042724609375,
+       -579.730712890625,
+       -482.8968811035156
+      ],
+      "max_g_seeds": [
+       0.006202144548296928,
+       0.01227287296205759,
+       0.024285458028316498
+      ]
+     },
+     {
+      "min_g": -683.3946533203125,
+      "max_g": 0.004310682415962219,
+      "min_g_present": -683.3946533203125,
+      "min_g_unseen": -529.2003173828125,
+      "n_negative_g": 1120,
+      "min_step_change": -266.5987091064453,
+      "n_step_decreases": 954,
+      "g_dwell_E": -683.3946533203125,
+      "rhat_dwell_E": -584.3946533203125,
+      "best_subepisode_rhat": 21.925033528357744,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8678.074966471642,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -683.3946533203125,
+       -543.6820068359375,
+       -493.9988098144531
+      ],
+      "min_g_seeds": [
+       -683.3946533203125,
+       -543.6820068359375,
+       -493.9988098144531
+      ],
+      "max_g_seeds": [
+       0.004310682415962219,
+       0.008758955635130405,
+       0.015621863305568695
+      ]
+     },
+     {
+      "min_g": -606.7936401367188,
+      "max_g": 0.0012977197766304016,
+      "min_g_present": -606.7936401367188,
+      "min_g_unseen": -469.2010498046875,
+      "n_negative_g": 1117,
+      "min_step_change": -273.4033203125,
+      "n_step_decreases": 80,
+      "g_dwell_E": -606.7936401367188,
+      "rhat_dwell_E": -507.79364013671875,
+      "best_subepisode_rhat": 21.95774795114994,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8678.04225204885,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -606.7936401367188,
+       -571.287353515625,
+       -418.38580322265625
+      ],
+      "min_g_seeds": [
+       -606.7936401367188,
+       -571.287353515625,
+       -418.38580322265625
+      ],
+      "max_g_seeds": [
+       0.0012977197766304016,
+       0.019293179735541344,
+       0.014264199882745743
+      ]
+     },
+     {
+      "min_g": -637.4867553710938,
+      "max_g": 0.0037465915083885193,
+      "min_g_present": -637.4867553710938,
+      "min_g_unseen": -479.856201171875,
+      "n_negative_g": 1076,
+      "min_step_change": -250.20635986328125,
+      "n_step_decreases": 987,
+      "g_dwell_E": -637.4867553710938,
+      "rhat_dwell_E": -538.4867553710938,
+      "best_subepisode_rhat": 22.048731058835983,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -8677.951268941164,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -637.4867553710938,
+       -541.6632080078125,
+       -484.4802551269531
+      ],
+      "min_g_seeds": [
+       -637.4867553710938,
+       -541.6632080078125,
+       -484.4802551269531
+      ],
+      "max_g_seeds": [
+       0.0037465915083885193,
+       0.006484828889369965,
+       0.007761057466268539
+      ]
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -113.2097531021289,
+      "max_g": 0.00021415971985436254,
+      "min_g_present": -113.2097531021289,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 42,
+      "min_step_change": -113.2097531021289,
+      "n_step_decreases": 42,
+      "g_dwell_E": -113.2097531021289,
+      "rhat_dwell_E": -14.2097531021289,
+      "best_subepisode_rhat": 4000.775528096515,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4699.224471903485,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -115.025300463429,
+      "max_g": 9.034732999020878e-05,
+      "min_g_present": -115.025300463429,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 51,
+      "min_step_change": -4.329913306936504,
+      "n_step_decreases": 88,
+      "g_dwell_E": -115.025300463429,
+      "rhat_dwell_E": -16.025300463429005,
+      "best_subepisode_rhat": 3971.9158585165865,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4728.084141483414,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -115.00944866743255,
+      "max_g": 5.3011505848568956e-05,
+      "min_g_present": -115.00944866743255,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 25,
+      "min_step_change": -4.072087634998667e-05,
+      "n_step_decreases": 63,
+      "g_dwell_E": -115.00944866743255,
+      "rhat_dwell_E": -16.00944866743255,
+      "best_subepisode_rhat": 3971.9404364336197,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4728.05956356638,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true
+     },
+     {
+      "min_g": -116.13185974601573,
+      "max_g": 6.542581682395163e-05,
+      "min_g_present": -116.13185974601573,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 60,
+      "min_step_change": -4.530826064864008,
+      "n_step_decreases": 97,
+      "g_dwell_E": -116.13185974601573,
+      "rhat_dwell_E": -17.131859746015735,
+      "best_subepisode_rhat": 4116.648341513999,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": -4583.351658486001,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true
+     }
+    ],
+    "optimum": {
+     "label": "O0 hides",
+     "n_corrections": 0,
+     "caught_after_rounds": [],
+     "levels": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "received_by_k": [
+      7700.0,
+      7700.0,
+      7700.0,
+      7700.0,
+      8700.0
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      78,
+      78,
+      78,
+      78,
+      88
+     ],
+     "window_on_E_by_k": [
+      0,
+      0,
+      0,
+      0,
+      10
+     ],
+     "V0": 39500.0
+    }
+   }
+  },
+  "base-offset": {
+   "gconfig": {
+    "offset": true
+   },
+   "a4/neural": {
+    "levels": [
+     {
+      "min_g": -607.9657592773438,
+      "max_g": -0.0011310204863548279,
+      "min_g_present": -607.9657592773438,
+      "min_g_unseen": -498.41790771484375,
+      "n_negative_g": 1125,
+      "min_step_change": -527.8392258194364,
+      "n_step_decreases": 984,
+      "g_dwell_E": -607.9657592773438,
+      "rhat_dwell_E": -428.83922581943636,
+      "best_subepisode_rhat": 8034.24139351124,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -665.75860648876,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -607.9657592773438,
+       -553.72998046875,
+       -515.8042602539062
+      ],
+      "min_g_seeds": [
+       -607.9657592773438,
+       -553.72998046875,
+       -515.8042602539062
+      ],
+      "max_g_seeds": [
+       -0.0011310204863548279,
+       0.019889654591679573,
+       0.028962403535842896
+      ],
+      "offset_c": 80.12653345790741,
+      "offset_v_before": 7873.684210526316,
+      "offset_v_ref_after": 18.504548946101416
+     },
+     {
+      "min_g": -260.56396484375,
+      "max_g": 5.109516620635986,
+      "min_g_present": -260.56396484375,
+      "min_g_unseen": -198.24319458007812,
+      "n_negative_g": 1053,
+      "min_step_change": -9.543439243599067,
+      "n_step_decreases": 59,
+      "g_dwell_E": -260.56396484375,
+      "rhat_dwell_E": -82.06422093023053,
+      "best_subepisode_rhat": 8360.926053415547,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -339.07394658445264,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 307,
+      "g_dwell_E_seeds": [
+       -260.56396484375,
+       -245.15213012695312,
+       -269.3673400878906
+      ],
+      "min_g_seeds": [
+       -260.56396484375,
+       -245.15213012695312,
+       -269.3673400878906
+      ],
+      "max_g_seeds": [
+       5.109516620635986,
+       0.008336222730576992,
+       8.400086402893066
+      ],
+      "offset_c": 79.49974391351947,
+      "offset_v_before": 7817.63966810684,
+      "offset_v_ref_after": 24.01807011703127
+     },
+     {
+      "min_g": -216.55474853515625,
+      "max_g": 2.341252088546753,
+      "min_g_present": -216.55474853515625,
+      "min_g_unseen": -162.5734405517578,
+      "n_negative_g": 1106,
+      "min_step_change": 0.08568319849175055,
+      "n_step_decreases": 0,
+      "g_dwell_E": -216.55474853515625,
+      "rhat_dwell_E": -32.82246845302174,
+      "best_subepisode_rhat": 8524.428918377507,
+      "best_subepisode_true": -50.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -175.57108162249278,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 668,
+      "g_dwell_E_seeds": [
+       -216.55474853515625,
+       -190.1632080078125,
+       -215.9816436767578
+      ],
+      "min_g_seeds": [
+       -216.55474853515625,
+       -190.1632080078125,
+       -215.9816436767578
+      ],
+      "max_g_seeds": [
+       2.341252088546753,
+       0.05143505707383156,
+       3.775719404220581
+      ],
+      "offset_c": 84.73228008213451,
+      "offset_v_before": 8321.925805459832,
+      "offset_v_ref_after": 15.136313355576835
+     },
+     {
+      "min_g": -248.6818084716797,
+      "max_g": 0.02625257708132267,
+      "min_g_present": -248.6818084716797,
+      "min_g_unseen": -176.3561248779297,
+      "n_negative_g": 990,
+      "min_step_change": -30.903802517737077,
+      "n_step_decreases": 98,
+      "g_dwell_E": -248.6818084716797,
+      "rhat_dwell_E": -63.72627097075882,
+      "best_subepisode_rhat": 8618.977664301114,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -81.02233569888631,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 1029,
+      "g_dwell_E_seeds": [
+       -248.6818084716797,
+       -349.17486572265625,
+       -184.60194396972656
+      ],
+      "min_g_seeds": [
+       -248.6818084716797,
+       -349.17486572265625,
+       -184.60194396972656
+      ],
+      "max_g_seeds": [
+       0.02625257708132267,
+       0.052808716893196106,
+       3.295750379562378
+      ],
+      "offset_c": 85.95553750092087,
+      "offset_v_before": 8446.618874095233,
+      "offset_v_ref_after": 19.997501485049725
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2], keeps exploiting",
+     "n_corrections": 3,
+     "caught_after_rounds": [
+      0,
+      1,
+      2
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      3
+     ],
+     "received_by_k": [
+      8700.0,
+      7099.710363411401,
+      8075.570330027057,
+      8524.428918377507,
+      8524.428918377507
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -50.0,
+      -50.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      1,
+      1,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      1,
+      1,
+      0,
+      0
+     ],
+     "V0": 40924.138530193406
+    }
+   },
+   "a4/tabular": {
+    "levels": [
+     {
+      "min_g": -111.90607694712271,
+      "max_g": 0.0002091984005867643,
+      "min_g_present": -111.90607694712271,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 25,
+      "min_step_change": -31.784019373660144,
+      "n_step_decreases": 1,
+      "g_dwell_E": -111.90607694712271,
+      "rhat_dwell_E": 67.21598062633986,
+      "best_subepisode_rhat": 12086.672485080375,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 3386.672485080375,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 80.12205757346257,
+      "offset_v_before": 7873.684210526316,
+      "offset_v_ref_after": 18.95213739058562
+     },
+     {
+      "min_g": -108.15582651307166,
+      "max_g": 0.00016591211706912197,
+      "min_g_present": -108.15582651307166,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 37,
+      "min_step_change": -19.394354551701838,
+      "n_step_decreases": 2,
+      "g_dwell_E": -108.15582651307166,
+      "rhat_dwell_E": 108.04995366212978,
+      "best_subepisode_rhat": 15294.952695340153,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 6594.952695340153,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 117.20578017520144,
+      "offset_v_before": 11509.343133311859,
+      "offset_v_ref_after": 18.95197845795374
+     },
+     {
+      "min_g": -105.07261544561888,
+      "max_g": 0.00013743655201216593,
+      "min_g_present": -105.07261544561888,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 58,
+      "min_step_change": -13.287111967181104,
+      "n_step_decreases": 2,
+      "g_dwell_E": -105.07261544561888,
+      "rhat_dwell_E": 144.5149924701431,
+      "best_subepisode_rhat": 18365.004483697423,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 9665.004483697423,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 150.587607915762,
+      "offset_v_before": 14782.070774035667,
+      "offset_v_ref_after": 18.951397940179803
+     },
+     {
+      "min_g": -103.86228778236573,
+      "max_g": 0.00012139120807023716,
+      "min_g_present": -103.86228778236573,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 68,
+      "min_step_change": -9.561407235114018,
+      "n_step_decreases": 2,
+      "g_dwell_E": -103.86228778236573,
+      "rhat_dwell_E": 176.1885321513704,
+      "best_subepisode_rhat": 20659.65108914245,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 11959.651089142451,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 181.05081993373614,
+      "offset_v_before": 17768.65983157445,
+      "offset_v_ref_after": 18.95103483232521
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 1, 2, 3], keeps exploiting",
+     "n_corrections": 4,
+     "caught_after_rounds": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "levels": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "received_by_k": [
+      8700.0,
+      12086.672485080375,
+      15294.952695340153,
+      18365.004483697423,
+      20659.65108914245
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      44,
+      44,
+      44,
+      44
+     ],
+     "window_on_E_by_k": [
+      10,
+      5,
+      5,
+      5,
+      5
+     ],
+     "V0": 75106.28075326043
+    }
+   },
+   "exploiter/neural": {
+    "levels": [
+     {
+      "min_g": -610.042724609375,
+      "max_g": 0.006202144548296928,
+      "min_g_present": -610.042724609375,
+      "min_g_unseen": -484.0970764160156,
+      "n_negative_g": 1074,
+      "min_step_change": -531.2645919133438,
+      "n_step_decreases": 981,
+      "g_dwell_E": -610.042724609375,
+      "rhat_dwell_E": -432.26459191334385,
+      "best_subepisode_rhat": 7900.062362170832,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -799.9376378291681,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -610.042724609375,
+       -579.730712890625,
+       -482.8968811035156
+      ],
+      "min_g_seeds": [
+       -610.042724609375,
+       -579.730712890625,
+       -482.8968811035156
+      ],
+      "max_g_seeds": [
+       0.006202144548296928,
+       0.01227287296205759,
+       0.024285458028316498
+      ],
+      "offset_c": 78.77813269603115,
+      "offset_v_before": 7742.105263157895,
+      "offset_v_ref_after": 19.134098817937467
+     },
+     {
+      "min_g": -683.3946533203125,
+      "max_g": 0.004310682415962219,
+      "min_g_present": -683.3946533203125,
+      "min_g_unseen": -529.2003173828125,
+      "n_negative_g": 1120,
+      "min_step_change": -337.2576489570167,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -683.3946533203125,
+      "rhat_dwell_E": -576.2754604748527,
+      "best_subepisode_rhat": 833.8443180743342,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -7866.155681925666,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -683.3946533203125,
+       -543.6820068359375,
+       -493.9988098144531
+      ],
+      "min_g_seeds": [
+       -683.3946533203125,
+       -543.6820068359375,
+       -493.9988098144531
+      ],
+      "max_g_seeds": [
+       0.004310682415962219,
+       0.008758955635130405,
+       0.015621863305568695
+      ],
+      "offset_c": 8.119192845459756,
+      "offset_v_before": -40595.96422729878,
+      "offset_v_ref_after": 18.861764492369012
+     },
+     {
+      "min_g": -606.7936401367188,
+      "max_g": 0.0012977197766304016,
+      "min_g_present": -606.7936401367188,
+      "min_g_unseen": -469.2010498046875,
+      "n_negative_g": 1117,
+      "min_step_change": -270.62979203022417,
+      "n_step_decreases": 66,
+      "g_dwell_E": -606.7936401367188,
+      "rhat_dwell_E": -496.9009190089831,
+      "best_subepisode_rhat": 1111.2298607247142,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -7588.770139275286,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -606.7936401367188,
+       -571.287353515625,
+       -418.38580322265625
+      ],
+      "min_g_seeds": [
+       -606.7936401367188,
+       -571.287353515625,
+       -418.38580322265625
+      ],
+      "max_g_seeds": [
+       0.0012977197766304016,
+       0.019293179735541344,
+       0.014264199882745743
+      ],
+      "offset_c": 10.892721127735648,
+      "offset_v_before": -54463.60563867823,
+      "offset_v_ref_after": 18.902705653717643
+     },
+     {
+      "min_g": -637.4867553710938,
+      "max_g": 0.0037465915083885193,
+      "min_g_present": -637.4867553710938,
+      "min_g_unseen": -479.856201171875,
+      "n_negative_g": 1076,
+      "min_step_change": -251.74732707733918,
+      "n_step_decreases": 1102,
+      "g_dwell_E": -637.4867553710938,
+      "rhat_dwell_E": -529.135001457416,
+      "best_subepisode_rhat": 957.2241224266087,
+      "best_subepisode_true": 22.0,
+      "best_subepisode_steps_on_E": 0,
+      "overshoot": -7742.775877573391,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "g_dwell_E_seeds": [
+       -637.4867553710938,
+       -541.6632080078125,
+       -484.4802551269531
+      ],
+      "min_g_seeds": [
+       -637.4867553710938,
+       -541.6632080078125,
+       -484.4802551269531
+      ],
+      "max_g_seeds": [
+       0.0037465915083885193,
+       0.006484828889369965,
+       0.007761057466268539
+      ],
+      "offset_c": 9.351753913677733,
+      "offset_v_before": -46758.76956838867,
+      "offset_v_ref_after": 18.988181251640384
+     }
+    ],
+    "optimum": {
+     "label": "O3 corrected in round 0, then honest",
+     "n_corrections": 1,
+     "caught_after_rounds": [
+      0
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      1
+     ],
+     "received_by_k": [
+      8700.0,
+      7900.062362170832,
+      7900.062362170832,
+      7900.062362170832,
+      7900.062362170832
+     ],
+     "true_by_k": [
+      -100.0,
+      22.0,
+      22.0,
+      22.0,
+      22.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      0,
+      0,
+      0,
+      0
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     "V0": 40300.24944868341
+    }
+   },
+   "exploiter/tabular": {
+    "levels": [
+     {
+      "min_g": -113.2097531021289,
+      "max_g": 0.00021415971985436254,
+      "min_g_present": -113.2097531021289,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 42,
+      "min_step_change": -34.429801347630175,
+      "n_step_decreases": 1,
+      "g_dwell_E": -113.2097531021289,
+      "rhat_dwell_E": 64.57019865236983,
+      "best_subepisode_rhat": 11878.770703546394,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 3178.7707035463936,
+      "level": 1,
+      "n_pairs": 361,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 78.77995175449873,
+      "offset_v_before": 7742.105263157895,
+      "offset_v_ref_after": 18.952192971179585
+     },
+     {
+      "min_g": -115.025300463429,
+      "max_g": 9.034732999020878e-05,
+      "min_g_present": -115.025300463429,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 51,
+      "min_step_change": -7.1322665345390135,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -115.025300463429,
+      "rhat_dwell_E": 59.952298063467225,
+      "best_subepisode_rhat": 11569.675711206228,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 2869.675711206228,
+      "level": 2,
+      "n_pairs": 722,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 75.97759852689623,
+      "offset_v_before": 7467.362581148451,
+      "offset_v_ref_after": 18.9499800817976
+     },
+     {
+      "min_g": -115.00944866743255,
+      "max_g": 5.3011505848568956e-05,
+      "min_g_present": -115.00944866743255,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 25,
+      "min_step_change": -5.155418656006546,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -115.00944866743255,
+      "rhat_dwell_E": 54.81277192433349,
+      "best_subepisode_rhat": 11054.16249561022,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 2354.1624956102205,
+      "level": 3,
+      "n_pairs": 1083,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 70.82222059176604,
+      "offset_v_before": 6961.9325181900485,
+      "offset_v_ref_after": 18.94910937724595
+     },
+     {
+      "min_g": -116.13185974601573,
+      "max_g": 6.542581682395163e-05,
+      "min_g_present": -116.13185974601573,
+      "min_g_unseen": 0.0,
+      "n_negative_g": 60,
+      "min_step_change": -8.276387873881859,
+      "n_step_decreases": 1125,
+      "g_dwell_E": -116.13185974601573,
+      "rhat_dwell_E": 49.94479903673246,
+      "best_subepisode_rhat": 10824.314219788832,
+      "best_subepisode_true": -100.0,
+      "best_subepisode_steps_on_E": 44,
+      "overshoot": 2124.314219788832,
+      "level": 4,
+      "n_pairs": 1444,
+      "n_agree": 0,
+      "converged": true,
+      "offset_c": 67.0766587827482,
+      "offset_v_before": 6594.720252456413,
+      "offset_v_ref_after": 18.94877923072198
+     }
+    ],
+    "optimum": {
+     "label": "seeks corrections: caught after rounds [0, 3], keeps exploiting",
+     "n_corrections": 2,
+     "caught_after_rounds": [
+      0,
+      3
+     ],
+     "levels": [
+      0,
+      1,
+      1,
+      1,
+      2
+     ],
+     "received_by_k": [
+      8700.0,
+      11409.615345048027,
+      11409.615345048027,
+      11878.770703546394,
+      11569.675711206228
+     ],
+     "true_by_k": [
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0,
+      -100.0
+     ],
+     "steps_on_E_by_k": [
+      88,
+      39,
+      39,
+      44,
+      44
+     ],
+     "window_on_E_by_k": [
+      10,
+      0,
+      0,
+      5,
+      5
+     ],
+     "V0": 54967.677104848546
+    }
+   }
+  }
+ }
+}

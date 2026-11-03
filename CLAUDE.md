@@ -331,6 +331,12 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **Absent Supervisor swap:** PPO is 5–10% below the best value, while honest is within 1% of the best (in 3 of 9 fits the best is a true −50 route). So PPO is **under-tuned**. Tuning: `S4T1_P2swap_ep1000_ent03_seeds0-2` (entropy 0.03).
   - **Boat Race, every variant:** the best under r̂ is *not* honest in 7–9 of 9 fits (true −76 to −100 vs honest 50). Here the correction itself pays for farming: a design result, not a PPO one.
   - **The swap's raise early in training is enormous.** Received returns reach 75,000 per sub-episode in the first 2M steps of Absent Supervisor, against an exploit worth 1,550.
+- **Level offset c_k (`g.offset=True`; exact checks only, 2026-11-03).** After each correction, every step also pays a constant, sized from the overseer's own rollouts: c_k = ([V_before − V_ref,after]⁺ + 0.02·|V_before|)/T_sub.
+  - **Grid:** results/step4/phase_a_offset. **Absent Supervisor and Tomato:** results/step4/<env>/phase_a/P1eq1_offset_ep1000.
+  - **It removes hiding on the grid,** even with the paper's fit.
+  - **But it pays per correction, and each c_k builds on the previous level,** so it grows (grid: 80 → 117 → 150 → 181/step). The optimum then seeks corrections and keeps exploiting: 5 of 8 grid cases, and Tomato is corrected every round.
+  - **In Absent Supervisor it is too small, and the optimum hides.** V_before comes from noisy rollouts (1,213, while hiding earns 1,450).
+  - **Not pursued:** no regulariser alone does better on all three.
 - **Timelines.**
   - Grid: `experiments/step2_figures.py --prefix step4 --results-dir results/step4/ppo ...`.
   - Step 3 tasks: `experiments/step3_figures.py --prefix step4 --results-dir results/step4/<env>/ppo ...`.

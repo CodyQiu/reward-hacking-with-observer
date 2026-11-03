@@ -105,6 +105,14 @@ def held_out_loss(params, pairs, task):
     return float(np.mean(np.logaddexp(0.0, d) - y * d))
 
 
+def rollout_return(trajs, task, params, offset):
+    """Mean return of rollouts under proxy + g (params None: no g) + a per-step offset."""
+    ret = np.array([t.proxy + offset * t.length for t in trajs])
+    if params is not None:
+        ret = ret + g_on_rows(params, _traj_rows(trajs, task)).reshape(len(trajs), -1).sum(axis=1)
+    return float(ret.mean())
+
+
 def _keep_previous(out_dir):
     """Never overwrite: a previous Phase A output moves to superseded/<timestamp>_*."""
     stamp = time.strftime("%Y%m%d-%H%M%S")
@@ -442,12 +450,21 @@ def main():
     Rs, D, rounds = [tb.proxy.copy()], [], []
     policy = pol_px                                   # round 1: the open exploiter
     ex = tb.exploit
+    prev = (None, 0.0)                                # (g params, offset per step) in force before correction c
     for c in range(1, proto.n_sub):
         agent = rollouts(batch, table_policy_fn(policy, A, EPS), proto, rng, t0=(c - 1) * T)
         D += cross_pairs(agent, refs_fixed, rng)
         params_g, info = fit_correction_rows(D, task, gcfg, seed=0)
         g = g_on_rows(params_g, support).reshape(tb.proxy.shape)
         R = tb.proxy + g
+        off = {}
+        if gcfg.offset:                               # Step 4 level offset, from the overseer's own rollouts
+            v_before = rollout_return(agent, task, *prev)
+            v_ref = rollout_return(refs_fixed, task, params_g, 0.0)
+            cst = (max(0.0, v_before - v_ref) + gcfg.offset_margin * abs(v_before)) / T
+            R = R + cst
+            prev = (params_g, cst)
+            off = {"offset_c": cst, "offset_v_before": v_before, "offset_v_ref_after": v_ref}
         Rs.append(R)
         best_pol = solve_subepisode(tb, R, T)
         best_r, best_ex = sub_value(tb, best_pol, R, T)
@@ -459,7 +476,7 @@ def main():
                "g_exploit_mean": g_ex, "exploit_pay_per_step": float(np.average(R[ex], weights=tb.prob[ex])),
                "honest_value_rhat": honest_r, "honest_value_proxy": sub_value(tb, pol_gt, tb.proxy, T)[0],
                "open_exploiter_value_rhat": open_r, "best_value_rhat": best_r, "best_true": best_true,
-               "best_exploit_rate": best_ex, "max_g": float(g.max()), "min_g": float(g.min())}
+               "best_exploit_rate": best_ex, "max_g": float(g.max()), "min_g": float(g.min()), **off}
         rounds.append(rec)
         log.note(f"A4 round {c}: |D| {len(D)} |D+| {info['n_agree']}; exploit pays {rec['exploit_pay_per_step']:+.1f}"
                  f"/step under r_hat (g on exploit {g_ex:+.1f}); best sub-episode under r_hat {best_r:.1f} "

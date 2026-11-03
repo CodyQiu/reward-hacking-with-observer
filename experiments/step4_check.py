@@ -10,6 +10,10 @@ Variants (one GConfig change each from Step 2's max1 PBRR):
                      at 0 (the tabular fit uses the bound g >= 0)
   P2-floor-noLplus   the swap with the floor, without L+
   P2-softplus        the swap with g = softplus(MLP) during the fit (diagnostic)
+  P1-eq1-offset      no regulariser + the level offset c_k (GConfig.offset): after each
+                     correction every step also pays a constant, sized from the overseer's own
+                     rollouts so the reference earns >= what the caught agent was earning
+  base-offset        the paper's fit + the level offset
 
 For each variant, two sequences of corrections (who is caught at level k):
   a4         Step 2's A4 recipe: the level-k rollouts come from the policy optimal
@@ -25,7 +29,7 @@ r_hat_k - r_hat_{k-1}), what dwelling on E pays, the best sub-episode under r_ha
 (value, true return, steps on E) and its overshoot over the proxy's best (8,700).
 Then the idealised level DP (src/step2_dp.py) gives the optimum and its end state.
 
-    .venv/bin/python experiments/step4_check.py [--run-id phase_a] [--quick]
+    .venv/bin/python experiments/step4_check.py [--run-id phase_a] [--quick] [--variants P1-eq1 P1-eq1-offset]
 """
 
 import argparse
@@ -62,6 +66,8 @@ VARIANTS = {
     "P2-floor": {"l_minus_on": "dispreferred", "g_floor": "clip"},
     "P2-floor-noLplus": {"l_minus_on": "dispreferred", "l_plus": False, "g_floor": "clip"},
     "P2-softplus": {"l_minus_on": "dispreferred", "g_floor": "softplus"},
+    "P1-eq1-offset": {"use_regularization": False, "offset": True},
+    "base-offset": {"offset": True},
 }
 SEQUENCES = ("a4", "exploiter")
 
@@ -106,6 +112,17 @@ def level_stats(R, R_prev, G, present, tb, T, E):
             "best_subepisode_steps_on_E": int(on_e), "overshoot": float(rh - PROXY_BEST)}
 
 
+def level_offset(gc, agent, refs, R_prev, R_new, T):
+    """c_k per step (GConfig.offset): the reference rollouts must earn at least the caught agent's
+    mean return under the reward in force when it was caught, plus a margin."""
+    if not gc.offset:
+        return 0.0, {}
+    v_before = float(np.mean([t.counts @ R_prev.ravel() for t in agent]))
+    v_ref = float(np.mean([t.counts @ R_new.ravel() for t in refs]))
+    c = (max(0.0, v_before - v_ref) + gc.offset_margin * abs(v_before)) / T
+    return c, {"offset_c": c, "offset_v_before": v_before, "offset_v_ref_after": v_ref}
+
+
 def run_sequence(gc, seq, refs, pol_px, X, tb, cfg, n_seeds, seed_base):
     """Fit levels 1..4. Returns {fit: {"R": (5, P, A), "levels": [...]}} for fit in
     neural (seed 0 canonical, others summarised) and tabular."""
@@ -131,8 +148,10 @@ def run_sequence(gc, seq, refs, pol_px, X, tb, cfg, n_seeds, seed_base):
                 extra = {"converged": info["converged"]}
             G = g.reshape(cfg.n_pos, 5)
             R = tb.reward[:, :, 0] + G
+            off, off_info = level_offset(gc, agent, refs, Rs[-1], R, T)
+            R = R + off
             st = level_stats(R, Rs[-1], G, present, tb, T, E)
-            st.update({"level": c, "n_pairs": len(D), "n_agree": info["n_agree"], **extra})
+            st.update({"level": c, "n_pairs": len(D), "n_agree": info["n_agree"], **extra, **off_info})
             levels.append(st)
             Rs.append(R)
             if seq == "a4":
@@ -146,6 +165,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-id", default="phase_a")
     ap.add_argument("--quick", action="store_true", help="1 neural seed, a4 sequence only")
+    ap.add_argument("--variants", nargs="+", default=list(VARIANTS), choices=list(VARIANTS))
     args = ap.parse_args()
     out_dir = os.path.join(OUT, args.run_id)
     if os.path.exists(out_dir):
@@ -166,7 +186,7 @@ def main():
 
     summary = {"g_base": g_base, "ridge": RIDGE, "n_seeds": n_seeds, "variants": {}}
     t0 = time.time()
-    for name, kw in VARIANTS.items():
+    for name, kw in ((n, VARIANTS[n]) for n in args.variants):
         gc = GConfig(**{**g_base, **kw})
         summary["variants"][name] = {"gconfig": kw}
         for si, seq in enumerate(seqs):
@@ -189,19 +209,26 @@ def main():
         log.note(f"  ({time.time() - t0:.0f}s so far)")
 
     V = summary["variants"]
-    base = V["base"]["a4/neural"]["optimum"]
-    log.check("base (Step 2 max1) still hides: never corrected, windows 0-3 clean, final window exploited",
-              base["label"] == "O0 hides" and base["window_on_E_by_k"][4] > 0
-              and not any(base["window_on_E_by_k"][:4]),
-              f"V0 {base['V0']:,.0f}, received {np.round(base['received_by_k']).astype(int).tolist()}")
-    skip = V["P1-skip"]["a4/neural"]["optimum"]
-    log.check("P1-skip reproduces Step 2: caught in round 0 on purpose", skip["caught_after_rounds"][:1] == [0],
-              f"{skip['label']}, received {np.round(skip['received_by_k']).astype(int).tolist()}")
-    for name in ("P2-floor", "P2-floor-noLplus", "P2-softplus"):
+    for name in args.variants:
+        for key in [k for k in V[name] if "/" in k]:
+            o = V[name][key]["optimum"]
+            log.finding(f"{name} [{key}]: {o['label']}; true by round {np.round(o['true_by_k']).astype(int).tolist()}"
+                        f" (honest {HONEST_TRUE:g}); received {np.round(o['received_by_k']).astype(int).tolist()}")
+    if "base" in V:
+        base = V["base"]["a4/neural"]["optimum"]
+        log.check("base (Step 2 max1) still hides: never corrected, windows 0-3 clean, final window exploited",
+                  base["label"] == "O0 hides" and base["window_on_E_by_k"][4] > 0
+                  and not any(base["window_on_E_by_k"][:4]),
+                  f"V0 {base['V0']:,.0f}, received {np.round(base['received_by_k']).astype(int).tolist()}")
+    if "P1-skip" in V:
+        skip = V["P1-skip"]["a4/neural"]["optimum"]
+        log.check("P1-skip reproduces Step 2: caught in round 0 on purpose", skip["caught_after_rounds"][:1] == [0],
+                  f"{skip['label']}, received {np.round(skip['received_by_k']).astype(int).tolist()}")
+    for name in [n for n in ("P2-floor", "P2-floor-noLplus", "P2-softplus") if n in V]:
         mins = [l["min_g"] for k, v in V[name].items() if "/" in k for l in v["levels"]]
         log.check(f"{name}: g >= 0 on every transition at every level", min(mins) >= 0.0,
                   f"min g {min(mins):.4f}")
-    for name in ("P2-swap", "P2-swap-noLplus"):
+    for name in [n for n in ("P2-swap", "P2-swap-noLplus") if n in V]:
         for key in [k for k in V[name] if "/" in k]:
             lv = V[name][key]["levels"]
             log.finding(f"{name} [{key}]: monotone vs proxy? min g {min(l['min_g'] for l in lv):+.2f} "
