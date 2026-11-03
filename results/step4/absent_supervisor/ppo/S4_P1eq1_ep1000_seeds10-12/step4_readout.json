@@ -33,11 +33,13 @@
   "exploit_true": -100.0,
   "R4_bar": 340.0,
   "n_episodes": 77,
+  "n_episodes_total": 768,
   "R1": true,
   "R2": true,
   "R3": true,
   "R4": true,
-  "all": true
+  "all": true,
+  "finished": true
  },
  "seed11": {
   "corrections_per_ep": 1.0008116883116882,
@@ -73,11 +75,13 @@
   "exploit_true": -100.0,
   "R4_bar": 340.0,
   "n_episodes": 77,
+  "n_episodes_total": 768,
   "R1": true,
   "R2": true,
   "R3": true,
   "R4": true,
-  "all": true
+  "all": true,
+  "finished": true
  },
  "seed12": {
   "corrections_per_ep": 1.0008116883116882,
@@ -113,10 +117,12 @@
   "exploit_true": -100.0,
   "R4_bar": 340.0,
   "n_episodes": 77,
+  "n_episodes_total": 768,
   "R1": true,
   "R2": true,
   "R3": true,
   "R4": true,
-  "all": true
+  "all": true,
+  "finished": true
  }
 }

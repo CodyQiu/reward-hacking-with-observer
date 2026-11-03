@@ -33,10 +33,12 @@
   "exploit_true": -198.92,
   "R4_bar": -118.77439999999999,
   "n_episodes": 77,
+  "n_episodes_total": 768,
   "R1": false,
   "R2": false,
   "R3": true,
   "R4": false,
-  "all": false
+  "all": false,
+  "finished": true
  }
 }
