@@ -151,6 +151,57 @@ def test_window_by_level_splits_the_window_probability():
     assert ev["window_by_level"].shape == (P.n_sub, P.n_sub)
 
 
+def test_stochastic_level_evaluation_is_exact():
+    """evaluate_levels_probs (PPO read as a table) equals evaluate_levels on a deterministic policy, is
+    linear in a mixture at t = 0, and its occupancy reproduces the received return under any tables."""
+    from src.step3.dp import evaluate_levels, evaluate_levels_probs, onehot_probs, solve_levels, value_from_occupancy
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    task = get_task("grid")
+    tb, P = task.tables, Protocol()
+    R = np.stack([tb.proxy + 3.0 * c for c in range(P.n_sub)])               # corrections pay: it seeks them
+    _, pol = solve_levels(tb, P, R)
+    a = evaluate_levels(tb, P, R, pol)
+    assert np.allclose(a["corrected"][:4], 1.0)                               # every level is visited
+    b = evaluate_levels_probs(tb, P, R, onehot_probs(pol, tb.n_actions))
+    for k in a:
+        assert np.allclose(a[k], b[k], atol=1e-9), k
+    pol2 = pol.copy()
+    pol2[0] = (pol[0] + 1) % tb.n_actions
+    a2 = evaluate_levels(tb, P, R, pol2)
+    oh, oh2 = onehot_probs(pol, tb.n_actions), onehot_probs(pol2, tb.n_actions)
+    mix = evaluate_levels_probs(tb, P, R, lambda t: 0.5 * oh(t) + 0.5 * oh2(t))
+    for k in a:
+        assert np.allclose(0.5 * np.asarray(a[k]) + 0.5 * np.asarray(a2[k]), mix[k], atol=1e-9), k
+    R2 = np.stack([tb.true - 1.0 * c for c in range(P.n_sub)])
+    assert np.allclose(value_from_occupancy(tb, mix["occ"], R), mix["received"])
+    assert np.allclose(value_from_occupancy(tb, mix["occ"], R2), evaluate_levels_probs(
+        tb, P, R2, lambda t: 0.5 * oh(t) + 0.5 * oh2(t))["received"])
+
+
+def test_best_response_check_on_an_open_exploiter():
+    """experiments/step4_br.py on Absent Supervisor with a cheap g fit: the best response to the open
+    exploiter's own corrections is at least as good as the exploiter (gap >= 0), and the paired per-draw
+    gaps average to the mean-table gap."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "experiments"))
+    from step4_br import best_response
+    from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    cfg = resolve_config("absent_supervisor", {"seed": 0, "g": {"epochs": 20, "use_regularization": False}})
+    task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
+    tb = task.tables
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))              # exploit in view every round
+    res = best_response(cfg, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions), n_draws=2,
+                        log=lambda m: None)
+    assert res["behaviour"][0] == {"correction": 1, "from": "policy", "round": 0, "p_caught": 1.0}
+    assert all(b["from"] == "policy" for b in res["behaviour"])               # it is caught at every level
+    assert res["gap"] >= -1e-9 and res["V_br"] >= res["V_policy"] - 1e-6
+    assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9
+    assert res["policy"]["corrections_per_ep"] > 3.99
+
+
 def test_anneal_factor():
     from src.step3.train import _anneal_factor
     an = {"last": 0.25, "floor": 0.1}

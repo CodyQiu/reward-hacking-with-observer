@@ -11,6 +11,7 @@
 # --resume (passed through to step3_ppo.py) continues an existing run from its checkpoints instead; set
 # DEPENDENCY=<jobid> to start only after that job ends (afterany: a time-limited job hands over to its successor),
 # DEPENDENCY=afterok:<jobid> to start only if it succeeded (e.g. after tomato_large's Phase A). Prints the job id.
+# EXCLUDE=<nodes> keeps the job off broken nodes (sbatch --exclude, e.g. EXCLUDE=barley-04).
 set -euo pipefail
 HOURS=$1; shift
 args=("$@")
@@ -44,5 +45,5 @@ job=logs/slurm/${tag}_${run}${suffix}.sh
 } > "$job"
 dep=()
 if [[ -n ${DEPENDENCY:-} ]]; then [[ $DEPENDENCY == *:* ]] && dep=(--dependency="$DEPENDENCY") || dep=(--dependency="afterany:$DEPENDENCY"); fi
-sbatch --parsable ${dep[@]+"${dep[@]}"} --job-name="$tag:$run" --partition=normal --cpus-per-task=$((2 * n)) --mem-per-cpu=4000M --no-requeue \
+sbatch --parsable ${dep[@]+"${dep[@]}"} ${EXCLUDE:+--exclude=$EXCLUDE} --job-name="$tag:$run" --partition=normal --cpus-per-task=$((2 * n)) --mem-per-cpu=4000M --no-requeue \
   --time="${HOURS}:00:00" --output="logs/slurm/${tag}_${run}_%j.out" "$job"

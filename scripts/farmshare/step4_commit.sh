@@ -1,8 +1,8 @@
 #!/bin/bash
 # Commit and push the Step 4 optimal-policy campaign's results without bloating git (docs/step4_optimal.md):
-# every call stages the small files (targets, exact checks, convergence reports and curves, configs, progress,
-# seed logs, runs.csv, the campaign log); a seed's large checkpoint files (logs.npz, model.zip, the round CSVs)
-# only once it has finished (metrics.json), because a running seed rewrites them every 24 episodes.
+# every call stages the small files (targets, exact checks, convergence reports and curves, best-response checks,
+# configs, progress, seed logs, runs.csv, the campaign log); a seed's large checkpoint files (logs.npz, model.zip,
+# the round CSVs) only once it has finished (metrics.json), because a running seed rewrites them every 24 episodes.
 #   bash scripts/farmshare/step4_commit.sh "<commit message>"
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -17,6 +17,7 @@ for env in grid absent_supervisor tomato tomato_large; do
     for f in overrides.json step4_convergence.json step4_convergence.png step4_probe.json; do
       [[ -f $r$f ]] && git add "$r$f"
     done
+    [[ -d ${r}step4_br ]] && git add -A "${r}step4_br"
     for l in "$r"seed*.log; do [[ -f $l ]] && git add "$l"; done
     for s in "$r"seed*/; do
       [[ -d $s ]] || continue

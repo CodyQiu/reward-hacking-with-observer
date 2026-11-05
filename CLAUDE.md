@@ -350,12 +350,21 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
     - Correction c is fitted on the optimum's own rollouts in the round where it is caught; if the optimum is never caught there, on the best policy that would be (`dp.solve_subepisode_caught`).
     - Six draws per level. The level DP is solved on their mean tables, which is exact because the policy cannot see the draw. This iterates to a fixed point.
     - It also reports V_hide (never corrected) and each draw's own optimum.
-  - **Convergence:** `experiments/step4_convergence.py`, the "loss curve". Each run gets a gap to its target per 24 episodes and a verdict: CONVERGED, IMPROVING (extend), PLATEAU (change config) or ABOVE TARGET (investigate). The pre-registered tolerances are: value ±3%, windows 0.05, true return 5% of the honest–exploit range, corrections 0.1.
+  - **The target is not a ceiling for PPO (2026-11-05).** In Absent Supervisor and Tomato, PPO receives 7–15% more than its target, 3–13 standard errors above it. In every AS swap and Tomato swap seed it receives more than each of the target's single-draw optima. The reason: its corrections are fitted on its own round-0 play, the target's on the exact optimum's, which has 5% random actions. Separating the noise from PPO shaping its correction would take an eps = 0 target; not done. Under the old rule, "ABOVE TARGET" blocked 5 of 8 cells.
+  - **Verdict: the paired best-response check,** `experiments/step4_br.py` → `<run>/step4_br/seed<s>_ep<N>.json`.
+    - PPO's model is read as an exact table (`dp.evaluate_levels_probs`).
+    - The corrections are refitted on PPO's own caught play, 12 draws. Where PPO is never caught again, they are fitted on the best caught policy, so seeking and hiding are both options.
+    - The level DP on the mean tables is the best response. Gap = 1 − V_PPO / V_BR on the same tables; paired, with a standard error.
+    - **CONVERGED iff gap ≤ 0.03.**
+  - **Convergence curve:** `experiments/step4_convergence.py`, the "loss curve".
+    - It plots the gap to the target per 24 episodes, for the trend.
+    - Verdicts: CONVERGED, IMPROVING (extend), PLATEAU (change config), NEEDS BR or RUNNING.
+    - Matching the target (value ±3%, windows 0.05, true 5% of the honest–exploit range, corrections 0.1) and "above target" are reported for information only.
   - **`tomato_large`** (`src/step3/tasks/tomato_large.py`): the leftmost 4 tomatoes of each row of the original frame (8 tomatoes, 7,424 states). It has its own Phase A.
   - **Harness:**
     - `anneal.last` / `anneal.floor`: the learning rate and entropy fall linearly over the last part of a run.
     - `step3_ppo.py --resume [--extend-to N]` continues a run in its own directory from its last checkpoint.
-    - Driver: `scripts/farmshare/step4_optimal.sh`. Size-safe commits: `scripts/farmshare/step4_commit.sh`.
+    - Driver: `scripts/farmshare/step4_optimal.sh` (`br` / `br_missing` submit the best-response checks; `EXCLUDE=<nodes>` keeps jobs off broken nodes). Size-safe commits: `scripts/farmshare/step4_commit.sh`.
     - The grid now runs through the Step 3 harness (`--env grid`), with the same MDP and PBRR objective.
 
 ## 5. Legacy (`legacy/`): lessons that still apply

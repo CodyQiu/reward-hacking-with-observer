@@ -13,6 +13,9 @@
 #   bash scripts/farmshare/step4_optimal.sh extend <env> <run_id> <episodes> [submit]   take a run on to <episodes> in total
 #   bash scripts/farmshare/step4_optimal.sh ppo <env> <variant> <tag> "<extra --set k=v ...>" [submit]   a new config
 #   bash scripts/farmshare/step4_optimal.sh confirm <env> <run_id> [submit]   the run's config on fresh seeds 20-22
+#   bash scripts/farmshare/step4_optimal.sh br <env> <run_id> [submit]       paired best-response check of its finished seeds
+#   bash scripts/farmshare/step4_optimal.sh br_missing [submit]               ... of every finished seed that lacks one
+# EXCLUDE=<nodes> (e.g. EXCLUDE=barley-04) keeps every submitted job off broken nodes.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -25,6 +28,8 @@ frozen() { case $1 in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomat
 ent3() { case $1 in grid) echo 0.03 ;; absent_supervisor) echo 0.3 ;; *) echo 0.1 ;; esac; }       # 3x the frozen entropy
 episodes() { case $1 in absent_supervisor) echo 3072 ;; *) echo 1536 ;; esac; }                 # 4x (2x for AS) Step 3's
 ANNEAL="anneal.last=0.25 anneal.floor=0.1"
+BR_DRAWS=12                                                       # overseer draws of the best-response check
+br_hours() { case $1 in tomato_large) echo 12 ;; tomato) echo 6 ;; *) echo 2 ;; esac; }
 TUNE_SEEDS=(0 1 2)
 CONFIRM_SEEDS=(20 21 22)
 
@@ -38,7 +43,12 @@ gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fi
   esac
 }
 rdir() { echo "results/step4/$1/optimal"; }
-run() { if (( GO )); then "$@"; else [[ -n ${DEPENDENCY:-} ]] && printf 'DEPENDENCY=%s ' "$DEPENDENCY"; printf '%q ' "$@"; echo; fi; }
+run() { if (( GO )); then "$@"; else [[ -n ${DEPENDENCY:-} ]] && printf 'DEPENDENCY=%s ' "$DEPENDENCY"
+          [[ -n ${EXCLUDE:-} ]] && printf 'EXCLUDE=%s ' "$EXCLUDE"; printf '%q ' "$@"; echo; fi; }
+br_submit() {   # env run_dir
+  run bash scripts/farmshare/run_cmd.sh "$(br_hours "$1")" 4 "br_$1_$(basename "$2")" .venv/bin/python -u \
+    experiments/step4_br.py "$2" --finished-only --draws "$BR_DRAWS"
+}
 running() { squeue -h -u "$USER" -o %j 2>/dev/null | grep -Fxq "$1"; }
 
 ppo_submit() {   # env run_id "sets" seeds...
@@ -108,5 +118,16 @@ case $CMD in
     env=$1 id=$2; d=$(rdir "$env")
     sets=$(.venv/bin/python scripts/farmshare/run_sets.py "$d/$id")
     ppo_submit "$env" "${id}_confirm" "$sets" "${CONFIRM_SEEDS[@]}" ;;
-  *) sed -n 2,16p "$0" ;;
+  br)
+    env=$1 id=$2
+    br_submit "$env" "$(rdir "$env")/$id" ;;
+  br_missing)
+    for env in "${ENVS[@]}"; do
+      d=$(rdir "$env"); [[ -d $d ]] || continue
+      for r in $(.venv/bin/python experiments/step4_br.py --missing "$d"/*/ 2>/dev/null); do
+        if running "br_${env}_$(basename "$r")"; then echo "# $env/$(basename "$r"): check still queued/running"; continue; fi
+        br_submit "$env" "$r"
+      done
+    done ;;
+  *) sed -n 2,18p "$0" ;;
 esac

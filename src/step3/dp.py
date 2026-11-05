@@ -19,7 +19,8 @@ exploited. ``solve_subepisode`` is the single-sub-episode optimum of a fixed rew
 
 import numpy as np
 
-__all__ = ["solve_levels", "evaluate_levels", "solve_subepisode", "solve_subepisode_caught", "table_policy_fn",
+__all__ = ["solve_levels", "evaluate_levels", "evaluate_levels_probs", "value_from_occupancy", "onehot_probs",
+           "solve_subepisode", "solve_subepisode_caught", "table_policy_fn",
            "refs_from_eval"]
 
 
@@ -113,6 +114,82 @@ def evaluate_levels(tb, proto, R_levels, policy):
                 nd[:, :, 0] = tb.mu0[:, None] * lv[None, :]
         d = nd
     return out
+
+
+def evaluate_levels_probs(tb, proto, R_levels, probs_at):
+    """Exact forward evaluation of a *stochastic* policy, e.g. a trained PPO policy read as a table.
+
+    ``probs_at(t)`` -> (S, L, 2, A) action probabilities at step t (only the levels c <= k of round k
+    and, outside the audit window, the unflagged copy f = 0 can carry mass; other entries are ignored).
+    Same outputs as ``evaluate_levels``, plus ``occ`` (K, L, S*A): the expected number of visits to each
+    (round, level, state-action). The level dynamics do not depend on the reward, so the received return
+    of the same policy under any other R' (L, S*A, F) is ``value_from_occupancy(tb, occ, R')``."""
+    R = np.asarray(R_levels, float)
+    L = R.shape[0]
+    S, A, F = tb.n_states, tb.n_actions, tb.nxt.shape[1]
+    K, T = proto.n_sub, proto.t_sub
+    ex = tb.exploit
+    d = np.zeros((S, L, 2))
+    d[:, 0, 0] = tb.mu0
+    out = {k: np.zeros(K) for k in ("received", "proxy", "true", "window", "corrected")}
+    out["exploit_t"] = np.zeros(proto.t_ep)
+    out["window_by_level"] = np.zeros((K, L))
+    out["level_dist"] = np.zeros((K, L))
+    out["occ"] = np.zeros((K, L, S * A))
+    fbit = np.arange(2).astype(bool)[None, None, :, None]                      # (1, 1, 2, 1)
+    for t in range(proto.t_ep):
+        k, tau = divmod(t, T)
+        Lk = min(k + 1, L)                                                     # reachable levels this round
+        if tau == 0:
+            out["level_dist"][k] = d.sum(axis=(0, 2))
+        P = np.asarray(probs_at(t), float)[:, :Lk]                             # (S, Lk, 2, A)
+        dk = d[:, :Lk]
+        win = bool(proto.in_window(t))
+        lidx = np.arange(Lk)[None, :, None, None]
+        nd = np.zeros((S, L, 2))
+        mf = np.zeros((L, 2))
+        for a in range(A):
+            r = np.arange(S) * A + a                                           # (S,)
+            w = dk * P[..., a]                                                 # (S, Lk, 2)
+            if not w.any():
+                continue
+            out["occ"][k][:Lk, r] += w.sum(axis=2).T
+            m = w[..., None] * tb.prob[r][:, None, None, :]                    # (S, Lk, 2, F)
+            out["received"][k] += (m * R[:Lk, r, :].transpose(1, 0, 2)[:, :, None, :]).sum()
+            out["proxy"][k] += (m * tb.proxy[r][:, None, None, :]).sum()
+            out["true"][k] += (m * tb.true[r][:, None, None, :]).sum()
+            e = ex[r][:, None, None, :]                                        # (S, 1, 1, F)
+            out["exploit_t"][t] += (m * e).sum()
+            f2 = np.broadcast_to(fbit | (e & win), m.shape)
+            if tau < T - 1:
+                flat = (tb.nxt[r][:, None, None, :] * L + lidx) * 2 + f2.astype(np.int64)
+                nd += np.bincount(flat.ravel(), weights=m.ravel(), minlength=S * L * 2).reshape(S, L, 2)
+            else:
+                mf[:Lk] += np.stack([(m * ~f2).sum(axis=(0, 2, 3)), (m * f2).sum(axis=(0, 2, 3))], axis=-1)
+        if tau == T - 1:
+            out["window"][k] = mf[:, 1].sum()
+            out["window_by_level"][k] = mf[:, 1]
+            if t < proto.t_ep - 1:
+                p = proto.p_detect
+                lv = mf[:, 0] + (1 - p) * mf[:, 1]
+                np.add.at(lv, np.minimum(np.arange(L) + 1, L - 1), p * mf[:, 1])
+                out["corrected"][k] = p * mf[:, 1].sum()
+                nd[:, :, 0] = tb.mu0[:, None] * lv[None, :]
+        d = nd
+    return out
+
+
+def value_from_occupancy(tb, occ, R_levels):
+    """Received return per round (K,) of the policy whose ``occ`` (K, L, S*A) came from
+    ``evaluate_levels_probs``, under reward tables R_levels (L, S*A, F): rewards enter linearly."""
+    rbar = np.einsum("rj,lrj->lr", tb.prob, np.asarray(R_levels, float))       # (L, S*A) expected reward
+    return np.einsum("klr,lr->k", occ, rbar)
+
+
+def onehot_probs(policy, n_actions):
+    """``probs_at`` for a deterministic level policy (t, S, L, 2) from ``solve_levels``."""
+    policy = np.asarray(policy)
+    return lambda t: np.eye(n_actions)[policy[t]]
 
 
 def solve_subepisode(tb, R, T, avoid_window=0):
