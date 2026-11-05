@@ -343,6 +343,20 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - Step 3 tasks: `experiments/step3_figures.py --prefix step4 --results-dir results/step4/<env>/ppo ...`.
   - Both draw the timeline only.
 - **If PPO falls short of the exact optimum,** tune it (mentor, 2026-11-02): not converging means it was under-tuned. The Step 3 run budget does not apply here.
+- **Optimal-policy campaign (from 2026-11-04; FarmShare only; procedure, criteria and the loop prompt in `docs/step4_optimal.md`, decisions in `docs/step4_optimal_log.md`).**
+  - **Goal (mentor, 2026-11-04):** PPO reaches almost exactly the exact optimum for the swap and the no-regulariser PBRR on the grid, Absent Supervisor, Tomato and `tomato_large`. The user's hypothesis, as stated: without a regulariser "a smart enough agent might then avoid correction"; with the swap an optimal agent "should be always-behaving". Each cell's exact target decides this before PPO does.
+  - **A5 is not the target.** It fixes the corrections in advance (one draw, fitted on a softened exploiter). PPO's corrections are fitted on its own caught rollouts with fresh draws, and PPO already earns more received reward than A5's optimum (Tomato and Absent Supervisor, no regulariser).
+  - **Self-consistent target:** `experiments/step4_targets.py` → `results/step4/<env>/targets/<variant>/seed<s>.json`.
+    - Correction c is fitted on the optimum's own rollouts in the round where it is caught; if the optimum is never caught there, on the best policy that would be (`dp.solve_subepisode_caught`).
+    - Six draws per level. The level DP is solved on their mean tables, which is exact because the policy cannot see the draw. This iterates to a fixed point.
+    - It also reports V_hide (never corrected) and each draw's own optimum.
+  - **Convergence:** `experiments/step4_convergence.py`, the "loss curve". Each run gets a gap to its target per 24 episodes and a verdict: CONVERGED, IMPROVING (extend), PLATEAU (change config) or ABOVE TARGET (investigate). The pre-registered tolerances are: value ±3%, windows 0.05, true return 5% of the honest–exploit range, corrections 0.1.
+  - **`tomato_large`** (`src/step3/tasks/tomato_large.py`): the leftmost 4 tomatoes of each row of the original frame (8 tomatoes, 7,424 states). It has its own Phase A.
+  - **Harness:**
+    - `anneal.last` / `anneal.floor`: the learning rate and entropy fall linearly over the last part of a run.
+    - `step3_ppo.py --resume [--extend-to N]` continues a run in its own directory from its last checkpoint.
+    - Driver: `scripts/farmshare/step4_optimal.sh`. Size-safe commits: `scripts/farmshare/step4_commit.sh`.
+    - The grid now runs through the Step 3 harness (`--env grid`), with the same MDP and PBRR objective.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 
@@ -373,7 +387,7 @@ reward-hacking-with-observer/
 ├── src/plots_step2.py     # Step 2 dashboard
 ├── experiments/step2_pbrr_check.py, step2_ppo.py, step2_figures.py; tests/test_step2.py
 ├── src/step3/             # Step 3: task interface, protocol VecEnv, trajectory-level PBRR, generic DP, harness
-├── src/step3/tasks/       # grid (regression anchor), tomato, taxi, absent_supervisor, mountain_car, lunar_lander
+├── src/step3/tasks/       # grid (regression anchor), tomato, tomato_large, taxi, absent_supervisor, mountain_car, lunar_lander, boat_race
 ├── src/plots_step3.py     # Step 3 dashboard and suite figure
 ├── experiments/step3_check.py (Phase A), step3_ppo.py, step3_figures.py, step3_suite.py; tests/test_step3.py
 ├── docs/step3_tuning_log.md  # Step 3 tuning record: Phase A decisions per env, every run, procedure changes
@@ -404,9 +418,16 @@ Tests are pytest-compatible, but pytest is not installed in `.venv`: run each te
 - **The first batch was cut short by a FarmShare-wide outage, not by our jobs** (diagnosed 2026-10-12; `docs/step3_tuning_log.md`, "FarmShare diagnosis").
   - No job of any user ended between 03:00 and 12:00 on 2026-10-12. Our processes stalled for about 10 h, resumed at normal speed, and were killed at 12:32. Time limits were not enforced during the outage, so "TIMEOUT" and "5–10× slower" are artefacts of wall time that includes the stall.
   - The partition is `OverSubscribe=NO`, `PreemptMode=OFF`: no preemption or time-sharing, so no `--exclusive` and no checkpointing are needed.
-  - **If a run is killed by a cluster incident,** rerun it under a new run id (`<id>_r2`) and log it. A requeued job can only fail, since runs are never overwritten, hence `--no-requeue`.
+  - **If a run is killed by a cluster incident or its time limit,** resume it from its checkpoints (`--resume`, below) and log it. Runs that predate checkpoints are rerun under a new run id (`<id>_r2`). A requeued job can only fail, since runs are never overwritten, hence `--no-requeue`.
   - **`--mem-per-cpu` must stay ≤ `MaxMemPerCPU` (4000 MB).** Above it, Slurm silently adds CPUs.
   - **Checkpoints (from 2026-11-03).** Step 3 / Step 4 runs (`src/step3/train.py`) rewrite `logs.npz`, the round CSVs, the model and `progress.json` every 24 episodes, atomically. A run killed by its time limit therefore keeps everything up to its last checkpoint. `metrics.json` exists only for finished runs. Runs started before this date saved only at the end.
+  - **Resume / extend (from 2026-11-04).**
+    - `submit.sh ... --resume [--extend-to N]` continues a run from its last checkpoint, an episode boundary, in the same directory.
+    - What carries over: the model with its optimiser state, and the logs.
+    - `config.json` records every resume. A finished seed's metrics are kept as `metrics_ep<N>.json`.
+    - The resumed run draws fresh env / overseer streams.
+    - `DEPENDENCY=<jobid>` (`afterany`, or `afterok:<id>`) chains jobs.
+    - Runs created from 2026-11-04 on save `overrides.json`.
   - **Threads.** Inside a job's cgroup a worker has about 12–32 threads and uses 1.4 CPU-s per s, i.e. one physical core. JAX sizes its pools from the affinity mask; on a bare login node the same process starts 257 threads.
 - **Runs started on the laptop.** LunarLander T0/T1_scalarclock, MountainCar T1_scalarclock_ent03 and Taxi T1_onehot_ent03 were trained on the laptop and are committed. Floating-point results differ between arm64 and x86_64: a seed is reproducible within one machine, not across machines.
 - **Git.** Commit results from the cluster and push. The laptop pulls.

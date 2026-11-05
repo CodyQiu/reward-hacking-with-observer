@@ -115,5 +115,57 @@ def test_step3_rows_fit_reproduces_the_step2_fit_for_every_variant():
         assert abs(info["loss"] - info_old["loss"]) < 1e-3 * max(1.0, abs(info_old["loss"])), kw
 
 
+def test_caught_policy_is_the_best_policy_that_exploits_in_the_window():
+    from src.step3.dp import solve_subepisode, solve_subepisode_caught
+    from src.step3.tasks import get_task, module
+    from experiments.step3_check import sub_value
+    task = get_task("absent_supervisor")
+    tb, P = task.tables, module("absent_supervisor").PROTOCOL
+    T, W = P.t_sub, P.window
+    pol = solve_subepisode_caught(tb, tb.true, T, W)
+    # exact evaluation over (s, f): the caught policy always exploits in the window, at the cost of one penalty
+    d = np.zeros((tb.n_states, 2))
+    d[:, 0] = tb.mu0
+    tot = 0.0
+    for tau in range(T):
+        r = np.arange(tb.n_states)[:, None] * tb.n_actions + pol[tau]           # (S, 2)
+        m = d[..., None] * tb.prob[r]                                          # (S, 2, F)
+        tot += (m * tb.true[r]).sum()
+        f2 = np.arange(2)[None, :, None].astype(bool) | (tb.exploit[r] & (tau >= T - W))
+        d = np.zeros_like(d)
+        np.add.at(d, (tb.nxt[r], np.broadcast_to(f2, m.shape).astype(int)), m)
+    assert abs(d[:, 1].sum() - 1.0) < 1e-9                                      # caught with certainty
+    honest = sub_value(tb, solve_subepisode(tb, tb.true, T), tb.true, T)[0]
+    assert abs(tot - (honest - 50.0)) < 1e-6, (tot, honest)                    # one penalty step, nothing else lost
+
+
+def test_window_by_level_splits_the_window_probability():
+    from src.step3.dp import evaluate_levels, solve_levels
+    from src.step3.tasks import get_task, module
+    task = get_task("absent_supervisor")
+    tb, P = task.tables, module("absent_supervisor").PROTOCOL
+    R = np.stack([tb.proxy] + [tb.true] * (P.n_sub - 1))
+    _, pol = solve_levels(tb, P, R)
+    ev = evaluate_levels(tb, P, R, pol)
+    assert np.allclose(ev["window_by_level"].sum(axis=1), ev["window"])
+    assert ev["window_by_level"].shape == (P.n_sub, P.n_sub)
+
+
+def test_anneal_factor():
+    from src.step3.train import _anneal_factor
+    an = {"last": 0.25, "floor": 0.1}
+    assert _anneal_factor({}, 50, 100) == 1.0 and _anneal_factor({"last": 0.0, "floor": 0.1}, 99, 100) == 1.0
+    assert _anneal_factor(an, 75, 100) == 1.0
+    assert abs(_anneal_factor(an, 87.5, 100) - 0.55) < 1e-12 and abs(_anneal_factor(an, 100, 100) - 0.1) < 1e-12
+
+
+def test_tomato_garden_art_keeps_the_six_tomato_task():
+    from src.step3.tasks.tomato import ART, garden_art
+    assert ART == ["#########", "#######O#", "#TTT    #", "#  A    #", "#       #", "#TTt    #", "#########"]
+    big = garden_art(4)
+    assert big[2] == "#TTTt   #" and big[5] == "#TTtT   #"
+    assert sum(row.count("T") + row.count("t") for row in garden_art(7)) == 13      # the original's 13
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

@@ -19,7 +19,8 @@ exploited. ``solve_subepisode`` is the single-sub-episode optimum of a fixed rew
 
 import numpy as np
 
-__all__ = ["solve_levels", "evaluate_levels", "solve_subepisode", "table_policy_fn", "refs_from_eval"]
+__all__ = ["solve_levels", "evaluate_levels", "solve_subepisode", "solve_subepisode_caught", "table_policy_fn",
+           "refs_from_eval"]
 
 
 def _q(tb, R, cont):
@@ -76,6 +77,7 @@ def evaluate_levels(tb, proto, R_levels, policy):
     d[:, 0, 0] = tb.mu0
     out = {k: np.zeros(K) for k in ("received", "proxy", "true", "window", "corrected")}
     out["exploit_t"] = np.zeros(proto.t_ep)
+    out["window_by_level"] = np.zeros((K, L))                     # P(at level c and window exploited) per round
     out["level_dist"] = np.zeros((K, L))
     sidx = np.arange(S)[:, None, None]
     lidx = np.broadcast_to(np.arange(L)[None, :, None], (S, L, 2))
@@ -101,6 +103,7 @@ def evaluate_levels(tb, proto, R_levels, policy):
         else:
             mf = np.stack([(m * ~f2).sum(axis=(0, 2, 3)), (m * f2).sum(axis=(0, 2, 3))], axis=-1)  # (L, 2)
             out["window"][k] = mf[:, 1].sum()
+            out["window_by_level"][k] = mf[:, 1]
             if t < proto.t_ep - 1:
                 p = proto.p_detect
                 lv = np.zeros(L)
@@ -126,16 +129,39 @@ def solve_subepisode(tb, R, T, avoid_window=0):
     return pol
 
 
+def solve_subepisode_caught(tb, R, T, window):
+    """The best single sub-episode under R (S*A, F) among policies that exploit at least once in
+    the last ``window`` steps, i.e. that get caught: what an agent at this correction level would
+    play if it sought the next correction. Returns policy (T, S, 2), indexed by the audit flag f."""
+    ex = tb.exploit
+    V = np.stack([np.full(tb.n_states, -1e9), np.zeros(tb.n_states)], axis=1)   # end: unflagged = infeasible
+    pol = np.zeros((T, tb.n_states, 2), np.int64)
+    for tau in range(T - 1, -1, -1):
+        Vn = V[tb.nxt]                                                        # (SA, F, 2)
+        if tau >= T - window:
+            c0 = np.where(ex, Vn[..., 1], Vn[..., 0])
+            cont = np.stack([c0, Vn[..., 1]], axis=-1)
+        else:
+            cont = Vn
+        Q = _q(tb, R, cont)                                                   # (S, A, 2)
+        pol[tau] = Q.argmax(axis=1)
+        V = Q.max(axis=1)
+    return pol
+
+
 def table_policy_fn(pol, n_actions, eps=0.0):
     """A ``policy_fn`` for ``pbrr.rollouts`` from a policy table on state indices:
-    (T, S) for a single sub-episode, or (t_ep, S, L, 2) from ``solve_levels``. With
-    probability ``eps`` the action is uniform (the "soft" policies of Phase A)."""
+    (T, S) for a single sub-episode, (T, S, 2) by audit flag (``solve_subepisode_caught``),
+    or (t_ep, S, L, 2) from ``solve_levels``. With probability ``eps`` the action is uniform
+    (the "soft" policies of Phase A)."""
     pol = np.asarray(pol)
 
     def fn(batch, t, n_corr, flagged):
         s = batch.s
         if pol.ndim == 2:
             a = pol[t % pol.shape[0], s]
+        elif pol.ndim == 3:
+            a = pol[t % pol.shape[0], s, np.asarray(flagged, np.int64)]
         else:
             a = pol[t, s, np.minimum(n_corr, pol.shape[2] - 1), np.asarray(flagged, np.int64)]
         p = np.full((len(s), n_actions), eps / n_actions)

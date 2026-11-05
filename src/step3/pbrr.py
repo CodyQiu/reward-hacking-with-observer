@@ -245,6 +245,18 @@ def g_on_rows(params, X, chunk=65_536):
     return out
 
 
+def g_table(params, task, chunk=262_144):
+    """g on every (s, a, s') row of a tabular task's padded tables, shape (S*A, F). Builds the
+    reward-model rows chunk by chunk: the full row matrix of a large task (tomato_large: 7.6M rows x
+    78 features) does not fit in memory."""
+    keys = task.support_keys()
+    flat = keys.ravel()
+    out = np.zeros(flat.shape)
+    for i in range(0, len(flat), chunk):
+        out[i:i + chunk] = g_on_rows(params, task.g_rows_from_keys(flat[i:i + chunk]))
+    return out.reshape(keys.shape)
+
+
 def _traj_rows(trajs, task):
     if trajs[0].keys is not None:
         return task.g_rows_from_keys(np.concatenate([t.keys for t in trajs]))

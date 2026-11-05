@@ -43,14 +43,14 @@ from src.pbrr_core import GConfig, boltzmann_label
 from src.report import CheckLog
 from src.step3.dp import (evaluate_levels, refs_from_eval, solve_levels, solve_subepisode,
                           table_policy_fn)
-from src.step3.pbrr import _traj_rows, fit_correction_rows, g_on_rows, rollouts
+from src.step3.pbrr import _traj_rows, fit_correction_rows, g_on_rows, g_table, rollouts
 from src.step3.reference import build_reference, reference_quality
 from src.step3.tasks import get_task, module
 from src.step3.train import RESULTS, ROOT
 
 K = 19                       # trajectories per policy per round (19 x 19 pairs, as in Step 2)
 EPS = 0.1                    # softening of DP policies so their rollouts are not all identical
-MARGIN = {"tomato": 1.20}    # A1: proxy optimum / honest optimum, per sub-episode (default 2.0)
+MARGIN = {"tomato": 1.20, "tomato_large": 1.20}    # A1: proxy optimum / honest optimum, per sub-episode (default 2.0)
 # A2: reference settings (default: the paper's / Step 2's 5 demos, 10% noise, 500 BC steps).
 # Taxi: 300 random start configurations need coverage, and cloned 10% noise means random
 # pickups (-10) and wrong-depot dropoffs -- so 80 demos at 2% noise (logged deviation).
@@ -446,7 +446,6 @@ def main():
 
     # ---- A4: canonical PBRR corrections --------------------------------------------------
     refs_fixed = rollouts(task.make_batch(K, seed=123), ref, proto, np.random.default_rng(123))
-    support = dpt.g_rows_from_keys(dpt.support_keys().ravel())
     Rs, D, rounds = [tb.proxy.copy()], [], []
     policy = pol_px                                   # round 1: the open exploiter
     ex = tb.exploit
@@ -455,7 +454,7 @@ def main():
         agent = rollouts(batch, table_policy_fn(policy, A, EPS), proto, rng, t0=(c - 1) * T)
         D += cross_pairs(agent, refs_fixed, rng)
         params_g, info = fit_correction_rows(D, task, gcfg, seed=0)
-        g = g_on_rows(params_g, support).reshape(tb.proxy.shape)
+        g = g_table(params_g, dpt)
         R = tb.proxy + g
         off = {}
         if gcfg.offset:                               # Step 4 level offset, from the overseer's own rollouts

@@ -11,6 +11,12 @@ configuration, the hypothesis being tested and S1-S5 per seed.
         --hypothesis "Step 1's PPO config works unchanged"
     .venv/bin/python experiments/step3_ppo.py --env taxi --run-id T1_ent02 --seeds 0 \
         --set ppo.ent_coef=0.02 --hypothesis "..."
+
+Resume / extend (same run directory; see src/step3/train.py): ``--resume`` continues every listed
+seed that has no metrics.json from its last checkpoint; ``--resume --extend-to N`` also takes
+finished seeds on to N episodes in total. ``--set`` may then change only ``anneal.*``. A seed that
+died before its first checkpoint (no model.zip) is moved aside to seed<s>_nockpt_<time> and
+restarted from scratch.
 """
 
 import argparse
@@ -45,6 +51,16 @@ def parse_sets(items):
     return out
 
 
+def _run_overrides(run_root):
+    """The --set overrides a run was started with (overrides.json, written by the launcher), for a
+    seed that has to restart from scratch inside an existing run."""
+    path = os.path.join(run_root, "overrides.json")
+    if os.path.exists(path):
+        with open(path) as fh:
+            return json.load(fh)
+    raise SystemExit(f"{run_root}: no overrides.json (runs started before 2026-11-04): restart that seed by hand")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--env", required=True)
@@ -55,20 +71,57 @@ def main():
     ap.add_argument("--results-dir", default=None,
                     help="parent of the run directory and runs.csv (default results/step3/<env>/tuning; "
                          "Step 4: results/step4/<env>/ppo)")
+    ap.add_argument("--resume", action="store_true", help="continue an existing run from its checkpoints")
+    ap.add_argument("--extend-to", type=int, default=None, help="with --resume: total episodes per seed")
     ap.add_argument("--worker-seed", type=int, default=None, help=argparse.SUPPRESS)
     args = ap.parse_args()
     overrides = parse_sets(args.set)
     tuning = args.results_dir or os.path.join(RESULTS, args.env, "tuning")
     run_root = os.path.join(tuning, args.run_id)
+    if args.resume and set(overrides) - {"anneal"}:
+        sys.exit("--resume: --set may change only anneal.* (the rest of the config is the run's own)")
 
     if args.worker_seed is not None:                       # one seed, in this process
-        cfg = resolve_config(args.env, {**overrides, "seed": args.worker_seed})
-        train_run(os.path.join(run_root, f"seed{args.worker_seed}"), cfg)
+        sdir = os.path.join(run_root, f"seed{args.worker_seed}")
+        if args.resume and os.path.exists(os.path.join(sdir, "model.zip")):
+            with open(os.path.join(sdir, "config.json")) as fh:
+                cfg = json.load(fh)
+            cfg["episodes"] = args.extend_to or cfg["episodes"]
+            cfg["anneal"] = {**cfg.get("anneal", {"last": 0.0, "floor": 1.0}), **overrides.get("anneal", {})}
+            train_run(sdir, cfg, resume=True)
+        else:
+            if args.resume and os.path.exists(sdir):        # died before its first checkpoint: keep it aside
+                os.replace(sdir, f"{sdir}_nockpt_{time.strftime('%Y%m%d-%H%M%S')}")
+            base = {}
+            if args.resume:                                 # the run's own overrides, from a sibling seed
+                base = _run_overrides(run_root)
+            cfg = resolve_config(args.env, {**base, **overrides, "seed": args.worker_seed,
+                                            **({"episodes": args.extend_to} if args.extend_to else {})})
+            train_run(sdir, cfg)
         return
 
-    if os.path.exists(run_root):
+    if args.resume:
+        if not os.path.isdir(run_root):
+            sys.exit(f"{run_root} does not exist: nothing to resume")
+        todo = []
+        for s in args.seeds:
+            m = os.path.join(run_root, f"seed{s}", "metrics.json")
+            done = os.path.exists(m)
+            if done and args.extend_to:
+                with open(os.path.join(run_root, f"seed{s}", "progress.json")) as fh:
+                    done = json.load(fh)["episodes"] >= args.extend_to
+            if not done:
+                todo.append(s)
+        if not todo:
+            sys.exit(f"{run_root}: every listed seed is finished" + (f" at >= {args.extend_to} episodes"
+                                                                       if args.extend_to else ""))
+        args.seeds = todo
+    elif os.path.exists(run_root):
         sys.exit(f"{run_root} exists: pick a new --run-id (results are never overwritten)")
-    os.makedirs(run_root)
+    else:
+        os.makedirs(run_root)
+        with open(os.path.join(run_root, "overrides.json"), "w") as fh:
+            json.dump(overrides, fh, indent=1)
     t0 = time.time()
     # one core per seed: no XLA / BLAS thread pools fighting over the machine. JAX sizes its own pools
     # from the CPU affinity mask, so inside a Slurm cgroup a worker has ~12 threads (257 on a bare node).
@@ -77,16 +130,20 @@ def main():
            "MKL_NUM_THREADS": "1"}
     procs = []
     for s in args.seeds:
-        log = open(os.path.join(run_root, f"seed{s}.log"), "w")
+        log = open(os.path.join(run_root, f"seed{s}.log"), "a" if args.resume else "w")
         cmd = [sys.executable, os.path.abspath(__file__), "--env", args.env, "--run-id", args.run_id,
                "--worker-seed", str(s), "--results-dir", tuning, "--set", *args.set]
+        if args.resume:
+            cmd += ["--resume"] + (["--extend-to", str(args.extend_to)] if args.extend_to else [])
         procs.append((s, subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env), log))
     for s, p, log in procs:
         p.wait()
         log.close()
         print(f"  seed {s} exit {p.returncode}")
 
-    cfg = resolve_config(args.env, overrides)
+    cfg = resolve_config(args.env, _run_overrides(run_root) if args.resume else overrides)
+    if args.resume and args.extend_to:
+        cfg["episodes"] = args.extend_to
     per_seed = {}
     for s in args.seeds:
         path = os.path.join(run_root, f"seed{s}", "metrics.json")
@@ -97,7 +154,8 @@ def main():
     if per_seed:
         with open(os.path.join(run_root, f"seed{next(iter(per_seed))}", "config.json")) as fh:
             git = json.load(fh)["git"]
-    row = {"run_id": args.run_id, "finished": time.strftime("%Y-%m-%d %H:%M"), "git": git,
+    row = {"run_id": args.run_id + (" (resumed)" if args.resume else ""), "finished": time.strftime("%Y-%m-%d %H:%M"),
+           "git": git,
            "seeds": " ".join(map(str, args.seeds)), "episodes": cfg["episodes"],
            "overrides": json.dumps(overrides, sort_keys=True), "hypothesis": args.hypothesis,
            "wall_min": round((time.time() - t0) / 60, 1),

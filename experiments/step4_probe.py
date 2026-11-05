@@ -32,7 +32,7 @@ from sbx import PPO
 
 from src.pbrr_core import GConfig, boltzmann_label
 from src.step3.dp import solve_subepisode, table_policy_fn
-from src.step3.pbrr import _traj_rows, fit_correction_rows, g_on_rows, policy_probs_fn, rollouts
+from src.step3.pbrr import _traj_rows, fit_correction_rows, g_on_rows, g_table, policy_probs_fn, rollouts
 from src.step3.protocol import Protocol
 from src.step3.reference import build_reference
 from src.step3.tasks import get_task
@@ -64,7 +64,6 @@ def probe(seed_dir, n_fits=3):
                          np.random.default_rng(1000 + seed))           # the run's own references
     model = PPO.load(os.path.join(seed_dir, "model.zip"), device="cpu")
     policy = policy_probs_fn(model, proto, A)
-    support = task.g_rows_from_keys(task.support_keys().ravel())
     pol_gt = solve_subepisode(tb, tb.true, T)
     honest_true = sub_value(tb, pol_gt, tb.true, T)[0]
     fits = []
@@ -73,7 +72,7 @@ def probe(seed_dir, n_fits=3):
         agent = rollouts(task.make_batch(pb["k"], seed=80_000 + f), policy, proto, rng)
         D = [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
         params, _ = fit_correction_rows(D, task, gcfg, seed=int(rng.integers(2 ** 31)))
-        R = tb.proxy + g_on_rows(params, support).reshape(tb.proxy.shape)
+        R = tb.proxy + g_table(params, task)
         best = solve_subepisode(tb, R, T)
         best_r, _ = sub_value(tb, best, R, T)
         bt = rhat_mc(task, proto, table_policy_fn(best, A), params, t0=T, n_corr=1)
