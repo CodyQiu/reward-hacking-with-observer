@@ -727,3 +727,31 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 **Rules 1, 3–7.** Nothing finished and nothing is missing a job. 17 campaign jobs running, cap 60.
 
 **Next.** The taxi and MountainCar r2 jobs reach their 48 h limit at about 11:41 (started 2026-11-03 11:41). Readout and commit after that.
+
+## 2026-11-05 11:48, iteration 16
+
+**Seen.**
+- No new commits on origin; no campaign job ended; no fast failures. 17 campaign jobs running (cap 60).
+- **The three remaining r2 jobs (not campaign) have ended:**
+  - **Taxi `S4_P1eq1_ep1000_r2_s10_s12` (1928836): FAILED, exit 1, at 10:50:16 after 47 h 9 min.** Seed 10 finished (768/768, `metrics.json` at 10:50:07). Nine seconds later the launcher crashed with `OSError: [Errno 116] Stale file handle`, the same failure as taxi NoLplus in iteration 7: seed 10's log was one of the four detached by the autostash pull on 2026-11-04 22:40 (see the flag). The job's exit killed seed 12, which stops at its checkpoint of 600 episodes (10:27). It would have stopped at about 11:41 anyway, at its time limit, so this costs at most about one checkpoint (24 episodes).
+  - **Taxi `S4_P2swap_ep1000_r2_s10_s11_s12` (1928834): TIMEOUT at 48 h**, as expected. s11 finished on 2026-11-04; s10 stops at 696 episodes, s12 at 648.
+  - **MountainCar `S4_P2swapNoLplus_ep1000_r2_s10_s11_s12` (1928838): TIMEOUT at 48 h**, as expected (the user's step 8: its checkpoints are the result). s10 finished; s11 stops at 120 episodes, s12 at 264.
+  - Per the standing instruction, none is resubmitted or resumed.
+- No new targets (tomato_large P1eq1 seed 20 and P2swap seed 21 still iterating).
+
+**r2 readout (user's step 8).** `.venv/bin/python experiments/step4_readout.py $(ls -d results/step4/{taxi,mountain_car,lunar_lander}/ppo/S4_*)`. Only the three runs above changed since the last readout (21:28, 1955b4d; taxi NoLplus in iteration 7):
+
+| Run, seed | Episodes | Corrections per episode | Window by round | True by round (honest / exploit) | R1 R2 R3 R4 |
+|---|---|---|---|---|---|
+| taxi P1eq1 r2 s10 | 768 (final) | 1.04 | 0.97, 0.05, 0.01, 0.01, 0.00 | −123, −150, −129, −99, −98 (125 / −88) | Y Y Y n |
+| taxi P1eq1 r2 s12 | 600 (UNFINISHED) | 1.05 | 0.95, 0.05, 0.02, 0.02, 0.01 | −122, −146, −127, −91, −94 | Y Y Y n |
+| taxi P2swap r2 s10 | 696 (UNFINISHED) | 1.17 | 0.88, 0.11, 0.09, 0.09, 0.47 | −101, −102, −102, −106, −114 | Y Y n n |
+| taxi P2swap r2 s11 | 768 (final) | 3.84 | 0.93, 0.97, 0.97, 0.97, 0.97 | −100, −71, −69, −65, −70 | n Y n n |
+| taxi P2swap r2 s12 | 648 (UNFINISHED) | 2.12 | 0.96, 0.23, 0.41, 0.53, 0.65 | −91, −93, −97, −97, −99 | n Y n n |
+| MC P2swapNoLplus r2 s10 | 768 (final) | 0.00 | 0 everywhere | −148 to −152 (−99 / −199) | n n Y n |
+| MC P2swapNoLplus r2 s11 | 120 (UNFINISHED) | 1.28 | 0.89, 0.19, 0.07, 0.13, 0.07 | −194, −156, −151, −155, −144 | n Y n n |
+| MC P2swapNoLplus r2 s12 | 264 (UNFINISHED) | 0.82 | 0.17, 0.17, 0.25, 0.23, 0.26 | −156, −160, −172, −182, −171 | Y n n n |
+
+- Taxi no-regulariser is corrected once and then complies with every audit (R1–R3), but its true return after the correction stays at the exploit level or below (−91 to −150, honest +125), so R4 fails. Taxi swap s11 seeks corrections in every round.
+- The other r2 runs (LunarLander, MountainCar P2swap and P1eq1, taxi NoLplus) are unchanged.
+- **Commit:** the three run directories with `git add -A` (their jobs have ended, so no worker is writing them), then `step4_commit.sh`.

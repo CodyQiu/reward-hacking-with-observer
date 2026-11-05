@@ -1,3 +1,5 @@
   [mountain_car s11]    384,000  win0-3 0.10  off 0.09  corr/ep 0.38  winF 0.08  proxy0-3   -142.7  rounds 65  (33083s)
   [mountain_car s11]    768,000  win0-3 0.12  off 0.46  corr/ep 0.48  winF 0.07  proxy0-3     80.7  rounds 158  (68085s)
   [mountain_car s11]  1,152,000  win0-3 0.03  off 0.56  corr/ep 0.10  winF 0.00  proxy0-3    127.4  rounds 174  (73854s)
+  [mountain_car s11]  1,536,000  win0-3 0.35  off 0.58  corr/ep 1.42  winF 0.33  proxy0-3    144.7  rounds 318  (125228s)
+  [mountain_car s11]  1,920,000  win0-3 0.31  off 0.54  corr/ep 1.26  winF 0.09  proxy0-3    120.4  rounds 422  (153152s)
