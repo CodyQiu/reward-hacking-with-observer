@@ -354,3 +354,34 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - **The extension started after the probe:** 1934777 on wheat-06 at 01:24. All three seed logs read "resumed at episode 3072 -> 6144", and `metrics_ep3072.json` is kept.
 
 **Next.** Grid `O1_P2swap_L` at 6144 (about 2.2 h). AS swap `LN` (about 2 h) and `LE`. tomato_large target seed 1 (about 03:30). The taxi and MountainCar r2 readout is due around 10:00 (their 48 h limit is about 11:40).
+
+## 2026-11-05 02:03, iteration 6
+
+**Seen.**
+- No new commits on origin.
+- Nothing has ended since `probe_it5` (COMPLETED); no fast failures.
+- 18 campaign jobs are running (cap 60).
+
+**Rules 1–7: nothing is due.**
+- No campaign run has finished since iteration 5.
+- No run is missing a job.
+- No new target has landed: tomato_large seed 1 is expected around 03:30.
+
+**Readings from running runs** (no decision is due; I record them here so later verdicts can be compared):
+- **grid `O1_P2swap_L` (extension, episodes 3576–3600 of 6144).** All three seeds are PLATEAU on the value gap (+0.12 to +0.18). True return after the correction is 19.0–21.7, down from 21.3–22.0 at 3072.
+  - Annealing is set by the new length: full rate until episode 4608, then a linear fall to 0.1× by 6144. So the policy is noisier again until the annealing starts.
+  - The verdict that counts is the one at 6144.
+- **AS swap `LN` (episodes 2400–2736 of 3072).** s0 and s1 are already ABOVE TARGET (−0.068, −0.113) and play nearer to honest than the target's −50 route (true 91–207 in rounds 1–4). s2 plays honest (true 382–415; its target is −100). It should finish within about 1 h.
+- **AS swap `LE` (episodes 888–1008 of 3072).** Still costly after the correction: true −136 to −356 in rounds 1–4.
+- **Tomato no regulariser.**
+  - `L` s0 and `LN` s0 are still CONVERGED.
+  - **`LN` s2 stopped exploiting altogether.** Between episodes 432 and 1104 it went from "corrected once, then near-honest" to honest in every round, round 0 included. Off-window exploitation is 0.00 and there are no corrections, so it runs fast, because no PBRR fits are made.
+  - That is deterrence, not hiding: it gives up round 0's exploit (588 vs 434) and every correction. Its value gap is +0.566.
+  - In the newest block it explores again (0.25 corrections per episode).
+- **Tomato swap.**
+  - `LN` s1 is ABOVE TARGET (−0.076), with the target's behaviour (corrected once, then true 416–417 against 418).
+  - **`LN` s2 no longer hides** (in iteration 5, at episode 216, it hid in rounds 0–2). It now exploits through every window, with 1.59 corrections per episode.
+  - All `L` and `LE` seeds, and `LN` s0, still exploit through every audit, at about 3 corrections per episode (episodes 264–360).
+- **tomato_large.**
+  - `O1_P1eq1_L` s0 reached its first checkpoint (24 episodes, at 3.9 h).
+  - The swap runs are at 48–72 episodes and still exploit through every audit.

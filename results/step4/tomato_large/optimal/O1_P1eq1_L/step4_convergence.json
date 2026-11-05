@@ -1,5 +1,86 @@
 [
  {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P1eq1_L/seed0",
+  "target": "step4/tomato_large/targets/P1eq1/seed0.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.48491060733795166,
+   "window": 0.7156463786591216,
+   "true": 0.6072586028000064,
+   "corr": 1.148436781635633
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.8854166666666666,
+    0.4114583333333333,
+    0.2838541666666667,
+    0.2708333333333333,
+    0.17708333333333334
+   ],
+   "true_by_k": [
+    124.48697662353516,
+    237.9166717529297,
+    262.4192810058594,
+    269.1927185058594,
+    277.6197814941406
+   ],
+   "received_by_k": [
+    607.6510620117188,
+    902.433349609375,
+    972.1469116210938,
+    992.335693359375,
+    1000.8673706054688
+   ],
+   "corrections_per_ep": 1.8515625
+  },
+  "target_summary": {
+   "V0": 8688.65648742848,
+   "received_by_k": [
+    785.962049999996,
+    1752.28073681676,
+    1833.1461766079867,
+    2158.474572253759,
+    2158.79295174987
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    515.7805507732353,
+    515.6208048059719,
+    522.1157453205573,
+    522.1221061932383
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.9995208141103002,
+    0.9995005453257882,
+    0.0009779221995572618,
+    0.0
+   ],
+   "corrections_per_ep": 2.999999281635633,
+   "end_state": "3.00 corrections per episode (by round [1.0, 1.0, 1.0, 0.0])"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.48491060733795166,
+    "window": 0.7156463786591216,
+    "true": 0.6072586028000064,
+    "corr": 1.148436781635633
+   }
+  ]
+ },
+ {
   "seed_dir": "results/step4/tomato_large/optimal/O1_P1eq1_L/seed1",
   "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
  },
