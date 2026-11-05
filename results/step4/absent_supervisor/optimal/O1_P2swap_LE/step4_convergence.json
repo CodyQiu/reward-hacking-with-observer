@@ -1,0 +1,245 @@
+[
+ {
+  "seed_dir": "results/step4/absent_supervisor/optimal/O1_P2swap_LE/seed0",
+  "target": "step4/absent_supervisor/targets/P2swap/seed0.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 3072,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.707153856754303,
+   "window": 0.75,
+   "true": 1.0724431818181819,
+   "corr": 1.9375
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.84375,
+    0.6276041666666666,
+    0.75,
+    0.7161458333333334,
+    0.6432291666666666
+   ],
+   "true_by_k": [
+    -649.609375,
+    -568.359375,
+    -639.84375,
+    -615.8854370117188,
+    -605.7291870117188
+   ],
+   "received_by_k": [
+    575.9114379882812,
+    685.5297241210938,
+    571.6060791015625,
+    524.1500854492188,
+    437.3997802734375
+   ],
+   "corrections_per_ep": 2.9375
+  },
+  "target_summary": {
+   "V0": 9542.885553636897,
+   "received_by_k": [
+    1550.0,
+    1998.2213884092246,
+    1998.2213884092246,
+    1998.2213884092246,
+    1998.2213884092246
+   ],
+   "true_by_k": [
+    -100.0,
+    -50.0,
+    -50.0,
+    -50.0,
+    -50.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 7350.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.707153856754303,
+    "window": 0.75,
+    "true": 1.0724431818181819,
+    "corr": 1.9375
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/absent_supervisor/optimal/O1_P2swap_LE/seed1",
+  "target": "step4/absent_supervisor/targets/P2swap/seed1.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 3072,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.72121262550354,
+   "window": 0.765625,
+   "true": 1.0513730690696024,
+   "corr": 2.0572916666666665
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.8515625,
+    0.765625,
+    0.7265625,
+    0.7135416666666666,
+    0.6953125
+   ],
+   "true_by_k": [
+    -663.1510620117188,
+    -626.8229370117188,
+    -619.4010620117188,
+    -616.2760620117188,
+    -628.2551879882812
+   ],
+   "received_by_k": [
+    597.265625,
+    608.6115112304688,
+    551.4547729492188,
+    490.3226623535156,
+    415.8671569824219
+   ],
+   "corrections_per_ep": 3.0572916666666665
+  },
+  "target_summary": {
+   "V0": 9553.956508124247,
+   "received_by_k": [
+    1550.0,
+    2000.9891270310618,
+    2000.9891270310618,
+    2000.9891270310618,
+    2000.9891270310618
+   ],
+   "true_by_k": [
+    -100.0,
+    -50.0,
+    -50.0,
+    -50.0,
+    -50.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 7350.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.72121262550354,
+    "window": 0.765625,
+    "true": 1.0513730690696024,
+    "corr": 2.0572916666666665
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/absent_supervisor/optimal/O1_P2swap_LE/seed2",
+  "target": "step4/absent_supervisor/targets/P2swap/seed2.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 3072,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.9397758841514587,
+   "window": 0.859375,
+   "true": 1.1579071599786932,
+   "corr": 2.3880208333333335
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.8541666666666666,
+    0.859375,
+    0.8359375,
+    0.8385416666666666,
+    0.7604166666666666
+   ],
+   "true_by_k": [
+    -677.0833129882812,
+    -736.8489379882812,
+    -676.6926879882812,
+    -675.390625,
+    -698.046875
+   ],
+   "received_by_k": [
+    586.8489379882812,
+    617.9446411132812,
+    609.2900390625,
+    572.7632446289062,
+    452.0729064941406
+   ],
+   "corrections_per_ep": 3.3880208333333335
+  },
+  "target_summary": {
+   "V0": 47139.259633941045,
+   "received_by_k": [
+    1550.0,
+    11397.314908485288,
+    11397.314908485288,
+    11397.314908485288,
+    11397.314908485288
+   ],
+   "true_by_k": [
+    -100.0,
+    -100.0,
+    -100.0,
+    -100.0,
+    -100.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 7350.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.9397758841514587,
+    "window": 0.859375,
+    "true": 1.1579071599786932,
+    "corr": 2.3880208333333335
+   }
+  ]
+ }
+]
