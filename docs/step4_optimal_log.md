@@ -467,3 +467,44 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - **tomato_large** (episodes 48–96 of 1536).
   - The no-regulariser seeds 0 are corrected about 2 times per episode, then play true 356–419.
   - The swap seeds still exploit through every audit.
+
+## 2026-11-05 04:48 – 04:55, iteration 9
+
+**Seen.**
+- No new commits on origin; no fast failures.
+- **COMPLETED: Tomato no-regulariser `O1_P1eq1_L`, `O1_P1eq1_LE` and `O1_P1eq1_LN`** (1934264–6, rye-01/02, 6 h 54 min – 6 h 56 min, exit 0). All 9 seeds are at 1536/1536, and each run wrote its `runs.csv` row.
+- No new target (tomato_large P2swap seed 2 and P1eq1 seed 1 are still running).
+
+**Rule 3: finished runs.**
+
+| Run | s0 | s1 | s2 | Action |
+|---|---|---|---|---|
+| tomato O1_P1eq1_L | CONVERGED (+0.002) | IMPROVING (+0.030) | PLATEAU (+0.021) | **extend to 3072** |
+| tomato O1_P1eq1_LE | CONVERGED (+0.012) | IMPROVING (+0.041) | IMPROVING (+0.029) | **extend to 3072** |
+| tomato O1_P1eq1_LN | CONVERGED (−0.003) | IMPROVING (+0.022) | PLATEAU (+0.019) | **extend to 3072** |
+
+- Rule 3: any seed IMPROVING, none ABOVE TARGET → `extend` to 2× (cap 12,288).
+- **All 9 seeds are corrected once, in round 0, and then play near-honest** (true 423–432; honest 434).
+  - In seed 0 that is the target. Its 3 seeds are CONVERGED, with value gaps of −0.003 to +0.012.
+  - In seeds 1 and 2 the target seeks 3 corrections (it exploits in the last steps of rounds 1–2). PPO's value is only 2–4% below it, but the window and correction gaps (0.95–1.0, 1.9–2.0) count as unconverged. Whether more training finds the correction-seeking play is what the extension tests.
+- **Commit before submitting:** 1ce5c0c, with the 1536-episode `model.zip` files (LN s2's was committed in 9e3284d).
+- **Dry runs:** `bash scripts/farmshare/step4_optimal.sh extend tomato O1_P1eq1_<L|LE|LN> 3072`. Each printed `bash scripts/farmshare/submit.sh 48 --env tomato --run-id O1_P1eq1_<…> --seeds 0 1 2 --results-dir results/step4/tomato/optimal --resume --extend-to 3072`.
+- **Submitted** behind gate **1935057**.
+  - The gate: `sbatch --parsable --hold -p normal --exclude=barley-04 -c 1 --mem-per-cpu=1000 -t 0:02:00 --no-requeue -o /dev/null --job-name=gate_extend_it9 --wrap true`.
+  - Each run went in as `DEPENDENCY=1935057 <that command>`, then `scontrol update JobId=<id> ExcNodeList=barley-04`, then `scontrol release 1935057`.
+  - **1935058** (`L`), **1935059** (`LE`) and **1935060** (`LN`) are running on barley-02. Every seed log reads "resumed at episode 1536 -> 3072", and `metrics_ep1536.json` is kept.
+
+**Rule 4.** No wave 2: Tomato P1eq1 is extending, and Tomato P2swap's runs are all still running. The grid and AS cells are blocked (flag).
+
+**Readings (running).**
+- **grid `O1_P2swap_L`** (episodes 5160–5736 of 6144, annealing). All 3 seeds are IMPROVING (+0.050 to +0.070), true 20.0–21.8. It finishes in about 1 h.
+- **AS swap `LE`** (episodes 1848–1992 of 3072).
+  - s0 and s1 now have small value gaps (+0.035, +0.022), but they do not play the target's route: true −220 to −317 after the correction, against −50.
+  - Window gaps are 0.24–0.30.
+- **Tomato swap.**
+  - `LN` s1 is ABOVE TARGET (−0.084) at episode 1440, with the target's behaviour (true 420–422 vs 418).
+  - `LE` s2 is corrected once, then plays true 376–379 (target 423).
+  - The other 7 seeds exploit through every audit (episodes 504–624).
+- **tomato_large no regulariser** (seeds 0, episodes 96–168). Corrected 2 times per episode (the target: 3), then true 385–453 (target 516–522).
+
+**Rule 7.** 16 campaign jobs are running (cap 60).
