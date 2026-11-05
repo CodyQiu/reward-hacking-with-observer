@@ -38,6 +38,10 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
     - The probe finds no seed above its own best: `LN` is at 86–97% of it.
     - Its last run, `LE`, is at about 1000 of 3072 episodes. Once it finishes, rule 4 is blocked anyway, because `L` s2 is IMPROVING.
     - That makes all four grid and AS cells. Only Tomato and tomato_large are still in wave 1.
+  - **Iteration 11 (06:50): every grid swap run has finished, and each has one ABOVE TARGET seed.**
+    - `L` at 6144: CONVERGED, ABOVE (−0.058), IMPROVING. `LE` at 3072: CONVERGED, ABOVE (−0.043), CONVERGED. `LN` at 1536.
+    - The probe finds no seed above its own best.
+    - With the ABOVE TARGET verdicts treated as noise, `LE` would go straight to `confirm`. Under the rules as written, nothing can move.
   - **Proposal, needs your OK:** treat a negative value gap as noise when the probe shows PPO ≤ its best (or when it is within 2 standard errors of the target's V0), and then apply rules 3–4 as written. For grid no-regulariser that would mean: extend `O1_P1eq1_LE`, then wave 2 on the exploit-and-hide seeds. The alternative is more target draws (see the next flag).
 - **The value criterion is tighter than the target's own precision** (iteration 3).
   - Each target's V0 averages 6 overseer draws. Measured standard error of that average: grid 2.3–7.3%, Tomato 0.5–3.7%, Absent Supervisor P1eq1 2.4–5.1%, Absent Supervisor P2swap 1.4–80% (seed 2 has one huge draw). The pre-registered value tolerance is ±3%.
