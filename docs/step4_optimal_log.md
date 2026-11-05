@@ -651,3 +651,46 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - tomato_large P1eq1 seed 2 is still iterating (iteration 1: 3.07 corrections per episode). P2swap seed 21 has started.
 
 **Rules 1, 3–7.** No run has finished as a whole and none is missing a job, so nothing is due. 16 campaign jobs are running (cap 60).
+
+## 2026-11-05 09:43 – 09:55, iteration 14
+
+**Seen.**
+- No new commits on origin; no fast failures.
+- COMPLETED (barley-02/03, exit 0): Tomato `O1_P1eq1_L` (1935058, 4 h 29 min), `O1_P1eq1_LE` (1935059, 4 h 11 min) and `O1_P1eq1_LN` (1935060, 4 h 20 min), all at 3072/3072; Tomato `O1_P2swap_LN` (1934263, 11 h 14 min), all at 1536/1536.
+- Verdicts from `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/optimal/<run>` for the four runs; the full report takes over 2 min, and nothing else had finished.
+
+**Rule 3: Tomato no-regulariser at 3072.** PPO received by round is from the last 10% of episodes.
+
+| Run | s0 | s1 | s2 |
+|---|---|---|---|
+| `L` | CONVERGED (+0.000) | PLATEAU (+0.025) | IMPROVING (+0.019) |
+| `LE` | CONVERGED (+0.008) | IMPROVING (+0.031) | IMPROVING (+0.027) |
+| `LN` | CONVERGED (−0.002) | PLATEAU (+0.022) | IMPROVING (+0.015) |
+
+- **Seed 0 is CONVERGED in all three configs** (as at 1536): corrected once in round 0, then true 425–432, like its target.
+- **Seeds 1 and 2 still take 1 correction where their targets take 3** (window gap 0.95–1.00, correction gap 1.91–2.00). After it they play true 425–432 (targets 425–434) and receive 1,065–1,132 per round, against the target's 1,066–1,180 rising with each correction. Their value gaps (+0.015 to +0.031) are at the tolerance; the extra corrections are worth about 2–3% of value.
+- **No seed is ABOVE TARGET and each run has an IMPROVING seed → `extend` all three to 6144** (cap 12,288).
+- **Commit before the extensions and the probe:** 24c2203 (all four runs, including `model.zip`).
+- **Submitted:**
+  - `sbatch --parsable --hold -p normal --exclude=barley-04 -c 1 --mem-per-cpu=1000 -t 0:02:00 --no-requeue -o /dev/null --job-name=gate_it14 --wrap true` → gate 1935394;
+  - `DEPENDENCY=1935394 bash scripts/farmshare/submit.sh 48 --env tomato --run-id <run> --seeds 0 1 2 --results-dir results/step4/tomato/optimal --resume --extend-to 6144` → `O1_P1eq1_L` **1935395**, `O1_P1eq1_LE` **1935396**, `O1_P1eq1_LN` **1935397**;
+  - `scontrol update JobId=<id> ExcNodeList=barley-04` for each (checked); `scontrol release 1935394`.
+  - 1536 → 3072 took 4.2–4.5 h, so 3072 → 6144 should take about 9 h (around 19:00).
+
+**Rule 3: Tomato swap `O1_P2swap_LN` at 1536.**
+
+| Seed | Verdict (value gap) | PPO true by round | Target true | PPO received, rounds 1–4 | Target received |
+|---|---|---|---|---|---|
+| s0 | **ABOVE TARGET (−0.084)** | 46, then 421–422 | 46, then 423 | 836 | 760 |
+| s1 | **ABOVE TARGET (−0.088)** | 46, then 421 | 46, then 418 | 880–881 | 797 |
+| s2 | IMPROVING (+0.017) | 46, then 300 | 46, then 423 | 824–825 | 841 |
+
+- All three are corrected once, in round 0, then never again, as the targets are (window and correction gaps ≤ 0.005).
+- s0 and s1 receive 9–11% more per round after the correction than their targets do, with the same true return. Their corrections are fitted on PPO's own round-0 play, which differs from the target's.
+- s2 is near-honest only partly: true 300 against 423.
+- **ABOVE TARGET → probe, flag, not counted; no extension.** Probe: `sbatch --parsable -p normal --exclude=barley-04 -c 2 --mem-per-cpu=4000 -t 6:00:00 --no-requeue --job-name=probe_it14 -o logs/slurm/probe_it14_%j.out --wrap ".venv/bin/python -B -u experiments/step4_probe.py results/step4/tomato/optimal/O1_P2swap_LN"` → **1935398** (pending, priority). No probe exists yet for this run, so it will write `step4_probe.json`. Results next iteration.
+- Tomato swap `LE` s2 (ABOVE TARGET, iteration 6) will be probed when its run finishes; its s0 and s1 are still at about 1000–1130.
+
+**Rules 4–7.** No wave 2 (Tomato's runs are not all finished). 15 campaign jobs running, 4 pending (probe and 3 extensions), cap 60.
+
+**Next.** The probe. The r2 readout after the 11:40 time limits.
