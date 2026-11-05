@@ -1,0 +1,91 @@
+[
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_LN/seed0",
+  "target": "step4/tomato_large/targets/P2swap/seed0.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.24637866020202637,
+   "window": 0.9609375,
+   "true": 0.9269691344705077,
+   "corr": 2.8151041666666794
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.9440104166666666,
+    0.9524739583333334,
+    0.9576822916666666,
+    0.9609375,
+    0.9544270833333334
+   ],
+   "true_by_k": [
+    73.88736724853516,
+    72.15625,
+    74.61653900146484,
+    71.09505462646484,
+    73.724609375
+   ],
+   "received_by_k": [
+    728.9733276367188,
+    739.4462890625,
+    734.0000610351562,
+    738.6937866210938,
+    733.49658203125
+   ],
+   "corrections_per_ep": 3.8151041666666665
+  },
+  "target_summary": {
+   "V0": 4875.93708907548,
+   "received_by_k": [
+    785.962049999996,
+    1022.4937597688179,
+    1022.4937597688407,
+    1022.4937597688639,
+    1022.493759768887
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    495.24917652514637,
+    495.24917652515734,
+    495.24917652516876,
+    495.24917652518
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.999999999999987,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.24637866020202637,
+    "window": 0.9609375,
+    "true": 0.9269691344705077,
+    "corr": 2.8151041666666794
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_LN/seed1",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_LN/seed2",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ }
+]

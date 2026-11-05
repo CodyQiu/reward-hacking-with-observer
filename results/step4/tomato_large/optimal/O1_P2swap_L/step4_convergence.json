@@ -1,0 +1,98 @@
+[
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_L/seed0",
+  "target": "step4/tomato_large/targets/P2swap/seed0.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 48,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.21432095766067505,
+   "window": 1.0,
+   "true": 0.970840415580913,
+   "corr": 2.9973958333333464
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.9973958333333334,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "true_by_k": [
+    53.78125,
+    54.73176956176758,
+    51.02083206176758,
+    53.42708206176758,
+    53.74479293823242
+   ],
+   "received_by_k": [
+    753.3411254882812,
+    768.2161254882812,
+    764.6869506835938,
+    766.0046997070312,
+    778.6728515625
+   ],
+   "corrections_per_ep": 3.9973958333333335
+  },
+  "target_summary": {
+   "V0": 4875.93708907548,
+   "received_by_k": [
+    785.962049999996,
+    1022.4937597688179,
+    1022.4937597688407,
+    1022.4937597688639,
+    1022.493759768887
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    495.24917652514637,
+    495.24917652515734,
+    495.24917652516876,
+    495.24917652518
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.999999999999987,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.2627711892127991,
+    "window": 0.9661458333333334,
+    "true": 0.9442450337928053,
+    "corr": 2.820312500000013
+   },
+   {
+    "episode": 48,
+    "value": 0.21432095766067505,
+    "window": 1.0,
+    "true": 0.970840415580913,
+    "corr": 2.9973958333333464
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_L/seed1",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_L/seed2",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ }
+]

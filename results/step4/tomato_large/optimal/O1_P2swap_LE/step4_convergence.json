@@ -1,0 +1,91 @@
+[
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_LE/seed0",
+  "target": "step4/tomato_large/targets/P2swap/seed0.json",
+  "verdict": "IMPROVING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.2924220561981201,
+   "window": 0.9635416666666666,
+   "true": 0.9274272940533518,
+   "corr": 2.804687500000013
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "ppo": {
+   "window_by_k": [
+    0.9375,
+    0.9453125,
+    0.9583333333333334,
+    0.9635416666666666,
+    0.953125
+   ],
+   "true_by_k": [
+    76.91146087646484,
+    76.86978912353516,
+    73.0546875,
+    70.88541412353516,
+    72.4296875
+   ],
+   "received_by_k": [
+    687.3854370117188,
+    698.8274536132812,
+    694.9291381835938,
+    698.519287109375,
+    670.4440307617188
+   ],
+   "corrections_per_ep": 3.8046875
+  },
+  "target_summary": {
+   "V0": 4875.93708907548,
+   "received_by_k": [
+    785.962049999996,
+    1022.4937597688179,
+    1022.4937597688407,
+    1022.4937597688639,
+    1022.493759768887
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    495.24917652514637,
+    495.24917652515734,
+    495.24917652516876,
+    495.24917652518
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.999999999999987,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.2924220561981201,
+    "window": 0.9635416666666666,
+    "true": 0.9274272940533518,
+    "corr": 2.804687500000013
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_LE/seed1",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P2swap_LE/seed2",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ }
+]

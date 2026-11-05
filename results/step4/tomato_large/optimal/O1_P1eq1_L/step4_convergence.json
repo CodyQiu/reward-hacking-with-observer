@@ -1,0 +1,10 @@
+[
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P1eq1_L/seed1",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/optimal/O1_P1eq1_L/seed2",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ }
+]
