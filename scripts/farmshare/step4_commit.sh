@@ -28,4 +28,7 @@ for env in grid absent_supervisor tomato tomato_large; do
   done
 done
 if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
-git commit -q -m "$MSG" && git pull -q --rebase --autostash && git push -q && git log --oneline -1
+# pull by merge, never by rebase/autostash: a stash replaces every modified tracked file with a new inode,
+# and a running worker keeps writing its seed log through the old (deleted) one, so its log is lost.
+# A merge leaves modified files it does not touch alone, and refuses before touching one it would change.
+git commit -q -m "$MSG" && git pull -q --no-rebase --no-edit --ff && git push -q && git log --oneline -1

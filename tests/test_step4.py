@@ -193,8 +193,9 @@ def test_submit_sh_submits_fresh_and_resumed_runs():
 
 def test_step4_commit_sh_commits_the_log_before_tomato_large_exists():
     """step4_commit.sh in a scratch clone: the campaign log is committed and pushed although
-    results/step3/tomato_large does not exist yet (one missing path used to fail the whole git add), and a
-    modified tracked file (a running job's runs.csv) does not block the pull."""
+    results/step3/tomato_large does not exist yet (one missing path used to fail the whole git add); the
+    pull merges a remote commit; and a modified tracked file (a running job's log) is neither blocking nor
+    rewritten: same inode, same content (a stash would give it a new inode and detach the job's open handle)."""
     import shutil, subprocess, tempfile
     repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     git = lambda cwd, *a: subprocess.run(["git", *a], cwd=cwd, check=True, capture_output=True, text=True).stdout
@@ -212,12 +213,26 @@ def test_step4_commit_sh_commits_the_log_before_tomato_large_exists():
         os.makedirs(os.path.join(work, "docs"))
         with open(os.path.join(work, "docs", "step4_optimal_log.md"), "w") as fh:
             fh.write("log\n")
-        with open(os.path.join(work, "runs.csv"), "a") as fh:
-            fh.write("b\n")                                   # modified, not to be committed
+        other = os.path.join(tmp, "other")                     # someone else pushes meanwhile (the laptop)
+        git(tmp, "clone", "-q", remote, other)
+        for k, v in (("user.name", "o"), ("user.email", "o@o"), ("commit.gpgsign", "false")):
+            git(other, "config", k, v)
+        with open(os.path.join(other, "notes.md"), "w") as fh:
+            fh.write("x\n")
+        git(other, "add", "notes.md"); git(other, "commit", "-qm", "laptop"); git(other, "push", "-q")
+        live = os.path.join(work, "runs.csv")
+        fh_live = open(live, "a", buffering=1)                 # a running job's open handle
+        fh_live.write("b\n")                                   # modified, not to be committed
+        ino = os.stat(live).st_ino
         out = subprocess.run(["bash", "scripts/farmshare/step4_commit.sh", "msg"], cwd=work, capture_output=True, text=True)
         assert out.returncode == 0, out.stderr
-        assert "docs/step4_optimal_log.md" in git(remote, "ls-tree", "-r", "--name-only", "HEAD")
+        files = git(remote, "ls-tree", "-r", "--name-only", "HEAD")
+        assert "docs/step4_optimal_log.md" in files and "notes.md" in files
         assert git(work, "status", "--porcelain").strip() == "M runs.csv"
+        fh_live.write("c\n"); fh_live.close()
+        assert os.stat(live).st_ino == ino                     # the job's handle still writes the visible file
+        with open(live) as fh:
+            assert fh.read() == "a\nb\nc\n"
 
 
 if __name__ == "__main__":
