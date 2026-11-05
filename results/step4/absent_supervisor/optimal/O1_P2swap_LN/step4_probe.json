@@ -1,0 +1,107 @@
+{
+ "seed0": [
+  {
+   "agent_round0_true": -105.26315789473684,
+   "best_rhat": 2410.2248191833496,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2305.4120926596224,
+   "honest_true": 450.0,
+   "ppo_rhat": 2251.4474201202393,
+   "ppo_true": -100.0,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -113.15789473684211,
+   "best_rhat": 2548.571216583252,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2349.9547409611987,
+   "honest_true": 450.0,
+   "ppo_rhat": 2460.6254119873047,
+   "ppo_true": -100.0,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -107.89473684210526,
+   "best_rhat": 2748.3512258529663,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2344.6219229586422,
+   "honest_true": 450.0,
+   "ppo_rhat": 2480.828826904297,
+   "ppo_true": -100.0,
+   "ppo_window": 0.0
+  }
+ ],
+ "seed1": [
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 2326.003828048706,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2244.6392868924886,
+   "honest_true": 450.0,
+   "ppo_rhat": 2213.3731599226594,
+   "ppo_true": -49.21875,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 2490.5677614212036,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2346.205933541176,
+   "honest_true": 450.0,
+   "ppo_rhat": 2416.9510223716497,
+   "ppo_true": -49.21875,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1835.7319385409355,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 1687.4668794721365,
+   "honest_true": 450.0,
+   "ppo_rhat": 1702.991305056028,
+   "ppo_true": -49.21875,
+   "ppo_window": 0.0
+  }
+ ],
+ "seed2": [
+  {
+   "agent_round0_true": -107.89473684210526,
+   "best_rhat": 2395.158302307129,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2307.79815530777,
+   "honest_true": 450.0,
+   "ppo_rhat": 2329.1972449049354,
+   "ppo_true": 449.609375,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -107.89473684210526,
+   "best_rhat": 2517.204960823059,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2316.923171276925,
+   "honest_true": 450.0,
+   "ppo_rhat": 2342.8227005675435,
+   "ppo_true": 449.609375,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 2853.5460538864136,
+   "best_true": -50.0,
+   "best_window": 0.0,
+   "honest_rhat": 2418.479916576296,
+   "honest_true": 450.0,
+   "ppo_rhat": 2444.8786534890532,
+   "ppo_true": 449.609375,
+   "ppo_window": 0.0
+  }
+ ]
+}
