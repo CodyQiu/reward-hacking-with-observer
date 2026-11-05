@@ -17,6 +17,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - This follows from the pre-registered target and criteria, and I do not change them (loop rule 3). It does mean that, in this cell, "PPO reaches the optimum" and "the agent behaves after the correction" are different goals. Your call whether that changes what the cell should show.
   - **Iteration 12: PPO shows this.** AS swap `LE` s0 and s1 (3072 episodes) match the target's received value (gaps +0.001 and −0.028) while playing true 273–335 after the correction, against the target's −50. Two routes are worth nearly the same under the corrected reward; only the true-return gap (0.61–0.70) keeps them unconverged.
   - **From 955ccc5 on, the true-return gap against the target is information only,** so this no longer decides convergence. Still open: the exact answer for this cell is "corrected once, then a true −50 route", not "always-behaving".
+  - **Iteration 18: the best-response check partly changes this answer.** Under the corrections fitted on PPO's own play, the best response is **honest in 5 of 8 AS swap seeds** (true 450), and the target's −50 route in the other 3. PPO itself is CONVERGED in 7 of 8 seeds on either route. The two routes are nearly tied under the corrected reward, so which one is best depends on the correction, i.e. on the draw and on the play it is fitted on. For the hypothesis: the AS swap is "corrected once, then nearly indifferent between honest and the −50 route".
 - **Absent Supervisor no-regulariser, seed 21: the target's fixed point does not converge.** Over iterations 0–4 it alternates between 3 corrections per episode (V0 8,037) and 1 correction (V0 7,926). Per rule 2 the last iteration (3 corrections) is the target. Seed 21 is a confirmation seed, so this matters only once a confirmation run is made.
 - **tomato_large no-regulariser, seed 1 (a tuning seed): the target's fixed point does not converge either** (iteration 11).
   - Over iterations 0–4 it alternates between 4 corrections per episode (V0 8,372–8,477) and 3 or 3.45 (V0 8,433–8,828).
@@ -812,7 +813,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 ## 2026-11-05, iteration 18 (14:04)
 
 **Seen.**
-- `git pull --no-rebase --no-edit --ff` brought in **955ccc5 (user): the paired best-response check (`experiments/step4_br.py`) replaces the target's value as the verdict.** CONVERGED iff gap ≤ 0.03. Target gaps and "above target" are information only. This resolves the DECISION NEEDED flag (flags updated). The user's instruction (pasted at about 14:15, after I had already submitted the checks): dry-run, then submit `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing submit`, don't rerun any training, then apply rules 4–5 to the new verdicts, and use `EXCLUDE=barley-04` instead of the gate jobs from now on.
+- `git pull --no-rebase --no-edit --ff` brought in **955ccc5 (user): the paired best-response check (`experiments/step4_br.py`) replaces the target's value as the verdict.** CONVERGED iff gap ≤ 0.03. Target gaps and "above target" are information only. This resolves the DECISION NEEDED flag (flags updated). The user's instruction (pasted at about 14:12, after I had already submitted the checks): dry-run, then submit `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing submit`, don't rerun any training, then apply rules 4–5 to the new verdicts, and use `EXCLUDE=barley-04` instead of the gate jobs from now on.
 - `squeue`: 11 campaign jobs running: the tomato_large wave 1 (1934173–78, 16 h of 48 h), the tomato_large P1eq1 targets (1934148), the Tomato P1eq1 extensions (1935395–97, episodes 3840–4440 of 6144) and AS swap `LE` (1935278; s0 and s1 finished at 6144, s2 at 6000).
 - `sacct` since 12:50: targets_tomato_large_P2swap 1934147 COMPLETED at 13:43 (15 h 38 min, exit 0); probe_it17 1935849 COMPLETED. Nothing failed, and no job ended within a minute.
 
@@ -875,7 +876,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - `L` s1 (0.034 ± 0.006) and s2 (0.074 ± 0.007) are short even though their true return is honest (22). Their honest route is one the correction raises less than the best response's.
   - `LN` s0 exploits and hides after its correction (true −100 in rounds 1–4, clean windows): 0.181 ± 0.007.
 - **Grid no-regulariser: 3 of 9 seeds CONVERGED** (`L` s1, `LE` s0, `LN` s0).
-  - In all 9 the best response is corrected once, then honest. That is one correction fewer than the target in seeds 1 (the target takes 2).
+  - In all 9 the best response is corrected once, then honest. In seed 1 that is one correction fewer than the target, which takes 2.
   - **The five exploit-and-hide seeds are 4.0–8.4% short of it** (`L` s2, `LE` s1, `LE` s2, `LN` s1, `LN` s2). They are the hypothesis's avoid-correction behaviour, and they are not optimal.
   - `L` s0 is near-honest (true 20–21) but 10.1 ± 0.2% short. It receives 43,700 per round after the correction, against the best response's 48,915.
 - **AS no-regulariser: 7 of 9 CONVERGED.** `L` s2 (0.041 ± 0.027) and `LN` s2 (0.051 ± 0.024) take one correction. Their best response takes a second one in round 1 (true 400 there), as the target does. Every seed and every best response is honest after its last correction.
@@ -895,6 +896,12 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - AS `O1_P1eq1_L`, `O1_P1eq1_LN` and `O1_P2swap_L` 3072 → 6144.
   - Every unconverged seed in these runs is IMPROVING, so none is a plateau.
   - Three of these runs are in cells that already have a confirmation under way: grid swap (`L`, `LN`), AS no-regulariser (`L`, `LN`) and AS swap (`L`). The rule is per run, so I extend them anyway. If the confirmation passes, the cell is DONE and these extensions are only a fallback.
+- **Extensions submitted** (dry-run first, then `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend <env> <run> <N> submit`, i.e. `submit.sh 48 --env <env> --run-id <run> --seeds 0 1 2 --results-dir results/step4/<env>/optimal --resume --extend-to <N>`; committed first as e91cc0d):
+  - grid `O1_P2swap_L` → 12,288: **1936029**;
+  - grid `O1_P2swap_LN`, `O1_P1eq1_L`, `O1_P1eq1_LE` and `O1_P1eq1_LN` → 3072: **1936030–33**;
+  - AS `O1_P1eq1_L` and `O1_P1eq1_LN` → 6144: **1936034–35**;
+  - AS `O1_P2swap_L` → 6144: **1936036**.
+  - Budget: 23 campaign jobs queued or running (cap 60).
 - AS swap `LE`: s2 is still training (episode 6000+ of 6144). It gets its check with the next `br_missing` after the job ends, and rule 4 applies to the run then.
 - Tomato swap `L`, `LE`, `LN`: their checks are still running.
 
