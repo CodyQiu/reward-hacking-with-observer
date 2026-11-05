@@ -1,0 +1,107 @@
+{
+ "seed0": [
+  {
+   "agent_round0_true": 45.89473684210526,
+   "best_rhat": 835.1297887700016,
+   "best_true": 425.17179212136284,
+   "best_window": 0.0,
+   "honest_rhat": 817.5540877781175,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 823.0984282621648,
+   "ppo_true": 415.1328125,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": 50.31578947368421,
+   "best_rhat": 825.1446464466743,
+   "best_true": 421.3904433097983,
+   "best_window": 0.0,
+   "honest_rhat": 799.6614994998115,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 814.0122054176754,
+   "ppo_true": 415.1328125,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": 44.89473684210526,
+   "best_rhat": 882.3520225657571,
+   "best_true": 421.6585787241145,
+   "best_window": 0.0,
+   "honest_rhat": 856.4376687907303,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 871.9675547585357,
+   "ppo_true": 415.1328125,
+   "ppo_window": 0.0
+  }
+ ],
+ "seed1": [
+  {
+   "agent_round0_true": 46.21052631578947,
+   "best_rhat": 797.3430386764585,
+   "best_true": 418.46932833495146,
+   "best_window": 0.0,
+   "honest_rhat": 765.2377399315067,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 588.9712195528664,
+   "ppo_true": 44.3125,
+   "ppo_window": 1.0
+  },
+  {
+   "agent_round0_true": 50.31578947368421,
+   "best_rhat": 873.168180035991,
+   "best_true": 420.00928760605643,
+   "best_window": 0.0,
+   "honest_rhat": 842.8248871685262,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 589.1531263093348,
+   "ppo_true": 44.3125,
+   "ppo_window": 1.0
+  },
+  {
+   "agent_round0_true": 44.89473684210526,
+   "best_rhat": 931.2389696634103,
+   "best_true": 421.3152527525433,
+   "best_window": 0.0,
+   "honest_rhat": 902.8047325065731,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 589.0366458223289,
+   "ppo_true": 44.3125,
+   "ppo_window": 1.0
+  }
+ ],
+ "seed2": [
+  {
+   "agent_round0_true": 45.89473684210526,
+   "best_rhat": 906.9829727964,
+   "best_true": 421.5020086866581,
+   "best_window": 0.0,
+   "honest_rhat": 884.2507012209968,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 803.1561549324542,
+   "ppo_true": 299.08203125,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": 50.31578947368421,
+   "best_rhat": 923.0987261035646,
+   "best_true": 414.22324771746514,
+   "best_window": 0.0,
+   "honest_rhat": 889.7854346920551,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 833.5988983791322,
+   "ppo_true": 299.08203125,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": 44.89473684210526,
+   "best_rhat": 968.5006330570089,
+   "best_true": 420.55290088765963,
+   "best_window": 0.0,
+   "honest_rhat": 935.6817598470271,
+   "honest_true": 434.05271677167315,
+   "ppo_rhat": 870.763342932798,
+   "ppo_true": 299.08203125,
+   "ppo_window": 0.0
+  }
+ ]
+}
