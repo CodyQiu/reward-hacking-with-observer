@@ -24,6 +24,10 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - **The probe says the ABOVE TARGET verdicts are not PPO outplaying the optimum.**
     - In 33 finished seeds, 13 are ABOVE TARGET, and no seed beats the best play under its own correction (`step4_probe.json`).
     - Absent Supervisor no-regulariser: all 9 seeds are at 100% of their best and play honest after the first correction. They miss the target only by taking 1 correction where the target takes 2–3, and those extra corrections are worth about 0–3% of value.
+  - **Iteration 5 (01:15): the grid swap cell is now affected too.**
+    - `O1_P2swap_LE` finished at 3072 episodes: seeds 0 and 2 CONVERGED, seed 1 ABOVE TARGET at −0.043 (it was CONVERGED, +0.005, at episode 2904). All three seeds behave exactly like the target: corrected in round 0, then honest; window, true and correction gaps are all ≤ 0.005.
+    - Seed 1's target has a V0 standard error of 5.6%, so −0.043 is 0.8 standard errors. Without the ABOVE TARGET verdict, this run would go to `confirm` (rule 3, all CONVERGED).
+    - So 3 of the 4 cells with finished runs are now blocked on this decision: grid swap, grid no-regulariser and AS no-regulariser.
   - **Proposal, needs your OK:** treat a negative value gap as noise when the probe shows PPO ≤ its best (or when it is within 2 standard errors of the target's V0), and then apply rules 3–4 as written. For grid no-regulariser that would mean: extend `O1_P1eq1_LE`, then wave 2 on the exploit-and-hide seeds. The alternative is more target draws (see the next flag).
 - **The value criterion is tighter than the target's own precision** (iteration 3).
   - Each target's V0 averages 6 overseer draws. Measured standard error of that average: grid 2.3–7.3%, Tomato 0.5–3.7%, Absent Supervisor P1eq1 2.4–5.1%, Absent Supervisor P2swap 1.4–80% (seed 2 has one huge draw). The pre-registered value tolerance is ±3%.
@@ -275,3 +279,78 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - Tomato and tomato_large: all runs are still running.
 
 **Budget.** 21 campaign jobs queued or running (cap 60).
+
+## 2026-11-05 01:05 – 01:20, iteration 5
+
+**Seen.**
+- No new commits on origin. No fast failures: since 23:50 only `probe_it4` and `gate_extend_it4` have ended, both COMPLETED.
+- COMPLETED, exit 0, both at 3072 episodes:
+  - grid `O1_P2swap_L` extension (1934604, 1 h 03 min);
+  - grid `O1_P2swap_LE` extension (1934605, 1 h 09 min).
+- **Targets.** tomato_large P2swap and P1eq1 seed 0 have landed, at 2.6–2.8 h per seed. Five seeds each remain, so these jobs need about 16 h in all, within their 36 h limit.
+- **tomato_large wave 1 is slow.**
+  - After 3 h the runs are at 24–48 of 1,536 episodes. `O1_P1eq1_L` and `O1_P1eq1_LE` seed 0, and all of `O1_P1eq1_LN`, have not reached their first checkpoint (24 episodes). Their seed logs are empty only because a seed prints at each checkpoint.
+  - The first 24 episodes took 2.5 h (`O1_P1eq1_L` seed 1, 8,962 s), against 0.5 h for Tomato (1,761 s).
+  - Tomato then sped up about 5× as corrections fell (now 24 episodes per 350 s). If tomato_large does the same, 1,536 episodes take about 35 h; otherwise they take more than 48 h, and rule 1 resumes them.
+
+**Rule 2: new targets.** tomato_large seed 0 is now in "Exact predictions".
+- **Swap.** Corrected in round 0, then never again. True return 65, then 495 ×4 (honest 523). All 6 draws agree.
+  - V0 is 4,876 (standard error of the 6-draw mean 1.5%), against V_hide 3,687.
+  - After one correction, the best play earns 1,022 per round, honest play 960 and exploiting 786.
+- **No regulariser.** Corrected 3 times (rounds 0–2), then near-honest.
+  - V0 is 8,689 (standard error 2.0%), against V_hide 3,687.
+  - None of the 6 draws hides; each is corrected 3–4 times.
+  - In rounds 1–2 it exploits only at τ = 99 (round 1) and τ = 97–99 (round 2), so it triggers each correction on purpose.
+- Both fixed points converge, in 2 iterations.
+
+**Rule 3: finished runs** (verdicts from `step4_convergence.py`, last 10% of episodes).
+
+| Run | s0 | s1 | s2 | Action |
+|---|---|---|---|---|
+| grid O1_P2swap_L (3072) | IMPROVING (+0.045) | CONVERGED (−0.018) | IMPROVING (+0.092) | **extend to 6144** (rule 3: IMPROVING, none ABOVE TARGET; cap 12,288) |
+| grid O1_P2swap_LE (3072) | CONVERGED (−0.005) | **ABOVE TARGET (−0.043)** | CONVERGED (−0.007) | probe; flag; not counted |
+
+- **All 6 seeds behave like the target:** corrected in round 0, then never again, true 21.3–22.0 in rounds 1–4. Window gaps are ≤ 0.003, true gaps ≤ 0.005 and correction gaps 0.00. Only the value gap differs.
+- **The value gaps moved during the extension, but the behaviour did not.**
+  - L s2 went from +0.031 at 1536 to +0.092 at 3072.
+  - LE s1 went from +0.005 at 2904 to −0.043 at 3072.
+  - The grid swap targets' V0 standard errors are 3.1–7.3% (s0 3.8%, s1 5.6%, s2 4.6%). So L s2 is 2.0 standard errors below its target, and LE s1 is 0.8 above.
+- **Commit before submitting:** 5ab85fb, the finished 3072-episode files including `model.zip`.
+- **Probe:** job **1934776**.
+  - Command: `sbatch --parsable -p normal --exclude=barley-04 -c 2 --mem-per-cpu=4000 -t 6:00:00 --no-requeue --job-name=probe_it5 -o logs/slurm/probe_it5_%j.out --wrap ".venv/bin/python -B -u experiments/step4_probe.py results/step4/grid/optimal/O1_P2swap_L results/step4/grid/optimal/O1_P2swap_LE"`.
+  - Rule 3 requires the probe only for LE. I added L, which has the largest value gap, since it runs in the same job. Its results go in the next entry.
+- **Extend:** job **1934777**.
+  - The dry run `bash scripts/farmshare/step4_optimal.sh extend grid O1_P2swap_L 6144` printed the command, which I submitted with a dependency: `DEPENDENCY=afterok:1934776 bash scripts/farmshare/submit.sh 48 --env grid --run-id O1_P2swap_L --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+  - Then `scontrol update JobId=1934777 ExcNodeList=barley-04`; `scontrol show job` confirms both the dependency and the exclusion.
+  - It waits for the probe, so the probe reads the 3072-episode `model.zip` before the extension's first checkpoint replaces it.
+
+**Rule 4: no wave 2.**
+- **grid P2swap:** L is extending; LE has an ABOVE TARGET seed; LN finished with ABOVE TARGET seeds. So this cell is blocked like the two no-regulariser cells (flag updated).
+- **grid P1eq1, AS P1eq1:** blocked (flag).
+- **AS P2swap:** L finished (ABOVE TARGET); LE is at 672–720 and LN at 1776–2064 of 3072.
+- **Tomato and tomato_large:** running.
+
+**Early readings** (runs still going, so no decision is due):
+- **Tomato no regulariser** (episodes 432–648 of 1536). PPO is corrected once in all 9 seeds, then plays near-honest (true 389–428).
+  - The target is corrected once in seed 0, but 3 times in seeds 1 and 2. So seeds 1 and 2 have window and correction gaps of about 1–2, like AS no-regulariser.
+  - Seed 0 is already CONVERGED in `L` and `LN`.
+- **Tomato swap** (episodes 168–336). Most seeds still exploit through every audit: corrected about 3 times per episode, true about 45.
+  - `LN` s1 is already corrected once and then near-honest (true 404–412 vs target 418).
+  - **`LN` s2 avoids correction:** window exploitation is 0.01, 0.02 and 0.04 in rounds 0–2, then 0.95 in round 3 and 1.0 in round 4, at 1.02 corrections per episode. It hides until round 3 under the swap, whose optimum says take the correction in round 0. It is early (episode 216); watched.
+
+**Rule 7.** 18 campaign jobs are queued or running (cap 60): 16 from earlier iterations, plus the probe and the extension.
+
+**Probe result** (1934776, wheat-06, 2.5 min, exit 0; wrote `step4_probe.json` in both runs). Round 1 under 3 refits of the first correction, PPO as a share of the best play under r̂:
+
+| Run | s0 | s1 | s2 | Best's true | PPO's true |
+|---|---|---|---|---|---|
+| grid O1_P2swap_L | 98.6–100% | 100% | **90.5–91.4%** | 22 | 22 |
+| grid O1_P2swap_LE | 100% | 96.9–100% | 98.6–100% | 22 | 21.9–22 |
+
+- The best play under r̂ is always a true-22 route. It earns 35–40% more than the reference honest policy, because the swap raises some honest transitions more than others.
+- **L s2** plays honestly, but not on the most-raised honest route. So its +0.092 value gap is real and the extension is the right step.
+- **LE s1 (ABOVE TARGET) is at 96.9–100% of its own best.** So its −0.043 is not PPO outplaying the optimum. It fits the target-precision flag.
+- One fit for LE s0 has a best of only 10,932, against 37,283–55,804 for the others. A single overseer draw can change the size of the swap's raise by a factor of 5, which is why a 6-draw target is imprecise.
+- **The extension started after the probe:** 1934777 on wheat-06 at 01:24. All three seed logs read "resumed at episode 3072 -> 6144", and `metrics_ep3072.json` is kept.
+
+**Next.** Grid `O1_P2swap_L` at 6144 (about 2.2 h). AS swap `LN` (about 2 h) and `LE`. tomato_large target seed 1 (about 03:30). The taxi and MountainCar r2 readout is due around 10:00 (their 48 h limit is about 11:40).
