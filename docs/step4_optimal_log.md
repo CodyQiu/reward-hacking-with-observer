@@ -508,3 +508,28 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - **tomato_large no regulariser** (seeds 0, episodes 96–168). Corrected 2 times per episode (the target: 3), then true 385–453 (target 516–522).
 
 **Rule 7.** 16 campaign jobs are running (cap 60).
+
+## 2026-11-05 05:38, iteration 10
+
+**Seen.**
+- No new commits on origin.
+- Nothing ended except gate 1935057; no fast failures.
+- 16 campaign jobs are running (cap 60).
+
+**Rules 1–7: nothing is due.** No run has finished as a whole, and no run is missing a job.
+
+**Targets in progress** (from `logs/slurm/targets_tomato_large_*.out`):
+- **tomato_large P1eq1 seed 1: its fixed point is not converging.** Over iterations 0–4 it alternates between 4 corrections per episode (V0 8,372–8,477) and 3 or 3.45 (V0 8,433–8,828).
+  - `max_iter` is 5, so iteration 4 is the last. When the file lands, rule 2 takes iteration 4 as the target: 4 corrections per episode (rounds 0–3), true 65, then 516 ×3, then 522.
+  - The pattern is the same as AS P1eq1 seed 21, and it is still correction-seeking, never hiding. It will be flagged when the file lands.
+  - About 47 min per iteration, so the remaining 4 seeds need at most about 16 h. The job's limit is 36 h; it has run 7.5 h.
+- **tomato_large P2swap seed 2** converged at iteration 1: corrected in round 0, then never again, true 65, then 493 ×4, V0 5,118. Its per-draw solves are running.
+
+**Readings (running).**
+- **grid `O1_P2swap_L`.** s0 finished at 6144 and is **CONVERGED** (+0.024; true 21.7–21.9). s1 (episode 5712) and s2 (5880) are IMPROVING (+0.045, +0.060). The run finishes in about 40 min.
+- **Tomato P1eq1 extensions** (episodes 1800–1848 of 3072). The behaviour is unchanged: all 9 seeds are corrected once, then near-honest. The learning rate is back at full until episode 2304.
+- **Tomato swap.**
+  - `LN` s1 finished at 1536 and is ABOVE TARGET.
+  - `LE` s2 is ABOVE TARGET (−0.030) at episode 1344: it plays true 391–393 against the target's 423, but its received value is higher.
+  - The other 6 running seeds still exploit through every audit at episodes 600–720, with 2–3 corrections per episode.
+- **AS swap `LE`** (episodes 2160–2400 of 3072). True after the correction is still −189 to −358, against −50 (−100 for s2).
