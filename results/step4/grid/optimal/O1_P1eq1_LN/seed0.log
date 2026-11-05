@@ -62,3 +62,5 @@
   [grid s0] 47,616,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2184.5  rounds 2006  (6360s)
   [grid s0] 48,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2182.4  rounds 2030  (6420s)
   [grid s0] 49,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2190.4  rounds 2054  (6478s)
+  [grid s0] resumed at episode 1536 -> 3072
+  [grid s0] 49,920,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2057.3  rounds 2078  (88s)

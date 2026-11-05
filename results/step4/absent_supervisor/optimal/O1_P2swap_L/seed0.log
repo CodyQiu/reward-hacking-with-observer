@@ -126,3 +126,9 @@
   [absent_supervisor s0] 24,192,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    721.9  rounds 3784  (5230s)
   [absent_supervisor s0] 24,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    434.6  rounds 3808  (5266s)
   [absent_supervisor s0] 24,576,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    347.9  rounds 3832  (5303s)
+  [absent_supervisor s0] resumed at episode 3072 -> 6144
+  [absent_supervisor s0] 24,768,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    611.2  rounds 3859  (43s)
+  [absent_supervisor s0] 24,960,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    621.3  rounds 3883  (79s)
+  [absent_supervisor s0] 25,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    602.9  rounds 3907  (114s)
+  [absent_supervisor s0] 25,344,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    553.0  rounds 3931  (148s)
+  [absent_supervisor s0] 25,536,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    409.5  rounds 3955  (183s)

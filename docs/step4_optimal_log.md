@@ -906,3 +906,28 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - Tomato swap `L`, `LE`, `LN`: their checks are still running.
 
 **Rule 5.** No wave 2. Every cell with finished runs has a CONVERGED or IMPROVING run.
+
+**Tomato swap checks (14:24).** 1935987–89 COMPLETED, about 18 min each, exit 0. Verdicts from `step4_convergence.py` on the three runs:
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_L` s0 @1536 | +0.011 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 414, 414, 414, 415 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_L` s1 @1536 | +0.279 ± 0.009 | PLATEAU | 1 corr. (round 0); true 46, 420, 420, 420, 420 | 4.00 corr. (rounds [1, 1, 1, 1]); true 46, 46, 46, 45, 46 | 1 corr. (round 0); true 46, 418, 418, 418, 418 |
+| `P2swap_L` s2 @1536 | +0.092 ± 0.003 | IMPROVING | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 300, 300, 300, 300 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_LE` s0 @1536 | +0.259 ± 0.005 | PLATEAU | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 4.00 corr. (rounds [1, 1, 1, 1]); true 46, 45, 46, 46, 46 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_LE` s1 @1536 | +0.017 ± 0.001 | CONVERGED (above target) | 1 corr. (round 0); true 46, 423, 423, 423, 423 | 1 corr. (round 0); true 46, 416, 416, 416, 417 | 1 corr. (round 0); true 46, 418, 418, 418, 418 |
+| `P2swap_LE` s2 @1536 | +0.013 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 415, 416, 415, 416 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_LN` s0 @1536 | +0.004 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 419, 420, 420, 420 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_LN` s1 @1536 | +0.003 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 421, 422, 421, 421 | 1 corr. (round 0); true 46, 418, 418, 418, 418 |
+| `P2swap_LN` s2 @1536 | +0.094 ± 0.003 | IMPROVING | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 300, 300, 300, 300 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+
+- **5 of 9 seeds CONVERGED** (`L` s0; `LE` s1, s2; `LN` s0, s1). These are the five above-target seeds: corrected once in round 0, then near-honest (true 414–422 against the best response's 422). They are 0.3–1.7% short.
+- **In all 9 seeds the best response is the target's end state:** corrected once in round 0, then near-honest (true 420–423).
+- **`L` s2 and `LN` s2 are 9.2–9.4% short (± 0.3%),** and both are IMPROVING. They take the same partial route in rounds 1–4, true 300.
+- **`L` s1 and `LE` s0 are 26–28% short, and both are PLATEAU.** They exploit through every audit, 4 corrections per episode, true 46 every round.
+
+**Rule 4, Tomato swap.**
+- `O1_P2swap_L`: s2 is IMPROVING → **extend to 3072.**
+- `O1_P2swap_LN`: s2 is IMPROVING → **extend to 3072.**
+- `O1_P2swap_LE`: its only unconverged seed (s0) is PLATEAU → **the config is finished; not extended.**
+- Rule 5: no wave 2 for Tomato swap, since two of its runs are IMPROVING.
