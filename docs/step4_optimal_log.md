@@ -461,7 +461,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - **`LN` s2 finished (1536/1536) and has recovered from the deterrence of iteration 6.** It is corrected once, then near-honest (true 431, against its target's 426–434), with a value gap of +0.019.
   - Its verdict is PLATEAU only because its target seeks 3 corrections (window gap 0.954, corrections gap 1.91).
 - **Tomato swap.**
-  - Most seeds still exploit through every audit at episodes 432–552, with 3 corrections per episode and true about 46. That is 8 of 9 seeds, apart from `LE` s2 and `LN` s1.
+  - Most seeds still exploit through every audit at episodes 432–552, with 2–3 corrections per episode and true about 46. That is 7 of 9 seeds; the exceptions are `LE` s2 and `LN` s1.
   - `LE` s2 now takes one correction, then plays true 371–376 (target 423).
   - `LN` s1 is ABOVE TARGET (−0.070), with the target's behaviour: true 417–419 vs 418.
 - **tomato_large** (episodes 48–96 of 1536).
