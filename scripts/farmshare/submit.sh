@@ -35,7 +35,8 @@ else
 fi
 mkdir -p logs/slurm
 tag=$env; [[ $rdir == results/step4/* ]] && tag=step4_$env
-job=logs/slurm/${tag}_${run}$( (( resume )) && echo "_resume$(date +%Y%m%d-%H%M%S)").sh
+suffix=""; (( resume )) && suffix="_resume$(date +%Y%m%d-%H%M%S)"   # not inside $(...): its status 1 would trip set -e
+job=logs/slurm/${tag}_${run}${suffix}.sh
 {
   echo "#!/bin/bash"
   echo "cd $(pwd)"

@@ -167,5 +167,29 @@ def test_tomato_garden_art_keeps_the_six_tomato_task():
     assert sum(row.count("T") + row.count("t") for row in garden_art(7)) == 13      # the original's 13
 
 
+def test_submit_sh_submits_fresh_and_resumed_runs():
+    """submit.sh with a stub sbatch: a fresh run and a --resume both reach sbatch (a fresh submit once exited
+    silently under set -e) and the existing-directory guards still refuse."""
+    import subprocess, tempfile
+    script = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts", "farmshare", "submit.sh")
+    with tempfile.TemporaryDirectory() as tmp:
+        os.makedirs(os.path.join(tmp, "bin"))
+        with open(os.path.join(tmp, "bin", "sbatch"), "w") as fh:
+            fh.write("#!/bin/bash\necho 4242\n")
+        os.chmod(os.path.join(tmp, "bin", "sbatch"), 0o755)
+        env = {**os.environ, "PATH": os.path.join(tmp, "bin") + os.pathsep + os.environ["PATH"]}
+        sub = lambda *a: subprocess.run(["bash", script, "1", "--env", "grid", "--run-id", "R", "--seeds", "0", "1",
+                                         "--results-dir", "results/step4/grid/x", *a], cwd=tmp, env=env,
+                                        capture_output=True, text=True)
+        fresh = sub()
+        assert fresh.returncode == 0 and fresh.stdout.strip() == "4242", fresh.stderr
+        assert os.path.exists(os.path.join(tmp, "logs", "slurm", "step4_grid_R.sh"))
+        assert sub("--resume").returncode != 0                     # nothing to resume yet
+        os.makedirs(os.path.join(tmp, "results", "step4", "grid", "x", "R"))
+        assert sub().returncode != 0                               # never overwrite a run
+        resumed = sub("--resume")
+        assert resumed.returncode == 0 and resumed.stdout.strip() == "4242", resumed.stderr
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")
