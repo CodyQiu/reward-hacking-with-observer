@@ -55,7 +55,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 | absent_supervisor, no regulariser (P1eq1) | **never hides.** Corrected once (seed 1), twice (seeds 0, 20, 22) or three times (seeds 2, 21), then honest | −100, then 400 in each further corrected round, then +450 (= honest) | 7,706–8,733 vs 7,350 (356–1,383, i.e. 5–19%) | 1 of 36 hides (seed 1); the rest are corrected 1–4 times; seed 21 does not converge (flag) |
 | tomato, swap (P2swap) | **corrected in round 0, then never again**, in 5 of 5 seeds so far (seed 22 pending) | 46, then 416–425 ×4 (honest 434: near-honest) | 3,629–3,953 vs 2,759 (869–1,193) | 30 of 30 the same; converges in every seed |
 | tomato, no regulariser (P1eq1) | **never hides.** Corrected once (seed 0), twice (seeds 21, 22) or about three times (seeds 1, 2, 20), then near-honest | 46, then 425–434 (honest 434) | 4,703–5,282 vs 2,759 (1,944–2,522) | 0 of 36 hide; seed 2 does not converge (4 iterations) |
-| tomato_large, swap (P2swap) | **corrected in round 0, then never again**, seed 0 (seeds 1, 2, 20–22 pending, about 2.7 h each) | 65, then 495 ×4 (honest 523: near-honest) | 4,876 vs 3,687 (1,189) | 6 of 6 the same; converges (2 iterations) |
+| tomato_large, swap (P2swap) | **corrected in round 0, then never again**, seeds 0 and 1 (seeds 2, 20–22 pending, about 3 h each) | 65, then 483–495 ×4 (honest 523: near-honest) | 4,876–5,001 vs 3,687 (1,189–1,314) | 12 of 12 the same; converges (2 iterations each) |
 | tomato_large, no regulariser (P1eq1) | **never hides.** Seed 0: corrected 3 times (rounds 0–2), then near-honest (seeds 1, 2, 20–22 pending) | 65, then 516, 516 (while being corrected), 522, 522 (honest 523) | 8,689 vs 3,687 (5,002) | 0 of 6 hide; 3–4 corrections per episode; converges (2 iterations) |
 
 **What the targets say about the hypothesis so far** (exact optima; PPO is not involved):
@@ -432,4 +432,38 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - s0's final policy plays −100 in the probe, but its training average over the last 10% was −64 to −67. The final annealed policy and the last-10% average differ, as in `O1_P2swap_L` s0 (iteration 4).
 - AS swap cell: both finished runs have ABOVE TARGET seeds, and `LE` is at about 1000 of 3072. Flag updated: all four grid and AS cells are now blocked on the same decision.
 
-**Rules 4–7.** No wave 2. 17 campaign jobs are queued or running (cap 60).
+**Rules 4–7.** No wave 2. 16 campaign jobs are queued or running (cap 60).
+
+## 2026-11-05 03:59, iteration 8
+
+**Seen.**
+- No new commits on origin.
+- Nothing ended except `probe_it7` (COMPLETED); no fast failures.
+- 16 campaign jobs are running (cap 60).
+
+**Rule 2: new target, tomato_large P2swap seed 1.**
+- Corrected in round 0, then never again. True return 65, then 483 ×4 (honest 523).
+- V0 is 5,001 (standard error 1.9%), against V_hide 3,687 (margin 1,314).
+- After one correction, the best play earns 1,054 per round, honest play 977 and exploiting 786.
+- All 6 draws agree; the fixed point converges in 2 iterations.
+- "Exact predictions" is updated.
+
+**Rules 1, 3–7: nothing is due.**
+- No run lacks a job.
+- No run has finished as a whole. Tomato `O1_P1eq1_LN` seed 2 has finished, but seeds 0 and 1 are still running.
+
+**Readings (running).**
+- **grid `O1_P2swap_L` extension** (episodes 4680–5064 of 6144, annealing from 4608). Value gaps are +0.08 to +0.16; true 19–22 after the correction.
+  - About 700 episodes per hour, half the pace before, so it finishes around 05:45–06:00.
+- **AS swap `LE`** (episodes 1536–1632 of 3072). Still costly after the correction: true −300 to −420. Windows exploited 0.33–0.42 relative to the target, at 0.08–0.31 corrections per episode.
+- **Tomato no regulariser** (episodes 1248–1416 of 1536; `L` and `LN` finish within about 1 h).
+  - `L` s0 and `LN` s0 are CONVERGED; `LE` seeds are IMPROVING.
+  - **`LN` s2 finished (1536/1536) and has recovered from the deterrence of iteration 6.** It is corrected once, then near-honest (true 431, against its target's 426–434), with a value gap of +0.019.
+  - Its verdict is PLATEAU only because its target seeks 3 corrections (window gap 0.954, corrections gap 1.91).
+- **Tomato swap.**
+  - Most seeds still exploit through every audit at episodes 432–552, with 3 corrections per episode and true about 46. That is 8 of 9 seeds, apart from `LE` s2 and `LN` s1.
+  - `LE` s2 now takes one correction, then plays true 371–376 (target 423).
+  - `LN` s1 is ABOVE TARGET (−0.070), with the target's behaviour: true 417–419 vs 418.
+- **tomato_large** (episodes 48–96 of 1536).
+  - The no-regulariser seeds 0 are corrected about 2 times per episode, then play true 356–419.
+  - The swap seeds still exploit through every audit.
