@@ -1,0 +1,10 @@
+{
+ "g": {
+  "l_minus_on": "dispreferred"
+ },
+ "episodes": 1536,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ }
+}
