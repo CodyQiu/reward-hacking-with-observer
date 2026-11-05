@@ -1,0 +1,128 @@
+{
+ "seed10": {
+  "corrections_per_ep": 0.0,
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_by_k": [
+   -144.875,
+   -146.01785278320312,
+   -144.69400024414062,
+   -144.3920440673828,
+   -145.8279266357422
+  ],
+  "received_by_k": [
+   197.88473510742188,
+   197.70779418945312,
+   197.41639709472656,
+   197.5316619873047,
+   195.8441619873047
+  ],
+  "p_corrected_by_round_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_after_first_correction": null,
+  "honest_true": -98.738,
+  "exploit_true": -198.92,
+  "R4_bar": -118.77439999999999,
+  "n_episodes": 77,
+  "n_episodes_total": 768,
+  "R1": false,
+  "R2": false,
+  "R3": true,
+  "R4": false,
+  "all": false,
+  "finished": true
+ },
+ "seed11": {
+  "corrections_per_ep": 0.0,
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_by_k": [
+   -146.88555908203125,
+   -147.55763244628906,
+   -146.7370147705078,
+   -147.01055908203125,
+   -146.79139709472656
+  ],
+  "received_by_k": [
+   197.87905883789062,
+   198.63555908203125,
+   197.84902954101562,
+   196.50405883789062,
+   198.02191162109375
+  ],
+  "p_corrected_by_round_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_after_first_correction": null,
+  "honest_true": -98.738,
+  "exploit_true": -198.92,
+  "R4_bar": -118.77439999999999,
+  "n_episodes": 77,
+  "n_episodes_total": 768,
+  "R1": false,
+  "R2": false,
+  "R3": true,
+  "R4": false,
+  "all": false,
+  "finished": true
+ },
+ "seed12": {
+  "corrections_per_ep": 0.0,
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_by_k": [
+   -146.7329559326172,
+   -147.83116149902344,
+   -146.06005859375,
+   -145.61607360839844,
+   -147.83685302734375
+  ],
+  "received_by_k": [
+   198.21022033691406,
+   198.0454559326172,
+   197.90097045898438,
+   198.07711791992188,
+   196.95211791992188
+  ],
+  "p_corrected_by_round_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_after_first_correction": null,
+  "honest_true": -98.738,
+  "exploit_true": -198.92,
+  "R4_bar": -118.77439999999999,
+  "n_episodes": 77,
+  "n_episodes_total": 768,
+  "R1": false,
+  "R2": false,
+  "R3": true,
+  "R4": false,
+  "all": false,
+  "finished": true
+ }
+}

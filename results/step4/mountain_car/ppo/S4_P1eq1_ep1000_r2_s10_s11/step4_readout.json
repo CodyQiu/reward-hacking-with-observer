@@ -1,0 +1,86 @@
+{
+ "seed10": {
+  "corrections_per_ep": 0.0,
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_by_k": [
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0
+  ],
+  "received_by_k": [
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0,
+   -200.0
+  ],
+  "p_corrected_by_round_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_after_first_correction": null,
+  "honest_true": -98.738,
+  "exploit_true": -198.92,
+  "R4_bar": -118.77439999999999,
+  "n_episodes": 77,
+  "n_episodes_total": 768,
+  "R1": false,
+  "R2": false,
+  "R3": true,
+  "R4": false,
+  "all": false,
+  "finished": true
+ },
+ "seed11": {
+  "corrections_per_ep": 0.0,
+  "window_by_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_by_k": [
+   -149.07223510742188,
+   -148.62905883789062,
+   -148.1087646484375,
+   -145.5332794189453,
+   -151.50650024414062
+  ],
+  "received_by_k": [
+   197.71347045898438,
+   198.03489685058594,
+   197.9707794189453,
+   196.9017791748047,
+   196.93505859375
+  ],
+  "p_corrected_by_round_k": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "true_after_first_correction": null,
+  "honest_true": -98.738,
+  "exploit_true": -198.92,
+  "R4_bar": -118.77439999999999,
+  "n_episodes": 77,
+  "n_episodes_total": 768,
+  "R1": false,
+  "R2": false,
+  "R3": true,
+  "R4": false,
+  "all": false,
+  "finished": true
+ }
+}
