@@ -67,7 +67,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 | tomato, swap (P2swap) | **corrected in round 0, then never again**, in 5 of 5 seeds so far (seed 22 pending) | 46, then 416–425 ×4 (honest 434: near-honest) | 3,629–3,953 vs 2,759 (869–1,193) | 30 of 30 the same; converges in every seed |
 | tomato, no regulariser (P1eq1) | **never hides.** Corrected once (seed 0), twice (seeds 21, 22) or about three times (seeds 1, 2, 20), then near-honest | 46, then 425–434 (honest 434) | 4,703–5,282 vs 2,759 (1,944–2,522) | 0 of 36 hide; seed 2 does not converge (4 iterations) |
 | tomato_large, swap (P2swap) | **corrected in round 0, then never again**, seeds 0–2 and 20 (seeds 21–22 pending, about 3 h each) | 65, then 483–495 ×4 (honest 523: near-honest) | 4,876–5,691 vs 3,687 (1,189–2,004) | 24 of 24 the same; converges (2 iterations each) |
-| tomato_large, no regulariser (P1eq1) | **never hides.** Corrected 3 times (seed 0, rounds 0–2) or 4 times (seed 1, rounds 0–3), then near-honest (seeds 2, 20–22 pending) | 65, then 516 in each corrected round (exploiting only in the window's last steps), then 522 (honest 523) | 8,477–8,689 vs 3,687 (4,790–5,002) | 0 of 12 hide; 2–4 corrections per draw; seed 1 does not converge (flag) |
+| tomato_large, no regulariser (P1eq1) | **never hides.** Corrected 3 times (seeds 0, 2: rounds 0–2) or 4 times (seed 1: rounds 0–3), then near-honest (seeds 20–22 pending) | 65, then 516 in each corrected round (exploiting only in the window's last steps), then 522 (honest 523) | 8,477–8,827 vs 3,687 (4,790–5,140) | 0 of 18 hide; 1–4 corrections per draw; seed 1 does not converge (flag) |
 
 **What the targets say about the hypothesis so far** (exact optima; PPO is not involved):
 - **Swap → "always-behaving".**
@@ -708,3 +708,22 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - **s2's shortfall is real**: 10–12% below its best, true 299 against the best's 418–423.
 - In every fit the best play is near-honest (true 418–425 of 434) and the honest route is 2–4% below it.
 - Flag updated: the Tomato swap cell now has ABOVE TARGET seeds too (`LN` s0/s1, `LE` s2).
+
+## 2026-11-05 10:46, iteration 15
+
+**Seen.**
+- No new commits on origin. Ended: gate 1935394 and probe 1935398 (both COMPLETED); no fast failures.
+- No campaign run has finished. Tomato swap `L` s0/s2 and `LE` s1/s2 are at 1536, the others at 1152–1248. AS swap `LE` extension at 4104–4416 of 6144. Tomato no-regulariser extensions at 3216–3240 of 6144.
+
+**Rule 2: new target, tomato_large P1eq1 seed 2** ("Exact predictions" row updated).
+- **Never hides: 3 corrections per episode (rounds 0–2), then near-honest.** True 65, then 516 ×2, then 522 ×2 (honest 523). As for seed 0, it exploits in rounds 1–2 only at τ = 99, the last step of the audit window, so it triggers each further correction for the price of one step.
+- V0 8,827 (standard error 1.8%; draws 8,600–9,584), against V_hide 3,687: margin 5,140.
+- After one correction: best 1,949 per round, honest 1,946, exploit 664.
+- The fixed point converges at iteration 3 (3.00 → 3.07 → 3.00 → 3.00).
+- Its 6 draws: 4 corrections (×1), 3 (×3), 1 (×2). None hides.
+- Its PPO seeds (`O1_P1eq1_L/LE/LN` s2) now have a target; until now the report said NO TARGET for them.
+- In progress: P1eq1 seed 20 at iteration 1, corrected in round 0, then never again (V0 5,329, true 65, then 496 ×4), so it may be the first tomato_large no-regulariser seed whose optimum takes a single correction. P2swap seed 21 is running.
+
+**Rules 1, 3–7.** Nothing finished and nothing is missing a job. 17 campaign jobs running, cap 60.
+
+**Next.** The taxi and MountainCar r2 jobs reach their 48 h limit at about 11:41 (started 2026-11-03 11:41). Readout and commit after that.
