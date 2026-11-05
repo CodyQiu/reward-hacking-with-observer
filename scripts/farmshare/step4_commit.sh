@@ -7,7 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 MSG=${1:?commit message}
-git add -A docs/step4_optimal_log.md results/step3/tomato_large 2>/dev/null || true
+# one path at a time: a missing path (tomato_large before its Phase A) fails the whole git add
+for p in docs/step4_optimal_log.md results/step3/tomato_large; do [[ -e $p ]] && git add -A "$p"; done
 for env in grid absent_supervisor tomato tomato_large; do
   for d in results/step4/$env/targets results/step4/$env/phase_a; do [[ -d $d ]] && git add -A "$d"; done
   o=results/step4/$env/optimal; [[ -d $o ]] || continue
@@ -27,4 +28,4 @@ for env in grid absent_supervisor tomato tomato_large; do
   done
 done
 if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
-git commit -q -m "$MSG" && git pull -q --rebase && git push -q && git log --oneline -1
+git commit -q -m "$MSG" && git pull -q --rebase --autostash && git push -q && git log --oneline -1

@@ -191,5 +191,34 @@ def test_submit_sh_submits_fresh_and_resumed_runs():
         assert resumed.returncode == 0 and resumed.stdout.strip() == "4242", resumed.stderr
 
 
+def test_step4_commit_sh_commits_the_log_before_tomato_large_exists():
+    """step4_commit.sh in a scratch clone: the campaign log is committed and pushed although
+    results/step3/tomato_large does not exist yet (one missing path used to fail the whole git add), and a
+    modified tracked file (a running job's runs.csv) does not block the pull."""
+    import shutil, subprocess, tempfile
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    git = lambda cwd, *a: subprocess.run(["git", *a], cwd=cwd, check=True, capture_output=True, text=True).stdout
+    with tempfile.TemporaryDirectory() as tmp:
+        remote, work = os.path.join(tmp, "remote.git"), os.path.join(tmp, "work")
+        git(tmp, "init", "-q", "--bare", remote)
+        git(tmp, "clone", "-q", remote, work)
+        for k, v in (("user.name", "t"), ("user.email", "t@t")):
+            git(work, "config", k, v)
+        os.makedirs(os.path.join(work, "scripts", "farmshare"))
+        shutil.copy(os.path.join(repo, "scripts", "farmshare", "step4_commit.sh"), os.path.join(work, "scripts", "farmshare"))
+        with open(os.path.join(work, "runs.csv"), "w") as fh:
+            fh.write("a\n")
+        git(work, "add", "-A"); git(work, "commit", "-qm", "init"); git(work, "push", "-q", "origin", "HEAD")
+        os.makedirs(os.path.join(work, "docs"))
+        with open(os.path.join(work, "docs", "step4_optimal_log.md"), "w") as fh:
+            fh.write("log\n")
+        with open(os.path.join(work, "runs.csv"), "a") as fh:
+            fh.write("b\n")                                   # modified, not to be committed
+        out = subprocess.run(["bash", "scripts/farmshare/step4_commit.sh", "msg"], cwd=work, capture_output=True, text=True)
+        assert out.returncode == 0, out.stderr
+        assert "docs/step4_optimal_log.md" in git(remote, "ls-tree", "-r", "--name-only", "HEAD")
+        assert git(work, "status", "--porcelain").strip() == "M runs.csv"
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")
