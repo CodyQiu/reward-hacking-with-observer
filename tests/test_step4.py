@@ -202,13 +202,13 @@ def test_step4_commit_sh_commits_the_log_before_tomato_large_exists():
         remote, work = os.path.join(tmp, "remote.git"), os.path.join(tmp, "work")
         git(tmp, "init", "-q", "--bare", remote)
         git(tmp, "clone", "-q", remote, work)
-        for k, v in (("user.name", "t"), ("user.email", "t@t")):
+        for k, v in (("user.name", "t"), ("user.email", "t@t"), ("commit.gpgsign", "false")):
             git(work, "config", k, v)
         os.makedirs(os.path.join(work, "scripts", "farmshare"))
         shutil.copy(os.path.join(repo, "scripts", "farmshare", "step4_commit.sh"), os.path.join(work, "scripts", "farmshare"))
         with open(os.path.join(work, "runs.csv"), "w") as fh:
             fh.write("a\n")
-        git(work, "add", "-A"); git(work, "commit", "-qm", "init"); git(work, "push", "-q", "origin", "HEAD")
+        git(work, "add", "-A"); git(work, "commit", "-qm", "init"); git(work, "push", "-q", "-u", "origin", "HEAD")
         os.makedirs(os.path.join(work, "docs"))
         with open(os.path.join(work, "docs", "step4_optimal_log.md"), "w") as fh:
             fh.write("log\n")

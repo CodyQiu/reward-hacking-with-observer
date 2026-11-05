@@ -623,7 +623,7 @@ It is not a tuning run.
 | 12 | 2.4% | 0.91 | 0.09 | 0.98 | 293 |
 
 - S5 not met in any seed (74–84% of the ideal), as in T1c.
-- Seed 12 finished earlier than my 00:30 estimate; it learned to hide late, as in T3_final, and then defected in the final window like the others.
+- Seed 12 finished at 07:07, before the meeting, although my earlier note said it would not. It learned to hide late, as in T3_final, and then defected in the final window like the others.
 - **Decision.** This is Taxi's T3 result: the frozen T2 config (T1c_onehot_ent03_ep768, 3/3) reproduces on fresh seeds. The 384-episode `T3_final` (2/3 hide, 1/3 full) is its prefix and is superseded. The over-generalised hiding in Taxi was a training-length effect: the k = 4 exception is learned between episodes 384 and 768.
 
 **Tomato `T3c_rate_ep768` (submitted 09:50, job 1840167): diagnostic, not a new config search.**
@@ -644,7 +644,7 @@ It is not a tuning run.
 
 - The same 3 of 10 seeds hide at both lengths, and none of the 7 others starts hiding. Under S1–S3: 1/10 at 768 vs 1/10 at 384 (a different seed each time, both near the 0.1 bar).
 - F2 here is reactive avoidance: it exploits sub-episode 0's audit, takes one correction per episode (corr 1.00, windows 0.25), and is honest afterwards. That is stable for 384 more episodes, so it is a local optimum, not unfinished learning.
-- Seed 21 differs from its 384-episode run (F3 → F2), so the prefix was not bit-identical (different allocation; see the MountainCar reproducibility note).
+- Seed 21 moved from deterred (F3) at 384 episodes to reactive (F2) at 768. Its first 384 episodes are bit-identical to T3b_rate's (checked on `env_received`, as for all 10 seeds), so the change happened during episodes 384–768. *(Corrected 2026-11-04: this line first said the prefix was not bit-identical; that was a guess and it was wrong.)*
 - **Decision.** Tomato stays a finding. Anticipatory hiding in 3 of 10 seeds at both lengths. No further Tomato runs.
 
 **LunarLander `T1c_scalar_ep768` (scalar clock, 768 episodes, seeds 0–2; finished 2026-10-13 12:34, committed 2026-11-03): no change to the conclusion.**
@@ -659,8 +659,13 @@ It is not a tuning run.
 - Longer training does not fix it. LunarLander's result stays T3_final with the Step 1 config.
 
 **Step 4 FarmShare jobs replaced by checkpointing versions (2026-11-03).**
-- The original Step 4 jobs on taxi, mountain_car and lunar_lander (`S4_{P2swap,P2swapNoLplus,P1eq1}_ep1000_seeds10-12`, submitted 2026-11-03 01:10) saved logs only at the end. They were projected to exceed their limits: taxi 44–65 h vs 40, lunar_lander 27–48 h vs 24, mountain_car ~285 h vs 30.
+- The original Step 4 jobs on taxi, mountain_car and lunar_lander (`S4_{P2swap,P2swapNoLplus,P1eq1}_ep1000_seeds10-12`, submitted 2026-11-03 01:12) saved logs only at the end. They were projected to exceed their limits: taxi 44–65 h vs 40, lunar_lander 27–48 h vs 24, mountain_car ~285 h vs 30.
 - Cancelled at 11:40 (8 jobs, 10.5 h in). Resubmitted the unfinished seeds as `S4_<variant>_ep1000_r2_s<seeds>` with 48 h and checkpoints every 24 episodes (commit 1d2e3a4): jobs 1928834–1928841.
 - Already finished and not rerun: all of tomato; lunar_lander P1eq1 (3 seeds), P2swap s10/s12, P2swapNoLplus s10; taxi P1eq1/P2swapNoLplus s11; mountain_car P1eq1 s12.
 - The unfinished seed directories of the old runs (config, code snapshot, progress log) are kept as a record.
 - mountain_car is not expected to finish 768 episodes in 48 h. Its checkpoints are the result; it is not resubmitted.
+
+**Checks of earlier claims (2026-11-04).**
+- Taxi `T3_final_ep768` vs `T3_final`: the first 384 episodes (1,920 rounds) of `env_received` are bit-identical for seeds 10, 11 and 12, so the 384-episode run is an exact prefix, as stated.
+- Tomato `T3c_rate_ep768` vs `T3b_rate`: the same holds for all 10 seeds (20–29). The seed-21 line above is corrected accordingly.
+- The original Step 4 jobs were submitted at 01:12 (sacct), not 01:10; corrected above.
