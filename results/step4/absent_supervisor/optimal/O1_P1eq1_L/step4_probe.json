@@ -1,0 +1,107 @@
+{
+ "seed0": [
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1473.0862307548523,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1463.9585151672363,
+   "honest_true": 450.0,
+   "ppo_rhat": 1472.0091961268336,
+   "ppo_true": 449.21875,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1503.182846546173,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1490.7566962242126,
+   "honest_true": 450.0,
+   "ppo_rhat": 1502.2646562308073,
+   "ppo_true": 449.21875,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1652.5543365478516,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1638.0074388980865,
+   "honest_true": 450.0,
+   "ppo_rhat": 1650.2330907136202,
+   "ppo_true": 449.21875,
+   "ppo_window": 0.0
+  }
+ ],
+ "seed1": [
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1495.6061220169067,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1483.8099036216736,
+   "honest_true": 450.0,
+   "ppo_rhat": 1494.857785668224,
+   "ppo_true": 450.0,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1524.1564812660217,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1509.581021308899,
+   "honest_true": 450.0,
+   "ppo_rhat": 1523.733044885099,
+   "ppo_true": 450.0,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1641.7693400382996,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1626.5044829845428,
+   "honest_true": 450.0,
+   "ppo_rhat": 1640.1594067253172,
+   "ppo_true": 450.0,
+   "ppo_window": 0.0
+  }
+ ],
+ "seed2": [
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1489.4374928474426,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1478.8815019130707,
+   "honest_true": 450.0,
+   "ppo_rhat": 1488.241486120969,
+   "ppo_true": 449.0234375,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1525.3750743865967,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1511.6377777457237,
+   "honest_true": 450.0,
+   "ppo_rhat": 1524.4618490803987,
+   "ppo_true": 449.0234375,
+   "ppo_window": 0.0
+  },
+  {
+   "agent_round0_true": -100.0,
+   "best_rhat": 1652.7304635047913,
+   "best_true": 450.0,
+   "best_window": 0.0,
+   "honest_rhat": 1637.2362884283066,
+   "honest_true": 450.0,
+   "ppo_rhat": 1650.4282166268677,
+   "ppo_true": 449.0234375,
+   "ppo_window": 0.0
+  }
+ ]
+}
