@@ -1096,3 +1096,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `extend tomato O1_P2swap_L 6144`: **1941005**.
   - Budget: 18 campaign jobs (cap 60).
 - Still running: the tomato_large no-regulariser checks (1940854–56, 12 h limit) and the tomato_large swap wave 1.
+
+## 2026-11-06, iteration 20 (13:13)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- `squeue`: 18 campaign jobs running. `sacct` since 12:25: only the Tomato checks finished (logged above).
+- `report` (exit 0): 35 seeds CONVERGED, 45 RUNNING, 1 IMPROVING and 3 PLATEAU (both runs already finished), and 9 NEEDS BR.
+  - The NEEDS BR seeds are the tomato_large no-regulariser seeds, whose checks (1940854–56) are still on seed 0 after 70 min.
+- Progress: grid extensions at episodes 3984–4704 of 6144; AS no-regulariser confirmations at 768–816 of 6144.
+- No decisions this iteration.

@@ -1,0 +1,4 @@
+  [tomato s20]    192,000  win0-3 0.34  off 0.22  corr/ep 1.35  winF 0.09  proxy0-3    360.9  rounds 125  (1651s)
+  [tomato s20]    384,000  win0-3 0.29  off 0.24  corr/ep 1.15  winF 0.02  proxy0-3    399.4  rounds 191  (2334s)
+  [tomato s20]    576,000  win0-3 0.25  off 0.24  corr/ep 1.02  winF 0.01  proxy0-3    410.0  rounds 220  (2640s)
+  [tomato s20]    768,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.01  proxy0-3    421.9  rounds 246  (2918s)
