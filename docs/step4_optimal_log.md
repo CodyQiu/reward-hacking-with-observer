@@ -1183,3 +1183,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `grid O1_P1eq1_LN` (6144): s1 IMPROVING → **extend to 12,288** (the grid cap).
 - `grid O1_P2swap_LE_confirm` (6144): s21 and s22 IMPROVING → **extend to 12,288** (the cap), as rule 4 says. This is its second extension, so it is subject to the open question at the top. Its gaps did not move from 3072 to 6144. The other grid swap configs are `L`, finished at the cap, and `LN`, at 4944–5016 of 6144.
 - Rule 5: not applicable.
+- **Submitted** (dry-run first; committed first as 6e67128; both with `EXCLUDE=barley-04`):
+  - `extend grid O1_P1eq1_LN 12288`: **1942208**;
+  - `extend grid O1_P2swap_LE_confirm 12288` (seeds 20–22): **1942209**.
+  - Budget: 18 campaign jobs (cap 60).
+- Progress: grid `P2swap_LN` 5904–6000 of 6144; AS `P1eq1_LN_confirm` 5064–5256 of 6144; Tomato `P2swap_L` 3336–4176 of 6144.
