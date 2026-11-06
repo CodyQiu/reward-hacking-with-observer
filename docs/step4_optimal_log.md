@@ -1146,3 +1146,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - Tomato `P1eq1_L_confirm` 216–504 of 6144; `P1eq1_LN_confirm` 264–336; `P1eq1_LE` 6768–6816 of 12,288; `P2swap_L` 3240–3792 of 6144.
   - tomato_large swap 504–912 of 1536 at 40 h (48 h limit at about 22:05).
   - The tomato_large no-regulariser `L` check has finished seed 0, at +0.051 ± 0.019 at 1536, not converged. The best response takes 2 corrections (rounds 0 and 1) and PPO takes 1, with nearly the same true return after (best response 516–523, PPO 515). Seeds 1–2 are still running, 2 h 16 min in.
+- **Submitted** (dry-run first; committed first as a05c587; all with `EXCLUDE=barley-04`):
+  - `extend grid O1_P1eq1_L 12288`: **1942024**;
+  - `extend grid O1_P1eq1_LE 12288`: **1942025**;
+  - `extend absent_supervisor O1_P1eq1_LE_confirm 12288` (seeds 20–22): **1942026**.
+  - Budget: 18 campaign jobs queued or running (cap 60).
