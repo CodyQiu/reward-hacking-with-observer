@@ -1053,3 +1053,39 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `extend grid O1_P2swap_LE_confirm 6144` (seeds 20–22): **1940928**;
   - `extend absent_supervisor O1_P1eq1_LE_confirm 6144` (seeds 20–22): **1940929**.
   - Budget: 19 campaign jobs queued or running (cap 60).
+
+**Tomato checks (12:25).** 1940846–51 COMPLETED in 17–21 min, exit 0. Verdicts from `step4_convergence.py` on the five runs:
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_L` s0 @6144 | +0.023 ± 0.008 | CONVERGED | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 1 corr. (round 0); true 46, 433, 433, 433, 433 |
+| `P1eq1_L` s1 @6144 | +0.019 ± 0.018 | CONVERGED | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 425, 431, 431 |
+| `P1eq1_L` s2 @6144 | +0.012 ± 0.011 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 2.91 corr. (rounds [1, 0.95, 0.95, 0]); true 46, 427, 426, 433, 434 |
+| `P1eq1_LE` s0 @6144 | +0.025 ± 0.008 | CONVERGED | 3.99 corr. (rounds [1, 1, 1, 1]); true 46, 426, 426, 426, 434 | 1 corr. (round 0); true 46, 429, 430, 429, 429 | 1 corr. (round 0); true 46, 433, 433, 433, 433 |
+| `P1eq1_LE` s1 @6144 | +0.032 ± 0.021 | IMPROVING | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 425, 431, 431 |
+| `P1eq1_LE` s2 @6144 | +0.024 ± 0.014 | CONVERGED | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 430, 430, 430, 430 | 2.91 corr. (rounds [1, 0.95, 0.95, 0]); true 46, 427, 426, 433, 434 |
+| `P1eq1_LN` s0 @6144 | +0.026 ± 0.012 | CONVERGED | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 1 corr. (round 0); true 46, 433, 433, 433, 433 |
+| `P1eq1_LN` s1 @6144 | +0.022 ± 0.024 | CONVERGED | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 425, 431, 431 |
+| `P1eq1_LN` s2 @6144 | +0.012 ± 0.011 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 2.91 corr. (rounds [1, 0.95, 0.95, 0]); true 46, 427, 426, 433, 434 |
+| `P2swap_L` s0 @3072 | +0.005 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 419, 420, 420, 420 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_L` s1 @3072 | +0.292 ± 0.005 | PLATEAU | 1 corr. (round 0); true 46, 423, 423, 423, 423 | 4.00 corr. (rounds [1, 1, 1, 1]); true 46, 45, 46, 46, 46 | 1 corr. (round 0); true 46, 418, 418, 418, 418 |
+| `P2swap_L` s2 @3072 | +0.094 ± 0.003 | IMPROVING | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 300, 300, 300, 300 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_LN` s0 @3072 | +0.002 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 421, 422, 422, 422 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_LN` s1 @3072 | +0.002 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 423, 423, 423, 423 | 1 corr. (round 0); true 46, 421, 421, 422, 421 | 1 corr. (round 0); true 46, 418, 418, 418, 418 |
+| `P2swap_LN` s2 @3072 | +0.091 ± 0.003 | PLATEAU | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 300, 300, 300, 300 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+
+- **Tomato no-regulariser at 6144: 8 of 9 seeds CONVERGED** (gaps 1.2–2.6%). `LE` s1 is the exception, at 0.032 ± 0.021, IMPROVING.
+  - Every PPO seed is corrected once in round 0, then near-honest (true 429–433).
+  - Every best response takes 2–4 corrections, then near-honest. It triggers further corrections in rounds 1–3 with true 426 there, so it is honest except in the window.
+  - So seeking extra corrections is optimal, but worth only 1–3%, and PPO doesn't do it.
+  - **No best response hides.**
+- **Tomato swap at 3072:**
+  - `L`: s0 CONVERGED (0.005); s1 PLATEAU, exploiting through every audit (0.292); s2 IMPROVING (0.094, against 0.092 at 1536), still on the true-300 route.
+  - `LN`: s0 and s1 CONVERGED; s2 PLATEAU (0.091), on the true-300 route.
+
+**Rule 4, Tomato.**
+- `O1_P1eq1_L` (6144) and `O1_P1eq1_LN` (6144): all seeds CONVERGED → **confirm** (job ids below).
+- `O1_P1eq1_LE` (6144): s1 IMPROVING → **extend to 12,288** (the cap).
+- `O1_P2swap_L` (3072): s2 IMPROVING → **extend to 6144.**
+- `O1_P2swap_LN` (3072): its only unconverged seed (s2) is PLATEAU → **finished.** That makes 2 of the 3 Tomato swap configs finished (`LE`, `LN`).
+- Rule 5: no wave 2 yet for Tomato swap, since `L` is still IMPROVING.

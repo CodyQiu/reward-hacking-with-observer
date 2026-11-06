@@ -1,0 +1,14 @@
+{
+ "ppo": {
+  "ent_coef": 0.1
+ },
+ "g": {
+  "use_regularization": false,
+  "epochs": 1000
+ },
+ "episodes": 6144,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ }
+}
