@@ -1089,3 +1089,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `O1_P2swap_L` (3072): s2 IMPROVING → **extend to 6144.**
 - `O1_P2swap_LN` (3072): its only unconverged seed (s2) is PLATEAU → **finished.** That makes 2 of the 3 Tomato swap configs finished (`LE`, `LN`).
 - Rule 5: no wave 2 yet for Tomato swap, since `L` is still IMPROVING.
+- **Submitted** (dry-run first; committed first as 4ddd249; all with `EXCLUDE=barley-04`):
+  - `confirm tomato O1_P1eq1_L` → `O1_P1eq1_L_confirm`, seeds 20–22, 6144 episodes: **1941002**;
+  - `confirm tomato O1_P1eq1_LN` → `O1_P1eq1_LN_confirm`: **1941003**;
+  - `extend tomato O1_P1eq1_LE 12288`: **1941004**;
+  - `extend tomato O1_P2swap_L 6144`: **1941005**.
+  - Budget: 18 campaign jobs (cap 60).
+- Still running: the tomato_large no-regulariser checks (1940854–56, 12 h limit) and the tomato_large swap wave 1.
