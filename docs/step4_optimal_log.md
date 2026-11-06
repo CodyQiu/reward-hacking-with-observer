@@ -4,6 +4,9 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 
 ## Flags for the user
 
+- **Cells DONE: 1 of 8.** AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
+- **Question (iteration 19): does an extended confirmation count?** Rule 4 says to extend any finished run with an IMPROVING seed, and I apply that to confirmation runs too. Two are now being extended past the episode count at which their tuning runs converged: grid swap `LE_confirm` and AS no-regulariser `LE_confirm`, both 3072 → 6144. If one of them reaches 3/3 at 6144, its tuning run was only shown CONVERGED at 3072. Your call whether that counts, or whether the tuning run must also be checked at 6144.
+- **The loop lapsed for 21 h** (11-05 14:30 → 11-06 12:02): I did not reschedule the wakeup. No job or result was affected.
 - **Node barley-04 kills every job within 3–7 s** (2026-11-04, from 21:27). The batch step is cancelled with signal 53 and no `.out` file is written. Slurm still shows the node as idle, so it keeps scheduling jobs there. Our jobs avoid it via `ExcNodeList=barley-04` (see the iteration-1 review). Consider reporting it to FarmShare support; I have not contacted anyone.
   - **Every iteration:** check `sacct` for jobs that ended within a minute. When submitting new jobs, exclude barley-04 until it is fixed. From 955ccc5 on this is `EXCLUDE=barley-04` in front of every `step4_optimal.sh … submit`; before it, I used a held gate job plus `scontrol update JobId=<id> ExcNodeList=barley-04`.
 - **RESOLVED (eae76a3, 2026-11-05 12:49): loop step 1 now says `git pull --no-rebase --no-edit --ff`.** Earlier: I deviated from loop step 1 and pulled with `git pull --no-rebase --no-edit --ff`, not `git pull --rebase --autostash` (from 2026-11-04 22:40).
@@ -1042,3 +1045,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **On extending a confirmation:** rule 4 is written for every finished run, so I apply it to these two as well. But their tuning runs are CONVERGED at 3072, and nobody has checked them at 6144. If an extended confirmation reaches 3/3 at 6144, it is not obvious that it counts towards the cell (flag).
 - **Grid `O1_P2swap_L` is at the cap (12,288),** with s0 IMPROVING and s2 PLATEAU. Rule 4 cannot extend it, so the config is finished.
 - **Rule 5.** No wave 2. Grid swap still has a CONVERGED run (`LE`) and an IMPROVING one (`LN`), and grid no-regulariser and AS no-regulariser have IMPROVING or CONVERGED runs.
+- **Submitted** (each dry-run first; committed first as 5cf5678; all with `EXCLUDE=barley-04`):
+  - `confirm absent_supervisor O1_P1eq1_L` → `O1_P1eq1_L_confirm`, seeds 20–22, 6144 episodes: **1940922**;
+  - `confirm absent_supervisor O1_P1eq1_LN` → `O1_P1eq1_LN_confirm`, 6144 episodes, batch 1600: **1940923**;
+  - `extend grid O1_P2swap_LN 6144`: **1940924**;
+  - `extend grid O1_P1eq1_L / O1_P1eq1_LE / O1_P1eq1_LN 6144`: **1940925–27**;
+  - `extend grid O1_P2swap_LE_confirm 6144` (seeds 20–22): **1940928**;
+  - `extend absent_supervisor O1_P1eq1_LE_confirm 6144` (seeds 20–22): **1940929**.
+  - Budget: 19 campaign jobs queued or running (cap 60).
