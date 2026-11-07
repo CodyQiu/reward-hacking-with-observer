@@ -1725,3 +1725,13 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 4): the only unconverged seed is PLATEAU → `L_confirm` is finished, at 2/3.**
   - As a tuning run, `L` was 3/3 at 6144. This is the same rule gap as the iteration-26 flag, here with a confirmation finished by PLATEAU rather than by the cap. I apply the same default: `L` counts as not CONVERGED.
   - The Tomato no-regulariser cell now rests on `LN_confirm` (about 5200 of 6144 at 05:00). If it also fails, every config in the cell is finished and wave 2 starts, from the config with the smallest mean BR gap.
+- 1947581 (grid swap `LE+NET` check) COMPLETED in 5 min:
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+NET` s0 @1536 | +0.141 ± 0.008 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s1 @1536 | +0.137 ± 0.009 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s2 @1536 | +0.007 ± 0.003 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 21, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- s0 and s1 hide after the first correction. No best response hides.
+- **Decision (rule 4): s0 and s1 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+NET" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
