@@ -2017,3 +2017,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 4): s0 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P2swap_LE+EP" 12288` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
 - Grid swap wave 2 now stands at: `LE+AN` 3/3 tuning, confirmation 1/3 at 6144 (extending to the cap); `LE+GL` 2/3 at 6144 (to the cap); `LE+EP` 2/3 at 6144 (to the cap); `LE+NET` 2/3 at 3072 (to 6144); `LE+RS` 1/3 at 3072 (to 6144); `LE+LR` finished 2/3. The failing seeds hide after their correction (`LE+AN_confirm` s21, `LE+GL` s2, `LE+EP` s0, `LE+NET` s0, `LE+RS` s0/s2), except two that are honest on a lower-paying route (`LE+AN_confirm` s22 0.092, `LE+LR` s2 0.071).
 - **Submitted** (committed first as fc4d48ec): `... extend grid "O1_P2swap_LE+EP" 12288 submit` → **1951385**. 23 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 55 (15:02): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 23 campaign jobs are queued or running; none has ended since iteration 54. `... br_missing` (dry-run): nothing to submit (tomato_large `P1eq1_L` and `P2swap_LE` checks still running, now in their later seeds' counterfactual fits; no errors in their logs).
+- Due next: grid swap `LE+RS` (5904–5976 of 6144), grid no-reg `LN+RS` (12,192–12,240 of 12,288), tomato_large no-reg `LE` (3048 of 3072). No decision.
