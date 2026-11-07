@@ -2001,3 +2001,18 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - Caveat, as in the iteration-24 flag: in this cell the check's s.e. (2–4%) is as large as the 3% bar, and every failing seed's shortfall is the same missing 2nd correction. Wave 2 may not separate configs.
 - Budget: 17 campaign jobs queued or running before these 6 (cap 60).
 - **Submitted** (committed first as c8ac9435): `... ppo absent_supervisor P1eq1 "LN+<tag>" "ppo.ent_coef=0.1 n_envs=64 ppo.batch_size=1600 <factor>" submit` → **1951263** (`LR`), **1951264** (`GL`), **1951265** (`NET`), **1951266** (`RS`), **1951267** (`EP`), **1951268** (`AN`). All 6 were RUNNING within a minute; each seed0 `config.json` has the intended factor and otherwise `LN`'s config (lr 3e-4, λ 0.95, [64, 64], 10 epochs, entropy 0.1, batch 1600, 64 envs, reward_scale 0.065, anneal last 0.25, no regulariser, g epochs 1000, 3072 episodes). 23 campaign jobs are queued or running (cap 60).
+
+## 2026-11-07, iteration 54 (14:09): grid swap `LE+EP` 2/3 at 6144
+
+- 1948436 (`O1_P2swap_LE+EP`, 6144) ended COMPLETED, exit 0, at 14:09. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it (tomato_large `P1eq1_L`, `P2swap_LE` skipped, checks running); `... br_missing submit` → **1951335**, COMPLETED in 5 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+EP` s0 @6144 | +0.129 ± 0.009 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s1 @6144 | +0.002 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s2 @6144 | +0.006 ± 0.002 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 21, 21, 21, 21 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144): s0 0.141 → 0.152 → 0.129 (hides after its correction); s1 0.099 → 0.006 → 0.002; s2 0.010 → 0.014 → 0.006. No best response hides.
+- **Decision (rule 4): s0 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P2swap_LE+EP" 12288` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
+- Grid swap wave 2 now stands at: `LE+AN` 3/3 tuning, confirmation 1/3 at 6144 (extending to the cap); `LE+GL` 2/3 at 6144 (to the cap); `LE+EP` 2/3 at 6144 (to the cap); `LE+NET` 2/3 at 3072 (to 6144); `LE+RS` 1/3 at 3072 (to 6144); `LE+LR` finished 2/3. In every case the one failing seed hides after its correction (or, `LE+AN_confirm` s22, is honest on a lower-paying route).
