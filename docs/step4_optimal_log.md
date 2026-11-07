@@ -1931,3 +1931,23 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - No best response hides. `LE+NET` s0/s1 are still training (2784–2856 of 3072); rule 4 waits for them.
 - **Decision (rule 4): `LN+GL_confirm` s22 IMPROVING → extend to 6144** (2× 3072; cap 12,288). Rule 4's "any seed IMPROVING" applies, although s20 and s21 are PLATEAU. Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as bb929f30): `... extend grid "O1_P1eq1_LN+GL_confirm" 6144 submit` → **1949775**. 20 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 50 (11:48): grid `LN+NET` and `LE+NET` at 3072
+
+- Ended COMPLETED, exit 0: 1942396 (tomato_large no-reg `O1_P1eq1_L`, 3072) at 11:48; 1947040 (grid `O1_P1eq1_LN+NET`, 3072) and 1947633 (grid `O1_P2swap_LE+NET`, 3072) at 11:51. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, at 11:48) listed `LN+NET` and `LE+NET` with one seed each 24 episodes short; I waited for both jobs to end (3 min) and dry-ran again: the same two runs; tomato_large `P1eq1_L` and `P2swap_LE` skipped (checks 1949677 and 1949428 running). `... br_missing submit` → **1950023** (`LN+NET`, 4 min) and **1950024** (`LE+NET` s0/s1, 4 min).
+- **Open item:** tomato_large `P1eq1_L` s2 finished after check 1949677 started (it covers s0 and s1 only). `br_missing` will list s2 once 1949677 ends.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+NET` s0 @3072 | +0.001 ± 0.002 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+NET` s1 @3072 | +0.037 ± 0.007 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+NET` s2 @3072 | +0.056 ± 0.033 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 20, 20, 20 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s0 @3072 | +0.130 ± 0.006 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s1 @3072 | +0.027 ± 0.004 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s2 @3072 | +0.003 ± 0.001 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history at 1536 → 3072: `LN+NET` 0.001 → 0.001, 0.050 → 0.037, 0.067 → 0.056; `LE+NET` 0.141 → 0.130, 0.137 → 0.027, 0.007 → 0.003.
+- The three failing seeds (`LN+NET` s1, s2; `LE+NET` s0) hide after their correction (PPO true −100 in rounds 1–4). No best response hides. In the no-regulariser cell, hiding costs only 4–6% of value against a best response that behaves (s1, s2), so the no-reg grid incentive to behave after a correction is weak.
+- The convergence script prints "above target" for the three `LN+NET` seeds (information only).
+- **Decision (rule 4): `LN+NET` s1/s2 and `LE+NET` s0 IMPROVING → extend both runs to 6144** (2× 3072; cap 12,288). Dry-runs: `... extend grid "O1_P1eq1_LN+NET" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`; `... extend grid "O1_P2swap_LE+NET" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
