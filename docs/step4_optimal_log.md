@@ -1640,3 +1640,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 **Decisions (rule 4):**
 - **Tomato `P1eq1_LE` is at the cap (12,288) → finished, at 1/3.** The Tomato no-regulariser cell now rests on `L_confirm` and `LN_confirm` (6144; `L` and `LN` were 3/3 as tuning runs at 6144), both still training.
 - **Grid swap `LE+RS`: s0 and s2 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+RS" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
+- **Submitted** (committed first as f5ff4d6; dry-run repeated just before): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+RS" 3072 submit` → **1947287**. 17 campaign jobs are queued or running (cap 60).
