@@ -1790,3 +1790,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 **Decisions (rule 4):**
 - **`LE+AN_confirm`: s21 and s22 are IMPROVING → extend to 3072.** This follows the practice of the earlier confirmation extensions; the iteration-19 question on whether an extended confirmation counts is still open. Dry-run: `... extend grid "O1_P2swap_LE+AN_confirm" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+AN_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
 - **`LE+EP`: s0 is IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P2swap_LE+EP" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+- **Submitted** (committed first as 1184f9b): O1_P2swap_LE+AN_confirm=1948435 O1_P2swap_LE+EP=1948436. 20 campaign jobs are queued or running.
