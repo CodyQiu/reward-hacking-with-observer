@@ -1930,3 +1930,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - The convergence script also prints "above target" for the three `LN+GL_confirm` seeds (information only, §4f).
 - No best response hides. `LE+NET` s0/s1 are still training (2784–2856 of 3072); rule 4 waits for them.
 - **Decision (rule 4): `LN+GL_confirm` s22 IMPROVING → extend to 6144** (2× 3072; cap 12,288). Rule 4's "any seed IMPROVING" applies, although s20 and s21 are PLATEAU. Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+- **Submitted** (committed first as bb929f30): `... extend grid "O1_P1eq1_LN+GL_confirm" 6144 submit` → **1949775**. 20 campaign jobs are queued or running.
