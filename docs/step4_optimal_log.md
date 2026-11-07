@@ -1708,3 +1708,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
     - `LN` is finished (PLATEAU: s2 0.091 on the true-300 route);
     - `L` is extending.
   - Wave 2 starts when `L` is finished.
+- **Submitted** (committed first as 92c7738): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato O1_P2swap_L 12288 submit` → **1947369**. 22 campaign jobs are queued or running (cap 60).
