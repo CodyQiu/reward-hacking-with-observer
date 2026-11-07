@@ -1587,3 +1587,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - The tomato_large rows come from the check logs' `-> gap` lines (`logs/slurm/br_tomato_large_O1_P2swap_{L,LE}_*.out`). Rule 4 for these runs waits for their other seeds.
 - `LN+NET` s1 and s2 hide after the first correction, the same failure as before. No best response hides.
 - **Decision (rule 4): `LN+NET` s1 and s2 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+NET" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
+- **Submitted** (committed first as e444d53): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+NET" 3072 submit` → **1947040**. 25 campaign jobs are queued or running (cap 60).
