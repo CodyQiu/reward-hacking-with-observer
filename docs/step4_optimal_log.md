@@ -1427,3 +1427,37 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor O1_P1eq1_L_confirm 24576` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_L_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 24576`
   - and the same with `O1_P1eq1_LN_confirm`.
 - **Submitted** (committed first as 63be5c3): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor O1_P1eq1_L_confirm 24576 submit` → **1945032**; the same with `O1_P1eq1_LN_confirm` → **1945033**. At the last extension's pace (about 900 episodes per hour), the remaining 12,288 episodes should take 14–15 h. Budget: 20 campaign jobs (cap 60).
+
+## 2026-11-07, iteration 31 (01:55): grid no-regulariser `L` at the cap; wave 2 for the grid no-regulariser cell
+
+- 1942024 (grid `O1_P1eq1_L`, extended to 12,288) ended COMPLETED, exit 0, at 01:51. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run; `... br_missing submit` → **1945734**, COMPLETED in 3 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_L` s0 @12288 | +0.007 ± 0.030 | CONVERGED (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_L` s1 @12288 | +0.003 ± 0.003 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_L` s2 @12288 | +0.069 ± 0.034 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history at 1536 / 3072 / 6144 / 12,288:
+  - s0: 0.101 / 0.002 / 0.001 / 0.007;
+  - s1: 0.002 / 0.013 / 0.000 / 0.003;
+  - s2: 0.056 / 0.047 / 0.068 / 0.069.
+- s2 hides after its first correction: it is corrected in round 0 and keeps exploiting off-window, with true −100 in every round. Its best response is corrected a second time and is honest afterwards. This is the same failure as `LE` s1/s2 and `LN` s1. The best response does not hide, so nothing changes the answer to the hypothesis and there is no flag.
+- **`L` is at the cap (12,288), so it is finished at 2/3.**
+
+**Rule 5: wave 2 for the grid no-regulariser cell.** All three wave-1 configs are finished at the 12,288 cap, and none was ever CONVERGED in 3/3. Their seeds that are still IMPROVING cannot be extended past the cap.
+- Mean BR gap at the final check (s0, s1, s2):
+  - `L` 0.026 (0.007, 0.003, 0.069);
+  - `LE` 0.033 (0.002, 0.040, 0.057);
+  - **`LN` 0.015 (0.000, 0.044, 0.000), the smallest.**
+- So the wave-2 base is `LN`, extras `n_envs=64 ppo.batch_size=1600`. Following rule 5 literally, each factor run uses `ppo`'s wave-1 length (1536 episodes, anneal over the last 25%) and is extended under rule 4 up to the 12,288 cap.
+- **RS:** the grid's Phase A summary (`results/step2/phase_a/summary.json`) sets no `reward_scale`, so the effective scale is the task default 0.01, as in the runs' `config.json`. 0.25 × 0.01 = `reward_scale=0.0025`.
+- I checked the override order in `src/step3/train.py: resolve_config`: `--set` overrides are applied after Phase A, and later `--set` items replace earlier ones. So `reward_scale=0.0025` takes effect, and `anneal.last=0.5` replaces the base's 0.25. `ppo.net_arch=[256,256]` is parsed with `ast.literal_eval` into a list.
+- Dry-runs, each `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh ppo grid P1eq1 "LN+<tag>" "n_envs=64 ppo.batch_size=1600 <factor>"`. Each gave `submit.sh 48 --env grid --run-id O1_P1eq1_LN+<tag> --seeds 0 1 2 --results-dir results/step4/grid/optimal --set g.use_regularization=False episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 <factor>`, for:
+  - `LR` `ppo.learning_rate=0.0001`;
+  - `GL` `ppo.gae_lambda=1.0`;
+  - `NET` `ppo.net_arch=[256,256]`;
+  - `RS` `reward_scale=0.0025`;
+  - `EP` `ppo.n_epochs=20`;
+  - `AN` `anneal.last=0.5`.
+- **Budget correction:** rule 8 limits the campaign to 60 jobs *queued or running at once*, not 60 jobs in total. My earlier "Budget: N campaign jobs" lines counted every job submitted since wave 1, which overstates the load. 13 campaign jobs are queued or running now; these 6 will make 19.
