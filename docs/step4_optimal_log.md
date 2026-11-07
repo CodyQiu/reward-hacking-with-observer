@@ -1426,3 +1426,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Dry-runs:
   - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor O1_P1eq1_L_confirm 24576` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_L_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 24576`
   - and the same with `O1_P1eq1_LN_confirm`.
+- **Submitted** (committed first as 63be5c3): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor O1_P1eq1_L_confirm 24576 submit` → **1945032**; the same with `O1_P1eq1_LN_confirm` → **1945033**. At the last extension's pace (about 900 episodes per hour), the remaining 12,288 episodes should take 14–15 h. Budget: 20 campaign jobs (cap 60).
