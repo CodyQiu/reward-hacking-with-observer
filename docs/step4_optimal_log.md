@@ -1356,3 +1356,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s2 gaps at 1536 / 3072 / 6144: 0.092 / 0.094 / 0.093. It is still on the true-300 route: corrected once, then never again (so it does behave), but on a route that pays less under the corrected reward than the best response's true-422 route.
   - s1 (0.292 at 3072, exploiting through every audit) is still training, at about 4000 of 6144. **Rule 4 waits for it,** since it applies once all of a run's seeds have a check.
   - **No best response hides.**
+
+## 2026-11-06, iteration 27 continued (22:07): tomato_large swap resume
+
+- The tomato_large swap wave 1, **1934173–75**, reached its 48 h limit: all three were TIMEOUT at 22:06:02 (`CANCELLED ... DUE TO TIME LIMIT`), as expected. This is not a cluster incident.
+- Last checkpoints (episodes of 1536):
+  - `O1_P2swap_L`: 1128 / 888 / 840;
+  - `O1_P2swap_LE`: 1200 / 768 / 672;
+  - `O1_P2swap_LN`: 720 / 624 / 1080.
+- Rule 1: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run) listed exactly these 3 runs, each as `submit.sh 48 --env tomato_large --run-id <run> --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume`. Every other run's job is still queued or running.
