@@ -6,6 +6,8 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 
 - **Cells DONE: 1 of 8.** AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
 - **Question (iteration 19): does an extended confirmation count?** Rule 4 says to extend any finished run with an IMPROVING seed, and I apply that to confirmation runs too. Two are now being extended past the episode count at which their tuning runs converged: grid swap `LE_confirm` and AS no-regulariser `LE_confirm`, both 3072 → 6144. If one of them reaches 3/3 at 6144, its tuning run was only shown CONVERGED at 3072. Your call whether that counts, or whether the tuning run must also be checked at 6144.
+  - **Update (iteration 24):** 3 confirmations are now being extended: grid swap `LE_confirm` (6144 → 12,288), AS no-regulariser `LE_confirm` (12,288 → 24,576, its third extension) and AS no-regulariser `LN_confirm` (6144 → 12,288).
+- **For information (iteration 24): in the AS no-regulariser cell the check's noise is as large as the 3% bar.** The 12-draw paired s.e. there is 2–4.5%, and the gaps of one seed move between checks by about as much. Examples: `LE_confirm` s21 at 0.001 / 0.000 / 0.018 ± 0.045 and s20 at 0.038 / 0.025 / 0.040 ± 0.020, at 3072 / 6144 / 12,288. All 4 of the cell's unconverged confirmation seeds are within 1 s.e. of 0.03: `LE_confirm` s20 0.040 ± 0.020 and s22 0.040 ± 0.042; `LN_confirm` s20 0.040 ± 0.024 and s22 0.054 ± 0.036. Their only shortfall is the same: the best response takes a 2nd correction in round 1 (true 400 there), PPO takes one. So extensions may not settle this cell. Your call on more draws; I am applying the rules unchanged.
 - **The loop lapsed for 21 h** (11-05 14:30 → 11-06 12:02): I did not reschedule the wakeup. No job or result was affected.
 - **Node barley-04 kills every job within 3–7 s** (2026-11-04, from 21:27). The batch step is cancelled with signal 53 and no `.out` file is written. Slurm still shows the node as idle, so it keeps scheduling jobs there. Our jobs avoid it via `ExcNodeList=barley-04` (see the iteration-1 review). Consider reporting it to FarmShare support; I have not contacted anyone.
   - **Every iteration:** check `sacct` for jobs that ended within a minute. When submitting new jobs, exclude barley-04 until it is fixed. From 955ccc5 on this is `EXCLUDE=barley-04` in front of every `step4_optimal.sh … submit`; before it, I used a held gate job plus `scontrol update JobId=<id> ExcNodeList=barley-04`.
@@ -1242,3 +1244,27 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `extend absent_supervisor O1_P1eq1_LN_confirm 12288` (seeds 20–22): **1942400**.
   - Budget: 18 campaign jobs (cap 60).
 - Next: the tomato_large swap wave 1 (1934173–75) reaches its 48 h limit at about 22:05 → rule 1 resume.
+
+## 2026-11-06, iteration 24 (17:07–17:25)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- `sacct` since 16:00: no run finished. Only the checks 1942377–78, already logged.
+- `report` (exit 0): 35 CONVERGED, 53 RUNNING, 1 IMPROVING and 3 PLATEAU (in finished runs: grid swap `L` and Tomato swap `LE`, `LN`), and 1 NEEDS BR. The NEEDS BR seed was AS no-regulariser `LE_confirm` s22, finished at 12,288 while s20/s21 were within 300 episodes.
+- I waited for that run to finish (1942026 COMPLETED at 17:18, 2 h 56 min, exit 0), so that one check covers all 3 seeds.
+- Rule 3: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run listed exactly this run), then `... br_missing submit` → **1942988**. COMPLETED in 3 min, exit 0.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| AS `P1eq1_LE_confirm` s20 @12288 | +0.040 ± 0.020 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -114, 449, 449, 449, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| AS `P1eq1_LE_confirm` s21 @12288 | +0.018 ± 0.045 | CONVERGED (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -105, 449, 449, 449, 449 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+| AS `P1eq1_LE_confirm` s22 @12288 | +0.040 ± 0.042 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -102, 449, 449, 450, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+
+- Gaps at 3072 / 6144 / 12,288:
+  - s20: 0.038 / 0.025 / 0.040;
+  - s21: 0.001 / 0.000 / 0.018;
+  - s22: 0.058 / 0.040 / 0.040.
+  - So 1 of 3 CONVERGED now (2 of 3 at 6144). The moves are within the s.e. (2–4.5%). Flagged at the top as information.
+- The shortfall is unchanged: the best response takes a 2nd correction in round 1 and PPO takes one. **No best response hides.**
+
+**Rule 4.**
+- `absent_supervisor O1_P1eq1_LE_confirm` (12,288): s20 and s22 IMPROVING → **extend to 24,576** (the AS cap). This is its third extension, so it is subject to the open question at the top.
