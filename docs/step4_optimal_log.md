@@ -1811,3 +1811,34 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - No best response hides.
 - **Decision (rule 4): all seeds IMPROVING → extend to 3072.** As with the other confirmation extensions, the iteration-19 question is still open. Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
 - **Submitted** (committed first as 49ed2b0): `... extend grid "O1_P1eq1_LN+GL_confirm" 3072 submit` → **1948580**. 20 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 44 (08:48): grid no-regulariser `LN+EP` (3072) / `LN+RS` (6144); AS no-regulariser `LN_confirm` at the cap
+
+- Ended COMPLETED, exit 0:
+  - 1946615 (`O1_P1eq1_LN+EP`, 3072) at 08:47;
+  - 1947182 (`O1_P1eq1_LN+RS`, 6144);
+  - 1945033 (AS `O1_P1eq1_LN_confirm`, 24,576, in 7 h 53 min).
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed these 3 runs, while Tomato `LN_confirm`'s check (1948484) is still running. `... br_missing submit` → **1948799** (`LN+EP`), **1948800** (`LN+RS`), **1948804** (AS `LN_confirm`). All COMPLETED in 3–4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+EP` s0 @3072 | +0.000 ± 0.001 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+EP` s1 @3072 | +0.043 ± 0.007 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+EP` s2 @3072 | +0.016 ± 0.031 | CONVERGED (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+RS` s0 @6144 | +0.062 ± 0.008 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+RS` s1 @6144 | +0.036 ± 0.007 | PLATEAU (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+RS` s2 @6144 | +0.064 ± 0.031 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| AS `P1eq1_LN_confirm` s20 @24576 | +0.044 ± 0.025 | PLATEAU (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| AS `P1eq1_LN_confirm` s21 @24576 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -101, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+| AS `P1eq1_LN_confirm` s22 @24576 | +0.052 ± 0.045 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -101, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+
+- Gap histories:
+  - `LN+EP` at 1536 → 3072: 0.056 → 0.000, 0.062 → 0.043, 0.002 → 0.016.
+  - `LN+RS` at 1536 / 3072 / 6144: 0.064 / 0.063 / 0.062, 0.043 / 0.043 / 0.036, 0.064 / 0.078 / 0.064. Flat; see the iteration-39 flag.
+  - AS `LN_confirm` at 6144 / 12,288 / 24,576: s20 0.040 / 0.064 / 0.044; s21 0.026 / 0.000 / 0.000; s22 0.054 / 0.017 / 0.052. They move within 1–2 s.e.
+- The grid failures hide after the first correction. In AS, PPO is corrected once and then honest (true 450), while its best response takes a 2nd correction in round 1. No best response hides.
+
+**Decisions (rule 4):**
+- **Grid `LN+EP`: s1 IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P1eq1_LN+EP" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+- **Grid `LN+RS`: s0 and s2 IMPROVING → extend to 12,288 (the cap).** Dry-run: `... extend grid "O1_P1eq1_LN+RS" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
+- **AS `LN_confirm` is at the cap (24,576) → finished, at 1/3.** The AS no-regulariser cell now rests on `L_confirm` (about 20,000 of 24,576). If it fails, every AS no-regulariser config is finished, and I apply the iteration-26 default: wave 2 from the config with the smallest mean BR gap.
