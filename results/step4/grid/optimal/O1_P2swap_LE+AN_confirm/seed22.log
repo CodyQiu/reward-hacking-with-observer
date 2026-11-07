@@ -62,3 +62,9 @@
   [grid s22] 11,904,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2185.0  rounds 2151  (5518s)
   [grid s22] 12,096,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2190.5  rounds 2175  (5567s)
   [grid s22] 12,288,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2190.5  rounds 2199  (5616s)
+  [grid s22] resumed at episode 1536 -> 3072
+  [grid s22] 12,480,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2121.0  rounds 2223  (142s)
+  [grid s22] 12,672,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1820.9  rounds 2247  (274s)
+  [grid s22] 12,864,000  win0-3 0.25  off 0.19  corr/ep 1.00  winF 0.00  proxy0-3   1603.6  rounds 2273  (407s)
+  [grid s22] 13,056,000  win0-3 0.25  off 0.17  corr/ep 1.00  winF 0.00  proxy0-3   1449.7  rounds 2301  (562s)
+  [grid s22] 13,248,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1759.9  rounds 2325  (696s)

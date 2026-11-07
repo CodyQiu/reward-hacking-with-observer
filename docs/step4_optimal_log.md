@@ -1791,3 +1791,22 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **`LE+AN_confirm`: s21 and s22 are IMPROVING → extend to 3072.** This follows the practice of the earlier confirmation extensions; the iteration-19 question on whether an extended confirmation counts is still open. Dry-run: `... extend grid "O1_P2swap_LE+AN_confirm" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+AN_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
 - **`LE+EP`: s0 is IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P2swap_LE+EP" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as 1184f9b): O1_P2swap_LE+AN_confirm=1948435 O1_P2swap_LE+EP=1948436. 20 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 43 (08:06): Tomato no-regulariser `LN_confirm` finished
+
+- 1941003 (Tomato `O1_P1eq1_LN_confirm`, 6144) ended COMPLETED, exit 0, at 08:05. Grid `O1_P1eq1_LN+GL_confirm` s21 has reached 1536; s20 and s22 are at 1440 and 1512.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `O1_P1eq1_LN+GL_confirm` (s21) and Tomato `O1_P1eq1_LN_confirm`; `... br_missing submit` → **1948483** (`LN+GL_confirm` s21) and **1948484** (Tomato `LN_confirm`, about 30–40 min).
+- 1946555 (`O1_P1eq1_LN+GL_confirm`, 1536) ended COMPLETED, exit 0, at 08:13. 1948483 checked s21. The next dry-run listed the run again, for s20 and s22; `... br_missing submit` → **1948559** (1 min).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+GL_confirm` s20 @1536 | +0.100 ± 0.008 | IMPROVING (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s21 @1536 | +0.090 ± 0.004 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s22 @1536 | +0.038 ± 0.026 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+
+- **`LN+GL_confirm` is 0/3 at 1536.**
+  - s20 hides after its correction, so λ = 1 does not remove hiding in every fresh seed.
+  - s21 reaches the target's end state but is 9% short earlier in the episode.
+  - s22 is 0.3 s.e. above the bar.
+  - No best response hides.
+- **Decision (rule 4): all seeds IMPROVING → extend to 3072.** As with the other confirmation extensions, the iteration-19 question is still open. Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
