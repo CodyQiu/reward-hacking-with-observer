@@ -2036,3 +2036,18 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144 → 12,288): s0 0.064 → 0.063 → 0.062 → 0.064; s1 0.043 → 0.043 → 0.036 → 0.043; s2 0.064 → 0.078 → 0.064 → 0.053. All three hide after their first correction at every check. Over 8× the training the BR gap did not move, while every check called the seeds IMPROVING: the clearest case so far for the iteration-39 flag. "Above target" is printed for all three (information only). No best response hides.
 - **`LN+RS` is at the cap → finished, at 0/3.** Grid no-regulariser wave 2 (base `LN`) now stands at: `LN+GL` 3/3 tuning, confirmation 0/3 at 3072 (extending to 6144); `LN+LR` 3/3 tuning at 3072, confirmation running (3072); `LN+EP` 2/3 at 3072 (extending to 6144); `LN+NET` 1/3 at 3072 (extending to 6144); `LN+AN` finished 1/3; `LN+RS` finished 0/3. No new decision.
+
+## 2026-11-07, iteration 57 (15:18): grid swap `LE+RS` 0/3 at 6144
+
+- 1949082 (`O1_P2swap_LE+RS`, 6144) ended COMPLETED, exit 0, at 15:18. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it (three tomato_large checks running); `... br_missing submit` → **1951881**, COMPLETED in 5 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+RS` s0 @6144 | +0.160 ± 0.010 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+RS` s1 @6144 | +0.200 ± 0.026 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+RS` s2 @6144 | +0.171 ± 0.011 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144): s0 0.120 → 0.149 → 0.160; s1 0.004 → 0.001 → **0.200**; s2 0.154 → 0.161 → 0.171.
+- **For information: s1 regressed.** It was CONVERGED and honest after its correction at 1536 and 3072, and now hides after it (true −100 in rounds 1–4), like s0 and s2. So with the reduced reward scale (0.0025) all three seeds end in the hiding local optimum, and all three gaps are growing. They are still labelled IMPROVING (iteration-39 flag). No best response hides: each is honest after one correction, like the target.
+- **Decision (rule 4): all three IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P2swap_LE+RS" 12288` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
