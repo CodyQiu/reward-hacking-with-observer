@@ -1913,3 +1913,20 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - No best response hides.
 - **Decision (rule 4): s21 and s22 IMPROVING → extend to 6144** (2× 3072; cap 12,288). As with the AS confirmations, this extends a confirmation run (iteration-19 flag still open). Dry-run: `... extend grid "O1_P2swap_LE+AN_confirm" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+AN_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as a024fdfc): `... extend grid "O1_P2swap_LE+AN_confirm" 6144 submit` → **1949593**. 19 campaign jobs are queued or running (incl. check 1949428).
+
+## 2026-11-07, iteration 49 (11:15): grid no-reg `LN+GL_confirm` 0/3 at 3072
+
+- 1948580 (`O1_P1eq1_LN+GL_confirm`, 3072) ended COMPLETED, exit 0, at 11:14. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LN+GL_confirm`, grid swap `O1_P2swap_LE+NET` (s2 finished at 3072) and tomato_large no-reg `O1_P1eq1_L` (s0, s1 finished at 3072). `... br_missing submit` → **1949671** (`LN+GL_confirm`, 3 min), **1949672** (`LE+NET` s2, 2 min), **1949677** (tomato_large `P1eq1_L`, running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+GL_confirm` s20 @3072 | +0.065 ± 0.010 | PLATEAU | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s21 @3072 | +0.108 ± 0.004 | PLATEAU | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s22 @3072 | +0.032 ± 0.028 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P2swap_LE+NET` s2 @3072 | +0.003 ± 0.001 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history at 1536 → 3072: `LN+GL_confirm` s20 0.100 → 0.065 (hides after its correction), s21 0.090 → 0.108 (honest; received-reward shortfall), s22 0.038 → 0.032 (honest; its best response takes a 2nd correction in round 1). `LE+NET` s2 0.007 → 0.003.
+- The convergence script also prints "above target" for the three `LN+GL_confirm` seeds (information only, §4f).
+- No best response hides. `LE+NET` s0/s1 are still training (2784–2856 of 3072); rule 4 waits for them.
+- **Decision (rule 4): `LN+GL_confirm` s22 IMPROVING → extend to 6144** (2× 3072; cap 12,288). Rule 4's "any seed IMPROVING" applies, although s20 and s21 are PLATEAU. Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
