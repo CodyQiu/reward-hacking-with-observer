@@ -1896,3 +1896,19 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history s20: 0.014 (1536) → 0.000 (3072). No best response hides.
 - For information (training logs, not a verdict): at 2736 s21 still hides after its correction (PPO true −100 in rounds 1–4; target-gap value 0.245); s22 is honest after its correction (true 21.6–21.8; value gap −0.003).
 - **Decision:** none yet. Rule 4 waits until s21 and s22 finish (about 12:00), then their checks.
+
+## 2026-11-07, iteration 48 (10:55): grid swap `LE+AN_confirm` 1/3 at 3072
+
+- 1948435 (`O1_P2swap_LE+AN_confirm`, 3072) ended COMPLETED, exit 0, at 10:55. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it (tomato_large swap `LE`'s check 1949428 still running); `... br_missing submit` → **1949574**, COMPLETED in 4 min (s21, s22; s20 was checked in iteration 47).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+AN_confirm` s20 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN_confirm` s21 @3072 | +0.162 ± 0.015 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN_confirm` s22 @3072 | +0.104 ± 0.006 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history at 1536 → 3072: s20 0.014 → 0.000; s21 0.215 → 0.162 (still hides after its correction); s22 0.107 → 0.104.
+- s22 has the best response's end state and true return (honest after one correction, true 21.9–22.0) yet a 10% BR gap: the shortfall is in *received* reward along the honest phase, i.e. PPO's honest route collects less of the swap's raise than the best response's does. Its BR gap is flat while it is labelled IMPROVING (another case for the iteration-39 flag).
+- No best response hides.
+- **Decision (rule 4): s21 and s22 IMPROVING → extend to 6144** (2× 3072; cap 12,288). As with the AS confirmations, this extends a confirmation run (iteration-19 flag still open). Dry-run: `... extend grid "O1_P2swap_LE+AN_confirm" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+AN_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
