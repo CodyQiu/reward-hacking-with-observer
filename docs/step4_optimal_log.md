@@ -1368,3 +1368,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Submitted** (committed first as 2d9e043): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume submit` → **1943603** (`O1_P2swap_L`), **1943604** (`LE`), **1943605** (`LN`). All 3 PENDING (Priority) at 22:08.
   - At their wave-1 pace (624–1200 episodes in 48 h), the slowest seeds (`LE` s2 at 672, `LN` s1 at 624) need about 1.5 more 48 h jobs.
   - Budget: 15 campaign jobs (cap 60).
+
+## 2026-11-06, iteration 28 (22:54)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- `sacct` since 21:30: only the tomato_large swap TIMEOUTs (logged above) and the Tomato swap `L` check.
+- **The resumes work.** 1943603–05 started at 22:08 on barley-01/02. Each seed's log says `resumed at episode <N> -> 1536`, at its last checkpoint (L 1128 / 888 / 840, LE 1200 / 768 / 672, LN 720 / 624 / 1080), and the seeds that have logged since show training lines. No errors.
+- Progress:
+  - grid `P1eq1_L` 10,728–10,776 of 12,288; `P2swap_LN` 9456–9480;
+  - AS `P1eq1_LN_confirm` 11,160–11,232 of 12,288; `P1eq1_L_confirm` 10,368–10,416 of 12,288; `P1eq1_LE_confirm` 21,960–22,776 of 24,576;
+  - Tomato `P2swap_L` s1 4464 of 6144; `P1eq1_LE` 9816–9936 of 12,288; `P1eq1_L_confirm` 3264–3600 of 6144; `P1eq1_LN_confirm` 3144–3192;
+  - tomato_large `P1eq1_L` 2040 of 3072 (`LE` and `LN` similar).
+- No decisions this iteration. Budget: 15 campaign jobs.
