@@ -1569,3 +1569,21 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - grid `LN+NET` 1296–1368 of 1536; `LN+GL_confirm` 144–216 of 1536; `LN+LR` 1824–1848 of 3072; swap wave 2 (`LE+…`) about 300 of 1536;
   - Tomato `P2swap_L` s1 5856 of 6144; `P1eq1_LE` 11,976–12,192 of 12,288; `P1eq1_L_confirm` 5472–5784 of 6144; `P1eq1_LN_confirm` 5208–5256.
 - No decisions this iteration.
+
+## 2026-11-07, iteration 36 (05:21): grid no-regulariser `LN+NET` at 1536; tomato_large swap s0 checks
+
+- 1945752 (`O1_P1eq1_LN+NET`) ended COMPLETED, exit 0, at 05:21. Tomato `O1_P1eq1_LE` s0 has reached 12,288; s1 and s2 are still training.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `O1_P1eq1_LN+NET` (2 h) and Tomato `O1_P1eq1_LE` (6 h, s0 only). `... br_missing submit` → **1946995** (`LN+NET`, COMPLETED in 4 min) and **1946996** (Tomato `P1eq1_LE` s0, pending).
+- Also landed: **1946199** (tomato_large swap `L` s0, 2 h 04 min) and **1946506** (tomato_large swap `LE` s0, 1 h 15 min), both COMPLETED, exit 0.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| grid `P1eq1_LN+NET` s0 @1536 | +0.001 ± 0.001 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid `P1eq1_LN+NET` s1 @1536 | +0.050 ± 0.007 | IMPROVING (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| grid `P1eq1_LN+NET` s2 @1536 | +0.067 ± 0.035 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 20, 20, 20 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| tomato_large `P2swap_L` s0 @1536 | +0.019 ± 0.001 | CONVERGED; s1, s2 still training | 1 corr. (round 0); true 65, 488, 488, 488, 488 | 1 corr. (round 0); true 65, 454, 452, 452, 457 | (see wave-1 entry) |
+| tomato_large `P2swap_LE` s0 @1536 | +0.025 ± 0.001 | CONVERGED; s1, s2 still training | 1 corr. (round 0); true 65, 488, 488, 488, 488 | 1 corr. (round 0); true 65, 452, 449, 447, 450 | (see wave-1 entry) |
+
+- The tomato_large rows come from the check logs' `-> gap` lines (`logs/slurm/br_tomato_large_O1_P2swap_{L,LE}_*.out`). Rule 4 for these runs waits for their other seeds.
+- `LN+NET` s1 and s2 hide after the first correction, the same failure as before. No best response hides.
+- **Decision (rule 4): `LN+NET` s1 and s2 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+NET" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
