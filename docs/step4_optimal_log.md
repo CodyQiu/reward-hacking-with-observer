@@ -1881,3 +1881,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history at 1536 → 3072: 0.120 → 0.149, 0.004 → 0.001, 0.154 → 0.161. s0 and s2 hide after the correction, and their BR gaps *grew*. They are still labelled IMPROVING (target-gap curve; see the iteration-39 flag).
 - No best response hides.
 - **Decision (rule 4): s0 and s2 IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P2swap_LE+RS" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+- **Submitted** (committed first as a0fa7ec9): `... extend grid "O1_P2swap_LE+RS" 6144 submit` → **1949082**. 18 campaign jobs are queued or running.
