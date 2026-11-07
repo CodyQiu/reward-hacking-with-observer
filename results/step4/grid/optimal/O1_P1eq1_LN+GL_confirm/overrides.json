@@ -1,0 +1,15 @@
+{
+ "g": {
+  "use_regularization": false
+ },
+ "episodes": 1536,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ },
+ "n_envs": 64,
+ "ppo": {
+  "batch_size": 1600,
+  "gae_lambda": 1.0
+ }
+}
