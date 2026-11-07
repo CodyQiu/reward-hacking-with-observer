@@ -1380,3 +1380,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - Tomato `P2swap_L` s1 4464 of 6144; `P1eq1_LE` 9816–9936 of 12,288; `P1eq1_L_confirm` 3264–3600 of 6144; `P1eq1_LN_confirm` 3144–3192;
   - tomato_large `P1eq1_L` 2040 of 3072 (`LE` and `LN` similar).
 - No decisions this iteration. Budget: 15 campaign jobs.
+
+## 2026-11-06, iteration 29 (23:54)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. `sacct` since 22:50: no job has ended; all 15 campaign jobs are running.
+- Progress:
+  - AS `P1eq1_LN_confirm` 11,952–12,000 of 12,288; `P1eq1_LE_confirm` 23,616–24,456 of 24,576; `P1eq1_L_confirm` 11,352–11,400 of 12,288;
+  - grid `P1eq1_L` 11,256–11,328 of 12,288; `P2swap_LN` 9984–10,008;
+  - Tomato `P2swap_L` s1 4680 of 6144; `P1eq1_LE` 10,176–10,296 of 12,288; `P1eq1_L_confirm` 3624–3960 of 6144; `P1eq1_LN_confirm` 3480–3528;
+  - tomato_large `P1eq1_L` 2112 of 3072; swap `L` 1272 / 912 / 864, `LE` 1296 / 816 / 672, `LN` 744 / 648 / 1248 of 1536.
+- The three AS no-regulariser confirmations should finish within about an hour. I'm waiting in the background for all three, then will run `br_missing` on them together.
+- No decisions this iteration. Budget: 15 campaign jobs.
