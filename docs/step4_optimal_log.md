@@ -1736,3 +1736,31 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - s0 and s1 hide after the first correction. No best response hides.
 - **Decision (rule 4): s0 and s1 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+NET" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
 - **Submitted** (committed first as 68c0159): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+NET" 3072 submit` → **1947633**. 21 campaign jobs are queued or running (cap 60).
+
+## 2026-11-07, iteration 41 (07:39): grid no-regulariser `LN+LR` CONVERGED 3/3 at 3072; grid swap `LE+GL` / `LE+LR` at 3072
+
+- Ended COMPLETED, exit 0: 1946556 (`O1_P1eq1_LN+LR`, 3072) at 07:38; 1947332 / 1947333 (grid swap `LE+LR` / `LE+GL`, 3072) at about 07:31.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed these 3 runs; `... br_missing submit` → **1948194** (`LN+LR`), **1948195** (`LE+GL`), **1948196** (`LE+LR`). All COMPLETED in 4–6 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+LR` s0 @3072 | +0.019 ± 0.004 | CONVERGED (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+LR` s1 @3072 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+LR` s2 @3072 | +0.005 ± 0.032 | CONVERGED (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+GL` s0 @3072 | +0.008 ± 0.007 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+GL` s1 @3072 | +0.007 ± 0.004 | CONVERGED (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+GL` s2 @3072 | +0.158 ± 0.011 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+LR` s0 @3072 | +0.003 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+LR` s1 @3072 | +0.001 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+LR` s2 @3072 | +0.071 ± 0.004 | PLATEAU | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history at 1536 → 3072:
+  - `LN+LR`: 0.035 → 0.019, 0.042 → 0.000, 0.048 → 0.005. Unlike most extensions, the BR gaps did fall here.
+  - `LE+GL`: 0.017 → 0.008, 0.009 → 0.007, 0.155 → 0.158 (s2 hides).
+  - `LE+LR`: 0.011 → 0.003, 0.009 → 0.001, 0.085 → 0.071 (s2 is honest after its correction but 7% short elsewhere).
+- No best response hides.
+
+**Decisions (rule 4):**
+- **Grid no-regulariser `LN+LR`: all seeds CONVERGED, tuning run → `confirm`.** This is the cell's second 3/3 config; `LN+GL_confirm` is already running. Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid "O1_P1eq1_LN+LR"` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --set g.use_regularization=False episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001`. `run_sets.py` resolves episodes to the run's 3072.
+- **Grid swap `LE+GL`: s2 IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P2swap_LE+GL" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+GL --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+- **Grid swap `LE+LR`: the only unconverged seed is PLATEAU → finished, at 2/3.**
