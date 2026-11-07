@@ -7,6 +7,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - **Cells DONE: 1 of 8.** AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
 - **Question (iteration 19): does an extended confirmation count?** Rule 4 says to extend any finished run with an IMPROVING seed, and I apply that to confirmation runs too. Two are now being extended past the episode count at which their tuning runs converged: grid swap `LE_confirm` and AS no-regulariser `LE_confirm`, both 3072 → 6144. If one of them reaches 3/3 at 6144, its tuning run was only shown CONVERGED at 3072. Your call whether that counts, or whether the tuning run must also be checked at 6144.
   - **Update (iteration 24):** 3 confirmations are now being extended: grid swap `LE_confirm` (6144 → 12,288), AS no-regulariser `LE_confirm` (12,288 → 24,576, its third extension) and AS no-regulariser `LN_confirm` (6144 → 12,288).
+- **Rule gap (iteration 26): a confirmation that fails at the cap.** Grid swap `LE` was CONVERGED 3/3 as a tuning run (3072), but its confirmation finished at the 12,288 cap at 2/3 (s21 hides, 0.217). If grid swap `LN` (running to 12,288) also fails, rule 5 ("none CONVERGED or IMPROVING") does not say whether that cell goes to wave 2. My default if it comes to that: treat a tuning run whose confirmation failed at the cap as not CONVERGED, and start wave 2 from the config with the smallest mean BR gap. Tell me if you want otherwise.
 - **For information (iteration 24): in the AS no-regulariser cell the check's noise is as large as the 3% bar.** The 12-draw paired s.e. there is 2–4.5%, and the gaps of one seed move between checks by about as much. Examples: `LE_confirm` s21 at 0.001 / 0.000 / 0.018 ± 0.045 and s20 at 0.038 / 0.025 / 0.040 ± 0.020, at 3072 / 6144 / 12,288. All 4 of the cell's unconverged confirmation seeds are within 1 s.e. of 0.03: `LE_confirm` s20 0.040 ± 0.020 and s22 0.040 ± 0.042; `LN_confirm` s20 0.040 ± 0.024 and s22 0.054 ± 0.036. Their only shortfall is the same: the best response takes a 2nd correction in round 1 (true 400 there), PPO takes one. So extensions may not settle this cell. Your call on more draws; I am applying the rules unchanged.
 - **The loop lapsed for 21 h** (11-05 14:30 → 11-06 12:02): I did not reschedule the wakeup. No job or result was affected.
 - **Node barley-04 kills every job within 3–7 s** (2026-11-04, from 21:27). The batch step is cancelled with signal 53 and no `.out` file is written. Slurm still shows the node as idle, so it keeps scheduling jobs there. Our jobs avoid it via `ExcNodeList=barley-04` (see the iteration-1 review). Consider reporting it to FarmShare support; I have not contacted anyone.
@@ -1299,3 +1300,29 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `absent_supervisor O1_P1eq1_L_confirm` (6144): s20 and s22 IMPROVING → **extend to 12,288** (cap 24,576). Subject to the open question about extended confirmations. With this, every AS no-regulariser confirmation is 1 of 3 and being extended.
 - Rule 5: not applicable.
 - **Submitted** (dry-run first; committed first as 79d811e; with `EXCLUDE=barley-04`): `extend absent_supervisor O1_P1eq1_L_confirm 12288` (seeds 20–22): **1943163**. Budget: 17 campaign jobs (cap 60).
+
+## 2026-11-06, iteration 26 (19:43)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- `sacct` since 18:40: `grid O1_P2swap_LE_confirm`, extended to 12,288 (1942209), COMPLETED at 19:32 after 4 h 17 min, exit 0.
+- Rule 3: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run listed exactly this run), then `... br_missing submit` → **1943318**. COMPLETED in 5 min, exit 0.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| grid `P2swap_LE_confirm` s20 @12288 | +0.001 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid `P2swap_LE_confirm` s21 @12288 | +0.217 ± 0.016 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid `P2swap_LE_confirm` s22 @12288 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gaps at 3072 / 6144 / 12,288:
+  - s20: 0.000 / 0.004 / 0.001;
+  - s21: 0.124 / 0.124 / 0.217;
+  - s22: 0.089 / 0.093 / 0.000.
+- **s22 converged.** At 12,288 it takes its best response's route through the raised transitions: 54,350 received per later round against 54,362, where at 6144 it had 47,990 against 53,160.
+- **s21 got worse.** It is still corrected in round 0, then keeps exploiting and hides from every later audit (true −100). It receives 37,800 per later round against 48,834 for its honest best response; at 6144 it was 44,080 against 50,618.
+- **No best response hides.** In every seed of the grid swap cell the best response is corrected in round 0 and honest after, as the target says ("always behaving" after one correction).
+
+**Rule 4.**
+- `grid O1_P2swap_LE_confirm` (12,288): s21 IMPROVING, but the run is at the 12,288 cap → **finished at the cap, 2 of 3.** So the `LE` config cannot make the grid swap cell DONE.
+- The grid swap cell's remaining config is `O1_P2swap_LN`, extended to 12,288 (1942399, at 7920–7944) and 2/3 at 6144. `L` finished at the cap (iteration 19).
+- **Possible gap in the rules, flagged at the top:** if `LN` does not reach 3/3, then every grid swap config is finished, but `LE` was CONVERGED (3/3) as a tuning run. Rule 5's condition, "none CONVERGED or IMPROVING", was written for wave-1 runs, so it is unclear whether wave 2 applies. If it comes to that, I'll take a CONVERGED tuning run whose confirmation failed at the cap as not CONVERGED, and start wave 2 from the config with the smallest mean BR gap, unless you say otherwise.
+- No submissions this iteration.
