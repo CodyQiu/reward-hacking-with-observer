@@ -1552,3 +1552,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - s0 and s1 hide after the first correction, the same failure as before. No best response hides.
 - **Decision (rule 4): s0 and s1 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+EP" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
+- **Submitted** (committed first as 4adbbe0): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+EP" 3072 submit` → **1946615**. 27 campaign jobs are queued or running (cap 60).
