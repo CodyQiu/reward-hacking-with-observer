@@ -1298,3 +1298,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `grid O1_P1eq1_LE` (12,288): s1 and s2 IMPROVING, but the run is at the 12,288 cap, so it can't be extended → **finished at the cap**. This is the same as grid swap `L` in iteration 19. The grid no-regulariser cell still has `L` and `LN` running to 12,288 (both 2/3 at 6144).
 - `absent_supervisor O1_P1eq1_L_confirm` (6144): s20 and s22 IMPROVING → **extend to 12,288** (cap 24,576). Subject to the open question about extended confirmations. With this, every AS no-regulariser confirmation is 1 of 3 and being extended.
 - Rule 5: not applicable.
+- **Submitted** (dry-run first; committed first as 79d811e; with `EXCLUDE=barley-04`): `extend absent_supervisor O1_P1eq1_L_confirm 12288` (seeds 20–22): **1943163**. Budget: 17 campaign jobs (cap 60).
