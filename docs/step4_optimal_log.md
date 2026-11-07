@@ -1675,3 +1675,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 **Decisions (rule 4):**
 - **`LE+AN`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid "O1_P2swap_LE+AN"` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+AN_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --set g.l_minus_on=dispreferred episodes=1536 anneal.last=0.5 anneal.floor=0.1 ppo.ent_coef=0.03`. `run_sets.py` resolves `anneal.last` to the run's 0.5.
 - **`LE+LR`, `LE+GL`, `LE+EP`: a seed IMPROVING → extend to 3072.** Dry-runs: `... extend grid "O1_P2swap_LE+<tag>" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+<tag> --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`. `LE+NET` is still training.
+- **Submitted** (committed first as 8b457ca):
+  - `... confirm grid "O1_P2swap_LE+AN" submit` → **1947331** (`O1_P2swap_LE+AN_confirm`, seeds 20–22). Its seed20 `config.json` has anneal.last 0.5, entropy 0.03, the swap and 16 envs.
+  - `... extend grid "O1_P2swap_LE+<tag>" 3072 submit` → **1947332** (`LR`), **1947333** (`GL`), **1947334** (`EP`).
+  - All RUNNING by 06:20. 23 campaign jobs are queued or running (cap 60).

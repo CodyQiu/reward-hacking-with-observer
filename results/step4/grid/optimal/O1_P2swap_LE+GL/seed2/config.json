@@ -1,7 +1,7 @@
 {
  "seed": 2,
  "n_envs": 16,
- "episodes": 1536,
+ "episodes": 3072,
  "ppo": {
   "learning_rate": 0.0003,
   "batch_size": 400,
@@ -76,5 +76,17 @@
   ]
  },
  "git": "d36a614",
- "started": "2026-11-07 04:12:41"
+ "started": "2026-11-07 04:12:41",
+ "resumes": [
+  {
+   "at_episodes": 1536,
+   "episodes": 3072,
+   "anneal": {
+    "last": 0.25,
+    "floor": 0.1
+   },
+   "git": "8b457ca",
+   "time": "2026-11-07 06:18:02"
+  }
+ ]
 }
