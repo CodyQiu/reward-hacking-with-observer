@@ -1365,3 +1365,6 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `O1_P2swap_LE`: 1200 / 768 / 672;
   - `O1_P2swap_LN`: 720 / 624 / 1080.
 - Rule 1: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run) listed exactly these 3 runs, each as `submit.sh 48 --env tomato_large --run-id <run> --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume`. Every other run's job is still queued or running.
+- **Submitted** (committed first as 2d9e043): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume submit` → **1943603** (`O1_P2swap_L`), **1943604** (`LE`), **1943605** (`LN`). All 3 PENDING (Priority) at 22:08.
+  - At about 26–28 h per 600 episodes, the slowest seeds (`LE` s2 at 672, `LN` s1 at 624) need nearly 2 more 48 h jobs.
+  - Budget: 15 campaign jobs (cap 60).
