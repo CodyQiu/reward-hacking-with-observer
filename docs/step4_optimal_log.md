@@ -4,7 +4,9 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 
 ## Flags for the user
 
-- **Cells DONE: 1 of 8.** AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
+- **Cells DONE: 2 of 8.**
+  - AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
+  - Tomato no-regulariser (iteration 45, 2026-11-07 09:05): `O1_P1eq1_LN` (64 envs, batch 1600, 6144 episodes) CONVERGED in 3/3 tuning seeds (0.026 / 0.022 / 0.012) and 3/3 confirmation seeds (0.017 / 0.010 / 0.025), both at 6144, with no extension of the confirmation.
 - **Question (iteration 19): does an extended confirmation count?** Rule 4 says to extend any finished run with an IMPROVING seed, and I apply that to confirmation runs too. Two are now being extended past the episode count at which their tuning runs converged: grid swap `LE_confirm` and AS no-regulariser `LE_confirm`, both 3072 → 6144. If one of them reaches 3/3 at 6144, its tuning run was only shown CONVERGED at 3072. Your call whether that counts, or whether the tuning run must also be checked at 6144.
   - **Update (iteration 24):** 3 confirmations are now being extended: grid swap `LE_confirm` (6144 → 12,288), AS no-regulariser `LE_confirm` (12,288 → 24,576, its third extension) and AS no-regulariser `LN_confirm` (6144 → 12,288).
 - **Rule gap (iteration 26): a confirmation that fails at the cap.** Grid swap `LE` was CONVERGED 3/3 as a tuning run (3072), but its confirmation finished at the 12,288 cap at 2/3 (s21 hides, 0.217). If grid swap `LN` (running to 12,288) also fails, rule 5 ("none CONVERGED or IMPROVING") does not say whether that cell goes to wave 2. My default if it comes to that: treat a tuning run whose confirmation failed at the cap as not CONVERGED, and start wave 2 from the config with the smallest mean BR gap. Tell me if you want otherwise.
@@ -1843,3 +1845,25 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Grid `LN+RS`: s0 and s2 IMPROVING → extend to 12,288 (the cap).** Dry-run: `... extend grid "O1_P1eq1_LN+RS" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
 - **AS `LN_confirm` is at the cap (24,576) → finished, at 1/3.** The AS no-regulariser cell now rests on `L_confirm` (about 20,000 of 24,576). If it fails, every AS no-regulariser config is finished, and I apply the iteration-26 default: wave 2 from the config with the smallest mean BR gap.
 - **Submitted** (committed first as 4088f05): `O1_P1eq1_LN+EP` → **1948855**; `O1_P1eq1_LN+RS` → **1948856**; 19 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 45 (09:02): **Tomato no-regulariser cell DONE**
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 18 campaign jobs are queued or running. `... br_missing` (dry-run): nothing new.
+- **1948484** (Tomato `O1_P1eq1_LN_confirm` check) COMPLETED in 56 min:
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN_confirm` s20 @6144 | +0.017 ± 0.013 | CONVERGED | 3.98 corr. (rounds [1, 1, 1, 0.99]); true 46, 426, 426, 426, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 433, 433 |
+| `P1eq1_LN_confirm` s21 @6144 | +0.010 ± 0.019 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 |
+| `P1eq1_LN_confirm` s22 @6144 | +0.025 ± 0.011 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 432, 432, 432 |
+
+- **Rule 4: a `_confirm` run with all seeds CONVERGED → the cell is DONE.**
+  - Tuning run `O1_P1eq1_LN` at 6144: 0.026 ± 0.012, 0.022 ± 0.024, 0.012 ± 0.011, all CONVERGED (iteration 17).
+  - Confirmation at the same 6144 episodes, with no extension: 0.017 / 0.010 / 0.025. So the iteration-19 question does not arise for this cell.
+  - Config: the frozen Tomato config (entropy 0.03), `g.use_regularization=False`, `n_envs=64 ppo.batch_size=1600`, 6144 episodes, annealing over the last 25%.
+- **End state, answering the hypothesis for Tomato without a regulariser:** nobody hides.
+  - PPO is corrected once (round 0, true 46) and then behaves (true 433 in rounds 1–4).
+  - Its best response and the target are both corrected *more* often: a 2nd correction in round 1 (true 426), sometimes a 3rd or 4th, then 432–434.
+  - So the no-regulariser optimum on Tomato accepts corrections, and even seeks an extra one, rather than avoiding them.
+- The other Tomato no-regulariser runs are finished: `L_confirm` at 2/3 (PLATEAU), `LE` at 1/3 (cap). Nothing more is submitted for this cell.
+- Flags: "Cells DONE" is updated to 2 of 8.
