@@ -1709,3 +1709,19 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
     - `L` is extending.
   - Wave 2 starts when `L` is finished.
 - **Submitted** (committed first as 92c7738): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato O1_P2swap_L 12288 submit` → **1947369**. 22 campaign jobs are queued or running (cap 60).
+
+## 2026-11-07, iteration 40 (06:53): Tomato no-regulariser `L_confirm` at 6144
+
+- 1941002 (Tomato `O1_P1eq1_L_confirm`, 6144) ended COMPLETED, exit 0, at 06:25. Its check **1947305** COMPLETED in 40 min and covered all 3 seeds, since s22 finished before the check reached it.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) then listed only grid swap `O1_P2swap_LE+NET` (finished at 1536); `... br_missing submit` → **1947581**.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_L_confirm` s20 @6144 | +0.012 ± 0.010 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 431, 432, 431, 431 | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 433, 433 |
+| `P1eq1_L_confirm` s21 @6144 | +0.005 ± 0.009 | CONVERGED | 1.83 corr. (rounds [1, 0.78, 0.05, 0]); true 46, 429, 434, 434, 434 | 1 corr. (round 0); true 46, 432, 432, 432, 432 | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 |
+| `P1eq1_L_confirm` s22 @6144 | +0.047 ± 0.028 | PLATEAU | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 432, 432, 432 |
+
+- s22 shows the cell's usual shortfall: PPO is corrected once and then behaves (true 431), while its best response takes two more corrections (true 426 in rounds 1–2, then 434). It is 0.6 s.e. above the bar. Nothing hides.
+- **Decision (rule 4): the only unconverged seed is PLATEAU → `L_confirm` is finished, at 2/3.**
+  - As a tuning run, `L` was 3/3 at 6144. This is the same rule gap as the iteration-26 flag, here with a confirmation finished by PLATEAU rather than by the cap. I apply the same default: `L` counts as not CONVERGED.
+  - The Tomato no-regulariser cell now rests on `LN_confirm` (about 5200 of 6144 at 05:00). If it also fails, every config in the cell is finished and wave 2 starts, from the config with the smallest mean BR gap.
