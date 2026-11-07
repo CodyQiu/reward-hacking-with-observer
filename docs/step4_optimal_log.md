@@ -1882,3 +1882,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - No best response hides.
 - **Decision (rule 4): s0 and s2 IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P2swap_LE+RS" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as a0fa7ec9): `... extend grid "O1_P2swap_LE+RS" 6144 submit` → **1949082**. 18 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 47 (10:23): checks for two newly finished seeds
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. No campaign job has ended since iteration 46; 18 campaign jobs are queued or running.
+- Two seeds finished inside running jobs: grid swap `O1_P2swap_LE+AN_confirm` s20 (3072 of 3072; s21/s22 at 2688–2760) and tomato_large swap `O1_P2swap_LE` s1 (1536; s2 at 1344).
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed exactly these two runs (`--finished-only`); `... br_missing submit` → **1949427** (`br_grid_O1_P2swap_LE+AN_confirm`, COMPLETED in 2 min) and **1949428** (`br_tomato_large_O1_P2swap_LE`, running; about 2–4 h).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+AN_confirm` s20 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history s20: 0.014 (1536) → 0.000 (3072). No best response hides.
+- For information (training logs, not a verdict): at 2736 s21 still hides after its correction (PPO true −100 in rounds 1–4; target-gap value 0.245); s22 is honest after its correction (true 21.6–21.8; value gap −0.003).
+- **Decision:** none yet. Rule 4 waits until s21 and s22 finish (about 12:00), then their checks.
