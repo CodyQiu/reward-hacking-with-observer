@@ -256,3 +256,12 @@
   [grid s22] 48,768,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2186.8  rounds 6892  (7656s)
   [grid s22] 48,960,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2189.2  rounds 6916  (7715s)
   [grid s22] 49,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2187.3  rounds 6940  (7772s)
+  [grid s22] resumed at episode 6144 -> 12288
+  [grid s22] 49,344,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2182.7  rounds 6964  (121s)
+  [grid s22] 49,536,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2005.0  rounds 6993  (253s)
+  [grid s22] 49,728,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2070.7  rounds 7020  (374s)
+  [grid s22] 49,920,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2025.2  rounds 7047  (498s)
+  [grid s22] 50,112,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   1945.0  rounds 7072  (618s)
+  [grid s22] 50,304,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1821.1  rounds 7097  (737s)
+  [grid s22] 50,496,000  win0-3 0.25  off 0.20  corr/ep 1.00  winF 0.00  proxy0-3   1747.3  rounds 7125  (865s)
+  [grid s22] 50,688,000  win0-3 0.25  off 0.18  corr/ep 1.00  winF 0.00  proxy0-3   1538.5  rounds 7152  (998s)
