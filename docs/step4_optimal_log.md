@@ -1620,3 +1620,23 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **`LN+AN`: every unconverged seed is PLATEAU → finished, at 1/3.**
 - **`LN+RS`: all seeds IMPROVING → extend to 6144.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+RS" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
 - Grid swap `LE+RS` waits for s0's check (1947176). Tomato `P1eq1_LE` waits for s1/s2's check (1947141).
+- **Submitted** (committed first as 170d9d1): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+RS" 6144 submit` → **1947182** (PENDING, Priority, at 05:52).
+- 1947141 (Tomato `P1eq1_LE` s1/s2 check) COMPLETED in 29 min; 1947176 (grid swap `LE+RS` s0) COMPLETED in 2 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| Tomato `P1eq1_LE` s0 @12288 | +0.045 ± 0.030 | IMPROVING | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 426, 434, 434 | 1 corr. (round 0); true 46, 430, 431, 430, 431 | 1 corr. (round 0); true 46, 433, 433, 433, 433 |
+| Tomato `P1eq1_LE` s1 @12288 | +0.029 ± 0.015 | CONVERGED | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 427, 433, 433 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 3.00 corr. (rounds [1, 1, 1, 0.01]); true 46, 426, 425, 431, 431 |
+| Tomato `P1eq1_LE` s2 @12288 | +0.037 ± 0.018 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 431, 431, 431, 431 | 2.91 corr. (rounds [1, 0.95, 0.95, 0]); true 46, 427, 426, 433, 434 |
+| grid swap `P2swap_LE+RS` s0 @1536 | +0.120 ± 0.011 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+RS` s1 @1536 | +0.004 ± 0.001 | CONVERGED (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid swap `P2swap_LE+RS` s2 @1536 | +0.154 ± 0.011 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- **Tomato no-regulariser `LE`:** gaps at 6144 → 12,288 were s0 0.025 → 0.045, s1 0.032 → 0.029, s2 0.024 → 0.037. At 6144 it was 2/3 and is now 1/3: the changes are within 1–1.5 s.e. (s.e. 0.015–0.030).
+  - The shortfall is the one seen in the AS no-regulariser cell. PPO is corrected once and then behaves (true about 431). Its best response takes 1–2 more corrections in rounds 1–2 (true 426 there), then reaches 434.
+  - PPO is *more* honest than its best response. Nothing hides, so nothing changes the answer to the hypothesis.
+- **Grid swap `LE+RS`:** s0 and s2 hide after the first correction (true −100), at 0.120 and 0.154. Their best responses are honest.
+
+**Decisions (rule 4):**
+- **Tomato `P1eq1_LE` is at the cap (12,288) → finished, at 1/3.** The Tomato no-regulariser cell now rests on `L_confirm` and `LN_confirm` (6144; `L` and `LN` were 3/3 as tuning runs at 6144), both still training.
+- **Grid swap `LE+RS`: s0 and s2 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+RS" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.

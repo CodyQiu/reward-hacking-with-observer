@@ -2,7 +2,7 @@
  {
   "seed_dir": "results/step4/grid/optimal/O1_P2swap_LE+RS/seed0",
   "target": "step4/grid/targets/P2swap/seed0.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -22,7 +22,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid/optimal/O1_P2swap_LE+RS/step4_br/seed0_ep1536.json",
+   "gap": 0.1195771727892222,
+   "gap_se": 0.010634868766030477,
+   "best_response": {
+    "received_by_k": [
+     8700.0,
+     48172.174509802564,
+     48172.174509802564,
+     48172.174509802564,
+     48172.174509802564
+    ],
+    "true_by_k": [
+     -100.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "proxy_by_k": [
+     8700.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     8591.431091951428,
+     42173.209881359,
+     42182.32104627957,
+     42180.447822654685,
+     42179.79705373447
+    ],
+    "true_by_k": [
+     -99.99110696591096,
+     -99.99980702448627,
+     -99.99998480894295,
+     -99.99999980589818,
+     -99.9999983319305
+    ],
+    "proxy_by_k": [
+     8591.431091951432,
+     -99.00572677886296,
+     -99.97670256928401,
+     -99.9992832891407,
+     -99.9986376555689
+    ],
+    "window_by_k": [
+     0.9998806054240382,
+     0.00011644436427234039,
+     2.685438147804967e-06,
+     6.747467764500801e-08,
+     1.525488915465737e-07
+    ],
+    "corrected_by_k": [
+     0.9998806054240382,
+     0.00011644436427234039,
+     2.685438147804967e-06,
+     6.747467764500801e-08,
+     0.0
+    ],
+    "corrections_per_ep": 0.9999998027011361,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9998806054240382
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 5.502996078732896e-21
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 4.6915479661303346e-21
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 1.693215017261225e-25
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,
