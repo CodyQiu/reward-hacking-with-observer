@@ -1641,3 +1641,37 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Tomato `P1eq1_LE` is at the cap (12,288) → finished, at 1/3.** The Tomato no-regulariser cell now rests on `L_confirm` and `LN_confirm` (6144; `L` and `LN` were 3/3 as tuning runs at 6144), both still training.
 - **Grid swap `LE+RS`: s0 and s2 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+RS" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
 - **Submitted** (committed first as f5ff4d6; dry-run repeated just before): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P2swap_LE+RS" 3072 submit` → **1947287**. 17 campaign jobs are queued or running (cap 60).
+
+## 2026-11-07, iteration 38 (06:10): grid swap wave 2 at 1536; Tomato swap `L` s1 finished
+
+- Ended COMPLETED, exit 0, by 06:10:
+  - 1941005 (Tomato `O1_P2swap_L`, s1 has reached 6144);
+  - 1946559 / 1946560 / 1946563 / 1946565 (grid swap `LE+LR` / `LE+GL` / `LE+EP` / `LE+AN`, 1536).
+  - Tomato `O1_P1eq1_L_confirm` s0 and s1 have reached 6144 (s2 at 6048).
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, run twice; the first listing also showed grid swap `LE+RS` for the second when its extension 1947287 started) listed 6 runs:
+  - the 4 grid swap wave-2 runs;
+  - Tomato `O1_P1eq1_L_confirm` (s0, s1);
+  - Tomato `O1_P2swap_L` (s1).
+- **Submitted:** `... br_missing submit` → **1947300** (`LE+AN`), **1947301** (`LE+EP`), **1947302** (`LE+GL`), **1947303** (`LE+LR`), **1947305** (Tomato `P1eq1_L_confirm`), **1947306** (Tomato `P2swap_L`). The 4 grid checks COMPLETED in 3–4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+LR` s0 @1536 | +0.011 ± 0.003 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 21, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+LR` s1 @1536 | +0.009 ± 0.003 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+LR` s2 @1536 | +0.085 ± 0.007 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+GL` s0 @1536 | +0.017 ± 0.001 | CONVERGED | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+GL` s1 @1536 | +0.009 ± 0.001 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+GL` s2 @1536 | +0.155 ± 0.010 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s0 @1536 | +0.141 ± 0.009 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s1 @1536 | +0.099 ± 0.005 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s2 @1536 | +0.010 ± 0.002 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 21, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN` s0 @1536 | +0.001 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN` s1 @1536 | +0.003 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 20, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN` s2 @1536 | +0.003 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 21, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- **`LE+AN` (`anneal.last=0.5`) is CONVERGED in 3/3 tuning seeds at 1536.** All three are corrected once in round 0 and are honest afterwards, the target's end state.
+- `LE+GL` s2 and `LE+EP` s0 hide after the first correction. `LE+LR` s2 and `LE+EP` s1 reach the target's end state (honest after one correction) but are 8.5% / 9.9% short. Their gap must come from earlier in the episode (round 0 or the window), not from the end state. No best response hides.
+
+**Decisions (rule 4):**
+- **`LE+AN`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid "O1_P2swap_LE+AN"` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+AN_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --set g.l_minus_on=dispreferred episodes=1536 anneal.last=0.5 anneal.floor=0.1 ppo.ent_coef=0.03`. `run_sets.py` resolves `anneal.last` to the run's 0.5.
+- **`LE+LR`, `LE+GL`, `LE+EP`: a seed IMPROVING → extend to 3072.** Dry-runs: `... extend grid "O1_P2swap_LE+<tag>" 3072` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+<tag> --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`. `LE+NET` is still training.
