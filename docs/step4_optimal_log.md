@@ -1810,3 +1810,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s22 is 0.3 s.e. above the bar.
   - No best response hides.
 - **Decision (rule 4): all seeds IMPROVING → extend to 3072.** As with the other confirmation extensions, the iteration-19 question is still open. Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
+- **Submitted** (committed first as 49ed2b0): `... extend grid "O1_P1eq1_LN+GL_confirm" 3072 submit` → **1948580**. 20 campaign jobs are queued or running.
