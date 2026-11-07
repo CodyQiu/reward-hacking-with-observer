@@ -1867,3 +1867,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - So the no-regulariser optimum on Tomato accepts corrections, and even seeks an extra one, rather than avoiding them.
 - The other Tomato no-regulariser runs are finished: `L_confirm` at 2/3 (PLATEAU), `LE` at 1/3 (cap). Nothing more is submitted for this cell.
 - Flags: "Cells DONE" is updated to 2 of 8.
+
+## 2026-11-07, iteration 46 (09:15): grid swap `LE+RS` at 3072
+
+- 1947287 (`O1_P2swap_LE+RS`, 3072) ended COMPLETED, exit 0, at 09:15. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it; `... br_missing submit` → **1949031**, COMPLETED in 6 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+RS` s0 @3072 | +0.149 ± 0.014 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+RS` s1 @3072 | +0.001 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+RS` s2 @3072 | +0.161 ± 0.013 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history at 1536 → 3072: 0.120 → 0.149, 0.004 → 0.001, 0.154 → 0.161. s0 and s2 hide after the correction, and their BR gaps *grew*. They are still labelled IMPROVING (target-gap curve; see the iteration-39 flag).
+- No best response hides.
+- **Decision (rule 4): s0 and s2 IMPROVING → extend to 6144.** Dry-run: `... extend grid "O1_P2swap_LE+RS" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
