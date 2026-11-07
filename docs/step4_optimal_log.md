@@ -2052,3 +2052,23 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **For information: s1 regressed.** It was CONVERGED and honest after its correction at 1536 and 3072, and now hides after it (true −100 in rounds 1–4), like s0 and s2. So with the reduced reward scale (0.0025) all three seeds end in the hiding local optimum, and all three gaps are growing. They are still labelled IMPROVING (iteration-39 flag). No best response hides: each is honest after one correction, like the target.
 - **Decision (rule 4): all three IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P2swap_LE+RS" 12288` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+RS --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
 - **Submitted** (committed first as 24f257f6): `... extend grid "O1_P2swap_LE+RS" 12288 submit` → **1951920**. 22 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 58 (15:47): tomato_large swap `LE` 3/3 → confirm; grid no-reg `LN+LR_confirm` 0/3 at 3072
+
+- Ended COMPLETED, exit 0: 1949428 (check, tomato_large `O1_P2swap_LE`) at 15:47 after 5 h 23 min; 1948280 (grid `O1_P1eq1_LN+LR_confirm`, 3072) at 15:48. `git pull --no-rebase --no-edit --ff`: already up to date.
+- 1949428 checked s1 **and s2** (s2 had finished before the job reached it), so tomato_large `P2swap_LE` needs no follow-up check (iteration-50 open item closed for this run). `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, after 1948280 ended) listed only `LN+LR_confirm` → `... br_missing submit` → **1952236**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| tomato_large `P2swap_LE` s0 @1536 | +0.025 ± 0.001 | CONVERGED | 1 corr. (round 0); true 65, 488, 488, 488, 488 | 1 corr. (round 0); true 65, 452, 449, 447, 450 | 1 corr. (round 0); true 65, 495, 495, 495, 495 |
+| tomato_large `P2swap_LE` s1 @1536 | +0.019 ± 0.000 | CONVERGED | 1 corr. (round 0); true 65, 478, 478, 478, 478 | 1 corr. (round 0); true 65, 455, 457, 456, 456 | 1 corr. (round 0); true 65, 483, 483, 483, 483 |
+| tomato_large `P2swap_LE` s2 @1536 | +0.017 ± 0.000 | CONVERGED | 1 corr. (round 0); true 65, 473, 473, 473, 473 | 1 corr. (round 0); true 65, 458, 459, 453, 455 | 1 corr. (round 0); true 65, 493, 493, 493, 493 |
+| grid `P1eq1_LN+LR_confirm` s20 @3072 | +0.066 ± 0.010 | PLATEAU | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid `P1eq1_LN+LR_confirm` s21 @3072 | +0.078 ± 0.003 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid `P1eq1_LN+LR_confirm` s22 @3072 | +0.138 ± 0.025 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+
+- tomato_large swap `LE`: all three seeds are corrected once in round 0 and then near-honest (PPO true 447–459, best response 473–488, target 483–495; honest 523), the target's end state. "Above target" is printed for all three (information only). No best response hides.
+- grid no-reg `LN+LR_confirm`: s20 hides after its correction; s21 is honest with a received-reward shortfall (7.8%); s22 is honest but its best response takes a 2nd correction in round 1 (13.8 ± 2.5%). Its tuning run was 3/3 at 3072 (0.019 / 0.000 / 0.005).
+- **Decisions (rule 4):**
+  1. **tomato_large swap `O1_P2swap_LE`: all seeds CONVERGED, tuning run → `confirm`.** Targets for seeds 20–22 exist (`results/step4/tomato_large/targets/P2swap/seed2{0,1,2}.json`). Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato_large "O1_P2swap_LE"` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/optimal --set ppo.ent_coef=0.1 g.l_minus_on=dispreferred g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. At tomato_large's pace 1536 episodes took more than 48 h for the tuning run, so this job will likely hit its time limit and need a resume from its checkpoints (a time-limit TIMEOUT, not an incident).
+  2. **grid `O1_P1eq1_LN+LR_confirm`: s21/s22 IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend grid "O1_P1eq1_LN+LR_confirm" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
