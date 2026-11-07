@@ -1391,3 +1391,38 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - tomato_large `P1eq1_L` 2112 of 3072; swap `L` 1272 / 912 / 864, `LE` 1296 / 816 / 672, `LN` 744 / 648 / 1248 of 1536.
 - The three AS no-regulariser confirmations should finish within about an hour. I'm waiting in the background for all three, then will run `br_missing` on them together.
 - No decisions this iteration. Budget: 15 campaign jobs.
+
+## 2026-11-07, iteration 30 (00:47): AS no-regulariser confirmations finished
+
+- 1942400 (`O1_P1eq1_LN_confirm`, 12,288), 1942997 (`O1_P1eq1_LE_confirm`, 24,576, the cap) and 1943163 (`O1_P1eq1_L_confirm`, 12,288) all ended COMPLETED, exit 0, by 00:46.
+- Rule 3: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed exactly these 3 runs, each as `step4_br.py <run> --finished-only --draws 12`.
+- **Submitted:** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1944943** (`LE_confirm`), **1944944** (`LN_confirm`), **1944945** (`L_confirm`). Budget: 18 campaign jobs (cap 60).
+- All 3 checks ended COMPLETED by 00:50 (about 2.5 min each). Verdicts from `.venv/bin/python experiments/step4_convergence.py <run>`:
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_L_confirm` s20 @12288 | +0.057 ± 0.027 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -101, 449, 449, 449, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_L_confirm` s21 @12288 | +0.004 ± 0.046 | CONVERGED (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -106, 449, 449, 449, 449 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+| `P1eq1_L_confirm` s22 @12288 | +0.032 ± 0.034 | IMPROVING | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 | 1 corr. (round 0); true -101, 449, 449, 449, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN_confirm` s20 @12288 | +0.064 ± 0.025 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -103, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN_confirm` s21 @12288 | +0.000 ± 0.038 | CONVERGED (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -101, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+| `P1eq1_LN_confirm` s22 @12288 | +0.017 ± 0.026 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LE_confirm` s20 @24576 | +0.047 ± 0.021 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -107, 449, 449, 449, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LE_confirm` s21 @24576 | +0.001 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -101, 449, 449, 449, 449 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+| `P1eq1_LE_confirm` s22 @24576 | +0.083 ± 0.038 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -103, 449, 449, 449, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+
+- BR gap history (s20 / s21 / s22):
+  - `L_confirm` at 6144 → 12,288: 0.047 → 0.057, 0.011 → 0.004, 0.051 → 0.032.
+  - `LN_confirm` at 6144 → 12,288: 0.040 → 0.064, 0.026 → 0.000, 0.054 → 0.017.
+  - `LE_confirm` at 3072 / 6144 / 12,288 / 24,576: s20 0.038 / 0.025 / 0.040 / 0.047; s21 0.001 / 0.000 / 0.018 / 0.001; s22 0.058 / 0.040 / 0.040 / 0.083.
+- **The shortfall is unchanged.** In every unconverged seed, PPO is corrected once (round 0) and then plays honestly (true about 449). Its best response is corrected a second time in round 1 (true 400 there). So PPO is *more* honest than its best response, and neither hides. Nothing here changes the answer to the hypothesis, so there is no flag.
+- **"IMPROVING" here comes from the target-gap curve, not the BR gap.** The BR gaps of the unconverged seeds do not trend down: they move by up to 0.04 between checks, within 1–2 s.e. (s.e. 0.02–0.04). See the iteration-24 flag on noise in this cell.
+
+**Decisions (rule 4):**
+- **`LE_confirm` is at the cap** (24,576 = 8× the wave-1 3072), so it is finished at **1/3**. As a tuning run, `LE` was CONVERGED 3/3 at 3072. Its confirmation has now failed at the cap, which is the same rule gap as grid swap `LE` (iteration-26 flag).
+- **`LN_confirm` is 2/3** (s20 IMPROVING). Extend to 24,576 (2× 12,288, the cap).
+- **`L_confirm` is 1/3** (s20 and s22 IMPROVING; s22 is 0.032, just over the bar). Extend to 24,576, the cap.
+- These two extensions are the cell's last chance. If neither confirmation reaches 3/3 at 24,576, then every config in the AS no-regulariser cell is finished without a CONVERGED confirmation. My default is the one in the iteration-26 flag: wave 2 from the config with the smallest mean BR gap, unless you rule otherwise.
+- Dry-runs:
+  - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor O1_P1eq1_L_confirm 24576` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_L_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 24576`
+  - and the same with `O1_P1eq1_LN_confirm`.
