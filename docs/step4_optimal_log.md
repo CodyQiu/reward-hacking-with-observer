@@ -1858,7 +1858,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 | `P1eq1_LN_confirm` s22 @6144 | +0.025 ± 0.011 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 434, 434, 434 | 1 corr. (round 0); true 46, 433, 433, 433, 433 | 2.00 corr. (rounds [1, 1, 0, 0]); true 46, 426, 432, 432, 432 |
 
 - **Rule 4: a `_confirm` run with all seeds CONVERGED → the cell is DONE.**
-  - Tuning run `O1_P1eq1_LN` at 6144: 0.026 ± 0.012, 0.022 ± 0.024, 0.012 ± 0.011, all CONVERGED (iteration 17).
+  - Tuning run `O1_P1eq1_LN` at 6144: 0.026 ± 0.012, 0.022 ± 0.024, 0.012 ± 0.011, all CONVERGED (iteration 19).
   - Confirmation at the same 6144 episodes, with no extension: 0.017 / 0.010 / 0.025. So the iteration-19 question does not arise for this cell.
   - Config: the frozen Tomato config (entropy 0.03), `g.use_regularization=False`, `n_envs=64 ppo.batch_size=1600`, 6144 episodes, annealing over the last 25%.
 - **End state, answering the hypothesis for Tomato without a regulariser:** nobody hides.
