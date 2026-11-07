@@ -1478,3 +1478,57 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - tomato_large `P1eq1_L` 2352–2376 of 3072; swap `L` 1536 / 984 / 912, `LE` 1512 / 912 / 720, `LN` 816 / 720 / 1536.
 - **Two tomato_large swap seeds have finished their 1536 episodes:** `P2swap_L` s0 and `P2swap_LN` s2. Rule 3: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `step4_br.py results/step4/tomato_large/optimal/O1_P2swap_L --finished-only --draws 12` and the same for `O1_P2swap_LN` (12 h limit).
 - **Submitted:** `... br_missing submit` → **1946199** (`P2swap_L`, s0) and **1946200** (`P2swap_LN`, s2). Both are RUNNING on wheat-03 and should take about 3 h 45 min. Rule 4 for these runs waits until all their seeds are checked. 21 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 33 (03:59): first grid no-regulariser wave-2 runs finished
+
+- `sacct` since 02:58: 1945750 (`LN+LR`), 1945751 (`LN+GL`), 1945753 (`LN+RS`) and 1945755 (`LN+AN`) all ended COMPLETED, exit 0, after 1 h 38 min – 1 h 50 min.
+- Still running:
+  - `LN+EP` 1224–1248 of 1536; `LN+NET` 840–864;
+  - grid swap `LN` 12,192–12,240 of 12,288;
+  - tomato_large swap `LE` s0 has finished its 1536.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed the 4 grid wave-2 runs (2 h limit) and tomato_large `O1_P2swap_LE` (12 h). It skipped tomato_large `P2swap_L` / `LN`, whose checks are still running.
+- **Submitted:** `... br_missing submit` → **1946502** (`LN+AN`), **1946503** (`LN+GL`), **1946504** (`LN+LR`), **1946505** (`LN+RS`), **1946506** (tomato_large `P2swap_LE`, s0). 22 campaign jobs are queued or running.
+- All 4 grid wave-2 checks ended COMPLETED, exit 0, at 04:07, after 2–4 min. 1942399 (grid swap `O1_P2swap_LN`, 12,288) ended COMPLETED, exit 0, at 04:07. Its check: `... br_missing` (dry-run) listed only it, and `... br_missing submit` → **1946541**, COMPLETED in 2 min.
+
+**Grid no-regulariser wave 2 (base `LN`) at 1536:**
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+LR` s0 @1536 | +0.035 ± 0.005 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 15, 16, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+LR` s1 @1536 | +0.042 ± 0.008 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -41, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+LR` s2 @1536 | +0.048 ± 0.032 | PLATEAU (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, -26, -99, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL` s0 @1536 | +0.029 ± 0.003 | CONVERGED (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL` s1 @1536 | +0.001 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+GL` s2 @1536 | +0.001 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+RS` s0 @1536 | +0.064 ± 0.007 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+RS` s1 @1536 | +0.043 ± 0.008 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+RS` s2 @1536 | +0.064 ± 0.035 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 20, 20, 20 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+AN` s0 @1536 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+AN` s1 @1536 | +0.039 ± 0.008 | PLATEAU (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+AN` s2 @1536 | +0.051 ± 0.034 | IMPROVING (above target) | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- **`LN+GL` (`ppo.gae_lambda=1.0`) is CONVERGED in 3/3 tuning seeds at 1536.** In all three, PPO is corrected once in round 0 and is honest afterwards (true 22). That is the target's end state.
+  - s0's 0.029 ± 0.003 is just inside the bar. Its best response is also honest, on a slightly different route (true 20).
+  - Every other unconverged grid no-regulariser seed, in wave 1 and wave 2, *hides* after its first correction (true −100 in later rounds). λ = 1 removes that failure in all three seeds at an eighth of the cap. A plausible reason: with λ = 0.95 the advantage across the 100-step boundary is biased towards the critic, which may undervalue the honest continuation. This is a hypothesis; I have not tested it.
+- No best response hides, so nothing changes the answer to the hypothesis.
+
+**Grid swap `LN` at the cap:**
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LN` s0 @12288 | +0.103 ± 0.008 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LN` s1 @12288 | +0.001 ± 0.003 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LN` s2 @12288 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- s0's gap at 1536 / 3072 / 6144 / 12,288 is 0.181 / 0.133 / 0.121 / 0.103. It hides after its first correction. **`LN` is finished at the cap at 2/3.**
+
+**Decisions:**
+1. **Grid no-regulariser `LN+GL`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid "O1_P1eq1_LN+GL"` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --set g.use_regularization=False episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.gae_lambda=1.0`.
+2. **Grid no-regulariser `LN+LR`, `LN+RS`, `LN+AN`: a seed IMPROVING → extend to 3072.** Dry-runs: `... extend grid "O1_P1eq1_LN+<tag>" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+<tag> --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`. `LN+EP` and `LN+NET` are still training.
+3. **Grid swap: rule 5 under the iteration-26 default.** No answer to that flag has come in, so I apply its stated default: a tuning run whose confirmation failed at the cap counts as not CONVERGED. Every grid swap wave-1 run is now finished:
+   - `L` at the cap, 2/3 (0.066 / 0.030 / 0.078);
+   - `LE` 3/3 as a tuning run at 3072 (0.000 / 0.001 / 0.002), but its confirmation finished at the cap at 2/3 (0.001 / 0.217 / 0.000);
+   - `LN` at the cap, 2/3 (0.103 / 0.001 / 0.000).
+   - **Base: `LE`**, with the smallest mean BR gap per run (`L` 0.058, `LE` 0.001, `LN` 0.035). Taking the mean over all six of `LE`'s seeds (tuning plus confirmation) would give 0.037, against `LN`'s 0.035, essentially a tie. I use the per-run mean that rule 5 uses for wave-1 runs.
+   - Extras: `ppo.ent_coef=0.03` (from `O1_P2swap_LE/overrides.json`). RS is again `reward_scale=0.0025`.
+   - Dry-runs, each `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh ppo grid P2swap "LE+<tag>" "ppo.ent_coef=0.03 <factor>"`. Each gave `submit.sh 48 --env grid --run-id O1_P2swap_LE+<tag> --seeds 0 1 2 --results-dir results/step4/grid/optimal --set g.l_minus_on=dispreferred episodes=1536 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03 <factor>`, for `LR`, `GL`, `NET`, `RS`, `EP` and `AN`.
