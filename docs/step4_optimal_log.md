@@ -1326,3 +1326,23 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - The grid swap cell's remaining config is `O1_P2swap_LN`, extended to 12,288 (1942399, at 7920–7944) and 2/3 at 6144. `L` finished at the cap (iteration 19).
 - **Possible gap in the rules, flagged at the top:** if `LN` does not reach 3/3, then every grid swap config is finished, but `LE` was CONVERGED (3/3) as a tuning run. Rule 5's condition, "none CONVERGED or IMPROVING", was written for wave-1 runs, so it is unclear whether wave 2 applies. If it comes to that, I'll take a CONVERGED tuning run whose confirmation failed at the cap as not CONVERGED, and start wave 2 from the config with the smallest mean BR gap, unless you say otherwise.
 - No submissions this iteration.
+
+## 2026-11-06, iteration 27 (20:49–21:10)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- `sacct` since 19:40: nothing had finished at 20:49. `grid O1_P1eq1_LN`, extended to 12,288 (1942208), was 98–99% done, so I waited: COMPLETED at 21:00 after 5 h 45 min, exit 0.
+- Tomato swap `L` (1941005, extended to 6144): s0 and s2 have finished; s1 is at 3960 of 6144.
+- Rule 3: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `grid O1_P1eq1_LN` and `tomato O1_P2swap_L` (finished seeds only). Then `... br_missing submit` → **1943448** (grid, COMPLETED in 6 min, exit 0) and **1943449** (Tomato, running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| grid `P1eq1_LN` s0 @12288 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| grid `P1eq1_LN` s1 @12288 | +0.044 ± 0.009 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| grid `P1eq1_LN` s2 @12288 | +0.000 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- s1 gaps at 1536 / 3072 / 6144 / 12,288: 0.079 / 0.049 / 0.038 / 0.044. It still hides after the round-0 correction (true −100), where its best response is honest. **No best response hides.**
+
+**Rule 4.**
+- `grid O1_P1eq1_LN` (12,288): s1 IMPROVING, at the cap → **finished at the cap, 2 of 3.**
+- Grid no-regulariser cell: `LE` finished at the cap (1/3), `LN` finished at the cap (2/3). `L` is still running to 12,288 (1942024, at about 9700; 2/3 at 6144), so it is the cell's last chance.
+- In all three grid no-regulariser configs, the same kind of seed fails: one that learned to hide after its first correction keeps hiding through 12,288 episodes. It is 4–7% short of the honest best response.
