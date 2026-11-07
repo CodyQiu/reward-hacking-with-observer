@@ -1539,3 +1539,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `... ppo grid P2swap "LE+<tag>" "ppo.ent_coef=0.03 <factor>" submit` → **1946559** (`LR`), **1946560** (`GL`), **1946561** (`NET`), **1946562** (`RS`), **1946563** (`EP`), **1946565** (`AN`). Each seed0 `config.json` has the intended change and nothing else. All share entropy 0.03, 16 envs and the swap (`l_minus_on` dispreferred).
   - All 10 were RUNNING by 04:17. 27 campaign jobs are queued or running (cap 60).
 - Flags: added an "Applied" note under the iteration-26 rule-gap flag.
+
+## 2026-11-07, iteration 34 (04:20): grid no-regulariser `LN+EP` at 1536
+
+- 1945754 (`O1_P1eq1_LN+EP`) ended COMPLETED, exit 0, at 04:19. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run; `... br_missing submit` → **1946600**, COMPLETED in 3 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+EP` s0 @1536 | +0.056 ± 0.006 | IMPROVING (above target) | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+EP` s1 @1536 | +0.062 ± 0.007 | IMPROVING | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+EP` s2 @1536 | +0.002 ± 0.001 | CONVERGED (above target) | 1 corr. (round 0); true -100, 20, 20, 20, 20 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- s0 and s1 hide after the first correction, the same failure as before. No best response hides.
+- **Decision (rule 4): s0 and s1 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+EP" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
