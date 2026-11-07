@@ -1466,3 +1466,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - All were RUNNING on barley-01 by 01:58.
   - Each seed0 `config.json` has the intended change and nothing else: lr 1e-4 / λ 1.0 / net [256, 256] / reward_scale 0.0025 / 20 epochs / anneal.last 0.5. All share n_envs 64, batch 1600 and `use_regularization` False.
 - 19 campaign jobs queued or running (cap 60).
+
+## 2026-11-07, iteration 32 (02:58)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. `sacct` since 01:58: no job has ended. 19 campaign jobs are queued or running.
+- Progress:
+  - grid `P2swap_LN` 11,616–11,688 of 12,288;
+  - grid wave 2 (of 1536): `LN+LR` 816–840, `LN+EP` 456–504, `LN+NET` 360–408;
+  - AS `P1eq1_L_confirm` 14,280 of 24,576; `P1eq1_LN_confirm` 15,672–15,696;
+  - Tomato `P2swap_L` s1 5400 of 6144; `P1eq1_LE` 11,256–11,424 of 12,288; `P1eq1_L_confirm` 4728–5064 of 6144; `P1eq1_LN_confirm` 4512–4560;
+  - tomato_large `P1eq1_L` 2352–2376 of 3072; swap `L` 1536 / 984 / 912, `LE` 1512 / 912 / 720, `LN` 816 / 720 / 1536.
+- **Two tomato_large swap seeds have finished their 1536 episodes:** `P2swap_L` s0 and `P2swap_LN` s2. Rule 3: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `step4_br.py results/step4/tomato_large/optimal/O1_P2swap_L --finished-only --draws 12` and the same for `O1_P2swap_LN` (12 h limit).
+- **Submitted:** `... br_missing submit` → **1946199** (`P2swap_L`, s0) and **1946200** (`P2swap_LN`, s2). Both are RUNNING on wheat-03 and should take about 3 h 45 min. Rule 4 for these runs waits until all their seeds are checked. 21 campaign jobs are queued or running.
