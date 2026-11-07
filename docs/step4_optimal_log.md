@@ -1553,3 +1553,19 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - s0 and s1 hide after the first correction, the same failure as before. No best response hides.
 - **Decision (rule 4): s0 and s1 are IMPROVING → extend to 3072.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+EP" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
 - **Submitted** (committed first as 4adbbe0): `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+EP" 3072 submit` → **1946615**. 27 campaign jobs are queued or running (cap 60).
+
+## 2026-11-07, iteration 35 (04:59)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 26 campaign jobs are queued or running.
+- `sacct` since 04:20: the `LN+EP` check (logged above), and **1946200** (tomato_large swap `LN` check, s2 only) COMPLETED in 2 h:
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| tomato_large `P2swap_LN` s2 @1536 | +0.035 ± 0.005 | not converged; s0, s1 still training (above target) | 1 corr. (round 0); true 65, 474, 474, 474, 474 | 1 corr. (round 0); true 65, 372, 373, 371, 373 | 1 corr. (round 0); true 65, 493, 493, 493, 493 |
+
+  - PPO behaves after its one correction, but on a route worth about 100 less in true return than its best response's. Neither hides.
+  - Rule 4 for this run waits for s0 and s1 (720 / 816 of 1536 at 02:58).
+- Progress:
+  - grid `LN+NET` 1296–1368 of 1536; `LN+GL_confirm` 144–216 of 1536; `LN+LR` 1824–1848 of 3072; swap wave 2 (`LE+…`) about 300 of 1536;
+  - Tomato `P2swap_L` s1 5856 of 6144; `P1eq1_LE` 11,976–12,192 of 12,288; `P1eq1_L_confirm` 5472–5784 of 6144; `P1eq1_LN_confirm` 5208–5256.
+- No decisions this iteration.
