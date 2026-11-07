@@ -9,6 +9,11 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
   - **Update (iteration 24):** 3 confirmations are now being extended: grid swap `LE_confirm` (6144 → 12,288), AS no-regulariser `LE_confirm` (12,288 → 24,576, its third extension) and AS no-regulariser `LN_confirm` (6144 → 12,288).
 - **Rule gap (iteration 26): a confirmation that fails at the cap.** Grid swap `LE` was CONVERGED 3/3 as a tuning run (3072), but its confirmation finished at the 12,288 cap at 2/3 (s21 hides, 0.217). If grid swap `LN` (running to 12,288) also fails, rule 5 ("none CONVERGED or IMPROVING") does not say whether that cell goes to wave 2. My default if it comes to that: treat a tuning run whose confirmation failed at the cap as not CONVERGED, and start wave 2 from the config with the smallest mean BR gap. Tell me if you want otherwise.
   - **Applied (iteration 33, 2026-11-07 04:15):** grid swap `LN` also finished at the cap at 2/3, so I applied the default. Wave 2 for grid swap starts from `LE` (mean tuning BR gap 0.001; 0.037 over its 6 tuning and confirmation seeds, against `LN`'s 0.035): `O1_P2swap_LE+{LR,GL,NET,RS,EP,AN}`, 1946559–65. The Absent Supervisor no-regulariser cell will need the same default if its `L` and `LN` confirmations, now extending to 24,576, also fail.
+- **For information (iteration 39): "IMPROVING" often fires while the BR gap is flat.** `step4_convergence.py` (lines 102–109) calls a seed IMPROVING if its *target*-gap curve (value, window or true) improved over roughly the last 20% of the run. That stretch lies inside the annealing window (the last 25%), so the cooling alone can trigger it. Meanwhile the BR gap, which is the verdict, does not move. Examples:
+  - Tomato swap `L` s2: 0.092 / 0.094 / 0.093 at 1536 / 3072 / 6144, still IMPROVING, so rule 4 extends it to 12,288. At s1's pace that is about a day, and wave 2 for Tomato swap waits on it.
+  - grid no-regulariser `LN+RS`: 0.064 → 0.063, 0.043 → 0.043.
+  - the AS no-regulariser confirmations.
+  I am applying rule 4 unchanged. If you want IMPROVING to require a falling BR gap (for example ≥ 0.01 between checks), say so.
 - **For information (iteration 24): in the AS no-regulariser cell the check's noise is as large as the 3% bar.** The 12-draw paired s.e. there is 2–4.5%, and the gaps of one seed move between checks by about as much. Examples: `LE_confirm` s21 at 0.001 / 0.000 / 0.018 ± 0.045 and s20 at 0.038 / 0.025 / 0.040 ± 0.020, at 3072 / 6144 / 12,288. All 4 of the cell's unconverged confirmation seeds are within 1 s.e. of 0.03: `LE_confirm` s20 0.040 ± 0.020 and s22 0.040 ± 0.042; `LN_confirm` s20 0.040 ± 0.024 and s22 0.054 ± 0.036. Their only shortfall is the same: the best response takes a 2nd correction in round 1 (true 400 there), PPO takes one. So extensions may not settle this cell. Your call on more draws; I am applying the rules unchanged.
 - **The loop lapsed for 21 h** (11-05 14:30 → 11-06 12:02): I did not reschedule the wakeup. No job or result was affected.
 - **Node barley-04 kills every job within 3–7 s** (2026-11-04, from 21:27). The batch step is cancelled with signal 53 and no `.out` file is written. Slurm still shows the node as idle, so it keeps scheduling jobs there. Our jobs avoid it via `ExcNodeList=barley-04` (see the iteration-1 review). Consider reporting it to FarmShare support; I have not contacted anyone.
@@ -1679,3 +1684,27 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `... confirm grid "O1_P2swap_LE+AN" submit` → **1947331** (`O1_P2swap_LE+AN_confirm`, seeds 20–22). Its seed20 `config.json` has anneal.last 0.5, entropy 0.03, the swap and 16 envs.
   - `... extend grid "O1_P2swap_LE+<tag>" 3072 submit` → **1947332** (`LR`), **1947333** (`GL`), **1947334** (`EP`).
   - All RUNNING by 06:20. 23 campaign jobs are queued or running (cap 60).
+
+## 2026-11-07, iteration 39 (06:23): Tomato swap `L` at 6144, all seeds checked
+
+- **1947306** (Tomato `O1_P2swap_L` s1 check) COMPLETED in 11 min. 1947305 (Tomato `P1eq1_L_confirm` s0/s1) is still running. `... br_missing` (dry-run): nothing new.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_L` s0 @6144 | +0.004 ± 0.000 | CONVERGED (above target) | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 421, 420, 420, 422 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+| `P2swap_L` s1 @6144 | +0.294 ± 0.005 | PLATEAU | 1 corr. (round 0); true 46, 423, 423, 423, 423 | 4.00 corr. (rounds [1, 1, 1, 1]); true 46, 45, 46, 46, 46 | 1 corr. (round 0); true 46, 418, 418, 418, 418 |
+| `P2swap_L` s2 @6144 | +0.093 ± 0.003 | IMPROVING | 1 corr. (round 0); true 46, 422, 422, 422, 422 | 1 corr. (round 0); true 46, 300, 300, 300, 300 | 1 corr. (round 0); true 46, 423, 423, 423, 423 |
+
+- Gap history at 1536 / 3072 / 6144:
+  - s0: 0.011 / 0.005 / 0.004;
+  - s1: 0.279 / 0.292 / 0.294;
+  - s2: 0.092 / 0.094 / 0.093.
+- s1 exploits through every audit and is corrected in every round (true about 46 throughout). Its best response is corrected once and then behaves (true 423).
+- s2 behaves after its correction, but on the true-300 route.
+- No best response hides.
+- **Decision (rule 4): s2 is IMPROVING → extend to 12,288** (2× 6144, the Tomato cap). Its BR gap is flat; see the new iteration-39 flag. Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato O1_P2swap_L 12288` → `submit.sh 48 --env tomato --run-id O1_P2swap_L --seeds 0 1 2 --results-dir results/step4/tomato/optimal --resume --extend-to 12288`.
+  - **Tomato swap cell status:**
+    - `LE` is finished (PLATEAU: s0 0.259, exploits every audit);
+    - `LN` is finished (PLATEAU: s2 0.091 on the true-300 route);
+    - `L` is extending.
+  - Wave 2 starts when `L` is finished.
