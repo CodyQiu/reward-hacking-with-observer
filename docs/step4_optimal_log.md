@@ -1268,3 +1268,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 **Rule 4.**
 - `absent_supervisor O1_P1eq1_LE_confirm` (12,288): s20 and s22 IMPROVING → **extend to 24,576** (the AS cap). This is its third extension, so it is subject to the open question at the top.
+- **Submitted** (dry-run first; committed first as 2d88e98; with `EXCLUDE=barley-04`): `extend absent_supervisor O1_P1eq1_LE_confirm 24576` (seeds 20–22): **1942997**. Budget: 18 campaign jobs (cap 60).
