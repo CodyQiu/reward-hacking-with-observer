@@ -1461,3 +1461,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - `EP` `ppo.n_epochs=20`;
   - `AN` `anneal.last=0.5`.
 - **Budget correction:** rule 8 limits the campaign to 60 jobs *queued or running at once*, not 60 jobs in total. My earlier "Budget: N campaign jobs" lines counted every job submitted since wave 1, which overstates the load. 13 campaign jobs are queued or running now; these 6 will make 19.
+- **Submitted** (committed first as 8b8e1ec), each with `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh ppo grid P1eq1 "LN+<tag>" "n_envs=64 ppo.batch_size=1600 <factor>" submit`:
+  - **1945750** `O1_P1eq1_LN+LR`, **1945751** `LN+GL`, **1945752** `LN+NET`, **1945753** `LN+RS`, **1945754** `LN+EP`, **1945755** `LN+AN`.
+  - All were RUNNING on barley-01 by 01:58.
+  - Each seed0 `config.json` has the intended change and nothing else: lr 1e-4 / λ 1.0 / net [256, 256] / reward_scale 0.0025 / 20 epochs / anneal.last 0.5. All share n_envs 64, batch 1600 and `use_regularization` False.
+- 19 campaign jobs queued or running (cap 60).
