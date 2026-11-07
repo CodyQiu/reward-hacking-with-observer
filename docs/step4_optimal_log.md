@@ -1952,3 +1952,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - The convergence script prints "above target" for the three `LN+NET` seeds (information only).
 - **Decision (rule 4): `LN+NET` s1/s2 and `LE+NET` s0 IMPROVING → extend both runs to 6144** (2× 3072; cap 12,288). Dry-runs: `... extend grid "O1_P1eq1_LN+NET" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`; `... extend grid "O1_P2swap_LE+NET" 6144` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as 5c61aaa0): `... extend grid "O1_P1eq1_LN+NET" 6144 submit` → **1950090**; `... extend grid "O1_P2swap_LE+NET" 6144 submit` → **1950091**. 18 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 51 (12:45): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 18 campaign jobs are queued or running; none has ended since iteration 50. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing to submit (tomato_large `P1eq1_L` and `P2swap_LE` skipped while checks 1949677 and 1949428 run; each will need a follow-up check for its s2).
+- Progress: AS `P1eq1_L_confirm` 23,544–23,616 of 24,576; grid swap `LE+GL` 5664 and `LE+EP` 5328–5448 of 6144; tomato_large no-reg `LE` 2904 and `LN` 2784–2808 of 3072. No decision.
