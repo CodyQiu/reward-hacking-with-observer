@@ -1234,3 +1234,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `grid O1_P2swap_LN` (6144): s0 IMPROVING → **extend to 12,288** (the grid cap).
 - `absent_supervisor O1_P1eq1_LN_confirm` (6144): s22 IMPROVING → **extend to 12,288** (cap 24,576), as rule 4 says. Subject to the open question about extended confirmations.
 - Rule 5: not applicable.
+- **Submitted** (dry-run first; committed first as fcfcefb; all with `EXCLUDE=barley-04`):
+  - `extend tomato_large O1_P1eq1_L 3072`: **1942396**;
+  - `extend tomato_large O1_P1eq1_LE 3072`: **1942397**;
+  - `extend tomato_large O1_P1eq1_LN 3072`: **1942398**;
+  - `extend grid O1_P2swap_LN 12288`: **1942399**;
+  - `extend absent_supervisor O1_P1eq1_LN_confirm 12288` (seeds 20–22): **1942400**.
+  - Budget: 18 campaign jobs (cap 60).
+- Next: the tomato_large swap wave 1 (1934173–75) reaches its 48 h limit at about 22:05 → rule 1 resume.
