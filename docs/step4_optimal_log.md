@@ -2155,3 +2155,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - All three: corrected once in round 0, then honest (true 450), and here the best response agrees exactly (gap 0.000 with s.e. 0.000 in every seed). In every other AS no-reg run so far, some seed's best response took a 2nd correction in round 1. With the [256, 256] network, PPO's round-0 play induces corrections under which a 2nd correction does not pay. The target still takes 2–3 corrections in s0 and s2 (information only; "above target" printed for s1). No best response hides.
 - **Decision (rule 4): `O1_P1eq1_LN+NET`: all seeds CONVERGED, tuning run → `confirm`.** Targets for seeds 20–22 exist. Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+NET"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.net_arch=[256,256] g.use_regularization=False g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64`.
 - **Submitted** (committed first as 29fbb5da): `... confirm absent_supervisor "O1_P1eq1_LN+NET" submit` → **1954560**, RUNNING; its seed20 `config.json` has [256, 256], entropy 0.1, batch 1600, 64 envs, no regulariser, 3072 episodes. 21 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 63 (18:29): tomato_large swap `LN` s0
+
+- 1952682 (check, tomato_large `O1_P2swap_LN` s0) ended COMPLETED, exit 0, at 18:29 after 1 h 41 min. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing to submit (tomato_large `P1eq1_LE`, `P1eq1_LN` checks running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| tomato_large `P2swap_LN` s0 @1536 | +0.047 ± 0.003 | IMPROVING | 1 corr. (round 0); true 65, 490, 490, 490, 490 | 1 corr. (round 0); true 65, 376, 376, 376, 375 | 1 corr. (round 0); true 65, 495, 495, 495, 495 |
+| tomato_large `P2swap_LN` s2 @1536 | +0.035 ± 0.005 | PLATEAU | 1 corr. (round 0); true 65, 474, 474, 474, 474 | 1 corr. (round 0); true 65, 372, 373, 371, 373 | 1 corr. (round 0); true 65, 493, 493, 493, 493 |
+
+- Both: corrected once in round 0, then a partly honest route (true 371–376) against the best response's near-honest 474–490, as in tomato_large swap `L` s2 (iteration 61). No best response hides. "Above target" printed for both (information only).
+- s1 is at 1296 of 1536 (job 1943605, 48 h limit). **No decision:** rule 4 waits until every seed has finished and been checked.
