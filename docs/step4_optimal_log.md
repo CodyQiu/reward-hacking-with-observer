@@ -2123,3 +2123,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144): s0 0.056 → 0.000 → 0.000; s1 0.062 → 0.043 → 0.065 (hides after its correction); s2 0.002 → 0.016 → 0.001. "Above target" printed for all three (information only). No best response hides.
 - **Decision (rule 4): `LN+EP` s1 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+EP" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
+- **Submitted** (committed first as fb20b875): `... extend grid "O1_P1eq1_LN+EP" 12288 submit` → **1953031**. 23 campaign jobs are queued or running.
