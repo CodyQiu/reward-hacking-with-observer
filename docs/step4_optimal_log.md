@@ -2111,3 +2111,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144): s20 0.100 → 0.065 → 0.070 (hides after its correction); s21 0.090 → 0.108 → 0.111 (honest; received-reward shortfall); s22 0.038 → 0.032 → 0.043 (honest; its best response takes a 2nd correction). All flat or rising; s21 and s22 still labelled IMPROVING (iteration-39 flag). "Above target" printed for all three (information only). No best response hides.
 - **Decision (rule 4): s21/s22 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
+- **Submitted** (committed first as 6efb2679): `... extend grid "O1_P1eq1_LN+GL_confirm" 12288 submit` → **1952948**.
+- 1942398 (tomato_large no-reg `O1_P1eq1_LN`, 3072) ended COMPLETED, exit 0, at 17:22 (all 3 seeds). `... br tomato_large "O1_P1eq1_LN"` (dry-run) → `... br tomato_large "O1_P1eq1_LN" submit` → **1952981** (running; hours).
+- 1948855 (grid `O1_P1eq1_LN+EP`, 6144) ended COMPLETED, exit 0, at 17:25. `... br_missing` (dry-run) listed only it → `... br_missing submit` → **1953004**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+EP` s0 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+EP` s1 @6144 | +0.065 ± 0.008 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+EP` s2 @6144 | +0.001 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144): s0 0.056 → 0.000 → 0.000; s1 0.062 → 0.043 → 0.065 (hides after its correction); s2 0.002 → 0.016 → 0.001. "Above target" printed for all three (information only). No best response hides.
+- **Decision (rule 4): `LN+EP` s1 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+EP" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
