@@ -2191,3 +2191,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **grid `O1_P2swap_LE+NET`: s0 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P2swap_LE+NET" 12288` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
   - AS `LN+GL`: s1, s2 still training; rule 4 waits.
 - **Submitted** (committed first as a11cd093): `... extend grid "O1_P1eq1_LN+LR_confirm" 12288 submit` → **1954904**; `... extend grid "O1_P2swap_LE+NET" 12288 submit` → **1954905**. 21 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 65 (19:46): AS no-reg `LN+LR` 2/3 at 3072
+
+- At 19:46, `git pull --no-rebase --no-edit --ff`: already up to date; no campaign job had ended since iteration 64. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `O1_P1eq1_LN+LR`, whose s0 was 96 episodes short (s1, s2 finished). I waited for the job: 1951263 ended COMPLETED, exit 0, at 19:51. `... br_missing` (dry-run) again listed only it → `... br_missing submit` → **1955849**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+LR` s0 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN+LR` s1 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 |
+| `P1eq1_LN+LR` s2 @3072 | +0.031 ± 0.025 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+
+- All three: corrected once, then honest. s2 misses the bar by 0.001 (s.e. 0.025); its best response takes a 2nd correction in round 1, the cell's usual pattern. "Above target" printed for s1 (information only). No best response hides.
+- **Decision (rule 4): s2 IMPROVING → extend to 6144** (2× 3072; cap 24,576). Dry-run: `... extend absent_supervisor "O1_P1eq1_LN+LR" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+LR --seeds 0 1 2 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`.
+- AS no-reg wave 2 now: `LN+NET` 3/3 (confirmation running); `LN+LR` 2/3 (extending); `LN+EP`, `LN+RS` 2/3 at 3072 (extending to 6144); `LN+AN` finished 2/3; `LN+GL` s0 hides (0.087), s1/s2 still training.
