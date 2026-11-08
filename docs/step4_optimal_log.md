@@ -2140,3 +2140,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - tomato_large swap `L` s2: corrected once, then a partly honest route (true 368–372, against the best response's 482 and honest 523). s0 is CONVERGED (0.018 at 1536); s1 is at 1392 of 1536, so rule 4 waits for it.
 - **Decision (rule 4): tomato_large no-reg `O1_P1eq1_L`: all three IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend tomato_large "O1_P1eq1_L" 6144` → `submit.sh 48 --env tomato_large --run-id O1_P1eq1_L --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`. 1536 → 3072 took this run 19 h 41 min, so 3072 → 6144 should take about 40 h, inside the 48 h limit.
 - **Submitted** (committed first as 5f9ab752): `... extend tomato_large "O1_P1eq1_L" 6144 submit` → **1953259**. 22 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 62 (18:21): AS no-reg `LN+NET` 3/3 → confirm
+
+- 1951265 (AS `O1_P1eq1_LN+NET`, 3072) ended COMPLETED, exit 0, at 18:21. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it (3 tomato_large checks running); `... br_missing submit` → **1954509**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+NET` s0 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -103, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN+NET` s1 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -112, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 |
+| `P1eq1_LN+NET` s2 @3072 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+
+- All three: corrected once in round 0, then honest (true 450), and here the best response agrees exactly (gap 0.000 with s.e. 0.000 in every seed). In every other AS no-reg run so far, some seed's best response took a 2nd correction in round 1. With the [256, 256] network, PPO's round-0 play induces corrections under which a 2nd correction does not pay. The target still takes 2–3 corrections in s0 and s2 (information only; "above target" printed for s1). No best response hides.
+- **Decision (rule 4): `O1_P1eq1_LN+NET`: all seeds CONVERGED, tuning run → `confirm`.** Targets for seeds 20–22 exist. Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+NET"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.net_arch=[256,256] g.use_regularization=False g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64`.
