@@ -2096,3 +2096,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **`LN+AN`: the one unconverged seed (s2) is PLATEAU → finished, at 2/3.**
   - **`LN+EP` and `LN+RS`: s2 IMPROVING → extend to 6144** (2× 3072; cap 24,576). Dry-runs: `... extend absent_supervisor "O1_P1eq1_LN+EP" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`; the same for `O1_P1eq1_LN+RS`.
 - `LN+LR`, `LN+GL`, `LN+NET` are still training (864–1200 of 3072 for `LN+GL`).
+- **Submitted** (committed first as e1cb7ddc): `... extend absent_supervisor "O1_P1eq1_LN+EP" 6144 submit` → **1952701**; `... extend absent_supervisor "O1_P1eq1_LN+RS" 6144 submit` → **1952702**. 23 campaign jobs are queued or running.
