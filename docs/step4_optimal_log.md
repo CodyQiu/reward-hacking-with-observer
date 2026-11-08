@@ -2097,3 +2097,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **`LN+EP` and `LN+RS`: s2 IMPROVING → extend to 6144** (2× 3072; cap 24,576). Dry-runs: `... extend absent_supervisor "O1_P1eq1_LN+EP" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+EP --seeds 0 1 2 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`; the same for `O1_P1eq1_LN+RS`.
 - `LN+LR`, `LN+GL`, `LN+NET` are still training (864–1200 of 3072 for `LN+GL`).
 - **Submitted** (committed first as e1cb7ddc): `... extend absent_supervisor "O1_P1eq1_LN+EP" 6144 submit` → **1952701**; `... extend absent_supervisor "O1_P1eq1_LN+RS" 6144 submit` → **1952702**. 23 campaign jobs are queued or running.
+
+## 2026-11-07, iteration 60 (17:14): grid no-reg `LN+GL_confirm` 0/3 at 6144
+
+- 1949775 (grid `O1_P1eq1_LN+GL_confirm`, 6144) ended COMPLETED, exit 0, at 17:13. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LN+GL_confirm` and tomato_large no-reg `O1_P1eq1_LN`, whose s0 and s2 were 24 episodes short (s1 finished). As in iteration 56, I checked the grid run alone and hold the tomato_large check until the run ends, so its three seeds share one multi-hour check: `... br grid "O1_P1eq1_LN+GL_confirm"` (dry-run) → `... br grid "O1_P1eq1_LN+GL_confirm" submit` → **1952886**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+GL_confirm` s20 @6144 | +0.070 ± 0.011 | PLATEAU | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s21 @6144 | +0.111 ± 0.004 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s22 @6144 | +0.043 ± 0.026 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144): s20 0.100 → 0.065 → 0.070 (hides after its correction); s21 0.090 → 0.108 → 0.111 (honest; received-reward shortfall); s22 0.038 → 0.032 → 0.043 (honest; its best response takes a 2nd correction). All flat or rising; s21 and s22 still labelled IMPROVING (iteration-39 flag). "Above target" printed for all three (information only). No best response hides.
+- **Decision (rule 4): s21/s22 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+GL_confirm" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
