@@ -2190,3 +2190,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **grid `O1_P1eq1_LN+LR_confirm`: s20 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+LR_confirm" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
   - **grid `O1_P2swap_LE+NET`: s0 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P2swap_LE+NET" 12288` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
   - AS `LN+GL`: s1, s2 still training; rule 4 waits.
+- **Submitted** (committed first as a11cd093): `... extend grid "O1_P1eq1_LN+LR_confirm" 12288 submit` → **1954904**; `... extend grid "O1_P2swap_LE+NET" 12288 submit` → **1954905**. 21 campaign jobs are queued or running.
