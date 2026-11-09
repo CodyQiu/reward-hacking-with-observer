@@ -2655,3 +2655,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `... br_missing` (dry-run) listed AS `LN+EP_confirm`: s22 finished 6144 inside the running job 1964876 (s20 5808, s21 5760) → `... br_missing submit` → **1966371**, COMPLETED in 1 min.
   - `P1eq1_LN+EP_confirm` s22 @6144: **+0.018 ± 0.031, CONVERGED**. PPO corrected once in round 0, then honest (true -125, 449, 450, 450, 450); best response 2 corrections (rounds 0, 1; true -100, 400, 450, 450, 450).
 - **No action:** the AS no-reg cell is DONE (iteration 88); `LN+EP_confirm` is information only.
+
+## 2026-11-09, iteration 101 (12:44): AS no-reg `LN+EP_confirm` finished, 2/3 (information only); tomato_large swap `LE_confirm` s20 at 1536
+
+- 1964876 (AS `O1_P1eq1_LN+EP_confirm`, 6144) ended COMPLETED, exit 0, at about 12:43. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag).
+- `... br_missing` (dry-run) listed AS `LN+EP_confirm` (s20, s21) and tomato_large swap `LE_confirm` (s20 finished 1536 inside the running job 1952313; s21 360, s22 432) → `... br_missing submit` → **1966404** (AS, COMPLETED by 12:58) and **1966405** (tomato_large, running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict (rule) | Best response | PPO (exact) |
+|---|---|---|---|---|
+| `P1eq1_LN+EP_confirm` s20 @6144 | +0.055 ± 0.023 | not converged | 2 corr. (rounds 0, 1); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -106, 449, 450, 450, 450 |
+| `P1eq1_LN+EP_confirm` s21 @6144 | +0.016 ± 0.047 | CONVERGED | same | 1 corr. (round 0); true -101, 450, 450, 450, 450 |
+| `P1eq1_LN+EP_confirm` s22 @6144 | +0.018 ± 0.031 | CONVERGED | same | (iteration 100) |
+
+- **No action:** AS no-reg is DONE (iteration 88), so `LN+EP_confirm` (2/3) is information only. Of the AS no-reg confirmations, `LN+RS` 3/3 (DONE), `LN+EP` 2/3, `LN+LR` 1/3, `LN+GL` 1/3, `LN+NET` held (s20 0.066). In every one PPO is corrected once and then honest (or, `LN+GL` s20, hides); the shortfall is the best response's second, received-reward-paying correction.
+- tomato_large swap `LE_confirm` s20 check is logged when 1966405 finishes. Background wait re-armed on the 9 training jobs.
