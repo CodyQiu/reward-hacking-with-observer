@@ -2678,3 +2678,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 ## 2026-11-09, iteration 103 (14:59): no change
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. No training job has ended. 1966405 (tomato_large swap `LE_confirm` s20 check) at 2 h 14 min: corrections 1–4 fitted (rounds 0–3), level DP next. 1952313 (the same run's training job) reaches its 48 h limit at about 15:55.
+
+## 2026-11-09, iteration 104 (15:21): tomato_large swap `LE_confirm` s20 @1536: 0.100, IMPROVING
+
+- 1966405 (best-response check, tomato_large swap `LE_confirm` s20 @1536) COMPLETED in 2 h 35 min. `.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P2swap_LE_confirm` for the verdict.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE_confirm` s20 @1536 | +0.100 ± 0.003 | IMPROVING | corrected in round 0, then never again; true 65, 472, 472, 472, 472 | corrected in round 0, then never again; true 65, 450, 448, 450, 65 | corrected in round 0, then never again; true 65, 485 ×4 |
+
+- PPO's end state matches the best response's and the target's (one correction, in round 0), but its round-4 window is exploited: it **defects in the final round** (true 65 in round 4), whereas under the swapped correction the best response stays honest there. Rounds 1–3 are honest but about 5% below the best response's route. This is the Step 3-style "exploit through the final window" habit carrying over, not hiding. The tuning seeds (`LE` s0–s2) converged at 1536 (0.025 / 0.019 / 0.017).
+- **No decision (rule 4 waits for all seeds):** s21 is at 432 and s22 at 528 of 1536, both still exploiting in every round (3 corrections per episode so far). Training job 1952313 reaches its 48 h limit at about 15:55 → resume (rule 1), with only its own line from the `resume` dry-run.
