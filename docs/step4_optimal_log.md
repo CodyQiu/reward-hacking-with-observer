@@ -2611,3 +2611,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144 → 12,288): s20 0.100 → 0.065 → 0.070 → 0.069 (hides after its correction throughout); s21 0.090 → 0.108 → 0.111 → 0.075 (honest; received shortfall); s22 0.038 → 0.032 → 0.043 → 0.028. "Above target" printed for all three (information only). No best response hides.
 - **At the cap → finished, at 1/3.** So grid no-reg `LN+GL` (3/3 as a tuning run at 1536) fails confirmation. Grid no-reg wave 2: only `LN+NET` (1/3 at 6144, extending to the cap; 8700 of 12,288) is left. The other five (`LN+GL`, `LN+LR` via their confirmations; `LN+EP`, `LN+AN`, `LN+RS`) have finished below 3/3; if `LN+NET` does too, wave 2 has plateaued and rule 6 (wave 3) applies.
+
+## 2026-11-09, iteration 95 (07:36): Tomato swap `L` s2 at 12,288; AS `LN+GL_confirm` finished
+
+- Ended COMPLETED, exit 0: 1965514 (AS `O1_P1eq1_LN+GL_confirm`, 6144) at 06:48 (it ended before the 06:50 watch list was taken, so the wait missed it). Tomato swap `L` s2 finished 12,288 inside its resumed job 1965874 (s1 at 8016). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): only AS `LN+NET_confirm`, held.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `LN+GL_confirm` (s22) and Tomato swap `L` (s2) → `... br_missing submit` → **1965939**, **1965940**, both COMPLETED by 07:45.
+  - AS `LN+GL_confirm` s22 @6144: +0.036 ± 0.030 (PPO corrected once then honest; best response takes a 2nd correction). Information only (cell DONE). The confirmation ends 1/3: s20 hides (0.147), s21 0.000, s22 0.036.
+  - **Tomato swap `L` s2 @12,288: +0.092 ± 0.004**, gap history 0.092 / 0.094 / 0.093 / 0.092 at 1536 / 3072 / 6144 / 12,288. Corrected once in round 0, then a partly honest route (true 300) against its best response's near-honest 422. Flat over 8× the training (iteration-39 flag).
+- **No decision:** Tomato swap `L` s1 (8016 of 12,288; 0.294 at 6144, exploiting through every audit) is still training. At about 1.7 episodes/min it needs about 42 h more, and wave 2 for Tomato swap waits on it (rule 5). This is the case your option 2 (start Tomato swap wave 2 now) would shortcut.
