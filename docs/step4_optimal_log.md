@@ -2517,3 +2517,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - No best response hides.
 - **Decision (rule 4): tomato_large `O1_P1eq1_LE`: all three IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend tomato_large "O1_P1eq1_LE" 6144` → `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LE --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`.
 - Grid no-reg wave 2 now: `LN+GL_confirm` and `LN+NET` extending to the cap; `LN+LR_confirm` 0/3, `LN+EP` 2/3, `LN+AN` 1/3, `LN+RS` 0/3 finished. If the last two also end below 3/3 (or `LN+GL` fails confirmation), wave 2 has plateaued and rule 6 (wave 3) applies.
+- **Submitted** (committed first as 877df776): `... extend tomato_large "O1_P1eq1_LE" 6144 submit` → **1965623**. 15 campaign jobs are queued or running.
