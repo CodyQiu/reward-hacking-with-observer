@@ -2392,3 +2392,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - All three: corrected once, then honest (true 450). s22 misses the bar by 0.002 with s.e. 0.039; its best response takes a 2nd correction in round 1, the cell's usual noise-limited shortfall (iteration-24 flag). "Above target" printed for s20 and s21 (information only). No best response hides.
 - **Decision (rule 4): s22 IMPROVING → extend to 6144** (2× 3072; cap 24,576). As before, this extends a confirmation run (iteration-19 flag still open). Dry-run: `... extend absent_supervisor "O1_P1eq1_LN+NET_confirm" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as 154d7800): `... extend absent_supervisor "O1_P1eq1_LN+NET_confirm" 6144 submit` → **1962149**. 19 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 79 (22:53): grid swap `LE+EP` 2/3 at the cap
+
+- 1956330 (grid `O1_P2swap_LE+EP`, resumed after the stall, 12,288) ended COMPLETED, exit 0, at 22:53. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it → `... br_missing submit` → **1962856**, COMPLETED in 3 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+EP` s0 @12288 | +0.128 ± 0.010 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s1 @12288 | +0.002 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+EP` s2 @12288 | +0.006 ± 0.009 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144 → 12,288): s0 0.141 → 0.152 → 0.129 → 0.128 (hides after its correction throughout); s1 0.099 → 0.006 → 0.002 → 0.002; s2 0.010 → 0.014 → 0.006 → 0.006. "Above target" printed for s1 (information only). No best response hides.
+- **`LE+EP` is at the cap → finished, at 2/3.** Grid swap wave 2: `LE+LR`, `LE+AN` (confirmation), `LE+RS`, `LE+EP` finished at 2/3; `LE+GL` (s1/s2 resumed) and `LE+NET` still extending to the cap.

@@ -253,3 +253,8 @@ PermissionError: [Errno 13] Permission denied
   [absent_supervisor s0] 185,856,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    720.2  rounds 6725  (7271s)
   [absent_supervisor s0] 186,624,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    719.9  rounds 6749  (7407s)
   [absent_supervisor s0] 187,392,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    721.0  rounds 6773  (7543s)
+  [absent_supervisor s0] 188,160,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    721.4  rounds 6797  (7680s)
+  [absent_supervisor s0] 188,928,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    723.2  rounds 6821  (7818s)
+  [absent_supervisor s0] 189,696,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    722.9  rounds 6845  (7954s)
+  [absent_supervisor s0] 190,464,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    722.9  rounds 6869  (8090s)
+  [absent_supervisor s0] 191,232,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    723.3  rounds 6893  (8228s)
