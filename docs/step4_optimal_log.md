@@ -2365,3 +2365,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history (1536 → 3072): s0 0.063 → 0.055; s1 0.066 → 0.049; s2 0.042 → 0.031 (now 0.001 above the bar). As in `L` (iteration 61): PPO is corrected once and then near-honest (true 520); its best response and the target keep collecting corrections by exploiting in the window's last steps (true 516 in those rounds) and are worth 3–6% more. PPO takes fewer corrections than optimal; nobody hides.
 - **Decision (rule 4): all three IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend tomato_large "O1_P1eq1_LN" 6144` → `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`.
 - **Submitted** (committed first as c256fa90): `... extend tomato_large "O1_P1eq1_LN" 6144 submit` → **1958379**. 20 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 77 (22:06): grid swap `LE+RS` 2/3 at the cap
+
+- 1956332 (grid `O1_P2swap_LE+RS`, resumed after the stall, 12,288) ended COMPLETED, exit 0, at 22:05. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it → `... br_missing submit` → **1958831**, COMPLETED in 5 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+RS` s0 @12288 | +0.171 ± 0.012 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+RS` s1 @12288 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+RS` s2 @12288 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144 → 12,288): s0 0.120 → 0.149 → 0.160 → 0.171 (hides after its correction throughout); s1 0.004 → 0.001 → 0.200 → **0.000** (back to honest after its regression, iteration 57); s2 0.154 → 0.161 → 0.171 → **0.000** (left the hiding optimum between 6144 and 12,288). So the hide-after-correction state is not always permanent: 2 of 3 seeds that were in it at 6144 left it by 12,288. "Above target" printed for s1 (information only). No best response hides.
+- **`LE+RS` is at the cap → finished, at 2/3.** Grid swap wave 2 now: `LE+GL` (2/3 at the cap with s1/s2 resumed; s0 0.004), `LE+EP` and `LE+NET` (extending to the cap); `LE+LR`, `LE+AN` (confirmation) and `LE+RS` finished at 2/3.
