@@ -2629,3 +2629,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. All 11 campaign jobs still running; none has ended since iteration 96. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag). `... br_missing` (dry-run): nothing.
 - Progress (episodes done / target, seeds in order): grid no-reg `LN+NET` 9936 / 9936 / 9912 of 12,288; grid swap `LE+NET_confirm` 2208 / 2136 / 2352 of 12,288; AS no-reg `LN+EP_confirm` 4680 / 4608 / 5424 and `LN+LR_confirm` 5952 / 5976 / 5904 of 6144 (cell DONE; information only); Tomato swap `L` s1 8304 of 12,288; tomato_large swap `LE_confirm` 1248 / 288 / 360 of 1536, `L` 2088 / 2040 / 2064 and `LN` 2544 / 1752 / 2544 of 3072; tomato_large no-reg `L` 4776 ×3, `LE` 3840 ×3, `LN` 3840 / 3768 / 3816 of 6144.
+
+## 2026-11-09, iteration 98 (09:51): AS no-reg `LN+LR_confirm` finished, 1/3 (information only)
+
+- 1965387 (AS `O1_P1eq1_LN+LR_confirm`, 6144) ended COMPLETED, exit 0, at about 09:50. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag). `... br_missing` (dry-run) listed only AS `LN+LR_confirm` → `... br_missing submit` → **1966219**, COMPLETED in 3 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict (rule) | Best response | PPO (exact) |
+|---|---|---|---|---|
+| `P1eq1_LN+LR_confirm` s20 @6144 | +0.035 ± 0.031 | not converged | 2 corr. (rounds 0, 1); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 |
+| `P1eq1_LN+LR_confirm` s21 @6144 | +0.018 ± 0.044 | CONVERGED | same | same |
+| `P1eq1_LN+LR_confirm` s22 @6144 | +0.043 ± 0.033 | not converged | same | same |
+
+- PPO is corrected once and then fully honest in every seed (true 450 = honest). Its best response takes a second correction in round 1 for the received reward it pays; the shortfall is within about 1 s.e. of the 0.03 bar in s20 and s22. No best response hides.
+- **No action:** the AS no-reg cell is DONE (`LN+RS`, iteration 88), so this confirmation (1/3) is information only. Still running for information: `LN+EP_confirm` 1964876.
+- Background wait re-armed on the 10 training jobs (1952313 1953259 1965253 1964876 1958379 1958116 1957285 1965673 1965623 1965874).
