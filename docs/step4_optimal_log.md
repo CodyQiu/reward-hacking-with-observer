@@ -2554,3 +2554,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **End state, answering the hypothesis for Absent Supervisor without a regulariser:** nobody hides. PPO is corrected once in round 0 (true about −100) and is then honest (true 450 in rounds 1–4). Its best response and the target take 1–3 corrections and then behave; the extra corrections are worth a few percent. So the no-regulariser optimum here accepts corrections rather than avoiding them.
 - **The other AS no-reg confirmations** (`LN+NET` 1962149, `LN+EP` 1964876, `LN+LR` 1965387, `LN+GL` 1965514) are still running. I leave them to finish rather than cancel jobs without your go-ahead; their checks will be logged for information, and no further extension or confirmation is submitted for this cell.
 - Flags: "Cells DONE" is updated to 3 of 8.
+
+## 2026-11-09, iteration 89 (04:31): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 14 campaign jobs running; none has ended since iteration 88. `... resume` and `... br_missing` (dry-runs): nothing to submit.
+- Progress: grid no-reg `LN+GL_confirm` 11,232–11,280 and `LN+NET` 8184–8232 of 12,288; AS `LN+NET_confirm` 5304 of 6144; grid swap `LE+NET_confirm` 312–360 of 12,288 after 81 min (about 4.4 episodes/min with the [256, 256] network, so about 46 h in all: it may reach its 48 h limit and need one resume); tomato_large swap `LE_confirm` 744 / 192 / 240 of 1536.
+- Expected time-limit stops (not incidents; rule 1 resumes them): Tomato swap `L` (1947369) at about 06:25 today, with s1 at 7680 of 12,288 (s0, s2 at 11,928 / 11,376); tomato_large swap `LE_confirm` (1952313) at about 15:55 today. Both lost 22.5 h of their limit to the stall.
