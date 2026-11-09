@@ -185,3 +185,17 @@
   [absent_supervisor s0] 141,312,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    633.4  rounds 5297  (10782s)
   [absent_supervisor s0] 142,080,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    632.6  rounds 5325  (10967s)
   [absent_supervisor s0] 142,848,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    627.3  rounds 5352  (11149s)
+  [absent_supervisor s0] 143,616,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    636.3  rounds 5378  (11328s)
+  [absent_supervisor s0] 144,384,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    627.7  rounds 5403  (11504s)
+  [absent_supervisor s0] 145,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    629.2  rounds 5428  (11679s)
+  [absent_supervisor s0] 145,920,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    623.8  rounds 5452  (11854s)
+  [absent_supervisor s0] 146,688,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    623.4  rounds 5477  (12033s)
+  [absent_supervisor s0] 147,456,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    618.3  rounds 5502  (12204s)
+Traceback (most recent call last):
+  File "/home/users/cody1212/reward-hacking-with-observer/experiments/step3_ppo.py", line 184, in <module>
+    main()
+  File "/home/users/cody1212/reward-hacking-with-observer/experiments/step3_ppo.py", line 91, in main
+    train_run(sdir, cfg, resume=True)
+  File "/home/users/cody1212/reward-hacking-with-observer/src/step3/train.py", line 255, in train_run
+    print(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
+PermissionError: [Errno 13] Permission denied

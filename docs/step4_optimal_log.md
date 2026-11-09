@@ -7,6 +7,7 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 - **Cells DONE: 2 of 8.**
   - AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
   - Tomato no-regulariser (iteration 45, 2026-11-07 09:05): `O1_P1eq1_LN` (64 envs, batch 1600, 6144 episodes) CONVERGED in 3/3 tuning seeds (0.026 / 0.022 / 0.012) and 3/3 confirmation seeds (0.017 / 0.010 / 0.025), both at 6144, with no extension of the confirmation.
+- **CLUSTER INCIDENT, NEEDS YOUR DECISION (iteration 66, 2026-11-08 18:46).** FarmShare stalled from about 20:11 on 11-07 to 18:46 on 11-08: no job of any user ended in that window, and at 18:46:35 jobs failed cluster-wide. **10 of our training runs and 2 checks were killed** (table in iteration 66). Per your instruction I have **not** resubmitted them. Each has intact checkpoints and could be continued in place with `--resume` (rule 1, `resume submit`), or rerun under new ids. Your call. Meanwhile the surviving jobs keep running; their 48 h limits now include the 22.5 h stall.
 - **Question (iteration 19): does an extended confirmation count?** Rule 4 says to extend any finished run with an IMPROVING seed, and I apply that to confirmation runs too. Two are now being extended past the episode count at which their tuning runs converged: grid swap `LE_confirm` and AS no-regulariser `LE_confirm`, both 3072 → 6144. If one of them reaches 3/3 at 6144, its tuning run was only shown CONVERGED at 3072. Your call whether that counts, or whether the tuning run must also be checked at 6144.
   - **Update (iteration 24):** 3 confirmations are now being extended: grid swap `LE_confirm` (6144 → 12,288), AS no-regulariser `LE_confirm` (12,288 → 24,576, its third extension) and AS no-regulariser `LN_confirm` (6144 → 12,288).
 - **Rule gap (iteration 26): a confirmation that fails at the cap.** Grid swap `LE` was CONVERGED 3/3 as a tuning run (3072), but its confirmation finished at the 12,288 cap at 2/3 (s21 hides, 0.217). If grid swap `LN` (running to 12,288) also fails, rule 5 ("none CONVERGED or IMPROVING") does not say whether that cell goes to wave 2. My default if it comes to that: treat a tuning run whose confirmation failed at the cap as not CONVERGED, and start wave 2 from the config with the smallest mean BR gap. Tell me if you want otherwise.
@@ -2206,3 +2207,32 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 4): s2 IMPROVING → extend to 6144** (2× 3072; cap 24,576). Dry-run: `... extend absent_supervisor "O1_P1eq1_LN+LR" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+LR --seeds 0 1 2 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`.
 - AS no-reg wave 2 now: `LN+NET` 3/3 (confirmation running); `LN+LR` 2/3 (extending); `LN+EP`, `LN+RS` 2/3 at 3072 (extending to 6144); `LN+AN` finished 2/3; `LN+GL` s0 hides (0.087), s1/s2 still training.
 - **Submitted** (committed first as fb2a8539): `... extend absent_supervisor "O1_P1eq1_LN+LR" 6144 submit` → **1955923**. 21 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 66 (18:46): **cluster incident: FarmShare stalled for 22.5 h; 11 runs and 2 checks killed**
+
+- The loop's 20:44 wakeup on 11-07 did not run until 18:46 on 11-08. The background wait (`squeue` every 30 s) ended at 18:45 with `slurm_load_jobs error: Socket timed out on send/recv operation`, and `sacct` failed with `_open_persist_conn: failed to open persistent connection to host:slurm-01:6819: Connection refused`. `git pull --no-rebase --no-edit --ff`: already up to date.
+- **Diagnosis (same signature as the 2026-10-12 outage, CLAUDE.md §6):**
+  - Every campaign run's last checkpoint (`progress.json` mtime) is between 20:07 and 20:11 on 11-07; none advanced until 18:46 on 11-08. The seed logs stop at the same time.
+  - `sacct -a -X -S 2026-11-07T20:15 -E 2026-11-08T18:46 -s CD,F,TO,CA,NF`: **no job of any user ended** in that window.
+  - At 18:46:35, 11 of our jobs ended FAILED (exit 1:0) at the same second, and other users' jobs ended FAILED/TIMEOUT in the same minute (alikhanm, azq, ckarl, darwinz, edyeres, etardif, gsbonfim, …). `sinfo` at 18:47: 10 nodes stuck in `completing` (barley-[01-03], oat-[01-02,05-06], rye-[01-02], wheat-06).
+  - The failed jobs' `.out` files are empty or end mid-run (e.g. `step4_grid_O1_P1eq1_LN+NET_1950090.out` is 0 bytes); results files are intact up to the last checkpoint (they are written atomically by path).
+- **Killed by the incident (FAILED 18:46:35, exit 1), with each seed's last checkpoint:**
+
+| Job | Run | Target episodes | Last checkpoint (episodes, per seed) |
+|---|---|---|---|
+| 1950090 | grid `O1_P1eq1_LN+NET` | 6144 | 5280 / 5280 / 5232 |
+| 1951119 | grid `O1_P2swap_LE+AN_confirm` | 12,288 | 10,584 / 10,608 / 10,536 |
+| 1951264 | AS `O1_P1eq1_LN+GL` | 3072 | s0 finished, **s1 2808**, s2 finished |
+| 1951385 | grid `O1_P2swap_LE+EP` | 12,288 | 8448 / 8496 / 8496 |
+| 1951920 | grid `O1_P2swap_LE+RS` | 12,288 | 8352 / 8400 / 8400 |
+| 1952702 | AS `O1_P1eq1_LN+RS` | 6144 | 4896 / 4944 / 4872 |
+| 1952948 | grid `O1_P1eq1_LN+GL_confirm` | 12,288 | 7320 / 7320 / 7320 |
+| 1954560 | AS `O1_P1eq1_LN+NET_confirm` | 3072 | 384 / 408 / 408 |
+| 1954904 | grid `O1_P1eq1_LN+LR_confirm` | 12,288 | 6672 / 6672 / 6672 |
+| 1954905 | grid `O1_P2swap_LE+NET` | 12,288 | 6648 / 6600 / 6648 |
+
+  - Checks: **1951850** (`br_tomato_large_O1_P1eq1_LE`) FAILED at 18:46:35 after finishing s0 (+0.087 ± 0.020; PPO corrected once then true 514; best response 4 corrections) and part of s1. **1952981** (`br_tomato_large_O1_P1eq1_LN`) ended TIMEOUT at 18:46:44 after 25 h 22 min against its 12 h limit, i.e. the limit was not enforced during the stall; I count it as killed by the incident, not as a normal time-limit TIMEOUT.
+- **Survived and running again** (checkpoints written at 18:46–18:47): tomato swap `L` (1947369), grid `LN+EP` (1953031), grid `LE+GL` (1951120), tomato_large no-reg `L` (1953259), tomato_large swap `L`/`LN` (1943603/05), AS `LN+EP` (1952701), AS `LN+LR` (1955923), tomato_large swap `LE_confirm` (1952313). Their elapsed time includes the 22.5 h stall, so they will reach their 48 h limits about 22.5 h earlier than their training alone would.
+- **Decisions:**
+  - **Nothing resubmitted.** Your standing instruction is: "If a job fails or is killed by a cluster incident, tell me; don't resubmit under the same run id." That overrides rule 1 (`resume submit`) for these 10 runs. They stay as they are until you decide. Flagged at the top.
+  - **No new checks this iteration.** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) lists AS `O1_P1eq1_LN+GL` (s2 finished before the stall) and tomato_large `O1_P1eq1_LE` (the killed check). The first belongs to a killed run and the second is a killed check, and 10 nodes are still `completing`, so I hold both until you answer or the cluster is clearly healthy.

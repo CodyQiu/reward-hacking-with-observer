@@ -421,3 +421,20 @@
   [grid s1] 80,256,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2102.0  rounds 11036  (22035s)
   [grid s1] 80,448,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2048.4  rounds 11063  (22152s)
   [grid s1] 80,640,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2028.1  rounds 11088  (22263s)
+  [grid s1] 80,832,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2095.5  rounds 11112  (22384s)
+  [grid s1] 81,024,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2118.2  rounds 11137  (22494s)
+  [grid s1] 81,216,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2108.5  rounds 11161  (22600s)
+  [grid s1] 81,408,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2097.8  rounds 11186  (22706s)
+  [grid s1] 81,600,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2134.8  rounds 11212  (22816s)
+  [grid s1] 81,792,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2144.7  rounds 11236  (22918s)
+  [grid s1] 81,984,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2156.2  rounds 11260  (23021s)
+  [grid s1] 82,176,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2155.0  rounds 11284  (23119s)
+  [grid s1] 82,560,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2135.4  rounds 11332  (23294s)
+Traceback (most recent call last):
+  File "/home/users/cody1212/reward-hacking-with-observer/experiments/step3_ppo.py", line 184, in <module>
+    main()
+  File "/home/users/cody1212/reward-hacking-with-observer/experiments/step3_ppo.py", line 91, in main
+    train_run(sdir, cfg, resume=True)
+  File "/home/users/cody1212/reward-hacking-with-observer/src/step3/train.py", line 255, in train_run
+    print(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
+PermissionError: [Errno 13] Permission denied
