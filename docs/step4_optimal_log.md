@@ -2591,3 +2591,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - 1965789 (check, Tomato swap `O1_P2swap_L` s0) ended COMPLETED, exit 0, at 06:13 after 7 min. `git pull --no-rebase --no-edit --ff`: already up to date. `... br_missing` (dry-run): nothing. `... resume` (dry-run) lists only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag).
 - Tomato swap `L` s0 @12,288: **+0.003 ± 0.000, CONVERGED** (gap history 0.011 → 0.005 → 0.004 → 0.003 at 1536 → 3072 → 6144 → 12,288). Corrected once in round 0, then near-honest (true 423), as its best response (422) and the target. s1 (7848) and s2 (11,928) are still training; job 1947369 reaches its 48 h limit at about 06:25 and will then be resumed (rule 1).
+
+## 2026-11-09, iteration 93 (06:26): Tomato swap `L` time limit → resume
+
+- 1947369 (Tomato swap `O1_P2swap_L`, extending to 12,288) ended **TIMEOUT** at 06:25:31 (its 48 h limit; batch step CANCELLED by the limit). A time-limit stop, not an incident, though 22.5 h of the limit went to the stall. Checkpoints: s0 finished 12,288 (check: +0.003, iteration 92); s1 7896, s2 12,072. `git pull --no-rebase --no-edit --ff`: already up to date.
+- **Decision (rule 1): resume.** Dry-run `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` listed Tomato `L` (`submit.sh 48 --env tomato --run-id O1_P2swap_L --seeds 1 2 --results-dir results/step4/tomato/optimal --resume`) and AS `LN+NET_confirm` (held, iteration-91 flag). Since `resume submit` resubmits every listed run, I ran only the Tomato line from the dry-run, verbatim: `EXCLUDE=barley-04 bash scripts/farmshare/submit.sh 48 --env tomato --run-id O1_P2swap_L --seeds 1 2 --results-dir results/step4/tomato/optimal --resume`.
+- `... br_missing` (dry-run) listed AS `LN+GL_confirm` (another seed finished).
