@@ -2669,3 +2669,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - **No action:** AS no-reg is DONE (iteration 88), so `LN+EP_confirm` (2/3) is information only. Of the AS no-reg confirmations, `LN+RS` 3/3 (DONE), `LN+EP` 2/3, `LN+LR` 1/3, `LN+GL` 1/3, `LN+NET` held (s20 0.066). In every one PPO is corrected once and then honest (or, `LN+GL` s20, hides); the shortfall is the best response's second, received-reward-paying correction.
 - tomato_large swap `LE_confirm` s20 check is logged when 1966405 finishes. Background wait re-armed on the 9 training jobs.
+
+## 2026-11-09, iteration 102 (13:58): no change; tomato_large swap `LE_confirm` s20 check still running
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 9 training jobs running; none has ended since iteration 101. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing new (tomato_large swap `LE_confirm` check still running). `... resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held.
+- 1966405 (tomato_large swap `LE_confirm` s20 @1536) has run 1 h 13 min: policy read exactly (windows exploited 1, 0, 0, 0, 1; 1 correction, in round 0); correction 2 being fitted on the best caught policy for round 1.
