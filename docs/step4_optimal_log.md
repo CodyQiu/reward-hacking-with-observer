@@ -2304,3 +2304,13 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144 → 12,288): s20 0.014 → 0.000 → 0.001 → 0.005; s21 0.215 → 0.162 → 0.180 → 0.100 (still hides after its correction); s22 0.107 → 0.104 → 0.092 → **0.000** (its received-reward shortfall closed). No best response hides.
 - **`LE+AN_confirm` is at the cap → finished, at 2/3.** So grid swap `LE+AN` (3/3 as a tuning run at 1536) fails confirmation, the same way `LE` did in wave 1 (iteration 26): one confirmation seed stays in the hide-after-correction local optimum. Grid swap wave 2 now: `LE+GL` 2/3, `LE+EP` 2/3, `LE+NET` 2/3, `LE+RS` 0/3 (all extending to the cap); `LE+LR` finished 2/3; `LE+AN` finished (confirmation 2/3).
+
+## 2026-11-08, iteration 72 (20:30): more incident damage: 4 seeds died at the stall's end with `PermissionError`
+
+- 1951120 (grid `O1_P2swap_LE+GL`, extending to 12,288; a job that "survived" the stall) ended **FAILED** (exit 1) at 20:29. `git pull --no-rebase --no-edit --ff`: already up to date.
+- **Cause:** s1 and s2 crashed with `PermissionError: [Errno 13] Permission denied` in `train.py` line 255 (the progress `print` to the seed's log file). Their last checkpoints are 10,296 / 10,272 at 20:10–20:11 on 11-07, i.e. they died when the stall ended, when their open log-file handles stopped working (the incident's NFS damage; cf. the stale-handle note at the top). s0 kept running and finished 12,288 at 20:29; the job's own `log.close()` then raised the same `PermissionError`, so Slurm marks the job FAILED.
+- `grep -l PermissionError results/step4/*/optimal/*/seed*.log` finds the same in **AS `O1_P1eq1_LN+EP` s0 and s2** (last checkpoints 4584 at 20:08–20:09 on 11-07). Their job 1952701 is still running for s1 (6048 of 6144) and will likely end FAILED the same way. Every other running job's seeds have checkpointed since 18:46 today (tomato_large swap `LE_confirm` s0/s2 last at 18:50, but at tomato_large's pace of about 24 episodes per hour that is not yet overdue).
+- **Decision:** these 4 seeds are casualties of the same incident, so under your iteration-68 decision (continue the incident's kills from their last checkpoints) I resume them:
+  - grid `LE+GL`: dry-run `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+GL --seeds 1 2 --results-dir results/step4/grid/optimal --resume`.
+  - AS `LN+EP` s0, s2: once 1952701 has ended (`resume` lists only runs without a job).
+  - Checks: `... br_missing` (dry-run) lists grid `LE+GL` (s0 finished at 12,288).
