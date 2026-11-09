@@ -2619,3 +2619,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - AS `LN+GL_confirm` s22 @6144: +0.036 ± 0.030 (PPO corrected once then honest; best response takes a 2nd correction). Information only (cell DONE). The confirmation ends 1/3: s20 hides (0.147), s21 0.000, s22 0.036.
   - **Tomato swap `L` s2 @12,288: +0.092 ± 0.004**, gap history 0.092 / 0.094 / 0.093 / 0.092 at 1536 / 3072 / 6144 / 12,288. Corrected once in round 0, then a partly honest route (true 300) against its best response's near-honest 422. Flat over 8× the training (iteration-39 flag).
 - **No decision:** Tomato swap `L` s1 (8016 of 12,288; 0.294 at 6144, exploiting through every audit) is still training. At about 1.7 episodes/min it needs about 42 h more, and wave 2 for Tomato swap waits on it (rule 5). This is the case your option 2 (start Tomato swap wave 2 now) would shortcut.
+
+## 2026-11-09, iteration 96 (08:31): no change; pace now about hourly
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 11 campaign jobs running; none has ended since iteration 95. `... br_missing` (dry-run): nothing. `... resume` (dry-run): only AS `LN+NET_confirm`, held (iteration-91 flag).
+- Only long runs remain: grid no-reg `LN+NET` (to 12,288), grid swap `LE+NET_confirm` (12,288, about 1.5 days more), Tomato swap `L` s1 (about 40 h), the tomato_large runs (days), and two AS no-reg confirmations whose cell is DONE. Per the pace rule I now check about hourly (the wakeup tool's maximum), with a background wait on every job. Next expected event: tomato_large swap `LE_confirm` reaches its 48 h limit at about 15:55 (resume, rule 1).
