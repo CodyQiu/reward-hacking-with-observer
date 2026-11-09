@@ -2323,3 +2323,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - 1943605 (tomato_large swap `O1_P2swap_LN`, 1536) ended COMPLETED, exit 0, at 20:46, about 1 h 20 min before its 48 h limit (s1 finished; s0 and s2 finished on 11-07). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only tomato_large `P2swap_LN` (3 tomato_large checks running) → `... br_missing submit` → **1957096** (s1; hours).
 - The 4 resumed seeds (iteration 72) are training again: e.g. AS `LN+EP` s0 at 4632 and grid `LE+GL` s1 at 10,464, both checkpointed at 20:45. No decision: rule 4 waits for tomato_large `P2swap_LN` s1's check, and tomato_large `P2swap_L` s1's (1956296).
+
+## 2026-11-08, iteration 74 (21:06): grid no-reg `LN+NET` 1/3 at 6144
+
+- 1956328 (grid `O1_P1eq1_LN+NET`, resumed after the stall, 6144) ended COMPLETED, exit 0, at 21:05. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it (4 tomato_large checks running) → `... br_missing submit` → **1957247**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+NET` s0 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+NET` s1 @6144 | +0.042 ± 0.009 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+| `P1eq1_LN+NET` s2 @6144 | +0.052 ± 0.007 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144): s0 0.001 → 0.001 → 0.000; s1 0.050 → 0.037 → 0.042; s2 0.067 → 0.056 → 0.052. s1 and s2 hide after their correction. "Above target" printed for s0 and s2 (information only). No best response hides.
+- **Decision (rule 4): s1/s2 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+NET" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.

@@ -202,3 +202,13 @@ PermissionError: [Errno 13] Permission denied
   [absent_supervisor s2] resumed at episode 4584 -> 6144
   [absent_supervisor s2] 147,456,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    620.6  rounds 5362  (164s)
   [absent_supervisor s2] 148,224,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    600.3  rounds 5391  (311s)
+  [absent_supervisor s2] 148,992,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    625.0  rounds 5416  (452s)
+  [absent_supervisor s2] 149,760,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    636.6  rounds 5440  (590s)
+  [absent_supervisor s2] 150,528,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    627.9  rounds 5464  (730s)
+  [absent_supervisor s2] 151,296,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    645.7  rounds 5488  (870s)
+  [absent_supervisor s2] 152,064,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    648.2  rounds 5512  (1006s)
+  [absent_supervisor s2] 152,832,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    648.1  rounds 5536  (1142s)
+  [absent_supervisor s2] 153,600,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    661.2  rounds 5561  (1283s)
+  [absent_supervisor s2] 154,368,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    658.1  rounds 5585  (1422s)
+  [absent_supervisor s2] 155,136,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    659.3  rounds 5609  (1551s)
+  [absent_supervisor s2] 155,904,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    655.8  rounds 5633  (1678s)
