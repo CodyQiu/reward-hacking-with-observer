@@ -2518,3 +2518,18 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 4): tomato_large `O1_P1eq1_LE`: all three IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend tomato_large "O1_P1eq1_LE" 6144` → `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LE --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`.
 - Grid no-reg wave 2 now: `LN+GL_confirm` and `LN+NET` extending to the cap; `LN+LR_confirm` 0/3, `LN+EP` 2/3, `LN+AN` 1/3, `LN+RS` 0/3 finished. If the last two also end below 3/3 (or `LN+GL` fails confirmation), wave 2 has plateaued and rule 6 (wave 3) applies.
 - **Submitted** (committed first as 877df776): `... extend tomato_large "O1_P1eq1_LE" 6144 submit` → **1965623**. 15 campaign jobs are queued or running.
+
+## 2026-11-09, iteration 87 (02:49): grid swap `LE+NET` 3/3 at the cap → confirm
+
+- At 02:49, `git pull --no-rebase --no-edit --ff`: already up to date; no campaign job had ended. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `O1_P2swap_LE+NET` with s2 at 12,048 of 12,288; I waited for the job. 1956331 (`LE+NET`, resumed after the incident, 12,288) ended COMPLETED, exit 0, at 03:02. `... br_missing` (dry-run) again listed only it → `... br_missing submit` → **1965670**, COMPLETED in 5 min.
+- AS `LN+GL_confirm` (1965514) is training normally now: seed20 `config.json` has λ 1.0, lr 3e-4, entropy 0.1, batch 1600, 64 envs, no regulariser, 6144 episodes; seeds at 432–480 at 02:50.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+NET` s0 @12288 | +0.003 ± 0.002 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s1 @12288 | +0.002 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+NET` s2 @12288 | +0.002 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144 → 12,288): s0 0.141 → 0.130 → 0.115 → **0.003** (left the hide-after-correction optimum between 6144 and 12,288, as `LE+RS` s2 did); s1 0.137 → 0.027 → 0.002 → 0.002; s2 0.007 → 0.003 → 0.014 → 0.002. All three: corrected once in round 0, then honest (true 22), the target's end state. "Above target" printed for s1 (information only). No best response hides.
+- **Decision (rule 4): `O1_P2swap_LE+NET`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid "O1_P2swap_LE+NET"` → `submit.sh 48 --env grid --run-id O1_P2swap_LE+NET_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --set g.l_minus_on=dispreferred episodes=12288 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03 ppo.net_arch=[256,256]`. The confirmation trains 12,288 episodes in one run (the length at which the tuning run converged), with a single annealing phase over its last 25%; the tuning run reached 12,288 through three extensions.
+- Grid swap wave 2 is now complete: `LE+NET` 3/3 (confirming); `LE+LR`, `LE+AN` (confirmation), `LE+RS`, `LE+EP`, `LE+GL` finished at 2/3. Rule 6 (wave 3) waits on this confirmation.
