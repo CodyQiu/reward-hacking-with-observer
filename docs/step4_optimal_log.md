@@ -2480,3 +2480,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - No best response hides.
 - **Decisions (rule 4):** grid `LN+EP` is at the cap → **finished, at 2/3**. AS `LN+GL`: s1/s2 still training; rule 4 waits.
 - Grid no-reg wave 2 now: `LN+GL` (confirmation 0/3, extending to the cap), `LN+LR` (confirmation 0/3, extending to the cap), `LN+NET` (1/3, extending to the cap); `LN+AN` 1/3, `LN+RS` 0/3 and `LN+EP` 2/3 finished.
+
+## 2026-11-09, iteration 85 (01:13): AS no-reg `LN+GL` 3/3 at 6144 → confirm
+
+- 1956439 (AS `O1_P1eq1_LN+GL`, 6144) ended COMPLETED, exit 0, at 01:13. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it → `... br_missing submit` → **1965510**, COMPLETED in 3 min (s1, s2).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+GL` s0 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -120, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN+GL` s1 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -103, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 |
+| `P1eq1_LN+GL` s2 @6144 | +0.016 ± 0.029 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -114, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+
+- Gap history (3072 → 6144): s0 0.087 → 0.000 (stopped hiding, iteration 84); s1 0.000 → 0.000; s2 0.009 → 0.016. All three corrected once, then honest. "Above target" printed for s1 (information only). No best response hides.
+- **Decision (rule 4): `O1_P1eq1_LN+GL`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+GL"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+GL_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.gae_lambda=1.0 g.use_regularization=False g.epochs=1000 episodes=6144 anneal.last=0.25 anneal.floor=0.1 n_envs=64`.
+- AS no-reg wave 2: 5 of 6 factors (`NET`, `RS`, `EP`, `LR`, `GL`) reached 3/3 as tuning runs and are in confirmation; `AN` finished at 2/3.
