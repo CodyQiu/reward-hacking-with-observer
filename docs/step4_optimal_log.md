@@ -2236,3 +2236,18 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decisions:**
   - **Nothing resubmitted.** Your standing instruction is: "If a job fails or is killed by a cluster incident, tell me; don't resubmit under the same run id." That overrides rule 1 (`resume submit`) for these 10 runs. They stay as they are until you decide. Flagged at the top.
   - **No new checks this iteration.** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) lists AS `O1_P1eq1_LN+GL` (s2 finished before the stall) and tomato_large `O1_P1eq1_LE` (the killed check). The first belongs to a killed run and the second is a killed check, and 10 nodes are still `completing`, so I hold both until you answer or the cluster is clearly healthy.
+
+## 2026-11-08, iteration 67 (19:03): cluster recovering; tomato_large swap `L` finished
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. `squeue` and `sacct` answer again; `sinfo` at 19:03 shows 1 node still `completing` (10 at 18:47). The 9 surviving jobs are writing checkpoints. No answer yet on the iteration-66 flag, so the 10 killed runs and 2 killed checks stay as they are.
+- 1943603 (tomato_large swap `O1_P2swap_L`, 1536) ended **COMPLETED**, exit 0, at 19:02: s1 finished its last episodes after the stall (s0 and s2 finished on 11-07). A normal completion, not a kill.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `O1_P1eq1_LN+GL`, tomato_large `O1_P1eq1_LE`, `O1_P1eq1_LN` and `O1_P2swap_L`. The two tomato_large no-reg entries are the checks killed by the incident, so I held them (iteration-66 flag). I submitted the other two singly, each after a dry-run:
+  - `... br tomato_large "O1_P2swap_L" submit` → **1956296** (s1; running, hours).
+  - `... br absent_supervisor "O1_P1eq1_LN+GL" submit` → **1956297**, COMPLETED in 1 min (s2, which finished before the stall; it reads finished seeds only and resubmits no training).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| AS `P1eq1_LN+GL` s0 @3072 | +0.087 ± 0.018 | IMPROVING | 1 corr. (round 0); true -100, 450, 450, 450, 450 | hides; true -103, -101, -101, -102, -101 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| AS `P1eq1_LN+GL` s2 @3072 | +0.009 ± 0.023 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -114, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+
+- **No decision on AS `LN+GL`:** s1 stopped at 2808 of 3072 when its job was killed, and rule 4 needs every seed finished. It waits on the iteration-66 decision.
