@@ -2560,3 +2560,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `git pull --no-rebase --no-edit --ff`: already up to date. 14 campaign jobs running; none has ended since iteration 88. `... resume` and `... br_missing` (dry-runs): nothing to submit.
 - Progress: grid no-reg `LN+GL_confirm` 11,232–11,280 and `LN+NET` 8184–8232 of 12,288; AS `LN+NET_confirm` 5304 of 6144; grid swap `LE+NET_confirm` 312–360 of 12,288 after 81 min (about 4.4 episodes/min with the [256, 256] network, so about 46 h in all: it may reach its 48 h limit and need one resume); tomato_large swap `LE_confirm` 744 / 192 / 240 of 1536.
 - Expected time-limit stops (not incidents; rule 1 resumes them): Tomato swap `L` (1947369) at about 06:25 today, with s1 at 7680 of 12,288 (s0, s2 at 11,928 / 11,376); tomato_large swap `LE_confirm` (1952313) at about 15:55 today. Both lost 22.5 h of their limit to the stall.
+
+## 2026-11-09, iteration 90 (05:18): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 14 campaign jobs running; none has ended since iteration 88. `... resume` and `... br_missing` (dry-runs): nothing to submit.
