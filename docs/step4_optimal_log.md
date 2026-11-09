@@ -2364,3 +2364,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072): s0 0.063 → 0.055; s1 0.066 → 0.049; s2 0.042 → 0.031 (now 0.001 above the bar). As in `L` (iteration 61): PPO is corrected once and then near-honest (true 520); its best response and the target keep collecting corrections by exploiting in the window's last steps (true 516 in those rounds) and are worth 3–6% more. PPO takes fewer corrections than optimal; nobody hides.
 - **Decision (rule 4): all three IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend tomato_large "O1_P1eq1_LN" 6144` → `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`.
+- **Submitted** (committed first as c256fa90): `... extend tomato_large "O1_P1eq1_LN" 6144 submit` → **1958379**. 20 campaign jobs are queued or running.
