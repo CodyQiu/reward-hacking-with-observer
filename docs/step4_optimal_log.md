@@ -2643,3 +2643,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - PPO is corrected once and then fully honest in every seed (true 450 = honest). Its best response takes a second correction in round 1 for the received reward it pays; the shortfall is within about 1 s.e. of the 0.03 bar in s20 and s22. No best response hides.
 - **No action:** the AS no-reg cell is DONE (`LN+RS`, iteration 88), so this confirmation (1/3) is information only. Still running for information: `LN+EP_confirm` 1964876.
 - Background wait re-armed on the 10 training jobs (1952313 1953259 1965253 1964876 1958379 1958116 1957285 1965673 1965623 1965874).
+
+## 2026-11-09, iteration 99 (10:56): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 10 training jobs running; none has ended since iteration 98. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing. `... resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag).
+- Expected next: tomato_large swap `LE_confirm` (1952313) reaches its 48 h limit at about 15:55 and tomato_large no-reg `L` (1953259) at about 17:55. Both will be resumed from their checkpoints (rule 1), each from its own line of the `resume` dry-run, so the held AS run is not resubmitted.
