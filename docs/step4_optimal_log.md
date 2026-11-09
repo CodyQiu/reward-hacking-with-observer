@@ -2251,3 +2251,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 | AS `P1eq1_LN+GL` s2 @3072 | +0.009 ± 0.023 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -114, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
 
 - **No decision on AS `LN+GL`:** s1 stopped at 2808 of 3072 when its job was killed, and rule 4 needs every seed finished. It waits on the iteration-66 decision.
+
+## 2026-11-08, iteration 68 (19:07): your decision: continue the killed runs from their checkpoints
+
+- **Your answer to the iteration-66 flag (19:06): "yeah, continue them via their last checkpoints".** So the 10 runs killed by the stall are resumed in place (rule 1, `resume submit`), and the 2 killed checks are resubmitted (`br_missing submit`).
+- `git pull --no-rebase --no-edit --ff`: already up to date. `sinfo` at 19:06: 1 node `completing`, the rest normal. 9 campaign jobs running.
+- Dry-run `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` listed exactly the 10 killed runs, each as `submit.sh 48 --env <env> --run-id <run> --seeds <unfinished seeds> --results-dir results/step4/<env>/optimal --resume`: grid `O1_P1eq1_LN+GL_confirm`, `O1_P1eq1_LN+LR_confirm`, `O1_P1eq1_LN+NET`, `O1_P2swap_LE+AN_confirm`, `O1_P2swap_LE+EP`, `O1_P2swap_LE+NET`, `O1_P2swap_LE+RS`; AS `O1_P1eq1_LN+GL` (seed 1 only), `O1_P1eq1_LN+NET_confirm`, `O1_P1eq1_LN+RS`. The other runs' jobs are still running.
+  - Without `--extend-to`, a resume trains to the episode count in each seed's `config.json`, which already holds its last extension (e.g. `LE+AN_confirm` seed20: 12,288, after resumes at 1536 → 3072 → 6144 → 12,288). So every run continues towards the target it was killed on.
+- Dry-run `... br_missing` listed tomato_large `O1_P1eq1_LE` and `O1_P1eq1_LN` (the two killed checks); tomato_large `P2swap_L` is skipped while its check 1956296 runs. `step4_br.py` keeps existing check files ("never overwritten"), so the resubmitted checks redo only the seeds without one: `P1eq1_LE` s1, s2 (s0 done, +0.087) and `P1eq1_LN` s2 (s0, s1 done).
