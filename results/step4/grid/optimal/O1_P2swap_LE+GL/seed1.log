@@ -444,3 +444,5 @@ PermissionError: [Errno 13] Permission denied
   [grid s1] 82,944,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2089.7  rounds 11384  (340s)
   [grid s1] 83,136,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2015.5  rounds 11408  (446s)
   [grid s1] 83,328,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2027.7  rounds 11432  (555s)
+  [grid s1] 83,520,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2108.4  rounds 11456  (664s)
+  [grid s1] 83,712,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2142.0  rounds 11480  (774s)

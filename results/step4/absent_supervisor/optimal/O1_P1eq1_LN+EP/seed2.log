@@ -201,3 +201,4 @@ Traceback (most recent call last):
 PermissionError: [Errno 13] Permission denied
   [absent_supervisor s2] resumed at episode 4584 -> 6144
   [absent_supervisor s2] 147,456,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    620.6  rounds 5362  (164s)
+  [absent_supervisor s2] 148,224,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    600.3  rounds 5391  (311s)

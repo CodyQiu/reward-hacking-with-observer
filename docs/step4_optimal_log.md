@@ -2316,3 +2316,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - Checks: `... br_missing` (dry-run) lists grid `LE+GL` (s0 finished at 12,288).
 - **Submitted** (committed first as c5be7dcc): `... resume submit` → **1956980** (grid `LE+GL` s1, s2); `... br_missing submit` → **1956981** (grid `LE+GL` s0), COMPLETED in 4 min: s0 @12,288 **+0.004 ± 0.004, CONVERGED** (gap history 0.017 → 0.008 → 0.004 → 0.004; corrected once, then honest).
 - 1952701 (AS `LN+EP`) ended COMPLETED, exit 0, at 20:38 with s1 finished (6144) and s0, s2 still at 4584. Dry-run `... resume` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+EP --seeds 0 2 --results-dir results/step4/absent_supervisor/optimal --resume`; `... resume submit` → **1957042**. `... br_missing` (dry-run) listed AS `LN+EP` → `... br_missing submit` → **1957046** (s1). 20 campaign jobs are queued or running.
+  - Check 1957046: AS `LN+EP` s1 @6144 +0.000 ± 0.000, CONVERGED (corrected once, then honest). s0 and s2 are resumed; rule 4 waits for them.
+
+## 2026-11-08, iteration 73 (20:46): tomato_large swap `LN` finished
+
+- 1943605 (tomato_large swap `O1_P2swap_LN`, 1536) ended COMPLETED, exit 0, at 20:46, about 1 h 20 min before its 48 h limit (s1 finished; s0 and s2 finished on 11-07). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only tomato_large `P2swap_LN` (3 tomato_large checks running) → `... br_missing submit` → **1957096** (s1; hours).
+- The 4 resumed seeds (iteration 72) are training again: e.g. AS `LN+EP` s0 at 4632 and grid `LE+GL` s1 at 10,464, both checkpointed at 20:45. No decision: rule 4 waits for tomato_large `P2swap_LN` s1's check, and tomato_large `P2swap_L` s1's (1956296).
