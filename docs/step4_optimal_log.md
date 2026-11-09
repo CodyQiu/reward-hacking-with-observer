@@ -2276,3 +2276,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - s0 hides from round 0 (iteration 64); s1 and s2 are corrected once, then honest. "Above target" printed for s1 (information only). No best response hides.
 - **Decision (rule 4): s0 IMPROVING → extend to 6144** (2× 3072; cap 24,576). Dry-run: `... extend absent_supervisor "O1_P1eq1_LN+GL" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+GL --seeds 0 1 2 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`.
+- **Submitted** (committed first as c17e19fb): `... extend absent_supervisor "O1_P1eq1_LN+GL" 6144 submit` → **1956439**. 21 campaign jobs are queued or running.
