@@ -2350,3 +2350,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - All three are corrected once in round 0, like the target and the best response. s1 and s2 then take a partly honest route (true 349–372) where the best response is near-honest (482–484). "Above target" printed for s0 (information only). No best response hides.
 - **Decision (rule 4): s1/s2 IMPROVING → extend to 3072** (2× 1536; cap 12,288). Dry-run: `... extend tomato_large "O1_P2swap_L" 3072` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_L --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`. The first 1536 episodes took about 70 h of training (two jobs), so this needs about 3 more days and at least one time-limit resume.
+- **Submitted** (committed first as 4856cc18): `... extend tomato_large "O1_P2swap_L" 3072 submit` → **1958116**. 20 campaign jobs are queued or running.
