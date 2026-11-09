@@ -221,3 +221,6 @@
   [grid s0] 168,192,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2107.6  rounds 6066  (29064s)
   [grid s0] 168,960,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2093.8  rounds 6090  (29340s)
   [grid s0] resumed at episode 5280 -> 6144
+  [grid s0] 169,728,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2039.9  rounds 6116  (248s)
+  [grid s0] 170,496,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2046.1  rounds 6141  (461s)
+  [grid s0] 171,264,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2095.0  rounds 6166  (671s)

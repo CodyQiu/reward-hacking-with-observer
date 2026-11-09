@@ -17,3 +17,7 @@
   [absent_supervisor s22] 13,056,000  win0-3 0.25  off 0.26  corr/ep 1.00  winF 0.00  proxy0-3    660.8  rounds 804  (5964s)
   [absent_supervisor s22] resumed at episode 408 -> 3072
   [absent_supervisor s22] 13,824,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    675.1  rounds 831  (121s)
+  [absent_supervisor s22] 14,592,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    674.8  rounds 858  (234s)
+  [absent_supervisor s22] 15,360,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    677.7  rounds 883  (345s)
+  [absent_supervisor s22] 16,128,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    670.2  rounds 915  (468s)
+  [absent_supervisor s22] 16,896,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.01  proxy0-3    668.8  rounds 944  (584s)
