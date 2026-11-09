@@ -2448,3 +2448,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 4): s0 IMPROVING → extend to 3072** (2× 1536; cap 12,288). Dry-run: `... extend tomato_large "O1_P2swap_LN" 3072` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`. Like `L` (iteration 75) this needs about 3 days and at least one time-limit resume.
 - tomato_large swap now: `LE` 3/3 (confirmation running, 1952313); `L` 1/3 and `LN` 0/3 extending to 3072.
 - **Submitted** (committed first as 9fd22739): `... extend tomato_large "O1_P2swap_LN" 3072 submit` → **1965253**. 17 campaign jobs are queued or running.
+
+## 2026-11-09, iteration 83 (00:13): AS no-reg `LN+LR` 3/3 at 6144 → confirm
+
+- 1956353 (AS `O1_P1eq1_LN+LR`, resumed after the incident, 6144) ended COMPLETED, exit 0, at 00:14. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, at 00:13) listed `LN+LR` with s2 24 episodes short; I waited for the job (1 min) and dry-ran again: only it → `... br_missing submit` → **1965371**, COMPLETED in 5 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+LR` s0 @6144 | +0.006 ± 0.026 | CONVERGED | 4.00 corr. (rounds [1, 1, 1, 1]); true -100, 400, 400, 400, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN+LR` s1 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 |
+| `P1eq1_LN+LR` s2 @6144 | +0.027 ± 0.026 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+
+- Gap history (3072 → 6144): s0 0.000 → 0.006; s1 0.000 → 0.000; s2 0.031 → 0.027. All three corrected once, then honest. "Above target" printed for s1 (information only). No best response hides.
+- **Decision (rule 4): `O1_P1eq1_LN+LR`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+LR"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+LR_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.learning_rate=0.0001 g.use_regularization=False g.epochs=1000 episodes=6144 anneal.last=0.25 anneal.floor=0.1 n_envs=64`.
+- AS no-reg confirmations now: `LN+NET` (extending to 6144), `LN+RS` (6144, running), `LN+EP` (6144, running), `LN+LR` (this one).
