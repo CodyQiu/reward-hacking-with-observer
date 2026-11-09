@@ -2648,3 +2648,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. 10 training jobs running; none has ended since iteration 98. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing. `... resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag).
 - Expected next: tomato_large swap `LE_confirm` (1952313) reaches its 48 h limit at about 15:55 and tomato_large no-reg `L` (1953259) at about 17:55. Both will be resumed from their checkpoints (rule 1), each from its own line of the `resume` dry-run, so the held AS run is not resubmitted.
+
+## 2026-11-09, iteration 100 (11:56): AS no-reg `LN+EP_confirm` s22 converged (information only)
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 10 training jobs running; none has ended since iteration 99. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag).
+- `... br_missing` (dry-run) listed AS `LN+EP_confirm`: s22 finished 6144 inside the running job 1964876 (s20 5808, s21 5760) → `... br_missing submit` → **1966371**, COMPLETED in 1 min.
+  - `P1eq1_LN+EP_confirm` s22 @6144: **+0.018 ± 0.031, CONVERGED**. PPO corrected once in round 0, then honest (true -125, 449, 450, 450, 450); best response 2 corrections (rounds 0, 1; true -100, 400, 450, 450, 450).
+- **No action:** the AS no-reg cell is DONE (iteration 88); `LN+EP_confirm` is information only.
