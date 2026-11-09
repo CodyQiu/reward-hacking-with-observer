@@ -2586,3 +2586,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 | `P1eq1_LN+GL_confirm` s20 @6144 | +0.147 ± 0.023 | PLATEAU | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | hides; true -100, -101, -101, -102, -101 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
 
   - **For information: with λ = 1, a second AS seed learns full exploit-and-hide** (never corrected, true about −101 per round), like tuning s0 at 3072 (iteration 64). Its best response is corrected twice and then honest, worth 14.7% more. A training local optimum: no best response hides. The cell is DONE (iteration 88), so this changes nothing.
+
+## 2026-11-09, iteration 92 (06:13): Tomato swap `L` s0 at 12,288
+
+- 1965789 (check, Tomato swap `O1_P2swap_L` s0) ended COMPLETED, exit 0, at 06:13 after 7 min. `git pull --no-rebase --no-edit --ff`: already up to date. `... br_missing` (dry-run): nothing. `... resume` (dry-run) lists only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag).
+- Tomato swap `L` s0 @12,288: **+0.003 ± 0.000, CONVERGED** (gap history 0.011 → 0.005 → 0.004 → 0.003 at 1536 → 3072 → 6144 → 12,288). Corrected once in round 0, then near-honest (true 423), as its best response (422) and the target. s1 (7848) and s2 (11,928) are still training; job 1947369 reaches its 48 h limit at about 06:25 and will then be resumed (rule 1).
