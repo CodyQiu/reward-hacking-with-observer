@@ -2405,3 +2405,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144 → 12,288): s0 0.141 → 0.152 → 0.129 → 0.128 (hides after its correction throughout); s1 0.099 → 0.006 → 0.002 → 0.002; s2 0.010 → 0.014 → 0.006 → 0.006. "Above target" printed for s1 (information only). No best response hides.
 - **`LE+EP` is at the cap → finished, at 2/3.** Grid swap wave 2: `LE+LR`, `LE+AN` (confirmation), `LE+RS`, `LE+EP` finished at 2/3; `LE+GL` (s1/s2 resumed) and `LE+NET` still extending to the cap.
+
+## 2026-11-08, iteration 80 (23:08): grid swap `LE+GL` 2/3 at the cap
+
+- 1956980 (grid `O1_P2swap_LE+GL` s1/s2, resumed after the incident, 12,288) ended COMPLETED, exit 0, at 23:08. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it → `... br_missing submit` → **1964143**, COMPLETED in 2 min (s1, s2; s0 in iteration 72).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+GL` s0 @12288 | +0.004 ± 0.004 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 21, 21, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+GL` s1 @12288 | +0.002 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+GL` s2 @12288 | +0.101 ± 0.010 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144 → 12,288): s0 0.017 → 0.008 → 0.004 → 0.004; s1 0.009 → 0.007 → 0.002 → 0.002; s2 0.155 → 0.158 → 0.109 → 0.101 (hides after its correction throughout). "Above target" printed for s1 (information only). No best response hides.
+- **`LE+GL` is at the cap → finished, at 2/3.** Grid swap wave 2: `LE+LR`, `LE+AN` (confirmation), `LE+RS`, `LE+EP`, `LE+GL` all finished at 2/3; only `LE+NET` (2/3 at 6144, extending to the cap) is left. If it also ends below 3/3 (or passes 3/3 but fails confirmation), wave 2 has plateaued and rule 6 (wave 3) applies.
