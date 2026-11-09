@@ -438,3 +438,10 @@ Traceback (most recent call last):
     print(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
 PermissionError: [Errno 13] Permission denied
   [grid s2] 82,368,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2079.0  rounds 11586  (23246s)
+  [grid s2] resumed at episode 10272 -> 12288
+  [grid s2] 82,368,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2092.8  rounds 11586  (114s)
+  [grid s2] 82,560,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2088.2  rounds 11610  (222s)
+  [grid s2] 82,752,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2091.8  rounds 11634  (327s)
+  [grid s2] 82,944,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2092.4  rounds 11658  (431s)
+  [grid s2] 83,136,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2094.1  rounds 11682  (539s)
+  [grid s2] 83,328,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2092.1  rounds 11706  (644s)

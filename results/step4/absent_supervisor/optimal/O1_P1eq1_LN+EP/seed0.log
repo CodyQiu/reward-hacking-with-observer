@@ -199,3 +199,5 @@ Traceback (most recent call last):
   File "/home/users/cody1212/reward-hacking-with-observer/src/step3/train.py", line 255, in train_run
     print(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
 PermissionError: [Errno 13] Permission denied
+  [absent_supervisor s0] resumed at episode 4584 -> 6144
+  [absent_supervisor s0] 147,456,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    632.9  rounds 5503  (147s)

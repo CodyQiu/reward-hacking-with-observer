@@ -438,3 +438,9 @@ Traceback (most recent call last):
   File "/home/users/cody1212/reward-hacking-with-observer/src/step3/train.py", line 255, in train_run
     print(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
 PermissionError: [Errno 13] Permission denied
+  [grid s1] resumed at episode 10296 -> 12288
+  [grid s1] 82,560,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2132.9  rounds 11334  (121s)
+  [grid s1] 82,752,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2141.9  rounds 11358  (229s)
+  [grid s1] 82,944,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2089.7  rounds 11384  (340s)
+  [grid s1] 83,136,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2015.5  rounds 11408  (446s)
+  [grid s1] 83,328,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   2027.7  rounds 11432  (555s)
