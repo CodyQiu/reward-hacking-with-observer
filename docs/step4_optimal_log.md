@@ -2391,3 +2391,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - All three: corrected once, then honest (true 450). s22 misses the bar by 0.002 with s.e. 0.039; its best response takes a 2nd correction in round 1, the cell's usual noise-limited shortfall (iteration-24 flag). "Above target" printed for s20 and s21 (information only). No best response hides.
 - **Decision (rule 4): s22 IMPROVING → extend to 6144** (2× 3072; cap 24,576). As before, this extends a confirmation run (iteration-19 flag still open). Dry-run: `... extend absent_supervisor "O1_P1eq1_LN+NET_confirm" 6144` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --resume --extend-to 6144`.
+- **Submitted** (committed first as 154d7800): `... extend absent_supervisor "O1_P1eq1_LN+NET_confirm" 6144 submit` → **1962149**. 19 campaign jobs are queued or running.
