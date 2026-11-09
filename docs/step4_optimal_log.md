@@ -2674,3 +2674,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. 9 training jobs running; none has ended since iteration 101. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing new (tomato_large swap `LE_confirm` check still running). `... resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held.
 - 1966405 (tomato_large swap `LE_confirm` s20 @1536) has run 1 h 13 min: policy read exactly (windows exploited 1, 0, 0, 0, 1; 1 correction, in round 0); correction 2 being fitted on the best caught policy for round 1.
+
+## 2026-11-09, iteration 103 (14:59): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. No training job has ended. 1966405 (tomato_large swap `LE_confirm` s20 check) at 2 h 14 min: corrections 1–4 fitted (rounds 0–3), level DP next. 1952313 (the same run's training job) reaches its 48 h limit at about 15:55.
