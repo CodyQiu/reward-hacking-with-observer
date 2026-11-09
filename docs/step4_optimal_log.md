@@ -2579,3 +2579,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 | `P1eq1_LN+NET_confirm` s20 @6144 | +0.066 ± 0.021 | IMPROVING | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
 
 - s20: 0.016 at 3072 → 0.066 at 6144, with the cell's usual shortfall (PPO corrected once then honest; the best response takes a 2nd correction). Information only: the cell is DONE.
+- Check 1965787/88 also gave AS `LN+GL_confirm` s20 (finished 6144; s21, s22 still training):
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+GL_confirm` s20 @6144 | +0.147 ± 0.023 | PLATEAU | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | hides; true -100, -101, -101, -102, -101 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+
+  - **For information: with λ = 1, a second AS seed learns full exploit-and-hide** (never corrected, true about −101 per round), like tuning s0 at 3072 (iteration 64). Its best response is corrected twice and then honest, worth 14.7% more. A training local optimum: no best response hides. The cell is DONE (iteration 88), so this changes nothing.
