@@ -351,3 +351,5 @@
   [grid s1] 66,816,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1816.7  rounds 9219  (16810s)
   [grid s1] 67,008,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1793.1  rounds 9245  (16969s)
   [grid s1] 67,200,000  win0-3 0.25  off 0.20  corr/ep 1.00  winF 0.00  proxy0-3   1730.3  rounds 9273  (17137s)
+  [grid s1] resumed at episode 8400 -> 12288
+  [grid s1] 67,392,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1795.3  rounds 9298  (73s)
