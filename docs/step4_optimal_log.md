@@ -2433,3 +2433,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 4): `O1_P1eq1_LN+EP`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+EP"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+EP_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.n_epochs=20 g.use_regularization=False g.epochs=1000 episodes=6144 anneal.last=0.25 anneal.floor=0.1 n_envs=64`.
 - AS no-reg now has three configs in confirmation: `LN+NET` (2/3 at 3072, extending to 6144), `LN+RS` (running, 6144), `LN+EP` (this one).
 - **Submitted** (committed first as e7e864d1): `... confirm absent_supervisor "O1_P1eq1_LN+EP" submit` → **1964876**, RUNNING; seed20 `config.json`: entropy 0.1, batch 1600, 20 epochs, 64 envs, no regulariser, 6144 episodes. 17 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 82 (23:25): tomato_large swap `LN` 0/3 at 1536
+
+- 1957096 (check, tomato_large `O1_P2swap_LN` s1) ended COMPLETED, exit 0, at 23:25 after 2 h 38 min. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `... br_missing` (dry-run): nothing to submit (tomato_large `P1eq1_LE` check running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| tomato_large `P2swap_LN` s0 @1536 | +0.047 ± 0.003 | IMPROVING | 1 corr. (round 0); true 65, 490, 490, 490, 490 | 1 corr. (round 0); true 65, 376, 376, 376, 375 | 1 corr. (round 0); true 65, 495, 495, 495, 495 |
+| tomato_large `P2swap_LN` s1 @1536 | +0.321 ± 0.009 | PLATEAU | 1 corr. (round 0); true 65, 478, 478, 478, 478 | 4.00 corr. (rounds [1, 1, 1, 1]); true 65, 64, 65, 65, 65 | 1 corr. (round 0); true 65, 483, 483, 483, 483 |
+| tomato_large `P2swap_LN` s2 @1536 | +0.035 ± 0.005 | PLATEAU | 1 corr. (round 0); true 65, 474, 474, 474, 474 | 1 corr. (round 0); true 65, 372, 373, 371, 373 | 1 corr. (round 0); true 65, 493, 493, 493, 493 |
+
+- s0 and s2: corrected once, then a partly honest route (true 372–376) against the best response's near-honest 474–490. **s1 exploits through every audit** (corrected in every round, true 64–65 throughout), 32% below its best response, which is corrected once and then near-honest. It does not hide; it never learned to stop. "Above target" printed for s0 and s2 (information only). No best response hides.
+- **Decision (rule 4): s0 IMPROVING → extend to 3072** (2× 1536; cap 12,288). Dry-run: `... extend tomato_large "O1_P2swap_LN" 3072` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`. Like `L` (iteration 75) this needs about 3 days and at least one time-limit resume.
+- tomato_large swap now: `LE` 3/3 (confirmation running, 1952313); `L` 1/3 and `LN` 0/3 extending to 3072.
