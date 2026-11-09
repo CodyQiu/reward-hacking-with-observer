@@ -2689,3 +2689,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - PPO's end state matches the best response's and the target's (one correction, in round 0), but its round-4 window is exploited: it **defects in the final round** (true 65 in round 4), whereas under the swapped correction the best response stays honest there. Rounds 1–3 are honest but about 5% below the best response's route. This is the Step 3-style "exploit through the final window" habit carrying over, not hiding. The tuning seeds (`LE` s0–s2) converged at 1536 (0.025 / 0.019 / 0.017).
 - **No decision (rule 4 waits for all seeds):** s21 is at 432 and s22 at 528 of 1536, both still exploiting in every round (3 corrections per episode so far). Training job 1952313 reaches its 48 h limit at about 15:55 → resume (rule 1), with only its own line from the `resume` dry-run.
+
+## 2026-11-09, iteration 105 (15:56): tomato_large swap `LE_confirm` TIMEOUT → resumed s21/s22 (1966678)
+
+- 1952313 (tomato_large swap `O1_P2swap_LE_confirm`) ended **TIMEOUT** at its 48 h limit (2-00:00:25), exit 0:0: a time limit, not a cluster incident. Checkpoints: s20 1536 (finished, checked in iteration 104), s21 456, s22 552 of 1536. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run) listed two lines: AS `LN+NET_confirm` s21/s22 (held, iteration-91 flag) and this run. Rule 1, ran only this run's line verbatim:
+  - `EXCLUDE=barley-04 bash scripts/farmshare/submit.sh 48 --env tomato_large --run-id O1_P2swap_LE_confirm --seeds 21 22 --results-dir results/step4/tomato_large/optimal --resume` → **1966678** (running on wheat-04). It continues to 1536 from the checkpoints in the same directory.
+- At the 48 h rate s21/s22 (about 100 episodes per 10 h after correction-heavy starts) need another 2–4 days; further resumes will likely be needed. Background wait re-armed on the 9 training jobs.
