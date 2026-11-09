@@ -2598,3 +2598,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Decision (rule 1): resume.** Dry-run `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` listed Tomato `L` (`submit.sh 48 --env tomato --run-id O1_P2swap_L --seeds 1 2 --results-dir results/step4/tomato/optimal --resume`) and AS `LN+NET_confirm` (held, iteration-91 flag). Since `resume submit` resubmits every listed run, I ran only the Tomato line from the dry-run, verbatim: `EXCLUDE=barley-04 bash scripts/farmshare/submit.sh 48 --env tomato --run-id O1_P2swap_L --seeds 1 2 --results-dir results/step4/tomato/optimal --resume`.
 - `... br_missing` (dry-run) listed AS `LN+GL_confirm` (another seed finished).
 - **Submitted** (committed first as a9bfcfcf): Tomato `L` resume → **1965874**, RUNNING (seed1 `config.json` records the resume at 7896 → 12,288); `... br_missing submit` → **1965875**, COMPLETED in 2 min: AS `LN+GL_confirm` s21 @6144 **+0.000 ± 0.000, CONVERGED** (corrected once, then honest; information only, the cell is DONE). 13 campaign jobs are queued or running.
+
+## 2026-11-09, iteration 94 (06:45): grid no-reg `LN+GL_confirm` 1/3 at the cap
+
+- 1956326 (grid `O1_P1eq1_LN+GL_confirm`, resumed after the incident, 12,288) ended COMPLETED, exit 0, at 06:45. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): only AS `LN+NET_confirm`, held (iteration-91 flag). `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only grid `LN+GL_confirm` → `... br_missing submit` → **1965881**, COMPLETED in 3 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+GL_confirm` s20 @12288 | +0.069 ± 0.011 | PLATEAU | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s21 @12288 | +0.075 ± 0.003 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P1eq1_LN+GL_confirm` s22 @12288 | +0.028 ± 0.025 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, -100, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144 → 12,288): s20 0.100 → 0.065 → 0.070 → 0.069 (hides after its correction throughout); s21 0.090 → 0.108 → 0.111 → 0.075 (honest; received shortfall); s22 0.038 → 0.032 → 0.043 → 0.028. "Above target" printed for all three (information only). No best response hides.
+- **At the cap → finished, at 1/3.** So grid no-reg `LN+GL` (3/3 as a tuning run at 1536) fails confirmation. Grid no-reg wave 2: only `LN+NET` (1/3 at 6144, extending to the cap; 8700 of 12,288) is left. The other five (`LN+GL`, `LN+LR` via their confirmations; `LN+EP`, `LN+AN`, `LN+RS`) have finished below 3/3; if `LN+NET` does too, wave 2 has plateaued and rule 6 (wave 3) applies.
