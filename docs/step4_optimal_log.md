@@ -2624,3 +2624,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. 11 campaign jobs running; none has ended since iteration 95. `... br_missing` (dry-run): nothing. `... resume` (dry-run): only AS `LN+NET_confirm`, held (iteration-91 flag).
 - Only long runs remain: grid no-reg `LN+NET` (to 12,288), grid swap `LE+NET_confirm` (12,288, about 1.5 days more), Tomato swap `L` s1 (about 40 h), the tomato_large runs (days), and two AS no-reg confirmations whose cell is DONE. Per the pace rule I now check about hourly (the wakeup tool's maximum), with a background wait on every job. Next expected event: tomato_large swap `LE_confirm` reaches its 48 h limit at about 15:55 (resume, rule 1).
+
+## 2026-11-09, iteration 97 (09:32): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. All 11 campaign jobs still running; none has ended since iteration 96. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held (iteration-91 flag). `... br_missing` (dry-run): nothing.
+- Progress (episodes done / target, seeds in order): grid no-reg `LN+NET` 9936 / 9936 / 9912 of 12,288; grid swap `LE+NET_confirm` 2208 / 2136 / 2352 of 12,288; AS no-reg `LN+EP_confirm` 4680 / 4608 / 5424 and `LN+LR_confirm` 5952 / 5976 / 5904 of 6144 (cell DONE; information only); Tomato swap `L` s1 8304 of 12,288; tomato_large swap `LE_confirm` 1248 / 288 / 360 of 1536, `L` 2088 / 2040 / 2064 and `LN` 2544 / 1752 / 2544 of 3072; tomato_large no-reg `L` 4776 ×3, `LE` 3840 ×3, `LN` 3840 / 3768 / 3816 of 6144.
