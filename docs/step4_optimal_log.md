@@ -2351,3 +2351,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - All three are corrected once in round 0, like the target and the best response. s1 and s2 then take a partly honest route (true 349–372) where the best response is near-honest (482–484). "Above target" printed for s0 (information only). No best response hides.
 - **Decision (rule 4): s1/s2 IMPROVING → extend to 3072** (2× 1536; cap 12,288). Dry-run: `... extend tomato_large "O1_P2swap_L" 3072` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_L --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`. The first 1536 episodes took about 70 h of training (two jobs), so this needs about 3 more days and at least one time-limit resume.
 - **Submitted** (committed first as 4856cc18): `... extend tomato_large "O1_P2swap_L" 3072 submit` → **1958116**. 20 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 76 (21:57): tomato_large no-reg `LN` 0/3 at 3072
+
+- 1956337 (check, tomato_large `O1_P1eq1_LN` s2, resubmitted after the incident) ended COMPLETED, exit 0, at 21:57 after 2 h 48 min. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `... br_missing` (dry-run): nothing to submit (2 tomato_large checks running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| tomato_large `P1eq1_LN` s0 @3072 | +0.055 ± 0.019 | IMPROVING | 2.67 corr. (rounds [1, 1, 0.64, 0.03]); true 65, 516, 519, 522, 522 | 1 corr. (round 0); true 65, 520, 520, 520, 520 | 3.00 corr. (rounds [1, 1, 1, 0]); true 65, 516, 516, 522, 522 |
+| tomato_large `P1eq1_LN` s1 @3072 | +0.049 ± 0.009 | IMPROVING | 4.00 corr. (rounds [1, 1, 1, 1]); true 65, 516, 516, 516, 522 | 1 corr. (round 0); true 65, 520, 520, 520, 520 | 4.00 corr. (rounds [1, 1, 1, 1]); true 65, 516, 516, 516, 522 |
+| tomato_large `P1eq1_LN` s2 @3072 | +0.031 ± 0.014 | IMPROVING | 4.00 corr. (rounds [1, 1, 1, 1]); true 65, 516, 516, 516, 522 | 1 corr. (round 0); true 65, 520, 520, 520, 520 | 3.00 corr. (rounds [1, 1, 1, 0]); true 65, 516, 516, 522, 522 |
+
+- Gap history (1536 → 3072): s0 0.063 → 0.055; s1 0.066 → 0.049; s2 0.042 → 0.031 (now 0.001 above the bar). As in `L` (iteration 61): PPO is corrected once and then near-honest (true 520); its best response and the target keep collecting corrections by exploiting in the window's last steps (true 516 in those rounds) and are worth 3–6% more. PPO takes fewer corrections than optimal; nobody hides.
+- **Decision (rule 4): all three IMPROVING → extend to 6144** (2× 3072; cap 12,288). Dry-run: `... extend tomato_large "O1_P1eq1_LN" 6144` → `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`.
