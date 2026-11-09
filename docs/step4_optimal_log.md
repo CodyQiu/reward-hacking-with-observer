@@ -2418,3 +2418,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072 → 6144 → 12,288): s0 0.017 → 0.008 → 0.004 → 0.004; s1 0.009 → 0.007 → 0.002 → 0.002; s2 0.155 → 0.158 → 0.109 → 0.101 (hides after its correction throughout). "Above target" printed for s1 (information only). No best response hides.
 - **`LE+GL` is at the cap → finished, at 2/3.** Grid swap wave 2: `LE+LR`, `LE+AN` (confirmation), `LE+RS`, `LE+EP`, `LE+GL` all finished at 2/3; only `LE+NET` (2/3 at 6144, extending to the cap) is left. If it also ends below 3/3 (or passes 3/3 but fails confirmation), wave 2 has plateaued and rule 6 (wave 3) applies.
+
+## 2026-11-08, iteration 81 (23:13): AS no-reg `LN+EP` 3/3 at 6144 → confirm
+
+- 1957042 (AS `O1_P1eq1_LN+EP` s0/s2, resumed after the incident, 6144) ended COMPLETED, exit 0, at 23:13. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it → `... br_missing submit` → **1964660**, COMPLETED in 2 min (s0, s2; s1 in iteration 72).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P1eq1_LN+EP` s0 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -104, 450, 450, 450, 449 | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 |
+| `P1eq1_LN+EP` s1 @6144 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 450, 450, 450, 450 | 1 corr. (round 0); true -100, 450, 450, 450, 449 | 1 corr. (round 0); true -100, 450, 450, 450, 450 |
+| `P1eq1_LN+EP` s2 @6144 | +0.021 ± 0.030 | CONVERGED | 2.00 corr. (rounds [1, 1, 0, 0]); true -100, 400, 450, 450, 450 | 1 corr. (round 0); true -101, 450, 450, 450, 450 | 3.00 corr. (rounds [1, 1, 1, 0]); true -100, 400, 400, 450, 450 |
+
+- Gap history (3072 → 6144): s0 0.000 → 0.000; s1 0.000 → 0.000; s2 0.044 → 0.021. All three corrected once, then honest. "Above target" printed for s1 (information only). No best response hides.
+- **Decision (rule 4): `O1_P1eq1_LN+EP`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+EP"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+EP_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.n_epochs=20 g.use_regularization=False g.epochs=1000 episodes=6144 anneal.last=0.25 anneal.floor=0.1 n_envs=64`.
+- AS no-reg now has three configs in confirmation: `LN+NET` (2/3 at 3072, extending to 6144), `LN+RS` (running, 6144), `LN+EP` (this one).
