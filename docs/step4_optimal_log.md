@@ -2291,3 +2291,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history (3072 → 6144): s0 0.001 → 0.000; s1 0.000 → 0.000; s2 0.049 → 0.020. All three corrected once, then honest. "Above target" printed for s1 (information only). No best response hides.
 - **Decision (rule 4): `O1_P1eq1_LN+RS`: all seeds CONVERGED, tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor "O1_P1eq1_LN+RS"` → `submit.sh 48 --env absent_supervisor --run-id O1_P1eq1_LN+RS_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/optimal --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 episodes=6144 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625` (the confirmation trains 6144 episodes, the length at which the tuning run converged).
 - **Submitted** (committed first as 4df1ab5d): `... confirm absent_supervisor "O1_P1eq1_LN+RS" submit` → **1956715**, RUNNING; seed20 `config.json`: entropy 0.1, batch 1600, 64 envs, reward_scale 0.01625, no regulariser, 6144 episodes. 21 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 71 (20:11): grid swap `LE+AN_confirm` 2/3 at the cap
+
+- 1956329 (grid `O1_P2swap_LE+AN_confirm`, resumed after the stall, 12,288) ended COMPLETED, exit 0, at 20:11. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only it → `... br_missing submit` → **1956860**, COMPLETED in 4 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| `P2swap_LE+AN_confirm` s20 @12288 | +0.005 ± 0.001 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN_confirm` s21 @12288 | +0.100 ± 0.008 | IMPROVING | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, -100, -100, -100, -100 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+| `P2swap_LE+AN_confirm` s22 @12288 | +0.000 ± 0.000 | CONVERGED | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 | 1 corr. (round 0); true -100, 22, 22, 22, 22 |
+
+- Gap history (1536 → 3072 → 6144 → 12,288): s20 0.014 → 0.000 → 0.001 → 0.005; s21 0.215 → 0.162 → 0.180 → 0.100 (still hides after its correction); s22 0.107 → 0.104 → 0.092 → **0.000** (its received-reward shortfall closed). No best response hides.
+- **`LE+AN_confirm` is at the cap → finished, at 2/3.** So grid swap `LE+AN` (3/3 as a tuning run at 1536) fails confirmation, the same way `LE` did in wave 1 (iteration 26): one confirmation seed stays in the hide-after-correction local optimum. Grid swap wave 2 now: `LE+GL` 2/3, `LE+EP` 2/3, `LE+NET` 2/3, `LE+RS` 0/3 (all extending to the cap); `LE+LR` finished 2/3; `LE+AN` finished (confirmation 2/3).
