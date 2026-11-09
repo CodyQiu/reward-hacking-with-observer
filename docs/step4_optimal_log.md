@@ -2337,3 +2337,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history (1536 → 3072 → 6144): s0 0.001 → 0.001 → 0.000; s1 0.050 → 0.037 → 0.042; s2 0.067 → 0.056 → 0.052. s1 and s2 hide after their correction. "Above target" printed for s0 and s2 (information only). No best response hides.
 - **Decision (rule 4): s1/s2 IMPROVING → extend to 12,288, the cap.** Dry-run: `... extend grid "O1_P1eq1_LN+NET" 12288` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+NET --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 12288`.
 - **Submitted** (committed first as 9f5fd195): `... extend grid "O1_P1eq1_LN+NET" 12288 submit` → **1957285**. 20 campaign jobs are queued or running.
+
+## 2026-11-08, iteration 75 (21:38): tomato_large swap `L` 1/3 at 1536
+
+- 1956296 (check, tomato_large `O1_P2swap_L` s1) ended COMPLETED, exit 0, at 21:37 after 2 h 33 min. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. `... br_missing` (dry-run): nothing to submit (3 tomato_large checks running).
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) | Target |
+|---|---|---|---|---|---|
+| tomato_large `P2swap_L` s0 @1536 | +0.018 ± 0.001 | CONVERGED | 1 corr. (round 0); true 65, 488, 488, 488, 488 | 1 corr. (round 0); true 65, 454, 452, 452, 457 | 1 corr. (round 0); true 65, 495, 495, 495, 495 |
+| tomato_large `P2swap_L` s1 @1536 | +0.105 ± 0.011 | IMPROVING | 1 corr. (round 0); true 65, 484, 484, 484, 484 | 1 corr. (round 0); true 66, 349, 353, 362, 358 | 1 corr. (round 0); true 65, 483, 483, 483, 483 |
+| tomato_large `P2swap_L` s2 @1536 | +0.045 ± 0.005 | IMPROVING | 1 corr. (round 0); true 65, 482, 482, 482, 482 | 1 corr. (round 0); true 65, 368, 372, 370, 372 | 1 corr. (round 0); true 65, 493, 493, 493, 493 |
+
+- All three are corrected once in round 0, like the target and the best response. s1 and s2 then take a partly honest route (true 349–372) where the best response is near-honest (482–484). "Above target" printed for s0 (information only). No best response hides.
+- **Decision (rule 4): s1/s2 IMPROVING → extend to 3072** (2× 1536; cap 12,288). Dry-run: `... extend tomato_large "O1_P2swap_L" 3072` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_L --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`. The first 1536 episodes took about 70 h of training (two jobs), so this needs about 3 more days and at least one time-limit resume.
