@@ -2955,3 +2955,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - 1968558 (check of Tomato swap `O1_P2swap_LN+N4`, finished seed s1 only) COMPLETED in 9 min. `git pull --no-rebase --no-edit --ff`: already up to date.
 - s1 at 1536: **gap 0.422** (s.e. 0.007), not converged. The policy **never exploits in view** (honest from round 0, true 433 per round, no correction); its best response exploits in round 0, is corrected once, and is honest after (true 46, then 423 ×4), i.e. the swap's raise pays for being caught once. s0 / s2 are at about 1100 of 1536; rule 6b for this run once all three seeds are checked.
 - 1968046 (tomato_large swap `L` at 3072): s0 **0.012** CONVERGED (iteration 130's note); s1 in progress.
+
+## 2026-11-10, iteration 134 (07:19–07:26): grid no-reg `LN+LR+ES10_confirm` 1/3 at 1536 → extend to 3072 (1968715)
+
+- 1968034 (grid no-reg `O1_P1eq1_LN+LR+ES10_confirm`, seeds 20–22, 1536) ended COMPLETED, exit 0, at 07:19 (4 h 12 min). Tomato swap `O1_P2swap_LN+ENT3` s2 has also finished 1536 (s0 1128, s1 384). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) listed both → `... br_missing submit` → **1968701** (the confirmation, 4 min) and **1968702** (Tomato swap `LN+ENT3`, finished seed s2 only).
+- **Grid no-reg `LN+LR+ES10_confirm` at 1536: 1/3**:
+  - s20 **0.003** (s.e. 0.003) CONVERGED: corrected in round 0, then honest (true −99.7 / 21.7 / 22 / 22 / 22); best response the same.
+  - s21 **0.109** (s.e. 0.006) IMPROVING: corrected in round 0, then honest at the shortest length (true −100 / 21.9 / 21.8 / 22 / 21.9), as is its best response (22 ×4). The gap is in received reward only: of the many shortest honest paths in the open grid, PPO's is not the one the refitted g pays most for.
+  - s22 **0.037** (s.e. 0.027) IMPROVING: corrected in round 0, then honest (true 22 ×4); its best response is corrected twice (rounds 0–1), as is the target.
+- **Rule 4 (any seed IMPROVING): extend to 2×.** As for every earlier confirmation with an IMPROVING seed (iterations 19–24 onwards; see the open question at the top on whether an extended confirmation counts), → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ES10_confirm 3072` (dry-run: seeds 20 21 22, `--resume --extend-to 3072`) → `... submit` → **1968715**. The grid no-reg cell is not DONE; `LN+LR+ES10+N4_confirm` (1968600) is running, and `LN+LR+ENT3` and `LN+LR+N4` are extending to 3072.
+- 29 jobs in the queue: 27 training + 2 checks (1968046, 1968702).
