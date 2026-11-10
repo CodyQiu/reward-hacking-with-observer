@@ -2764,3 +2764,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 ## 2026-11-09, iteration 112 (20:02): no change
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. 10 training jobs running; none has ended since iteration 110. Progress: grid no-reg `LN+LR` 5448 ×3 of 6144 and `LN+LR+GL` 1896 ×3 of 3072 (wave 3, both under an hour from finishing); tomato_large swap `LN` s1 2904 of 3072; tomato_large no-reg `L` 5808 / 5832 / 5832 of 6144.
+
+## 2026-11-09, iteration 113 (20:34): tomato_large swap `LN` finished 3072; s1 check submitted
+
+- 1965253 (tomato_large swap `O1_P2swap_LN`, extending 1536 → 3072) ended COMPLETED, exit 0, at about 20:33. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run (s1) → `... br_missing submit` → **1967425** (tomato_large checks take about 2.5 h). Rule 4 then applies to `LN` (s0 0.046, s2 0.036 at 3072, both flat).
