@@ -2881,3 +2881,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted, per the user). `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run → `... br_missing submit` → **1968026**.
 - Rule 6b applies when its gaps are in: extend to 3072 while any seed is not CONVERGED, whatever the verdict; `confirm` if 3/3.
 - 28 campaign jobs + 2 checks (1967673, 1968026).
+
+## 2026-11-10, iteration 125 (03:04): grid no-reg `LN+LR+ES10` is 3/3 CONVERGED at 1536 → `confirm` (1968034)
+
+- 1968026 (check of grid no-reg `O1_P1eq1_LN+LR+ES10` at 1536) COMPLETED in 4 min. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+ES10`: **3/3 CONVERGED**:
+  - s0 gap **0.002** (s.e. 0.001): corrected in round 0, then honest, true −100 / 21.8 / 22 / 22 / 22; best response the same (22 ×4).
+  - s1 gap **0.014** (s.e. 0.004): corrected in round 0, then honest, true −100 / 19.9 / 19.4 / 21.4 / 21.8; best response corrected in round 0 then a 2-step-longer honest route (true 20 ×4).
+  - s2 gap **0.004** (s.e. 0.000): as s0 (true −100 / 21.8 / 22 / 22 / 22).
+  - Target comparison (information only): s0 and s2 match the target's end state (O3); s1's target is corrected twice (rounds 0–1), PPO and its best response once.
+- **Rule 6b → rule 4 (all seeds CONVERGED, tuning run):** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid O1_P1eq1_LN+LR+ES10` (dry-run: seeds 20–22, `--set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 episodes=1536`, the run's own config at its final episode count) → `... submit` → **1968034** (`O1_P1eq1_LN+LR+ES10_confirm`). The grid no-reg cell is DONE if this is 3/3.
+- Nothing cancelled: the other grid no-reg runs (`LN+LR+GL` at about 5150 of 6144; `LN+LR+` ENT3, N4, ES10+N4) keep running until the cell is DONE. 29 campaign jobs + the tomato_large no-reg `L` check (1967673).
