@@ -138,7 +138,12 @@ def main():
         procs.append((s, subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env), log))
     for s, p, log in procs:
         p.wait()
-        log.close()
+        # FarmShare's NFS can revoke an open log (docs/step4_optimal_log.md, iteration 91). The seed's results
+        # are on disk, written by path, so a failed close must not kill the job and the seeds still running.
+        try:
+            log.close()
+        except OSError as e:
+            print(f"  seed {s}: closing its log failed ({e}); its results are unaffected")
         print(f"  seed {s} exit {p.returncode}")
 
     cfg = resolve_config(args.env, _run_overrides(run_root) if args.resume else overrides)

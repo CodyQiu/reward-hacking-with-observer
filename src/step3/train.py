@@ -29,6 +29,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import time
 from dataclasses import asdict
 
@@ -174,6 +175,17 @@ def _restore(run_dir, overseer, proto, n_ep):
             getattr(overseer, attr).extend(keep)
 
 
+def _say(msg):
+    """A progress line to the seed log (the worker's stdout). FarmShare's NFS can revoke an open log file
+    (PermissionError, stale handle: iterations 72 and 91 of docs/step4_optimal_log.md). Losing log lines must
+    not kill the run, whose results are written by path at every checkpoint, so later output goes to /dev/null
+    (which also keeps the interpreter's exit-time flush from failing)."""
+    try:
+        print(msg, flush=True)
+    except OSError:
+        sys.stdout = sys.stderr = open(os.devnull, "w")
+
+
 def train_run(run_dir, config, verbose=True, resume=False):
     """Train one seed. Refuses to touch an existing ``run_dir`` unless ``resume``: then it continues
     that run from its last checkpoint up to ``config["episodes"]`` (which may exceed the original
@@ -232,7 +244,7 @@ def train_run(run_dir, config, verbose=True, resume=False):
         n_done = model.num_timesteps // ep_steps
         _restore(run_dir, overseer, proto, n_done)
         venv.episode = n_done - 1                            # the next reset starts episode n_done
-        print(f"  [{config['env']} s{seed}] resumed at episode {n_done} -> {config['episodes']}", flush=True)
+        _say(f"  [{config['env']} s{seed}] resumed at episode {n_done} -> {config['episodes']}")
     else:
         model = PPO("MlpPolicy", venv, seed=seed, policy_kwargs=dict(net_arch=list(net_arch)), verbose=0,
                     **ppo)
@@ -252,10 +264,10 @@ def train_run(run_dir, config, verbose=True, resume=False):
             m = metrics_from_logs(np.array(overseer.on_exploit), np.array(overseer.caught),
                                   np.array(overseer.env_proxy), proto, refs,
                                   ep_slice=slice(max(0, n_ep - 24), n_ep))
-            print(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
+            _say(f"  [{config['env']} s{seed}] {model.num_timesteps:>10,}  win0-3 {m['window_0_3']:.2f}  "
                   f"off {m['offwindow_rel']:.2f}  corr/ep {m['corrections_per_ep']:.2f}  winF "
                   f"{m['window_final']:.2f}  proxy0-3 {m['proxy_0_3']:8.1f}  rounds {len(overseer.rounds)}  "
-                  f"({time.time() - t0:.0f}s)", flush=True)
+                  f"({time.time() - t0:.0f}s)")
         # checkpoint: a run killed by a time limit keeps everything up to here (no metrics.json = unfinished)
         on, ca, px = _save_logs(run_dir, overseer, model)
         with open(os.path.join(run_dir, "progress.tmp.json"), "w") as fh:
