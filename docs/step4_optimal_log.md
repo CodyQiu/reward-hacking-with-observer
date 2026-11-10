@@ -2989,3 +2989,13 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Tomato swap `LN+ENT3` s0 at 1536: gap 0.007** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / about 420.5 ×4; best response 46 / 422.1 ×4). With s2 (0.007) the run is 2/2 checked; s1 still training (about 500 / 1536). Rule 6b when s1 is checked.
 - **Grid no-reg `LN+LR+ENT3` at 3072: 3/3 CONVERGED**: s0 **0.000** (iteration 136), s1 **0.001** (s.e. 0.001; at 1536 it was 0.040 IMPROVING), s2 **0.016** (s.e. 0.002; policy honest in rounds 1–3 and exploits uncorrected in round 4, true −100 / 22 / 22 / 22 / −100; best response honest in round 4 too, 22). All three are corrected in round 0, then honest, like the best response. **Rule 6b → rule 4 (tuning run, all CONVERGED): `confirm`** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid O1_P1eq1_LN+LR+ENT3` (dry-run: seeds 20–22, `--set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 ppo.ent_coef=0.03 episodes=3072`, i.e. the run's own config at its final length) → `... submit` → **1968947**. The grid no-reg cell becomes DONE as soon as any of `LN+LR+ES10_confirm` (1968715, extending to 3072), `LN+LR+ES10+N4_confirm` (1968600) or `LN+LR+ENT3_confirm` (1968947) is 3/3.
 - 28 jobs in the queue: 27 training + 1 check (tomato_large swap `L`, 1968046).
+
+## 2026-11-10, iteration 138 (09:55–09:58): tomato_large swap `L` 1/3 at 3072 → extend to 6144 (1969069)
+
+- 1968046 (check of tomato_large swap `O1_P2swap_L` at 3072) COMPLETED in 6 h 20 min. `git pull --no-rebase --no-edit --ff`: already up to date.
+- **tomato_large swap `L` at 3072: 1/3**. All three policies are corrected in round 0 and are then honest (window exploitation 0 in rounds 1–4), as are their best responses; the gaps are in how much true reward the honest rounds collect.
+  - s0 **0.012** (s.e. 0.001) CONVERGED (0.019 at 1536): true 65 / about 463 ×4; best response 65 / 485.8 ×4.
+  - s1 **0.036** (s.e. 0.003) IMPROVING (0.105 at 1536): true about 64.9 / 375.5 ×4; best response 65 / 475.9 ×4.
+  - s2 **0.032** (s.e. 0.004) IMPROVING (0.045 at 1536): true about 64.8 / 372.8 ×4; best response 65 / 466.5 ×4.
+- **Rule 4 (seeds IMPROVING): extend 2×**, below the 12,288 cap → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P2swap_L 6144` (dry-run: seeds 0 1 2, `--resume --extend-to 6144`) → `... submit` → **1969069**.
+- 28 jobs in the queue, all training (no check running).

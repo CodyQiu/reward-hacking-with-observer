@@ -63,3 +63,9 @@
   [tomato s1] 193,536,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    432.8  rounds 844  (27092s)
   [tomato s1] 196,608,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    432.9  rounds 844  (27286s)
   [tomato s1] resumed at episode 1536 -> 3072
+  [tomato s1] 199,680,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    432.4  rounds 844  (224s)
+  [tomato s1] 202,752,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    431.4  rounds 847  (518s)
+  [tomato s1] 205,824,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    431.1  rounds 853  (871s)
+  [tomato s1] 208,896,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    431.0  rounds 856  (1169s)
+  [tomato s1] 211,968,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    430.9  rounds 866  (1606s)
+  [tomato s1] 215,040,000  win0-3 0.00  off 0.00  corr/ep 0.00  winF 0.00  proxy0-3    430.9  rounds 878  (2089s)
