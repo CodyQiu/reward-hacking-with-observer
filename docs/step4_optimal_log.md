@@ -2729,3 +2729,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run) listed AS `LN+NET_confirm` s21/s22 (held) and this run. Rule 1, ran only this run's line verbatim:
   - `EXCLUDE=barley-04 bash scripts/farmshare/submit.sh 48 --env tomato_large --run-id O1_P1eq1_L --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume` → **1967055** (running on barley-01, with the log-file guard). About 500 episodes per seed remain; at the rate since 09:32 (s0 4776 → 5616, about 100 episodes/h) that is about 5 h.
 - Grid no-reg wave 3 (1966901 `LN+LR+GL`, 1966902 `LN+LR` → 6144) started at 17:27.
+
+## 2026-11-09, iteration 109 (18:56): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 11 training jobs running; none has ended since iteration 108. `... br_missing` (dry-run): nothing new (1966848 still running). `... resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held.
+- 1966848 (tomato_large swap `LN`, s0/s2 @3072) has finished its first seed: **s0 +0.046 ± 0.003, not converged**. PPO is corrected once in round 0 and then plays an honest-ish route with true 376 per round, against its best response's 488 (same end state, one correction; PPO's windows in rounds 1–4 are clean). The second seed's check is at correction 3 of 4. Logged in full when it finishes.
