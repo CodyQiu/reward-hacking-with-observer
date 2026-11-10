@@ -363,6 +363,7 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **`tomato_large`** (`src/step3/tasks/tomato_large.py`): the leftmost 4 tomatoes of each row of the original frame (8 tomatoes, 7,424 states). It has its own Phase A.
   - **Harness:**
     - `anneal.last` / `anneal.floor`: the learning rate and entropy fall linearly over the last part of a run.
+    - `anneal.ent_start` / `anneal.ent_episodes` (2026-11-09): the entropy coefficient alone starts at `ent_start`× and falls linearly to 1× by episode `ent_episodes`. It is used by the exploration wave (`step4_optimal.sh explore`, rule 6b). From that date no cell is closed as "a finding" (user: tune, including exploration, until all/most seeds reach their ideal behaviour).
     - `step3_ppo.py --resume [--extend-to N]` continues a run in its own directory from its last checkpoint.
     - Driver: `scripts/farmshare/step4_optimal.sh` (`br` / `br_missing` submit the best-response checks; `EXCLUDE=<nodes>` keeps jobs off broken nodes). Size-safe commits: `scripts/farmshare/step4_commit.sh`.
     - The grid now runs through the Step 3 harness (`--env grid`), with the same MDP and PBRR objective.

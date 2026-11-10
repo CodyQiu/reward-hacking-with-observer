@@ -210,6 +210,14 @@ def test_anneal_factor():
     assert abs(_anneal_factor(an, 87.5, 100) - 0.55) < 1e-12 and abs(_anneal_factor(an, 100, 100) - 0.1) < 1e-12
 
 
+def test_entropy_boost_falls_to_one_by_its_episode_and_stays_off_by_default():
+    from src.step3.train import _ent_boost
+    an = {"last": 0.25, "floor": 0.1, "ent_start": 10, "ent_episodes": 768}
+    assert _ent_boost({}, 0) == 1.0 and _ent_boost({"last": 0.25, "floor": 0.1}, 0) == 1.0
+    assert _ent_boost(an, 0) == 10.0 and abs(_ent_boost(an, 384) - 5.5) < 1e-12
+    assert _ent_boost(an, 768) == 1.0 and _ent_boost(an, 5000) == 1.0      # an extension does not restart it
+
+
 def test_tomato_garden_art_keeps_the_six_tomato_task():
     from src.step3.tasks.tomato import ART, garden_art
     assert ART == ["#########", "#######O#", "#TTT    #", "#  A    #", "#       #", "#TTt    #", "#########"]

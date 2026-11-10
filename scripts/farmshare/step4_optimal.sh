@@ -13,6 +13,8 @@
 #   bash scripts/farmshare/step4_optimal.sh extend <env> <run_id> <episodes> [submit]   take a run on to <episodes> in total
 #   bash scripts/farmshare/step4_optimal.sh ppo <env> <variant> <tag> "<extra --set k=v ...>" [submit]   a new config
 #   bash scripts/farmshare/step4_optimal.sh confirm <env> <run_id> [submit]   the run's config on fresh seeds 20-22
+#   bash scripts/farmshare/step4_optimal.sh explore <env> <variant> <base_run_id> [stage2] [submit]
+#                                                    exploration wave on top of a base run (rule 6b), seeds 0-2
 #   bash scripts/farmshare/step4_optimal.sh br <env> <run_id> [submit]       paired best-response check of its finished seeds
 #   bash scripts/farmshare/step4_optimal.sh br_missing [submit]               ... of every finished seed that lacks one
 # EXCLUDE=<nodes> (e.g. EXCLUDE=barley-04) keeps every submitted job off broken nodes.
@@ -118,6 +120,15 @@ case $CMD in
     env=$1 id=$2; d=$(rdir "$env")
     sets=$(.venv/bin/python scripts/farmshare/run_sets.py "$d/$id")
     ppo_submit "$env" "${id}_confirm" "$sets" "${CONFIRM_SEEDS[@]}" ;;
+  explore)
+    env=$1 v=$2 base=$3 stage=${4:-}; d=$(rdir "$env")
+    [[ $stage == stage2 ]] || stage=""
+    [[ $base == O1_${v}_* ]] || { echo "$base is not an O1_${v}_* run" >&2; exit 1; }
+    lines=$(.venv/bin/python scripts/farmshare/explore_sets.py "$d/$base" "$(episodes "$env")" $stage)
+    while IFS=$'\t' read -r tag sets; do
+      if [[ -e $d/${base}+$tag ]]; then echo "# $env/${base}+$tag exists: skipped"; continue; fi
+      ppo_submit "$env" "${base}+$tag" "$sets" "${TUNE_SEEDS[@]}"
+    done <<< "$lines" ;;
   br)
     env=$1 id=$2
     br_submit "$env" "$(rdir "$env")/$id" ;;
@@ -129,5 +140,5 @@ case $CMD in
         br_submit "$env" "$r"
       done
     done ;;
-  *) sed -n 2,18p "$0" ;;
+  *) sed -n 2,20p "$0" ;;
 esac

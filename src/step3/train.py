@@ -7,7 +7,9 @@ A run's configuration is a nested dict:
     protocol  -- t_sub, n_sub, window, p_detect, show_monitor
     ppo       -- PPO hyperparameters (the tuning knobs; defaults = Step 1's config)
     anneal    -- last, floor: over the last ``last`` fraction of the episodes the learning rate and
-                 the entropy coefficient fall linearly to ``floor`` x their values (default off)
+                 the entropy coefficient fall linearly to ``floor`` x their values (default off);
+                 ent_start, ent_episodes: the entropy coefficient alone starts at ``ent_start`` x its
+                 value and falls linearly to 1x by episode ``ent_episodes`` (default off)
     pbrr      -- k (rollouts per round), beta, reference (n_demos, noise, seed)
     g         -- the correction network / Eq 3 fit (Phase A's E.1 search winner, max1)
     refs      -- the idealised optimum's numbers the criteria are relative to
@@ -149,6 +151,17 @@ def _anneal_factor(an, done, total):
     return 1.0 - (1.0 - floor) * min(1.0, (x - (1 - last)) / last)
 
 
+def _ent_boost(an, episodes_done):
+    """Early-exploration multiplier on the entropy coefficient alone: ``anneal.ent_start`` at episode 0,
+    falling linearly to 1 at episode ``anneal.ent_episodes`` (absolute, so an extension does not restart
+    it), then 1. Default off. The Step 4 campaign's exploration wave (docs/step4_optimal.md, rule 6b):
+    a seed's outcome there is settled in its first ~1500 episodes."""
+    start, n = float(an.get("ent_start", 1.0)), float(an.get("ent_episodes", 0))
+    if n <= 0:
+        return 1.0
+    return 1.0 + (start - 1.0) * max(0.0, 1.0 - episodes_done / n)
+
+
 def _num(v):
     try:
         return float(v)
@@ -255,7 +268,8 @@ def train_run(run_dir, config, verbose=True, resume=False):
     t0 = time.time()
     while model.num_timesteps < timesteps:
         fac = _anneal_factor(config.get("anneal", {}), model.num_timesteps, timesteps)
-        model.ent_coef = ent0 * fac                         # read by every update (not a jit constant)
+        boost = _ent_boost(config.get("anneal", {}), model.num_timesteps // ep_steps)
+        model.ent_coef = ent0 * fac * boost                 # read by every update (not a jit constant)
         model.lr_schedule = (lambda lr: (lambda _: lr))(lr0 * fac)
         model.learn(total_timesteps=min(chunk, timesteps - model.num_timesteps), reset_num_timesteps=False,
                     callback=overseer, progress_bar=False)
@@ -273,7 +287,8 @@ def train_run(run_dir, config, verbose=True, resume=False):
         with open(os.path.join(run_dir, "progress.tmp.json"), "w") as fh:
             json.dump({"timesteps": int(model.num_timesteps), "of": timesteps,
                        "episodes": len(overseer.caught) // proto.n_sub, "of_episodes": int(config["episodes"]),
-                       "seconds": time.time() - t0, "anneal_factor": fac, "resumes": n_resume}, fh)
+                       "seconds": time.time() - t0, "anneal_factor": fac, "ent_coef": float(model.ent_coef),
+                       "resumes": n_resume}, fh)
         os.replace(os.path.join(run_dir, "progress.tmp.json"), os.path.join(run_dir, "progress.json"))
     wall = time.time() - t0
 

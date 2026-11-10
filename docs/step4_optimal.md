@@ -8,6 +8,8 @@ This week, PPO must behave (almost exactly) optimally. For two PBRR variants, it
 
 It must do so on four environments: the grid, Absent Supervisor, Tomato, and **tomato_large**, a slightly larger Tomato with 8 tomatoes. In the mentor's words, as relayed by the user: every agent should eventually behave optimally. One that hasn't was not tuned or trained enough, so keep tuning and training until it does.
 
+**The user, 2026-11-09:** "make sure that we are doing enough PPO tuning (including exploration and stuff) so that all/most seeds achieve their absolute ideal behavior". No cell is closed as "a finding": rule 6b below replaces that exit.
+
 **The user's hypothesis, as stated:**
 - Without regularisation, total reward may go down as well as up, so "a smart enough agent might then avoid correction".
 - With the swap, an agent that learns its best policy "should be always-behaving".
@@ -151,13 +153,38 @@ Apply these in order and log every decision in `docs/step4_optimal_log.md`:
    | `anneal.last=0.5` | `AN` |
 
    Name each run `<best tag>+<factor>`, e.g. `O1_P2swap_LE+GL`.
-6. **Wave 3.** If wave 2 plateaus too, combine the two best wave-2 factors and extend the best run. If nothing improves after that, stop tuning that cell and report it as a finding, with its convergence curve.
+6. **Wave 3.** If wave 2 plateaus too, combine the two best wave-2 factors and extend the best run. If that doesn't make the cell DONE either, the cell stays open: rule 6b continues it. (Until 2026-11-09 this rule ended the cell as "a finding"; the user ruled that out.)
+6b. **Exploration wave (from 2026-11-09; the user's instruction is quoted under "Goal").** In the five unfinished cells, every unconverged seed falls short in the same way: after its first correction it doesn't explore enough. It keeps exploiting through every audit, or hides from later audits, or settles on a partly honest route, while its best response is corrected and then honest. None of the 387 best responses up to iteration 115 avoids correction. Waves 2 and 3 don't vary exploration.
+   - **Start it now in every cell that is not DONE.** It doesn't wait for waves 2–3. Run it in parallel with whatever the cell has running, and don't cancel anything. Bases:
+
+     | cell | base run |
+     |---|---|
+     | grid swap | `O1_P2swap_LE+NET` |
+     | grid no-regulariser | `O1_P1eq1_LN+LR` |
+     | Tomato swap | `O1_P2swap_LN` |
+     | tomato_large swap | `O1_P2swap_LE` |
+     | tomato_large no-regulariser | `O1_P1eq1_LN` |
+
+   - **Command:** `explore <env> <variant> <base> submit` (`scripts/farmshare/explore_sets.py` builds the configs). It submits 4 runs on seeds 0–2, each the base's config at the wave-1 length (1536 episodes) plus one factor, named `<base>+<factor>`:
+
+     | factor | change on top of the base |
+     |---|---|
+     | `ENT3` | entropy coefficient 3× the base's |
+     | `ES10` | entropy starts at 10× the base's and falls linearly to 1× by episode 768 (`anneal.ent_start=10 anneal.ent_episodes=768`), then the usual end-of-run anneal |
+     | `N4` | 4× the base's envs and batch, the same 4 minibatches, at most 256 envs. PBRR fits dominate run time, not env count: Tomato `LN` (64 envs) took 10.5 h for 1536 episodes, `L` (16) took 12.7 h. |
+     | `ES10+N4` | both |
+
+   - **Extend exploration runs further than rule 4 does.** While any seed of an exploration run is not CONVERGED, `extend` the run to 2× its episodes, whatever the verdict (IMPROVING or PLATEAU), up to rule 4's cap. Seeds escape after long flat stretches: grid swap `LE+NET` s0 was 0.141 / 0.130 / 0.115 at 1536 / 3072 / 6144, then 0.003 at 12,288.
+   - **Confirmation** works as in rule 4. When a run is 3/3 CONVERGED, run `confirm`; the cell is DONE when the confirmation is 3/3.
+   - **Stage 2.** A cell may finish its four stage-1 runs without becoming DONE: each run is at the cap, or CONVERGED but failed its confirmation. Then take the stage-1 run with the smallest mean BR gap and run `explore <env> <variant> <that run> stage2 submit`. It submits `ENT10` (entropy 10×), `ES30` (30×, falling to 1× by episode 1536) and `ES30+N4`, with the same extension rule.
+   - **Never close a cell as a finding.** Suppose stage 2 also ends without the cell DONE. Then flag the cell at the top of the log, with each seed's failure mode and the configs tried. Keep extending any run that has an unconverged seed, and wait for the user.
+   - **Order and budget.** Submit grid first (hours per run), then Tomato (about half a day), then tomato_large (days). Rule 8's 60-job budget still applies; if the budget is full, submit the rest as jobs finish. Once a cell is DONE, start nothing new for it. Its running exploration runs finish and are information only.
 7. **Commit.** Run `bash scripts/farmshare/step4_commit.sh "<message>"`.
    - It commits only small files while seeds are running.
    - It commits `logs.npz`, `model.zip` and the round CSVs only once a seed has finished.
    - Never `git add` a running seed's checkpoint files by hand.
 8. **Budget.** Keep the campaign at ≤ 60 queued or running jobs (each job is 3 seeds = 3 cores). The partition allows 128 per user. Don't cancel other jobs (for example the Taxi, MountainCar and LunarLander `*_r2_*` runs) without the user's go-ahead.
-9. **Stop** when all 8 cells are DONE (or reported as findings), or when the user says stop. Then write a final summary at the top of the log. For each cell it gives:
+9. **Stop** when all 8 cells are DONE, or when the user says stop. Then write a final summary at the top of the log. For each cell it gives:
    - the target end state;
    - the converged config;
    - the best-response gap of every seed;
@@ -173,14 +200,14 @@ The text given to FarmShare Claude, started with `/loop`, is kept at the end of 
 ```
 /loop You are running the Step 4 "optimal-policy" campaign of this repo (~/reward-hacking-with-observer) on Stanford FarmShare. Read CLAUDE.md (§4f, §6 FarmShare) and docs/step4_optimal.md before doing anything; docs/step4_optimal.md is the source of truth for the goal, the pre-registered criteria and the decision rules, and you follow it exactly.
 
-Goal: PPO must reach (almost exactly) its exact optimum, i.e. be within 3% of the best response to the corrections its own play induces (experiments/step4_br.py, the verdict), for the swap (g.l_minus_on=dispreferred) and the no-regulariser (g.use_regularization=False) PBRR on grid, absent_supervisor, tomato and tomato_large; the self-consistent target (experiments/step4_targets.py) gives the exact end state that answers the user's hypothesis. Not converging means not tuned or trained enough: keep tuning (scripts/farmshare/step4_optimal.sh wave1 / ppo / extend) until every (env, variant) cell has a config CONVERGED in 3/3 tuning seeds and 3/3 fresh confirmation seeds, or is reported as a finding after wave 3.
+Goal: PPO must reach (almost exactly) its exact optimum, i.e. be within 3% of the best response to the corrections its own play induces (experiments/step4_br.py, the verdict), for the swap (g.l_minus_on=dispreferred) and the no-regulariser (g.use_regularization=False) PBRR on grid, absent_supervisor, tomato and tomato_large; the self-consistent target (experiments/step4_targets.py) gives the exact end state that answers the user's hypothesis. Not converging means not tuned or trained enough: keep tuning (scripts/farmshare/step4_optimal.sh wave1 / ppo / explore / extend), including exploration (rule 6b), until every (env, variant) cell has a config CONVERGED in 3/3 tuning seeds and 3/3 fresh confirmation seeds. Never close a cell as a finding: if the rules run out, flag the cell for the user and keep extending its unconverged runs.
 
 Each iteration:
 0. If docs/step4_optimal_log.md does not exist yet, this is the first iteration: git pull; run `.venv/bin/python tests/test_step4.py`; submit `bash scripts/farmshare/step4_optimal.sh phase_a submit` (note the first job id = PHASEA_JOB; then rerun with `PHASEA_JOB=<id>` so the three tomato_large variant checks wait for it); then `PHASEA_JOB=<id> bash scripts/farmshare/step4_optimal.sh targets submit` and `PHASEA_JOB=<id> bash scripts/farmshare/step4_optimal.sh wave1 submit`. Always dry-run a command first (omit "submit") and check it. Create docs/step4_optimal_log.md (append-only: date, what you saw, what you decided, the exact commands, job ids) and commit.
 1. git pull --no-rebase --no-edit --ff (never --rebase or --autostash: they replace modified tracked files, which detaches running seeds' open logs); squeue -u $USER; bash scripts/farmshare/step4_optimal.sh report.
-2. Apply the decision rules of docs/step4_optimal.md in order (resume, new targets, best-response checks, finished runs: confirm / extend / plateau, wave 2, wave 3, budget). Put EXCLUDE=<broken nodes> (e.g. EXCLUDE=barley-04) in front of every submit while a node is broken. Log every decision and command in docs/step4_optimal_log.md.
+2. Apply the decision rules of docs/step4_optimal.md in order (resume, new targets, best-response checks, finished runs: confirm / extend / plateau, wave 2, wave 3, exploration wave 6b, budget). Put EXCLUDE=<broken nodes> (e.g. EXCLUDE=barley-04) in front of every submit while a node is broken. Log every decision and command in docs/step4_optimal_log.md.
 3. As soon as a target is computed, write its end state per cell at the top of the log under "Exact predictions": whether the no-regulariser optimum avoids correction (hides) and whether the swap optimum is corrected once and then behaves. These are the answer to the user's hypothesis; never adjust environments, criteria or targets to get a hoped-for result.
 4. Commit with `bash scripts/farmshare/step4_commit.sh "<short message>"` (never git add running seeds' checkpoint files by hand; never overwrite or delete a run; a seed that died before its first checkpoint is moved aside automatically by --resume).
 5. If something is broken (a job crashes, a script errors, a target's fixed point does not converge, a best-response check fails), log it with the error text, fix only what is clearly a bug (commit the fix with a test), and otherwise flag it at the top of the log for the user instead of improvising.
-Pace: wake every ~45 min while jobs run (longer, ~2 h, when only long runs remain). Stop the loop when every cell is DONE or reported as a finding, after writing the final summary at the top of the log.
+Pace: wake every ~45 min while jobs run (longer, ~2 h, when only long runs remain). Stop the loop when every cell is DONE or the user says stop, after writing the final summary at the top of the log.
 ```
