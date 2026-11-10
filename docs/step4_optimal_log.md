@@ -2845,3 +2845,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **(3) Grid no-reg `LN+LR`:** its confirmation is `O1_P1eq1_LN+LR_confirm` at 6144: 0.062 / 0.107 / 0.135, so **0/3 and `LN+LR` fails confirmation.** No `confirm` submitted. The grid no-reg cell stays open on `LN+LR+GL` (2/3 at 3072, extending to 6144, 1967546) and on the exploration wave from `LN+LR` (1967608–1967611).
 - **(4) AS `LN+NET_confirm`:** held (its cell is DONE; information only).
 - Flags at the top updated: the iteration-114 question is RESOLVED (option a); the iteration-91 flag records the decision to keep holding; the rule-6b note lists what is still open (the wave-3 factor ranking).
+
+## 2026-11-09, iteration 119 (23:01): tomato_large no-reg `L` finished 6144; check submitted
+
+- 1967055 (tomato_large no-reg `O1_P1eq1_L`, resumed after its TIMEOUT, to 6144) ended COMPLETED, exit 0, at about 23:00. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run → `... br_missing submit` → **1967673** (tomato_large checks take about 2–2.5 h).
+- The three barley-02 exploration jobs (1967616, 1967617, 1967618), 21 min after starting, now have their `.out` files (still empty) but no run directories yet: a slow start, as in iteration 85, not a failure. Rechecked next iteration. 28 campaign jobs + 1 check.
