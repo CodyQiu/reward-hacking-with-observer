@@ -1,0 +1,18 @@
+{
+ "ppo": {
+  "ent_coef": 0.1,
+  "batch_size": 1600
+ },
+ "g": {
+  "l_minus_on": "dispreferred",
+  "epochs": 1000
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "episodes": 1536,
+ "n_envs": 64
+}

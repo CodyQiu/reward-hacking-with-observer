@@ -1,0 +1,16 @@
+{
+ "ppo": {
+  "ent_coef": 0.03,
+  "batch_size": 6400
+ },
+ "g": {
+  "use_regularization": false,
+  "epochs": 1000
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ },
+ "n_envs": 256,
+ "episodes": 1536
+}

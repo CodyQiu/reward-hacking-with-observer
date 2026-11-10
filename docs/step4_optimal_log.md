@@ -2828,3 +2828,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 | tomato_large no-reg | `O1_P1eq1_LN` | ent 0.09 | ent 0.03, start 10× by 768 | 256 envs, batch 6400 | both |
 
   - Budget (rule 8): 8 training jobs running + 1 extension + 20 exploration runs = 29 ≤ 60. All submitted now, in the rule's order.
+- **Submitted** (`... explore <env> <variant> <base> submit`, then `... extend tomato_large O1_P2swap_LN 6144 submit`), at 22:41:
+  - grid swap `O1_P2swap_LE+NET+` `ENT3` **1967604**, `ES10` **1967605**, `N4` **1967606**, `ES10+N4` **1967607**;
+  - grid no-reg `O1_P1eq1_LN+LR+` `ENT3` **1967608**, `ES10` **1967609**, `N4` **1967610**, `ES10+N4` **1967611**;
+  - Tomato swap `O1_P2swap_LN+` `ENT3` **1967613**, `ES10` **1967614**, `N4` **1967615**, `ES10+N4` **1967616**;
+  - tomato_large swap `O1_P2swap_LE+` `ENT3` **1967617**, `ES10` **1967618**, `N4` **1967619**, `ES10+N4` **1967620**;
+  - tomato_large no-reg `O1_P1eq1_LN+` `ENT3` **1967621**, `ES10` **1967622**, `N4` **1967623**, `ES10+N4` **1967624**;
+  - tomato_large swap `O1_P2swap_LN` → 6144: **1967625**.
+  - 29 campaign jobs queued or running; 1967604 started at once, the rest pending (Priority). Rule 6b's extension rule for these runs: while any seed is not CONVERGED, extend to 2× whatever the verdict, up to the cap.
