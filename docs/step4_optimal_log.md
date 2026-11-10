@@ -2930,3 +2930,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `experiments/step4_convergence.py`: **3/3 CONVERGED**: s0 **0.019** (s.e. 0.002), s1 **0.012** (s.e. 0.002), s2 **0.005** (s.e. 0.004). Every seed is corrected in round 0 and then honest (true −100, then 20.3–22.0 per round); the best response is the same end state (22 ×4).
 - **Rule 6b → rule 4 (all seeds CONVERGED, tuning run):** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid O1_P2swap_LE+NET+ES10` (dry-run: seeds 20–22, `--set g.l_minus_on=dispreferred anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 ppo.ent_coef=0.03 ppo.net_arch=[256,256] episodes=1536`) → `... submit` → **1968340** (`O1_P2swap_LE+NET+ES10_confirm`). The grid swap cell is not yet DONE, so a second 3/3 config gets its own confirmation; the cell is DONE as soon as any of `LE+NET_confirm` (1965673), `LE+NET+ENT3_confirm` (1968264) or `LE+NET+ES10_confirm` (1968340) is 3/3.
 - Nothing cancelled. 27 jobs in the queue: 25 training + 2 tomato_large checks (1967673, 1968046).
+
+## 2026-11-10, iteration 131 (05:29): tomato_large no-reg `L` 1/3 at 6144 → extend to 12,288 (the cap; 1968344)
+
+- 1967673 (check of tomato_large no-reg `O1_P1eq1_L` at 6144) COMPLETED in 6 h 26 min. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `experiments/step4_convergence.py` (gap history at 1536 / 3072 / 6144):
+  - s0 **0.060** (s.e. 0.018) **IMPROVING** (0.051 → 0.088 → 0.060);
+  - s1 **0.064** (s.e. 0.017) **IMPROVING** (0.036 → 0.058 → 0.064);
+  - s2 **0.027** (s.e. 0.011) **CONVERGED** (0.060 → 0.044 → 0.027).
+  - All three policies are corrected in round 0 and then never again (true 65, then about 518 per round). Their best responses seek further corrections: 2.92 (s0), 3.00 (s1) and 4.00 (s2) per episode, with true 516–522 per round, i.e. about the same true return.
+- **Rule 4 (a seed is IMPROVING): extend to 2×, capped at 12,288** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_L 12288` (dry-run: seeds 0 1 2, `--resume --extend-to 12288`) → `... submit` → **1968344**. At tomato_large's speed this needs several 48 h jobs (resumed after each TIMEOUT).
+- 28 jobs in the queue: 27 training + the tomato_large swap `L` check (1968046).
