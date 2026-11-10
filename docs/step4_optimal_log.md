@@ -3016,3 +3016,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s22 **0.052** (s.e. 0.023) IMPROVING (0.037 at 1536): corrected in round 0, then honest from round 1 on with some exploiting left in round 1 (true −100 / 7.7 / 22 / 22 / 22); its best response takes 2 corrections (rounds 0–1), then the 20-route.
   - **Rule 4 (seeds IMPROVING): extend 2×**, as for every earlier confirmation with an IMPROVING seed (open question at the top) → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ES10_confirm 6144` (dry-run: seeds 20 21 22, `--resume --extend-to 6144`) → `... submit` → **1969083**. The grid no-reg cell is not DONE; `LN+LR+ES10+N4_confirm` (1968600) and `LN+LR+ENT3_confirm` (1968947) are running.
 - 27 jobs in the queue, all training.
+
+## 2026-11-10, iteration 140 (10:22–10:37): grid swap `LE+NET+N4` 2/3 at 3072 (information only, cell DONE); Tomato swap `LN+ES10+N4` s2 0.002 CONVERGED
+
+- 1968081 (grid swap `O1_P2swap_LE+NET+N4`, extension to 3072) ended COMPLETED, exit 0, at about 10:22 (5 h 34 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1969113** (grid swap `LE+NET+N4`, 4 min) and **1969114** (Tomato swap `O1_P2swap_LN+ES10+N4`, finished seed s2, 12 min); s1 finished as 1969114 ran → **1969147**.
+- **Grid swap `LE+NET+N4` at 3072 (information only; the cell is DONE since iteration 139, so no extension):** s0 **0.001** (s.e. 0.000) CONVERGED; s1 **0.145** (s.e. 0.008; 0.190 at 1536): corrected in round 0, then exploits uncorrected in rounds 1–4 (true −100 ×5), best response honest (22 ×4); s2 **0.007** (s.e. 0.007) CONVERGED (0.002 at 1536). So at 4× envs, one seed in three keeps the exploit after its correction for 3072 episodes.
+- **Tomato swap `LN+ES10+N4` s2 at 1536: gap 0.002** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / about 420.5 ×4; best response 46 / 421.6 ×4). s1 check 1969147 running; s0 at 1176.
+- Tomato swap so far at the exploration runs' first checks: converged seeds `LN+ENT3` s0, s2; `LN+N4` s0, s2; `LN+ES10+N4` s2, all with the same end state (corrected once, then honest at about 420 against 421.6–422.1). The only unconverged seed is `LN+N4` s1 (never exploits in view, 0.422).
+- 27 jobs in the queue: 26 training + check 1969147.
