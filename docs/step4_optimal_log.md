@@ -2783,3 +2783,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history (1536 / 3072 / 6144): s0 0.035 / 0.019 / 0.000; s1 0.042 / 0.000 / 0.002; s2 0.048 / 0.005 / 0.000. All three are corrected once in round 0 and honest afterwards, exactly like their best responses.
 - **Decision (rule 4): all seeds CONVERGED in a tuning run → `confirm`.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid "O1_P1eq1_LN+LR"` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR_confirm --seeds 20 21 22 --results-dir results/step4/grid/optimal --set g.use_regularization=False episodes=6144 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 ...`.
 - **Not submitted:** `O1_P1eq1_LN+LR_confirm` already exists (this config on seeds 20–22, 3072 → 6144 → 12,288; 0/3 at every check), and runs are never overwritten. Flagged at the top (update under "Rule gap (iteration 107)") with the options; waiting for the user. The cell's other wave-3 run, `LN+LR+GL` (2/3 at 1536, extending to 3072, 1967237), continues.
+
+## 2026-11-09, iteration 115 (21:39): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 8 training jobs running; none has ended since iteration 114. Progress: grid no-reg `LN+LR+GL` 2736 / 2712 / 2736 of 3072; tomato_large no-reg `L` 5976 / 6000 / 6000 of 6144. 1967425 (tomato_large swap `LN` s1 check) at 1 h 04 min. The grid no-reg `LN+LR` confirmation question (iteration 114) is unanswered; nothing submitted for it.
