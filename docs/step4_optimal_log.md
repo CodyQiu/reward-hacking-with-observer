@@ -2800,3 +2800,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Gap history (1536 → 3072): s0 0.009 → 0.004, s1 0.006 → 0.003, s2 0.089 → 0.076. s2 plays the shortest honest path (true 22, the honest optimum); its best response takes a 2-step-longer honest route (true 20) that the fitted correction pays more received reward for. No seed hides.
 - **Decision (rule 4): a seed is IMPROVING → extend to 2× (6144).** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+LR+GL" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
+  - **Submitted:** `... extend grid "O1_P1eq1_LN+LR+GL" 6144 submit` → **1967546**.
