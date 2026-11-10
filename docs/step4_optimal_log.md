@@ -3031,3 +3031,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - 1969147 (check of Tomato swap `O1_P2swap_LN+ES10+N4`, finished seed s1) COMPLETED in 13 min. `git pull --no-rebase --no-edit --ff`: already up to date.
 - s1 at 1536: **gap 0.001** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / about 421.5 ×4; best response 46 / 422.7 ×4). With s2 (0.002) the run is 2/2 checked; s0 at about 1180 of 1536 (job 1967616 still running). Rule 6b when s0 is checked: if it is CONVERGED, the run is 3/3 and goes to `confirm`.
 - 26 jobs in the queue, all training.
+
+## 2026-11-10, iteration 142 (11:14–11:22): grid swap `LE+NET+ES10+N4` 3/3 at 1536 (information only, cell DONE: no `confirm`)
+
+- 1967607 (grid swap `O1_P2swap_LE+NET+ES10+N4`, exploration, 1536) ended COMPLETED, exit 0, at about 11:13 (12 h 32 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1969266** (`LE+NET+ES10+N4`, 6 min) and **1969267** (`LE+NET+ES10_confirm`, finished seed s22, 1 min).
+- **Grid swap `LE+NET+ES10+N4` at 1536: 3/3 CONVERGED**: s0 **0.012** (s.e. 0.005), s1 **0.001** (s.e. 0.000), s2 **0.002** (s.e. 0.000). Every seed is corrected in round 0, then honest (true −100, then 21.9–22 per round), as is its best response. **The cell has been DONE since iteration 139, so per rule 6b no `confirm` is submitted;** this is a second config (after `LE+NET+ENT3`, and `LE+NET+ES10` at 1536) that reaches the cell's optimum in 3/3 tuning seeds.
+- **Grid swap `LE+NET+ES10_confirm` s22 at 1536: gap 0.016** (s.e. 0.003), CONVERGED: corrected in round 0, then honest (true −100 / 19.7 / 21.9 / 21.6 / 21.9); best response −100 / 22 ×4. s20 / s21 at 1368 / 1488 (information only).
+- 26 jobs in the queue, all training.
