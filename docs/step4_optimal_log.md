@@ -2734,3 +2734,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. 11 training jobs running; none has ended since iteration 108. `... br_missing` (dry-run): nothing new (1966848 still running). `... resume` (dry-run): only AS `LN+NET_confirm` s21/s22, held.
 - 1966848 (tomato_large swap `LN`, s0/s2 @3072) has finished its first seed: **s0 +0.046 ± 0.003, not converged**. PPO is corrected once in round 0 and then plays an honest-ish route with true 376 per round, against its best response's 488 (same end state, one correction; PPO's windows in rounds 1–4 are clean). The second seed's check is at correction 3 of 4. Logged in full when it finishes.
+
+## 2026-11-09, iteration 110 (19:09): grid no-reg wave 3 `LN+LR+GL` 2/3 at 1536 → extend to 3072
+
+- 1966901 (grid `O1_P1eq1_LN+LR+GL`, 1536) ended COMPLETED, exit 0, at about 19:09 (1 h 43 min). `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed it (tomato_large swap `LN` check still running) → `... br_missing submit` → **1967225**, COMPLETED in 4 min. Verdicts: `.venv/bin/python experiments/step4_convergence.py "results/step4/grid/optimal/O1_P1eq1_LN+LR+GL"`.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) |
+|---|---|---|---|---|
+| `P1eq1_LN+LR+GL` s0 @1536 | +0.009 ± 0.001 | CONVERGED | corrected in round 0, then never again; true -100, 22 ×4 | same (true -100, 22 ×4) |
+| `P1eq1_LN+LR+GL` s1 @1536 | +0.006 ± 0.001 | CONVERGED | same | same |
+| `P1eq1_LN+LR+GL` s2 @1536 | +0.089 ± 0.002 | IMPROVING | corrected in round 0, then never again; true -100, 20 ×4 | corrected in round 0, then never again; true -100, 21 ×4 |
+
+- All three are corrected once and then honest: none hides after its correction (the failure of `LN+NET` s1, `LN+GL_confirm` s20, `LN+LR_confirm`). s2's shortfall is received reward only: it takes an honest route that the fitted correction pays less for than its best response's (also honest) route.
+- **Decision (rule 4): a seed is IMPROVING → extend to 2× (3072).** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+LR+GL" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
