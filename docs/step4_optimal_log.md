@@ -2850,3 +2850,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - 1967055 (tomato_large no-reg `O1_P1eq1_L`, resumed after its TIMEOUT, to 6144) ended COMPLETED, exit 0, at about 23:00. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run → `... br_missing submit` → **1967673** (tomato_large checks take about 2–2.5 h).
 - The three barley-02 exploration jobs (1967616, 1967617, 1967618), 21 min after starting, now have their `.out` files (still empty) but no run directories yet: a slow start, as in iteration 85, not a failure. Rechecked next iteration. 28 campaign jobs + 1 check.
+
+## 2026-11-09, iteration 120 (23:49): every exploration run has started
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 29 jobs RUNNING (28 training + the tomato_large no-reg `L` check 1967673); none has ended since iteration 119.
+- The barley-02 slow starts resolved: Tomato swap `LN+ES10+N4`, tomato_large swap `LE+ENT3` and `LE+ES10` now have their run directories and seed logs (about 30–60 min after starting). Nothing resubmitted.
+- First checkpoints (episodes of 1536, seeds 0/1/2): grid swap `LE+NET+` ENT3 96/72/96, ES10 48/48/72, N4 168/192/168, ES10+N4 24 ×3; grid no-reg `LN+LR+` ENT3 216/312/240, ES10 288/312/288, N4 192 ×3, ES10+N4 168 ×3; Tomato swap `LN+` ENT3 24/48/24, ES10 24 ×3, N4 24 ×3 (ES10+N4 none yet); tomato_large exploration runs: none yet (slow PBRR fits; expected). Grid no-reg `LN+LR+GL` 3768 ×3 of 6144.
