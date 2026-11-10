@@ -2970,4 +2970,4 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 ## 2026-11-10, iteration 135 (07:33): Tomato swap `LN+ENT3` s2 0.007 CONVERGED at 1536
 
 - 1968702 (check of Tomato swap `O1_P2swap_LN+ENT3`, finished seed s2 only) COMPLETED in 12 min. `git pull --no-rebase --no-edit --ff`: already up to date.
-- s2 at 1536: **gap 0.007** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / 418.6 / 418.8 / 418.4 / 418.7); best response the same end state (46, then 421.7 ×4). This is the first Tomato swap seed to reach its best response's end state (the swap's raise pays for one correction, then honest). s0 / s1 still training (about 1150 / 400); rule 6b for this run once all three are checked.
+- s2 at 1536: **gap 0.007** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / 418.6 / 418.8 / 418.4 / 418.7); best response the same end state (46, then 421.7 ×4). The same end state as Tomato swap `L` s0 (0.003 at 12,288): the swap's raise pays for one correction, then honest; here reached at 1536 with 3× entropy. s0 / s1 still training (about 1150 / 400); rule 6b for this run once all three are checked.
