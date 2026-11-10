@@ -1,0 +1,17 @@
+{
+ "g": {
+  "use_regularization": false
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "n_envs": 64,
+ "ppo": {
+  "batch_size": 1600,
+  "learning_rate": 0.0001
+ },
+ "episodes": 1536
+}

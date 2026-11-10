@@ -2892,3 +2892,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - Target comparison (information only): s0 and s2 match the target's end state (O3); s1's target is corrected twice (rounds 0–1), PPO and its best response once.
 - **Rule 6b → rule 4 (all seeds CONVERGED, tuning run):** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid O1_P1eq1_LN+LR+ES10` (dry-run: seeds 20–22, `--set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 episodes=1536`, the run's own config at its final episode count) → `... submit` → **1968034** (`O1_P1eq1_LN+LR+ES10_confirm`). The grid no-reg cell is DONE if this is 3/3.
 - Nothing cancelled: the other grid no-reg runs (`LN+LR+GL` at about 5150 of 6144; `LN+LR+` ENT3, N4, ES10+N4) keep running until the cell is DONE. 29 campaign jobs + the tomato_large no-reg `L` check (1967673).
+
+## 2026-11-10, iteration 126 (03:33): tomato_large swap `L` finished 3072; check submitted
+
+- 1958116 (tomato_large swap `O1_P2swap_L`, extension 1536 → 3072) ended COMPLETED, exit 0, at 03:33 (29 h 54 min); all three seeds have `metrics.json` (and `metrics_ep1536.json`). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) listed this run → `... br_missing submit` → **1968046**. Rule 4 when its gaps are in (cap 12,288).
+- 27 training jobs + 2 checks (1967673, 1968046).
