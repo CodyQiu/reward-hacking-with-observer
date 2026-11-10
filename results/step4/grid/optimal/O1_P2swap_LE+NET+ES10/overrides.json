@@ -1,0 +1,19 @@
+{
+ "g": {
+  "l_minus_on": "dispreferred"
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "ppo": {
+  "ent_coef": 0.03,
+  "net_arch": [
+   256,
+   256
+  ]
+ },
+ "episodes": 1536
+}

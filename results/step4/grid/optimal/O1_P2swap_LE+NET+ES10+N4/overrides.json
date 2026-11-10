@@ -1,0 +1,21 @@
+{
+ "g": {
+  "l_minus_on": "dispreferred"
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "ppo": {
+  "ent_coef": 0.03,
+  "net_arch": [
+   256,
+   256
+  ],
+  "batch_size": 1600
+ },
+ "episodes": 1536,
+ "n_envs": 64
+}
