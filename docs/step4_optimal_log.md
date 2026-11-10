@@ -4,6 +4,8 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 
 ## Flags for the user
 
+- **NEW RULE 6b (the user, a614de65, 2026-11-09 22:36): exploration wave in every open cell, and no cell is closed as a finding.** Applied from iteration 117: 4 exploration runs (`ENT3`, `ES10`, `N4`, `ES10+N4`) on each of the five open cells' bases, run in parallel with what each cell has running. This supersedes my open swap-priority question (Tomato swap no longer waits for `L` s1; grid swap's exploration runs beside `LE+NET_confirm`) and the "report as a finding" exit of rule 6. Still open: the grid no-reg `LN+LR` confirmation clash (under "Rule gap (iteration 107)"), the wave-3 factor ranking (same place) and resuming AS `LN+NET_confirm` (iteration-91 flag).
+
 - **Cells DONE: 3 of 8.**
   - Absent Supervisor no-regulariser (iteration 88, 2026-11-09 03:44): `O1_P1eq1_LN+RS` (64 envs, batch 1600, reward_scale 0.01625, 6144 episodes) CONVERGED in 3/3 tuning seeds (0.000 / 0.000 / 0.020) and 3/3 confirmation seeds (0.028 / 0.000 / 0.023), both at 6144, with no extension of the confirmation.
   - AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
@@ -2801,3 +2803,28 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Gap history (1536 → 3072): s0 0.009 → 0.004, s1 0.006 → 0.003, s2 0.089 → 0.076. s2 plays the shortest honest path (true 22, the honest optimum); its best response takes a 2-step-longer honest route (true 20) that the fitted correction pays more received reward for. No seed hides.
 - **Decision (rule 4): a seed is IMPROVING → extend to 2× (6144).** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+LR+GL" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
   - **Submitted:** `... extend grid "O1_P1eq1_LN+LR+GL" 6144 submit` → **1967546**.
+
+## 2026-11-09, iteration 117 (22:38): tomato_large swap `LN` all IMPROVING at 3072 → extend; the user's rule 6b → exploration wave in the five open cells
+
+- 1967425 (tomato_large swap `LN` s1 @3072) COMPLETED in 2 h 03 min. `git pull --no-rebase --no-edit --ff` brought **a614de65** (Cody, 22:36, "exploration wave (rule 6b) and no cell closed as a finding": `docs/step4_optimal.md` rules 6, 6b, 9 and the prompt; `anneal.ent_start` / `anneal.ent_episodes` in `src/step3/train.py`; `step4_optimal.sh explore`; `scripts/farmshare/explore_sets.py`; a test). Read in full. `.venv/bin/python tests/test_step4.py`: **15 tests, 0 failed**.
+- **Rule 4, tomato_large swap `LN`** (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P2swap_LN`):
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) |
+|---|---|---|---|---|
+| `P2swap_LN` s0 @3072 | +0.046 ± 0.003 | IMPROVING | corrected in round 0, then never again; true 65, 488 ×4 | corrected in round 0, then never again; true 65, 375 ×4 |
+| `P2swap_LN` s1 @3072 | +0.035 ± 0.003 | IMPROVING | corrected in round 0, then never again; true 65, 477 ×4 | corrected in round 0, then never again; true 65, 375 ×4 |
+| `P2swap_LN` s2 @3072 | +0.036 ± 0.005 | IMPROVING | corrected in round 0, then never again; true 65, 476 ×4 | corrected in round 0, then never again; true 65, 373–374 ×4 |
+
+  - s1 went 0.321 → 0.035 between 1536 and 3072 (it stopped exploiting through every audit); s0 and s2 are flat (0.047 → 0.046, 0.035 → 0.036). All three now play the same near-honest route (true about 375) where the best response is more honest (476–488). "Above target" for all three (information only).
+  - **Decision: seeds IMPROVING → extend to 6144.** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P2swap_LN 6144` → `submit.sh 48 --env tomato_large --run-id O1_P2swap_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 6144`.
+- **Rule 6b (new): exploration wave now in every cell that is not DONE**, bases as listed in the rule, order grid → Tomato → tomato_large. Dry-runs, each `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore <env> <variant> <base>`; each gave 4 `submit.sh 48 --env <env> --run-id <base>+<factor> --seeds 0 1 2 --results-dir results/step4/<env>/optimal --set <base's overrides> episodes=1536 <factor>` lines:
+
+| Cell | Base | `ENT3` | `ES10` | `N4` | `ES10+N4` |
+|---|---|---|---|---|---|
+| grid swap | `O1_P2swap_LE+NET` | ent 0.09 | ent 0.03, start 10×, to 1× by 768 | 64 envs, batch 1600 | both |
+| grid no-reg | `O1_P1eq1_LN+LR` | ent 0.03 | ent 0.01 (default), start 10× by 768 | 256 envs, batch 6400 | both |
+| Tomato swap | `O1_P2swap_LN` | ent 0.09 | ent 0.03, start 10× by 768 | 256 envs, batch 6400 | both |
+| tomato_large swap | `O1_P2swap_LE` | ent 0.3 | ent 0.1, start 10× by 768 | 64 envs, batch 1600 | both |
+| tomato_large no-reg | `O1_P1eq1_LN` | ent 0.09 | ent 0.03, start 10× by 768 | 256 envs, batch 6400 | both |
+
+  - Budget (rule 8): 8 training jobs running + 1 extension + 20 exploration runs = 29 ≤ 60. All submitted now, in the rule's order.
