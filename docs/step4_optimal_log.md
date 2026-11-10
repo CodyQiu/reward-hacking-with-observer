@@ -2787,3 +2787,16 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 ## 2026-11-09, iteration 115 (21:39): no change
 
 - `git pull --no-rebase --no-edit --ff`: already up to date. 8 training jobs running; none has ended since iteration 114. Progress: grid no-reg `LN+LR+GL` 2736 / 2712 / 2736 of 3072; tomato_large no-reg `L` 5976 / 6000 / 6000 of 6144. 1967425 (tomato_large swap `LN` s1 check) at 1 h 04 min. The grid no-reg `LN+LR` confirmation question (iteration 114) is unanswered; nothing submitted for it.
+
+## 2026-11-09, iteration 116 (22:20): grid no-reg `LN+LR+GL` 2/3 at 3072 → extend to 6144
+
+- 1967237 (grid `O1_P1eq1_LN+LR+GL`, 1536 → 3072) ended COMPLETED, exit 0, at about 22:19. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed it (tomato_large swap `LN` s1 check still running) → `... br_missing submit` → **1967544**, COMPLETED in 3 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Verdict | Best response | PPO (exact) |
+|---|---|---|---|---|
+| `P1eq1_LN+LR+GL` s0 @3072 | +0.004 ± 0.004 | CONVERGED | corrected in round 0, then never again; true -100, 22 ×4 | same (true -100, 22 ×4) |
+| `P1eq1_LN+LR+GL` s1 @3072 | +0.003 ± 0.000 | CONVERGED | same | same |
+| `P1eq1_LN+LR+GL` s2 @3072 | +0.076 ± 0.003 | IMPROVING | corrected in round 0, then never again; true -100, 20 ×4 | corrected in round 0, then never again; true -100, 22 ×4 |
+
+- Gap history (1536 → 3072): s0 0.009 → 0.004, s1 0.006 → 0.003, s2 0.089 → 0.076. s2 plays the shortest honest path (true 22, the honest optimum); its best response takes a 2-step-longer honest route (true 20) that the fitted correction pays more received reward for. No seed hides.
+- **Decision (rule 4): a seed is IMPROVING → extend to 2× (6144).** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+LR+GL" 6144` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 6144`.
