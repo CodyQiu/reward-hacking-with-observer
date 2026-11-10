@@ -2874,3 +2874,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `git pull --no-rebase --no-edit --ff`: already up to date. 29 jobs RUNNING; none has ended since iteration 119; nothing due under rules 1/3.
 - 1967673 (tomato_large no-reg `L` check): seed 0 gap 0.060 (iteration 122); seed 1 at correction 3.
 - Progress (episodes, seeds 0/1/2): grid no-reg `LN+LR+ES10` 1392/1368/1368 of 1536 (first exploration run to finish, within about an hour), `LN+LR+ENT3` 960/960/912, `N4` 744/720/744, `ES10+N4` 696 ×3, `LN+LR+GL` 5136/5112/5160 of 6144; grid swap `LE+NET+` ENT3 816/792/816, ES10 456/504/480, N4 936/960/888, ES10+N4 144/144/168, `LE+NET_confirm` 8160/7848/8328; Tomato swap `L` s1 9984, `LN+` ENT3 240/144/240, ES10 120/96/96, N4 168/192/192, ES10+N4 96/72/72; tomato_large swap `L` 2976/2952/2928 of 3072, `LN` 3456/3456/3480, `LE_confirm` s21/s22 864/696; no-reg `LE` 5160/5184/5184, `LN` 4848/4800/4824; tomato_large exploration 0–96 (`LN+ES10+N4` and swap `LE+ES10`, `LE+ES10+N4` still without a checkpoint).
+
+## 2026-11-10, iteration 124 (02:58): grid no-reg `LN+LR+ES10` finished 1536; check submitted
+
+- 1967609 (grid no-reg `O1_P1eq1_LN+LR+ES10`, exploration wave, 1536 episodes) ended COMPLETED, exit 0, at 02:58 (4 h 18 min); all three seeds have `metrics.json`. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted, per the user). `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only this run → `... br_missing submit` → **1968026**.
+- Rule 6b applies when its gaps are in: extend to 3072 while any seed is not CONVERGED, whatever the verdict; `confirm` if 3/3.
+- 28 campaign jobs + 2 checks (1967673, 1968026).
