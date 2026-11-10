@@ -62,6 +62,7 @@ BASE_CONFIG = {
 
 
 def phase_a_path(env):
+    env = getattr(module(env), "G_FROM", env)     # a task that borrows another task's Phase A (its g config)
     if env == "grid":
         return os.path.join(ROOT, "results", "step2", "phase_a", "summary.json")
     return os.path.join(RESULTS, env, "phase_a", "summary.json")
@@ -74,6 +75,7 @@ def resolve_config(env, overrides=None):
     cfg["protocol"] = asdict(mod.PROTOCOL)
     cfg["reward_scale"] = mod.DEFAULTS["reward_scale"]
     cfg["task"] = dict(mod.DEFAULTS.get("task", {}))
+    cfg["pbrr"].update(mod.DEFAULTS.get("pbrr", {}))     # a task's own reference recipe (grid_routes: the rule)
     path = phase_a_path(env)
     if os.path.exists(path):
         with open(path) as fh:

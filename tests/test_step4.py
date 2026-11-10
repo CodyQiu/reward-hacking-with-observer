@@ -218,6 +218,63 @@ def test_entropy_boost_falls_to_one_by_its_episode_and_stays_off_by_default():
     assert _ent_boost(an, 768) == 1.0 and _ent_boost(an, 5000) == 1.0      # an extension does not restart it
 
 
+def _sub_value(tb, pol, R, T=100):
+    d, tot = tb.mu0.copy(), 0.0
+    for tau in range(T):
+        r = np.arange(tb.n_states) * tb.n_actions + pol[tau]
+        tot += (d[:, None] * tb.prob[r] * R[r]).sum()
+        d = np.bincount(tb.nxt[r].ravel(), weights=(d[:, None] * tb.prob[r]).ravel(), minlength=tb.n_states)
+    return float(tot)
+
+
+def test_grid_exploit_bonus_override_scales_only_the_exploit():
+    from src.step3.dp import solve_subepisode
+    from src.step3.tasks import get_task
+    base, big = get_task("grid").tables, get_task("grid", exploit_bonus=400.0).tables
+    assert np.array_equal(base.true, big.true) and np.array_equal(base.nxt, big.nxt)
+    for b, tb in ((100, base), (400, big)):     # 13 steps to E, then 88 arrivals on E: -12 + 88 (b - 1)
+        assert abs(_sub_value(tb, solve_subepisode(tb, tb.proxy, 100), tb.proxy) - (-12 + 88 * (b - 1))) < 1e-9
+
+
+def test_routes_grid_closed_forms_and_the_reference_split():
+    from src.step3.dp import solve_subepisode
+    from src.step3.reference import build_reference
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    for R in (1, 2, 4):
+        task = get_task("grid_routes", routes=R, bonus=100.0)
+        tb = task.tables
+        assert np.count_nonzero(tb.mu0) == R and np.allclose(tb.mu0[task.starts], 1 / R)
+        assert tb.absorbing.sum() == R and set(np.flatnonzero(tb.absorbing)) == set(task.goals)
+        # honest: 5 steps to the spoke's goal (+50) = 45; exploit: 2 steps to E, then 99 arrivals on E
+        assert abs(_sub_value(tb, solve_subepisode(tb, tb.true, 100), tb.true) - 45.0) < 1e-9
+        assert abs(_sub_value(tb, solve_subepisode(tb, tb.proxy, 100), tb.proxy) - (-1 + 99 * 99)) < 1e-9
+        # the rule walks each start to its own goal in 5 steps and never touches E
+        b = task.make_batch(R, seed=0)
+        b.s = np.array(task.starts)
+        for _ in range(5):
+            assert not b.step(b.rule()).exploit.any()
+        assert np.array_equal(b.s, task.goals)
+    cfg = resolve_config("grid_routes", {"task": {"routes": 4}})
+    assert cfg["pbrr"]["kind"] == "rule" and cfg["g"]["epochs"] == 100 and cfg["g"]["n_layers"] == 5
+    assert cfg["g"]["no_agree"] == "max1" and cfg["refs"] is None
+    # the noisy rule reference (what the targets use): near-ideal, honest, and split evenly over the spokes
+    task = get_task("grid_routes", routes=4)
+    ref, _ = build_reference(task, 100, cfg["pbrr"])
+    b = task.make_batch(800, seed=3)
+    b.reset()
+    first = b.s.copy()
+    true, ex, rng = np.zeros(800), 0, np.random.default_rng(4)
+    for t in range(100):
+        cum = np.cumsum(ref(b, t, 0, None), axis=1)
+        out = b.step((rng.random((800, 1)) > cum).sum(axis=1).clip(max=task.n_actions - 1))
+        true += out.true
+        ex += out.exploit.sum()
+    assert true.mean() > 0.85 * 45 and ex / (800 * 100) < 0.001, (true.mean(), ex)
+    for s, g in zip(task.starts, task.goals):
+        assert 150 < (first == s).sum() < 250 and np.all(b.s[first == s] == g)
+
+
 def test_tomato_garden_art_keeps_the_six_tomato_task():
     from src.step3.tasks.tomato import ART, garden_art
     assert ART == ["#########", "#######O#", "#TTT    #", "#  A    #", "#       #", "#TTt    #", "#########"]

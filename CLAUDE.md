@@ -367,6 +367,10 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
     - `step3_ppo.py --resume [--extend-to N]` continues a run in its own directory from its last checkpoint.
     - Driver: `scripts/farmshare/step4_optimal.sh` (`br` / `br_missing` submit the best-response checks; `EXCLUDE=<nodes>` keeps jobs off broken nodes). Size-safe commits: `scripts/farmshare/step4_commit.sh`.
     - The grid now runs through the Step 3 harness (`--env grid`), with the same MDP and PBRR objective.
+- **Where does no-regulariser get avoided and the swap not? (from 2026-11-10; exact targets only; plan, pre-registered criteria and predictions in `docs/step4_hide_env.md`).**
+  - The user's theory, as stated: the no-regulariser fit "raises the honest and fines the exploit", which can "lower overall reward, leading to a smart enough agent to exploit that"; the swap should avoid this. A hypothesis to test, not a rule.
+  - Sweeps (`scripts/farmshare/step4_hide.sh`, both variants, seeds 0–2): Taxi as in Step 3; the grid with `task.exploit_bonus` ∈ {200 … 3200}; and `grid_routes` (`src/step3/tasks/grid_routes.py`: the exploit at a hub, R ∈ {1, 2, 4} spokes each with its own start and goal, random start; it borrows the grid's g config through `G_FROM`) × bonus {100, 400, 1600}.
+  - Map: `experiments/step4_hide_map.py`. No PPO until the map is in.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 
@@ -397,7 +401,7 @@ reward-hacking-with-observer/
 ├── src/plots_step2.py     # Step 2 dashboard
 ├── experiments/step2_pbrr_check.py, step2_ppo.py, step2_figures.py; tests/test_step2.py
 ├── src/step3/             # Step 3: task interface, protocol VecEnv, trajectory-level PBRR, generic DP, harness
-├── src/step3/tasks/       # grid (regression anchor), tomato, tomato_large, taxi, absent_supervisor, mountain_car, lunar_lander, boat_race
+├── src/step3/tasks/       # grid (regression anchor), grid_routes, tomato, tomato_large, taxi, absent_supervisor, mountain_car, lunar_lander, boat_race
 ├── src/plots_step3.py     # Step 3 dashboard and suite figure
 ├── experiments/step3_check.py (Phase A), step3_ppo.py, step3_figures.py, step3_suite.py; tests/test_step3.py
 ├── docs/step3_tuning_log.md  # Step 3 tuning record: Phase A decisions per env, every run, procedure changes

@@ -7,6 +7,8 @@ Policy and reward-model features are the one-hot position, so the reward-model r
 proxy != true holds exactly on the transitions that arrive on E (Step 1's flag).
 """
 
+from dataclasses import replace
+
 import numpy as np
 
 from ...audit_grid import BASE, build_tables
@@ -18,7 +20,11 @@ DEFAULTS = {"protocol": PROTOCOL, "reward_scale": 0.01}
 RIGHT, DOWN, STAY = 4, 2, 0
 
 
-def make_task(cfg=BASE):
+def make_task(cfg=BASE, **params):
+    """``params`` override ``AuditConfig`` fields, e.g. ``exploit_bonus=400`` (``--set task.exploit_bonus=400``;
+    the Step 4 bonus sweep, docs/step4_hide_env.md). None given = Step 1's grid."""
+    if params:
+        cfg = replace(cfg, **params)
     tb = build_tables(cfg)
     S, A = cfg.n_pos, 5
     eye = np.eye(S, dtype=np.float32)
