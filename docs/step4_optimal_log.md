@@ -2856,3 +2856,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `git pull --no-rebase --no-edit --ff`: already up to date. 29 jobs RUNNING (28 training + the tomato_large no-reg `L` check 1967673); none has ended since iteration 119.
 - The barley-02 slow starts resolved: Tomato swap `LN+ES10+N4`, tomato_large swap `LE+ENT3` and `LE+ES10` now have their run directories and seed logs (about 30–60 min after starting). Nothing resubmitted.
 - First checkpoints (episodes of 1536, seeds 0/1/2): grid swap `LE+NET+` ENT3 96/72/96, ES10 48/48/72, N4 168/192/168, ES10+N4 24 ×3; grid no-reg `LN+LR+` ENT3 216/312/240, ES10 288/312/288, N4 192 ×3, ES10+N4 168 ×3; Tomato swap `LN+` ENT3 24/48/24, ES10 24 ×3, N4 24 ×3 (ES10+N4 none yet); tomato_large exploration runs: none yet (slow PBRR fits; expected). Grid no-reg `LN+LR+GL` 3768 ×3 of 6144.
+
+## 2026-11-10, iteration 121 (00:36): no change
+
+- `git pull --no-rebase --no-edit --ff`: already up to date. 29 jobs RUNNING; none has ended since iteration 119. 1967673 (tomato_large no-reg `L` check) at correction 3.
+- Exploration progress (episodes, seeds 0/1/2, of 1536): grid swap `LE+NET+` ENT3 312/240/264, ES10 96/96/120, N4 384/408/360, ES10+N4 48 ×3; grid no-reg `LN+LR+` ENT3 432/504/432, ES10 576 ×3, N4 336 ×3, ES10+N4 288/312/288; Tomato swap `LN+` ENT3 72/72/48, ES10 48 ×3, N4 72/48/48, ES10+N4 no checkpoint yet; tomato_large swap `LE+N4` 24 ×3, the other tomato_large exploration runs no checkpoint yet. Grid no-reg `LN+LR+GL` 4152 / 4152 / 4176 of 6144.
+- At these rates the earliest exploration runs (grid no-reg) reach 1536 in about 4–5 h; grid swap `LE+NET+ES10+N4` (48 episodes in about 2 h) will need resumes past its 48 h limit.
