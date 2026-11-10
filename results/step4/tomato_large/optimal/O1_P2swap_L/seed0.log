@@ -128,3 +128,4 @@
   [tomato_large s0] 24,192,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    545.2  rounds 5870  (105177s)
   [tomato_large s0] 24,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    544.9  rounds 5894  (105978s)
   [tomato_large s0] 24,576,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    543.4  rounds 5918  (106763s)
+  [tomato_large s0] resumed at episode 3072 -> 6144

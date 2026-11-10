@@ -6,7 +6,8 @@ This log is append-only. The procedure, criteria and decision rules are in `docs
 
 - **NEW RULE 6b (the user, a614de65, 2026-11-09 22:36): exploration wave in every open cell, and no cell is closed as a finding.** Applied from iteration 117: 4 exploration runs (`ENT3`, `ES10`, `N4`, `ES10+N4`) on each of the five open cells' bases, run in parallel with what each cell has running. This supersedes my open swap-priority question (Tomato swap no longer waits for `L` s1; grid swap's exploration runs beside `LE+NET_confirm`) and the "report as a finding" exit of rule 6. Your decisions (iteration 118): the `LN+LR` confirmation clash → option (a); AS `LN+NET_confirm` stays held. Still open, low priority now that rule 6b runs: the wave-3 factor ranking (under "Rule gap (iteration 107)").
 
-- **Cells DONE: 3 of 8.**
+- **Cells DONE: 4 of 8.**
+  - **Grid swap (iteration 139, 2026-11-10 10:05):** `O1_P2swap_LE+NET+ENT3` (rule 6b exploration on `LE+NET`: `ppo.ent_coef=0.09 ppo.net_arch=[256,256] anneal.last=0.25 anneal.floor=0.1`, 1536 episodes) CONVERGED in 3/3 tuning seeds (0.011 / 0.020 / 0.012) and 3/3 confirmation seeds (0.013 / 0.009 / 0.012), both at 1536, with no extension of the confirmation. Every seed: corrected in round 0, then honest (true −100, then about 21.6–22 per round), as is its best response and the target ("always-behaving" after the one correction the swap's raise pays for). Its other running runs (`LE+NET_confirm`, `LE+NET+ES10_confirm`, `LE+NET+N4`, `LE+NET+ES10+N4`) finish as information only; nothing new is started for the cell (rule 6b).
   - Absent Supervisor no-regulariser (iteration 88, 2026-11-09 03:44): `O1_P1eq1_LN+RS` (64 envs, batch 1600, reward_scale 0.01625, 6144 episodes) CONVERGED in 3/3 tuning seeds (0.000 / 0.000 / 0.020) and 3/3 confirmation seeds (0.028 / 0.000 / 0.023), both at 6144, with no extension of the confirmation.
   - AS swap (iteration 19): `O1_P2swap_LN` CONVERGED in 3/3 tuning and 3/3 confirmation seeds.
   - Tomato no-regulariser (iteration 45, 2026-11-07 09:05): `O1_P1eq1_LN` (64 envs, batch 1600, 6144 episodes) CONVERGED in 3/3 tuning seeds (0.026 / 0.022 / 0.012) and 3/3 confirmation seeds (0.017 / 0.010 / 0.025), both at 6144, with no extension of the confirmation.
@@ -2999,3 +3000,19 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s2 **0.032** (s.e. 0.004) IMPROVING (0.045 at 1536): true about 64.8 / 372.8 ×4; best response 65 / 466.5 ×4.
 - **Rule 4 (seeds IMPROVING): extend 2×**, below the 12,288 cap → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P2swap_L 6144` (dry-run: seeds 0 1 2, `--resume --extend-to 6144`) → `... submit` → **1969069**.
 - 28 jobs in the queue, all training (no check running).
+
+## 2026-11-10, iteration 139 (10:00–10:10): **grid swap DONE** (`LE+NET+ENT3_confirm` 3/3 at 1536); grid no-reg `LN+LR+ES10_confirm` 1/3 at 3072 → extend to 6144 (1969083)
+
+- 1968715 (grid no-reg `O1_P1eq1_LN+LR+ES10_confirm`, extension to 3072) ended COMPLETED, exit 0, at about 10:00 (2 h 35 min). 1968264 (grid swap `O1_P2swap_LE+NET+ENT3_confirm`, seeds 20–22, 1536) ended COMPLETED, exit 0 (4 h 47 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) listed both runs → `... br_missing submit` → **1969076** (`LN+LR+ES10_confirm`, 4 min) and **1969077** (`LE+NET+ENT3_confirm`, 3 min).
+- **Grid swap `LE+NET+ENT3_confirm` at 1536: 3/3 CONVERGED**:
+  - s20 **0.013** (s.e. 0.002): corrected in round 0, then honest (true −100 / 21.6 / 21.7 / 21.9 / 21.9); best response −100 / 22 ×4.
+  - s21 **0.009** (s.e. 0.001): corrected in round 0, then honest (true −100 / 21.8 / 21.7 / 21.9 / 22.0); best response the same end state.
+  - s22 **0.012** (s.e. 0.001): corrected in round 0, then honest (true −100 / 21.9 / 21.9 / 21.8 / 21.9); best response the same end state.
+  - **Rule 4 (a `_confirm` run, all CONVERGED, not extended): the grid swap cell is DONE.** Tuning `LE+NET+ENT3` was 3/3 at 1536 (0.011 / 0.020 / 0.012, iteration 128); confirmation 3/3 at the same 1536. Target, best responses and PPO agree: corrected once in round 0, then honest. The cell's other runs still running (`LE+NET_confirm` 1965673 at about 10,500 / 12,288; `LE+NET+ES10_confirm` 1968340; `LE+NET+N4` 1968081; `LE+NET+ES10+N4` 1967607) are not cancelled; they finish and are information only. Rule 6b: start nothing new for this cell, so I will not extend, confirm or resume them. `br_missing` will still check their finished seeds (a few minutes each on the grid), for information.
+- **Grid no-reg `LN+LR+ES10_confirm` at 3072: 1/3**:
+  - s20 **0.000** (s.e. 0.000) CONVERGED (0.003 at 1536): corrected in round 0, then honest (true −100 / 22 ×4), as is its best response.
+  - s21 **0.079** (s.e. 0.003) IMPROVING (0.109 at 1536): corrected in round 0, then honest at the shortest length (true −100 / 22 ×4); its best response is the 2-step-longer honest route (true 20 ×4), which the refitted g pays more for.
+  - s22 **0.052** (s.e. 0.023) IMPROVING (0.037 at 1536): corrected in round 0, then honest from round 1 on with some exploiting left in round 1 (true −100 / 7.7 / 22 / 22 / 22); its best response takes 2 corrections (rounds 0–1), then the 20-route.
+  - **Rule 4 (seeds IMPROVING): extend 2×**, as for every earlier confirmation with an IMPROVING seed (open question at the top) → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ES10_confirm 6144` (dry-run: seeds 20 21 22, `--resume --extend-to 6144`) → `... submit` → **1969083**. The grid no-reg cell is not DONE; `LN+LR+ES10+N4_confirm` (1968600) and `LN+LR+ENT3_confirm` (1968947) are running.
+- 27 jobs in the queue, all training.
