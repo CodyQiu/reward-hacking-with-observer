@@ -2748,3 +2748,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - All three are corrected once and then honest: none hides after its correction (the failure of `LN+NET` s1, `LN+GL_confirm` s20, `LN+LR_confirm`). s2's shortfall is received reward only: it takes an honest route that the fitted correction pays less for than its best response's (also honest) route.
 - **Decision (rule 4): a seed is IMPROVING → extend to 2× (3072).** Dry-run: `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid "O1_P1eq1_LN+LR+GL" 3072` → `submit.sh 48 --env grid --run-id O1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/optimal --resume --extend-to 3072`.
   - **Submitted:** `... extend grid "O1_P1eq1_LN+LR+GL" 3072 submit` → **1967237**.
+
+## 2026-11-09, iteration 111 (19:16): tomato_large swap `LN` s0/s2 at 3072, flat
+
+- 1966848 (best-response check, tomato_large swap `LN` s0/s2 @3072) COMPLETED in 2 h 18 min.
+
+| Run, seed @ episodes | BR gap ± s.e. | Best response | PPO (exact) |
+|---|---|---|---|
+| `P2swap_LN` s0 @3072 | +0.046 ± 0.003 | corrected in round 0, then never again; true 65, 488 ×4 | corrected in round 0, then never again; true 65, 376 ×4 |
+| `P2swap_LN` s2 @3072 | +0.036 ± 0.005 | corrected in round 0, then never again; true 65, 476 ×4 | corrected in round 0, then never again; true 65, 375 ×4 |
+
+- Gap history (1536 → 3072): s0 0.047 → 0.046, s2 0.035 → 0.036: flat over 2× the training. Both are corrected once in round 0 and keep their later windows clean (no hiding, no final-round defection); the shortfall is a near-honest route (true about 375) that the swapped correction pays less for than the best response's more honest one (476–488).
+- **No decision (rule 4 waits for all seeds):** s1 is at 2688 of 3072 in job 1965253 (0.321 at 1536). Verdicts are computed when s1's check is in.
