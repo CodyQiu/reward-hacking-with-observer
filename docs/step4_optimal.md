@@ -118,7 +118,7 @@ Code checks (laptop, 2 draws, not results):
 
 **When a cell is done.** A *cell* is one (env, variant) pair. It is done when:
 1. some config is CONVERGED in 3 of 3 tuning seeds; and
-2. the same config, at its final episode count (`step4_optimal.sh confirm <env> <run> submit`), is CONVERGED in 3 of 3 fresh seeds (20–22).
+2. the same config (`step4_optimal.sh confirm <env> <run> submit`) is CONVERGED in 3 of 3 fresh seeds (20–22). A confirmation run may be extended like any other run (rule 4), and its seeds count once CONVERGED. The user, 2026-11-10: "im accepting seeds that require extending episodes in the confirmation round to count as okay". (Before this date, the confirmation had to converge at the tuning run's final episode count.)
 
 ## Decision rules for each loop iteration
 
