@@ -3025,3 +3025,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Tomato swap `LN+ES10+N4` s2 at 1536: gap 0.002** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / about 420.5 ×4; best response 46 / 421.6 ×4). s1 check 1969147 running; s0 at 1176.
 - Tomato swap so far at the exploration runs' first checks: converged seeds `LN+ENT3` s0, s2; `LN+N4` s0, s2; `LN+ES10+N4` s2, all with the same end state (corrected once, then honest at about 420 against 421.6–422.1). The only unconverged seed is `LN+N4` s1 (never exploits in view, 0.422).
 - 27 jobs in the queue: 26 training + check 1969147.
+
+## 2026-11-10, iteration 141 (10:51): Tomato swap `LN+ES10+N4` s1 0.001 CONVERGED
+
+- 1969147 (check of Tomato swap `O1_P2swap_LN+ES10+N4`, finished seed s1) COMPLETED in 13 min. `git pull --no-rebase --no-edit --ff`: already up to date.
+- s1 at 1536: **gap 0.001** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / about 421.5 ×4; best response 46 / 422.7 ×4). With s2 (0.002) the run is 2/2 checked; s0 at about 1180 of 1536 (job 1967616 still running). Rule 6b when s0 is checked: if it is CONVERGED, the run is 3/3 and goes to `confirm`.
+- 26 jobs in the queue, all training.
