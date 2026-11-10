@@ -3101,3 +3101,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Committed now: `results/step4/taxi/targets/`, `results/step4/grid_routes/targets/`, `docs/step4_hide_env.md` (the grid's b200–b3200 targets were already committed by `step4_commit.sh`, which stages `results/step4/grid/targets`, with iteration 147). Flag added at the top of this log.
 - **Campaign:** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) listed tomato_large swap `O1_P2swap_LE_confirm` (s21 finished 1536; s20 already checked; s22 at 864 in job 1966678) → `... br_missing submit` → **1971115** (about 2 h per tomato_large seed). Rule 4 for `LE_confirm` once s22 is finished and checked.
 - 24 jobs in the queue: 23 campaign training + check 1971115.
+
+## 2026-11-10, iteration 149 (14:56): tomato_large no-reg `LE` finished 6144; check submitted (1971129)
+
+- 1965623 (tomato_large no-reg `O1_P1eq1_LE`, extension to 6144) ended COMPLETED, exit 0, at about 14:55 (36 h 52 min). `git pull --no-rebase --no-edit --ff`: brought your f04d4ab3 (Step 4b overview: `experiments/step4b_figures.py`, `results/step4b/overview.json`); nothing for the loop to act on.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) listed `O1_P1eq1_LE` → `... br_missing submit` → **1971129** (about 6 h). Its gaps so far: s0 0.053 / 0.087, s1 0.061 / 0.052, s2 0.046 / 0.037 at 1536 / 3072. Rule 4 when the check finishes.
+- 24 jobs in the queue: 22 campaign training + 2 checks (1971115, 1971129).
