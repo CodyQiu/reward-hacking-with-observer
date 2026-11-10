@@ -2966,3 +2966,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s22 **0.037** (s.e. 0.027) IMPROVING: corrected in round 0, then honest (true 22 ×4); its best response is corrected twice (rounds 0–1), as is the target.
 - **Rule 4 (any seed IMPROVING): extend to 2×.** As for every earlier confirmation with an IMPROVING seed (iterations 19–24 onwards; see the open question at the top on whether an extended confirmation counts), → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ES10_confirm 3072` (dry-run: seeds 20 21 22, `--resume --extend-to 3072`) → `... submit` → **1968715**. The grid no-reg cell is not DONE; `LN+LR+ES10+N4_confirm` (1968600) is running, and `LN+LR+ENT3` and `LN+LR+N4` are extending to 3072.
 - 29 jobs in the queue: 27 training + 2 checks (1968046, 1968702).
+
+## 2026-11-10, iteration 135 (07:33): Tomato swap `LN+ENT3` s2 0.007 CONVERGED at 1536
+
+- 1968702 (check of Tomato swap `O1_P2swap_LN+ENT3`, finished seed s2 only) COMPLETED in 12 min. `git pull --no-rebase --no-edit --ff`: already up to date.
+- s2 at 1536: **gap 0.007** (s.e. 0.000), CONVERGED: corrected in round 0, then honest (true 46 / 418.6 / 418.8 / 418.4 / 418.7); best response the same end state (46, then 421.7 ×4). This is the first Tomato swap seed to reach its best response's end state (the swap's raise pays for one correction, then honest). s0 / s1 still training (about 1150 / 400); rule 6b for this run once all three are checked.

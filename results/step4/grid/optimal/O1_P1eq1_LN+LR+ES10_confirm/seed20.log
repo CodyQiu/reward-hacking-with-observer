@@ -62,3 +62,6 @@
   [grid s20] 47,616,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2157.3  rounds 2012  (14798s)
   [grid s20] 48,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2166.4  rounds 2036  (14949s)
   [grid s20] 49,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2169.1  rounds 2060  (15069s)
+  [grid s20] resumed at episode 1536 -> 3072
+  [grid s20] 49,920,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2111.2  rounds 2089  (185s)
+  [grid s20] 50,688,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2072.4  rounds 2114  (358s)
