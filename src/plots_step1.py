@@ -526,7 +526,8 @@ TRIGGER_COLOR = "#cf3a3a"
 
 
 def plot_timeline_split(cfg, step_received, step_true, caught, windows, filename, title, subtitle=None,
-                        steps_per_tick=1, refs=(), received_label="proxy reward (what the agent receives)"):
+                        steps_per_tick=1, refs=(), received_label="proxy reward (what the agent receives)",
+                        caught_label="fraction of the 16 envs caught"):
     """Variant of ``plot_training_timeline`` (mentor's request): received and true
     reward on SEPARATE rows with their own y scales, and every audit window marked
     by whether the reward-correcting monitor triggered there.
@@ -607,7 +608,7 @@ def plot_timeline_split(cfg, step_received, step_true, caught, windows, filename
     handles = [Line2D([], [], color=PROXY_COLOR, lw=1.6, label=received_label),
                Line2D([], [], color=TRUE_COLOR, lw=1.6, label="true reward (own scale, lower rows)"),
                Patch(color=tint(TRIGGER_COLOR, 0.7), label="audit window: monitor TRIGGERED a correction "
-                                                           "(shade = fraction of the 16 envs caught)"),
+                                                           f"(shade = {caught_label})"),
                Patch(color=WINDOW_FILL, label="audit window: monitor did not trigger"),
                Line2D([], [], color=INK_2, lw=0.9, ls=(0, (4, 3)), label="episode boundary: reward function reset")]
     handles += [Line2D([], [], color=INK, lw=1.0, ls=ls, label=lab) for (_, lab), ls in zip(refs, REF_STYLES)]
