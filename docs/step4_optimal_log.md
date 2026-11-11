@@ -3296,3 +3296,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **s20 at 1536: gap 0.002 (s.e. 0.000) CONVERGED.** Corrected in round 0, then honest (46 / about 420 ×4); best response 46 / 420.5 ×4.
 - s21 (1512) and s22 (1200 of 1536) are still training (1969485). Their latest exact evaluations already show the same end state (corrected in round 0, then honest: true about 420 / 418 per round). The cell is DONE if both are CONVERGED when checked at 1536.
 - 22 jobs in the queue: 18 campaign training + 4 checks (1971434, 1972098, 1972174, 1972219).
+
+## 2026-11-11, iteration 170 (03:12–03:20): tomato_large no-reg `LN+N4` 0/3 at 1536 → rule 6b extend to 3072 (1972233)
+
+- Check 1971434 (`br_tomato_large_O1_P1eq1_LN+N4`, 1536, s0–s2) ended COMPLETED at 03:12 (6 h 9 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- **tomato_large no-reg `LN+N4` (exploration) at 1536: 0/3 CONVERGED**, all labelled PLATEAU (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P1eq1_LN+N4`):
+  - s0 **0.061** (s.e. 0.019), s1 **0.053** (s.e. 0.013), s2 **0.034** (s.e. 0.013).
+  - Every seed is corrected in round 0, then honest (true about 65 / 520.5 ×4, the highest true return of this cell's runs so far). The best response is corrected in rounds 0–3 (s0, s2: 4.00 per episode) or 0–2 (s1: 3.00), with true 515.8 in the corrected rounds and 522.4 after; as in `LE` and `LN+ENT3`, PPO misses the extra corrections the refitted g pays for.
+  - **Rule 6b (exploration run, seeds not CONVERGED: extend 2× whatever the verdict)** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN+N4 3072` (dry-run: seeds 0 1 2, `--resume --extend-to 3072`) → `... submit` → **1972233**.
+- 22 jobs in the queue: 19 campaign training + 3 checks (1972098, 1972174, 1972219).
