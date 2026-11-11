@@ -253,3 +253,6 @@
   [tomato_large s0] resumed at episode 6000 -> 6144
   [tomato_large s0] 192,768,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    585.8  rounds 6398  (1441s)
   [tomato_large s0] 193,536,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    586.7  rounds 6422  (2907s)
+  [tomato_large s0] 194,304,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    587.1  rounds 6446  (4371s)
+  [tomato_large s0] 195,072,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    586.6  rounds 6470  (5866s)
+  [tomato_large s0] 195,840,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    586.9  rounds 6494  (7333s)

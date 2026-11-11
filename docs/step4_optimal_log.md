@@ -3244,3 +3244,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Scheduled wake-up; no training job or check ended since iteration 162. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run): nothing new (checks 1971434, 1971657 still running).
 - Progress (episodes per seed): grid no-reg `LN+LR+ES10_confirm` 11,640 / 11,664 / 11,616 of 12,288; `LN+LR+ENT3_confirm` 5160 / 4848 / 4848 of 6144; `LN+LR+N4` about 6600 of 12,288. Tomato swap confirmations `LN+ES10+N4` 864 / 744 / 432, `LN+ENT3` 1536 / 216 / 240, `LN+ES10` 216 / 288 / 240, `LN+N4` 24 ×3; `L` 12,288 / 11,808 / 12,288. tomato_large swap `LE_confirm` s22 1080 of 1536; `L` about 3920 of 6144.
 - 23 jobs in the queue: 21 campaign training + 2 checks.
+
+## 2026-11-10/11, iteration 164 (23:57–00:15): grid no-reg `LN+LR+ES10_confirm` 2/3 at 12,288, the cap → failed (config finished); tomato_large no-reg `LN+ES10` finished 1536 (check 1972098)
+
+- 1967622 (tomato_large no-reg `O1_P1eq1_LN+ES10`, exploration, 1536) ended COMPLETED, exit 0, at about 23:57 (25 h 16 min). 1971176 (grid no-reg `O1_P1eq1_LN+LR+ES10_confirm`, extension to 12,288) ended COMPLETED (7 h 44 min) just after. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1972097** (grid `LN+LR+ES10_confirm`, 5 min; s22 finished during the check and was included) and **1972098** (tomato_large `LN+ES10`, up to 12 h).
+- **Grid no-reg `LN+LR+ES10_confirm` at 12,288 (the grid cap): 2/3** (`.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+ES10_confirm`; gaps at 1536 / 3072 / 6144 / 12,288):
+  - s20 **0.002** (s.e. 0.004) CONVERGED (0.003 / 0.000 / 0.014 / 0.002): corrected in round 0, then honest at 22 ×4; best response the 20-route.
+  - s21 **0.109** (s.e. 0.004) PLATEAU (0.109 / 0.079 / 0.077 / 0.109): same end state and true return as its best response (corrected in round 0, then honest at 22 ×4); the gap is in received reward only, which shortest honest path the refitted g pays most for.
+  - s22 **0.018** (s.e. 0.029) CONVERGED (0.037 / 0.052 / 0.033 / 0.018): corrected once, then honest; best response corrected twice (rounds 0–1), then honest.
+  - **Rule 4: at the cap, and the only unconverged seed is PLATEAU → the config is finished; no further extension.** So `LN+LR+ES10` failed its confirmation (2/3 at the cap).
+- Grid no-reg stage 1 (rule 6b): `LN+LR+ES10+N4` failed its confirmation (iteration 151), `LN+LR+ES10` failed its confirmation (now), `LN+LR+ENT3_confirm` is extending to 6144 (1971304), and `LN+LR+N4` is extending to 12,288 (1971660). Stage 2 starts only when all four stage-1 runs are finished without the cell DONE; not yet.
+- 23 jobs in the queue: 20 campaign training + 3 checks (1971434, 1971657, 1972098).
