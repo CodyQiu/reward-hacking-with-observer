@@ -3132,3 +3132,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **Rule 4 (every unconverged seed PLATEAU): the config is finished; not extended.** So `LN+LR+ES10+N4` failed its confirmation (1/3).
 - Grid no-reg's remaining confirmations: `LN+LR+ES10_confirm` (1971176, to 12,288) and `LN+LR+ENT3_confirm` (1968947, running to 3072). Stage-1 exploration runs still running: `LN+LR+N4` (1969486, extending to 6144). In every grid no-reg confirmation seed that falls short, PPO is corrected once and then honest; what it misses is either a second correction (best response corrected twice), the longer 20-route, or a received-reward difference between shortest honest paths.
 - 23 jobs in the queue: 21 campaign training + 2 checks (1971115, 1971129).
+
+## 2026-11-10, iteration 152 (17:15): no job ended; nothing to submit
+
+- Scheduled wake-up; no training job or check ended since iteration 151. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run): nothing new (checks 1971115 and 1971129 still running).
+- Progress (episodes done per seed): grid no-reg `LN+LR+ENT3_confirm` 2472 / 2640 / 2952 of 3072; `LN+LR+ES10_confirm` about 6950 of 12,288; `LN+LR+N4` about 4750 of 6144. Tomato swap confirmations `LN+ES10+N4` 120, `LN+ENT3` 72, `LN+ES10` 48 of 1536 (about 25 episodes/h, so each will reach its 48 h limit at about 1200 episodes and be resumed from its checkpoints); `LN+N4` about 2560 of 3072; `L` 12,288 / 11,352 / 12,288. tomato_large swap `LE_confirm` s22 936 of 1536; `L` 3528 of 6144. tomato_large no-reg `LN` (1958379) about 5670 of 6144 with 4 h 45 min of its 48 h left, so it will likely end TIMEOUT before 6144 and be resumed; `L` about 7020 of 12,288.
+- 23 jobs in the queue: 21 campaign training + 2 checks (1971115, 1971129).
