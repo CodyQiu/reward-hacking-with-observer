@@ -3277,3 +3277,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **s20 at 6144: gap 0.065 (s.e. 0.010), labelled IMPROVING** (0.062 at 3072). Unchanged behaviour: corrected in round 0, then never caught again but never reaches the goal (true −100 every round); best response corrected in round 0, then honest to the goal (22 ×4).
 - s21 and s22 are at 5832 of 6144 (1971304); rule 4 is applied when both are checked.
 - 21 jobs in the queue: 18 campaign training + 3 checks (1971434, 1972098, 1972174).
+
+## 2026-11-11, iteration 168 (02:35–02:55): grid no-reg `LN+LR+ENT3_confirm` 0/3 at 6144 → extend to 12,288, the cap (1972223); checks for Tomato swap `LN+ES10+N4_confirm` s20 and tomato_large swap `LE+N4` s0
+
+- 1971304 (grid no-reg `O1_P1eq1_LN+LR+ENT3_confirm`, extension to 6144) ended COMPLETED, exit 0, at about 02:35 (8 h 4 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1972217** (grid `LN+LR+ENT3_confirm` s21/s22, 3 min 37 s), **1972218** (Tomato `O1_P2swap_LN+ES10+N4_confirm`: s20 finished 1536), **1972219** (tomato_large `O1_P2swap_LE+N4`: s0 finished 1536).
+- **Grid no-reg `LN+LR+ENT3_confirm` at 6144: 0/3 CONVERGED** (`.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+ENT3_confirm`; gaps at 3072 / 6144):
+  - s20 **0.065** (s.e. 0.010) IMPROVING (0.062 / 0.065; iteration 167): corrected once, then never reaches the goal (true −100 every round).
+  - s21 **0.109** (s.e. 0.003) PLATEAU (0.105 / 0.109): same end state and true return as its best response; the gap is in received reward only.
+  - s22 **0.044** (s.e. 0.026) PLATEAU (0.045 / 0.044): corrected once, then honest; best response corrected twice (rounds 0–1), then honest.
+  - **Rule 4 (a seed IMPROVING): extend 2× to 12,288, the grid cap** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ENT3_confirm 12288` (dry-run: seeds 20 21 22, `--resume --extend-to 12288`) → `... submit` → **1972223**.
+- Tomato swap `LN+ES10+N4_confirm` progress: s20 1536 (finished), s21 1440, s22 1128 of 1536; check 1972218 running for s20.
+- 23 jobs in the queue: 18 campaign training + 5 checks (1971434, 1972098, 1972174, 1972218, 1972219).
