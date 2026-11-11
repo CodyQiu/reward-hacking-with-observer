@@ -3229,3 +3229,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run) listed the held AS `LN+NET_confirm` s21/s22 line and this run. Per your standing instruction, a time-limit TIMEOUT is resumed from its checkpoints; so I ran only this run's line (the AS line stays held), not `resume submit`: `EXCLUDE=barley-04 bash scripts/farmshare/submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume` → **1972038** (same run directory, to 6144).
 - `... br_missing` (dry-run): nothing new (checks 1971297, 1971434, 1971657 still running).
 - 23 jobs in the queue: 20 campaign training + 3 checks.
+
+## 2026-11-10, iteration 162 (22:08–22:15): tomato_large no-reg `LN+ENT3` 0/3 at 1536 → rule 6b extend to 3072 (1972044)
+
+- Check 1971297 (`br_tomato_large_O1_P1eq1_LN+ENT3`, 1536, s0–s2) ended COMPLETED at 22:08 (3 h 45 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- **tomato_large no-reg `LN+ENT3` (exploration) at 1536: 0/3 CONVERGED**, all labelled IMPROVING (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P1eq1_LN+ENT3`):
+  - s0 **0.063** (s.e. 0.015), s1 **0.073** (s.e. 0.010), s2 **0.043** (s.e. 0.016).
+  - In every seed PPO is corrected in round 0, then honest (true about 65 / 516.7 ×4). The best response is corrected in every round 0–3 (s0, s1: 4.00 per episode) or rounds 0–2 (s2: 3.00), with the same true return in the corrected rounds (515.8) and about 522.5 after the last correction. As in `LE` (iteration 156), PPO misses the extra corrections the refitted g pays for.
+  - **Rule 6b (exploration run, seeds not CONVERGED: extend 2×)** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN+ENT3 3072` (dry-run: seeds 0 1 2, `--resume --extend-to 3072`) → `... submit` → **1972044**.
+- 23 jobs in the queue: 21 campaign training + 2 checks (1971434, 1971657).
