@@ -258,3 +258,4 @@
   [tomato_large s1] 195,840,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    586.6  rounds 6345  (7349s)
   [tomato_large s1] 196,608,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    586.6  rounds 6369  (8592s)
   [tomato_large s1] resumed at episode 6144 -> 12288
+  [tomato_large s1] 197,376,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    586.4  rounds 6393  (1362s)

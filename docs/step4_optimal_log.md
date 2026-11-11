@@ -3392,3 +3392,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - Behaviour is unchanged: every seed is corrected once in round 0, then honest (true 65 / about 520.6 ×4). The best response is corrected in (nearly) every round, 3.95–4.00 corrections per episode, at true 65 / about 515.8 ×3 / 522.4. Each correction pays more received reward than it costs.
 - **Rule 4 (tuning run, s0 IMPROVING, 6144 < cap 12,288): extend 2×.** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN 12288` (dry-run: `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 12288`) → `... submit` → **1972331**. It will reach the 48 h limit before 12,288; resume it then.
 - Queue: 17 jobs, 14 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972223, 1972233, 1972303, 1972331) and 3 checks (1972098, 1972281, 1972282). Cells DONE: 5 of 8.
+
+## 2026-11-11, iteration 181 (08:21–08:24): grid no-reg `LN+LR+ENT3_confirm` finished 12288 (the cap); check 1972342
+
+- Woken by the training wait: **1972223** (grid `O1_P1eq1_LN+LR+ENT3_confirm`, extension to 12,288) COMPLETED 08:21 (5:33:03, exit 0).
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `O1_P1eq1_LN+NET_confirm` s21/s22 line (not submitted).
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_O1_P1eq1_LN+LR+ENT3_confirm`; `... br_missing submit` → **1972342** (s20–s22 at 12,288).
+- This run is now at the grid cap, so after its check it is finished whatever the verdict (rule 4). Grid no-reg stage 2 is due once `LN+LR+N4` (1971660, about 8,900/12,288) also ends without the cell DONE.
+- Queue: 17 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972233, 1972303, 1972331) and 4 checks (1972098, 1972281, 1972282, 1972342). Cells DONE: 5 of 8.
