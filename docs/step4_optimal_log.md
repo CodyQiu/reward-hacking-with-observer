@@ -3319,3 +3319,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Rule 6b: start nothing new for Tomato swap.** Its running runs finish as information only (no extend, confirm or resume; `br_missing` still checks them): `O1_P2swap_L` (1965874), `LN+ENT3_confirm` (1971094), `LN+ES10_confirm` (1971154), `LN+N4_confirm` (1972035).
 - Open cells: grid no-regulariser, tomato_large swap, tomato_large no-regulariser.
 - 21 jobs in the queue: 17 campaign training + 4 checks (1972098, 1972174, 1972219, 1972237).
+
+## 2026-11-11, iteration 172 (04:12–04:20): Tomato swap `L` finished 12,288 (information only); checks for it, tomato_large no-reg `LN+ES10+N4` s1/s2 and tomato_large swap `LN` s1/s2
+
+- 1965874 (Tomato swap `O1_P2swap_L`, extension to 12,288) ended COMPLETED, exit 0, at about 04:12 (45 h 45 min). Its cell is DONE (iteration 171), so it is information only: no extend or confirm. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1972280** (Tomato `O1_P2swap_L` at 12,288; rule 6b says `br_missing` still checks a DONE cell's runs), **1972281** (tomato_large `O1_P1eq1_LN+ES10+N4`: s1, s2 finished 1536), **1972282** (tomato_large `O1_P2swap_LN`: s1, s2 finished 6144; s0 at 6120).
+- 23 jobs in the queue: 16 campaign training + 7 checks (1972098, 1972174, 1972219, 1972237, 1972280, 1972281, 1972282).
