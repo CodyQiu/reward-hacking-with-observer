@@ -3222,3 +3222,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Rule 6b → rule 4 (tuning run, all CONVERGED; the cell is not DONE): `confirm`** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato O1_P2swap_LN+N4` (dry-run: seeds 20–22, `--set ppo.ent_coef=0.03 ppo.batch_size=6400 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=256 episodes=3072`, the run's own overrides at its final length) → `... submit` → **1972035**.
 - Tomato swap confirmations now: `LN+ES10+N4_confirm` (1969485), `LN+ENT3_confirm` (1971094; s20 0.437, never exploits, so not 3/3 at 1536), `LN+ES10_confirm` (1971154), `LN+N4_confirm` (1972035). The cell is DONE as soon as any is 3/3 (at its length or after extensions).
 - 23 jobs in the queue: 20 campaign training + 3 checks (1971297, 1971434, 1971657).
+
+## 2026-11-10, iteration 161 (21:59–22:05): tomato_large no-reg `LN` hit its 48 h time limit at about 6000 of 6144 → resumed from its checkpoints (1972038)
+
+- 1958379 (tomato_large no-reg `O1_P1eq1_LN`, extension to 6144) ended **TIMEOUT** at 21:58 (2-00:00:00): its time limit, not a cluster incident (`CANCELLED ... DUE TO TIME LIMIT`). Last checkpoints: s0 6000, s1 5976, s2 5952 of 6144. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run) listed the held AS `LN+NET_confirm` s21/s22 line and this run. Per your standing instruction, a time-limit TIMEOUT is resumed from its checkpoints; so I ran only this run's line (the AS line stays held), not `resume submit`: `EXCLUDE=barley-04 bash scripts/farmshare/submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume` → **1972038** (same run directory, to 6144).
+- `... br_missing` (dry-run): nothing new (checks 1971297, 1971434, 1971657 still running).
+- 23 jobs in the queue: 20 campaign training + 3 checks.
