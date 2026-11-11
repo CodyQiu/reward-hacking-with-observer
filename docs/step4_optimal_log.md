@@ -3401,3 +3401,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_O1_P1eq1_LN+LR+ENT3_confirm`; `... br_missing submit` → **1972342** (s20–s22 at 12,288).
 - This run is now at the grid cap, so after its check it is finished whatever the verdict (rule 4). Grid no-reg stage 2 is due once `LN+LR+N4` (1971660, about 8,900/12,288) also ends without the cell DONE.
 - Queue: 17 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972233, 1972303, 1972331) and 4 checks (1972098, 1972281, 1972282, 1972342). Cells DONE: 5 of 8.
+
+## 2026-11-11, iteration 182 (08:26–08:30): grid no-reg `LN+LR+ENT3_confirm` 1/3 at the 12,288 cap → finished (confirmation failed)
+
+- Woken by the check wait: **1972342** (`br_grid_O1_P1eq1_LN+LR+ENT3_confirm`, s20–s22 at 12,288) COMPLETED 08:26 (3:16).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+ENT3_confirm` (gap history 3072 / 6144 / 12288):
+  - s20 **0.067** (s.e. 0.011) PLATEAU (0.062 / 0.065 / 0.067). Corrected in round 0, then never reaches the goal: true −100 in every round. The best response is corrected in round 0, then honest (−100 / 22 ×4).
+  - s21 **0.106** (s.e. 0.003) labelled IMPROVING (0.105 / 0.109 / 0.106). Its end state already matches the best response (corrected in round 0, then honest, true −100 / 22 ×4), so the gap is in received reward only, as at 6144.
+  - s22 **0.019** (s.e. 0.025) CONVERGED (0.045 / 0.044 / 0.019). Corrected in round 0, then honest; the best response takes 2 corrections (rounds 0 and 1).
+- **Rule 4: 1/3 at the grid cap (12,288), so this confirmation is finished and failed.** No further extension.
+- Grid no-reg stage 1 (rule 6b): `LN+LR+ES10+N4` failed its confirmation (iteration 151), `LN+LR+ES10` failed its confirmation (iteration 164), `LN+LR+ENT3` failed its confirmation (now). `LN+LR+N4` (1971660, exploration, about 8,900/12,288) is still training. **Stage 2 is not yet due:** it starts when `LN+LR+N4` ends without the cell DONE.
+- Queue: 16 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972233, 1972303, 1972331) and 3 checks (1972098, 1972281, 1972282). Cells DONE: 5 of 8.
