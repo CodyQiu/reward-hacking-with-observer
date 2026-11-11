@@ -3173,3 +3173,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **Rule 4 (seeds IMPROVING): extend 2× to 6144** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ENT3_confirm 6144` (dry-run: seeds 20 21 22, `--resume --extend-to 6144`) → `... submit` → **1971304**. Under your iteration-145 ruling, 3/3 at an extended length counts.
 - So the tuning run's 3/3 at 3072 (0.000 / 0.001 / 0.016) did not carry over to seeds 20–22 at the same length. Grid no-reg's confirmations still running: `LN+LR+ENT3_confirm` (1971304, to 6144) and `LN+LR+ES10_confirm` (1971176, to 12,288). Exploration still running: `LN+LR+N4` (1969486, to 6144).
 - 22 jobs in the queue: 20 campaign training + 2 checks (1971129, 1971297).
+
+## 2026-11-10, iteration 156 (19:24–19:30): tomato_large no-reg `LE` 0/3 at 6144, all IMPROVING → extend to 12,288, the cap (1971330)
+
+- Check 1971129 (`br_tomato_large_O1_P1eq1_LE`, 6144) ended COMPLETED at 19:24 (4 h 27 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- **tomato_large no-reg `LE` at 6144: 0/3 CONVERGED** (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P1eq1_LE`; gaps at 1536 / 3072 / 6144):
+  - s0 **0.053** (s.e. 0.023) IMPROVING (0.053 / 0.087 / 0.053).
+  - s1 **0.076** (s.e. 0.015) IMPROVING (0.061 / 0.052 / 0.076).
+  - s2 **0.046** (s.e. 0.016) IMPROVING (0.046 / 0.037 / 0.046).
+  - In every seed PPO is corrected in round 0, then honest (true about 65 / 516 ×4). The best response is corrected in rounds 0, 1 and 2 (3.00–3.24 corrections per episode), then honest; its true return is the same in rounds 1–2 (515.8) and higher in rounds 3–4 (about 522), and its received reward is higher. So PPO misses the two extra corrections the refitted g pays for.
+  - **Rule 4 (seeds IMPROVING): extend 2× to 12,288, the cap for tomato_large** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LE 12288` (dry-run: seeds 0 1 2, `--resume --extend-to 12288`) → `... submit` → **1971330**. The last extension (3072 → 6144) took 36 h 52 min, so this one will reach its 48 h limit at about 8100 and be resumed from its checkpoints.
+- tomato_large no-reg still open: `LE` (1971330, to 12,288), `L` (1968344, to 12,288), `LN` (1958379, to 6144), and exploration `LN+{ES10,N4,ES10+N4}` (1967622–1967624); `LN+ENT3` finished 1536, check 1971297 running.
+- 22 jobs in the queue: 21 campaign training + 1 check (1971297).
