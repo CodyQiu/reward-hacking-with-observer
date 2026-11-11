@@ -3256,3 +3256,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **Rule 4: at the cap, and the only unconverged seed is PLATEAU → the config is finished; no further extension.** So `LN+LR+ES10` failed its confirmation (2/3 at the cap).
 - Grid no-reg stage 1 (rule 6b): `LN+LR+ES10+N4` failed its confirmation (iteration 151), `LN+LR+ES10` failed its confirmation (now), `LN+LR+ENT3_confirm` is extending to 6144 (1971304), and `LN+LR+N4` is extending to 12,288 (1971660). Stage 2 starts only when all four stage-1 runs are finished without the cell DONE; not yet.
 - 23 jobs in the queue: 20 campaign training + 3 checks (1971434, 1971657, 1972098).
+
+## 2026-11-11, iteration 165 (00:11): tomato_large swap `LE+N4` s2 CONVERGED at 1536 (0.009)
+
+- Check 1971657 (`br_tomato_large_O1_P2swap_LE+N4`, s2 at 1536) ended COMPLETED at 00:11 (2 h 51 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- **tomato_large swap `LE+N4` s2 at 1536: gap 0.009 (s.e. 0.000) CONVERGED.** Corrected in round 0, then honest (65 / about 465 ×4); best response 65 / 474.4 ×4.
+- s0 (1248 of 1536) and s1 (312 of 1536) are still training (1967619). s1 is slow because it still exploits through the audits (about 2.8 corrections per episode, each a PBRR refit); 1967619 will reach its 48 h limit before s1 finishes and be resumed from its checkpoints. Rule 6b/4 is applied when all three are checked.
+- 23 jobs in the queue: 20 campaign training + 2 checks (1971434, 1972098).
