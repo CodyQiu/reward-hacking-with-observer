@@ -3289,3 +3289,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **Rule 4 (a seed IMPROVING): extend 2× to 12,288, the grid cap** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ENT3_confirm 12288` (dry-run: seeds 20 21 22, `--resume --extend-to 12288`) → `... submit` → **1972223**.
 - Tomato swap `LN+ES10+N4_confirm` progress: s20 1536 (finished), s21 1440, s22 1128 of 1536; check 1972218 running for s20.
 - 23 jobs in the queue: 18 campaign training + 5 checks (1971434, 1972098, 1972174, 1972218, 1972219).
+
+## 2026-11-11, iteration 169 (02:58): Tomato swap `LN+ES10+N4_confirm` s20 CONVERGED at 1536 (0.002)
+
+- Check 1972218 (`br_tomato_O1_P2swap_LN+ES10+N4_confirm`, s20 at 1536) ended COMPLETED (13 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- **s20 at 1536: gap 0.002 (s.e. 0.000) CONVERGED.** Corrected in round 0, then honest (46 / about 420 ×4); best response 46 / 420.5 ×4.
+- s21 (1512) and s22 (1200 of 1536) are still training (1969485). Their latest exact evaluations already show the same end state (corrected in round 0, then honest: true about 420 / 418 per round). The cell is DONE if both are CONVERGED when checked at 1536.
+- 22 jobs in the queue: 18 campaign training + 4 checks (1971434, 1972098, 1972174, 1972219).

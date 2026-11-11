@@ -1,7 +1,7 @@
 {
  "seed": 22,
  "n_envs": 64,
- "episodes": 6144,
+ "episodes": 12288,
  "ppo": {
   "learning_rate": 0.0001,
   "batch_size": 1600,
@@ -86,6 +86,16 @@
    },
    "git": "3bdf5662",
    "time": "2026-11-10 18:31:20"
+  },
+  {
+   "at_episodes": 6144,
+   "episodes": 12288,
+   "anneal": {
+    "last": 0.25,
+    "floor": 0.1
+   },
+   "git": "c07bcfa9",
+   "time": "2026-11-11 02:47:27"
   }
  ]
 }
