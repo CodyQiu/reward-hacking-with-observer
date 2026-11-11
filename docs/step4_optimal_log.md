@@ -3147,5 +3147,17 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s20 at 1536: gap **0.100** (s.e. 0.003), labelled IMPROVING (checked earlier). PPO true by round 65.8 / 443.7 / 443.9 / 443.0 / **64.8**: corrected in round 0, honest in rounds 1–3, and exploits again in round 4. The best response stays honest in round 4 (65 / 471.5 ×4).
   - s21 at 1536: gap **0.017** (s.e. 0.001) **CONVERGED**. Corrected in round 0, then honest (65.3 / about 447 ×4); best response 65 / 464.5 ×4.
   - s22: training, 936 of 1536; no check yet.
-- Rule 4 is applied when s22 has finished and been checked (the run is still training, so no `extend` yet). So far 1/2 checked seeds CONVERGED, and s20 IMPROVING means the run will be extended 2× (to 3072) unless s22 changes nothing about that.
+- Rule 4 is applied when s22 has finished and been checked (the run is still training, so no `extend` yet). So far 1/2 checked seeds CONVERGED. Whatever s22 shows, s20 IMPROVING means rule 4 extends the run 2× (to 3072).
 - 22 jobs in the queue: 21 campaign training + 1 check (1971129).
+
+## 2026-11-10, iteration 154 (18:21–18:30): grid no-reg `LN+LR+ENT3_confirm` s21/s22 checked at 3072 (0.105 PLATEAU, 0.045 IMPROVING); tomato_large no-reg `LN+ENT3` finished 1536, check 1971297
+
+- Scheduled wake-up at 18:21. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted).
+- `... br_missing` (dry-run) listed grid `O1_P1eq1_LN+LR+ENT3_confirm` (s21, s22 finished 3072; s20 at 3024) and tomato_large `O1_P1eq1_LN+ENT3` (s0, s1 finished 1536) → `... br_missing submit` → **1971296** (grid, 1 min 31 s) and **1971297** (tomato_large, about 12 h).
+- 1967621 (tomato_large no-reg `O1_P1eq1_LN+ENT3`, exploration, 1536) then ended COMPLETED, exit 0, at about 18:24 (19 h 43 min). Its s2 finished after 1971297 started; `step4_br.py` tests each seed's `metrics.json` when it reaches it, so 1971297 also checks s2 (and `br_missing` will list s2 if it does not).
+- **Grid no-reg `LN+LR+ENT3_confirm` at 3072** (`.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+ENT3_confirm`):
+  - s21 **0.105** (s.e. 0.003), labelled PLATEAU: policy and best response have the same end state and true return (corrected in round 0, then honest at 22 ×4); the gap is in received reward only, which of the shortest honest paths the refitted g pays most for (as `LN+LR+ES10+N4_confirm` s21).
+  - s22 **0.045** (s.e. 0.024), labelled IMPROVING: corrected once, then honest (−100 / 21.8 / 22 / 21.9 / 22); best response corrected twice (rounds 0–1), then honest.
+  - s20: training, 3048 of 3072 (1968947 still running); no check yet.
+  - Rule 4 is applied when s20 has finished and been checked. Whatever s20 shows, s22 IMPROVING means rule 4 extends the run 2× (to 6144). Its tuning run was 3/3 at 3072 (0.000 / 0.001 / 0.016).
+- 22 jobs in the queue: 20 campaign training + 2 checks (1971129, 1971297).
