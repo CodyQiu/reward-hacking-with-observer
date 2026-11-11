@@ -3359,4 +3359,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **Rule 4 (seeds IMPROVING): extend 2× to 3072** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P2swap_LE_confirm 3072` (dry-run: seeds 20 21 22, `--resume --extend-to 3072`) → `... submit` → **1972303**.
 - Check 1972294 (Tomato swap `LN+ES10_confirm` s20, s22) ended COMPLETED (43 min): s20 **0.003**, s22 **0.003**, both CONVERGED. With s21 (0.003, iteration 175), this confirmation is also 3/3 at 1536: a second config that would have closed Tomato swap. Information only (the cell is DONE).
 - **Missed event, no consequence:** 1967625 (tomato_large swap `O1_P2swap_LN`, extension to 6144) ended COMPLETED, exit 0, at 04:13:51 (29 h 33 min), just before I re-armed the training wait, so no iteration logged it. Its check 1972282 was submitted at about 04:15 and started after s0 finished, so it covers all three seeds at 6144 (s1, s2 were already finished). Rule 4 is applied when 1972282 finishes.
-- 19 jobs in the queue: 15 campaign training (1972303 pending) + 4 checks (1972098, 1972174, 1972281, 1972282).
+- 18 jobs in the queue: 14 campaign training (1972303 pending) + 4 checks (1972098, 1972174, 1972281, 1972282).
+
+### Iteration 178 (2026-11-11 07:25)
+
+- Woken by the 07:22 fallback; the training wait then fired: **1971094** (Tomato swap `O1_P2swap_LN+ENT3_confirm`, 3072 episodes) COMPLETED 07:22 (17:00:36, exit 0). All three seeds have `metrics.json`.
+- `git pull --no-rebase --no-edit --ff`: already up to date. `sacct` since 04:00: no other training job ended unseen.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the AS `O1_P1eq1_LN+NET_confirm` s21/s22 line, **held** per the user; not submitted.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_O1_P2swap_LN+ENT3_confirm`; `... br_missing submit` -> **1972320**. Tomato swap is DONE, so this is information only (no extend/confirm/resume).
+- Progress (episodes): tomato_large swap `LE+N4` s1 600/1536 (s0, s2 finished); `LE_confirm` 1584/3072 ×3; `L` 4416/6144; `LE+ENT3` 336–384/1536, `LE+ES10` 120–144/1536, `LE+ES10+N4` 120/1536 (all four 1967617–1967620 will reach the 48 h limit at about 15:40 today; resume them then). tomato_large no-reg `LE` 7368/12288; `LN+ENT3` 2304/3072; `LN+N4` 1896/3072; `L` 8136–8160/12288. Grid no-reg `LN+LR+ENT3_confirm` 11208–11304/12288; `LN+LR+N4` 8808–8880/12288. Tomato swap `LN+N4_confirm` 1200–1464/3072 (info only).
+- Checks still running: 1972098, 1972174, 1972281, 1972282 (all tomato_large), plus 1972320.
+- No rule decisions this iteration. Cells DONE: 5 of 8.
+- Queue: 18 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972223, 1972233, 1972303) and 5 checks (1972098, 1972174, 1972281, 1972282, 1972320).

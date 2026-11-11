@@ -62,3 +62,6 @@
   [tomato_large s20] 11,904,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 1.00  proxy0-3    528.6  rounds 1948  (157647s)
   [tomato_large s20] 12,096,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 1.00  proxy0-3    532.9  rounds 1972  (158492s)
   [tomato_large s20] 12,288,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 1.00  proxy0-3    537.1  rounds 1996  (159338s)
+  [tomato_large s20] resumed at episode 1536 -> 3072
+  [tomato_large s20] 12,480,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 1.00  proxy0-3    522.6  rounds 2020  (1285s)
+  [tomato_large s20] 12,672,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 1.00  proxy0-3    503.2  rounds 2044  (2571s)

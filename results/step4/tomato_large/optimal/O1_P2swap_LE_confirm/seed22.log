@@ -63,3 +63,6 @@
   [tomato_large s22] 11,904,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    470.8  rounds 5182  (126496s)
   [tomato_large s22] 12,096,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    472.9  rounds 5206  (127180s)
   [tomato_large s22] 12,288,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    474.4  rounds 5230  (127841s)
+  [tomato_large s22] resumed at episode 1536 -> 3072
+  [tomato_large s22] 12,480,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    466.0  rounds 5254  (1324s)
+  [tomato_large s22] 12,672,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.01  proxy0-3    467.2  rounds 5283  (3157s)
