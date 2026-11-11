@@ -3342,3 +3342,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Check 1972283 (`br_tomato_O1_P2swap_LN+ES10_confirm`, s21 at 1536) ended COMPLETED (18 min). **s21: gap 0.003 (s.e. 0.000) CONVERGED** (corrected in round 0, then honest, 46 / about 420 ×4; best response 46 / 421 ×4). The cell is DONE, so this confirmation is information only (rule 6b). s20 and s22 still training (1971154).
 - 19 jobs in the queue: 14 campaign training + 5 checks (1972098, 1972174, 1972237, 1972281, 1972282).
+
+## 2026-11-11, iteration 176 (05:28): Tomato swap `LN+ES10_confirm` finished 1536 (information only); check 1972294
+
+- 1971154 (Tomato swap `O1_P2swap_LN+ES10_confirm`, 1536) ended COMPLETED, exit 0, at about 05:28 (13 h 41 min). The cell is DONE, so it is information only. `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1972294** (s20, s22).
+- 19 jobs in the queue: 13 campaign training + 6 checks.
