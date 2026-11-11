@@ -3161,3 +3161,15 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s20: training, 3048 of 3072 (1968947 still running); no check yet.
   - Rule 4 is applied when s20 has finished and been checked. Whatever s20 shows, s22 IMPROVING means rule 4 extends the run 2× (to 6144). Its tuning run was 3/3 at 3072 (0.000 / 0.001 / 0.016).
 - 22 jobs in the queue: 20 campaign training + 2 checks (1971129, 1971297).
+
+## 2026-11-10, iteration 155 (18:27–18:35): grid no-reg `LN+LR+ENT3_confirm` 0/3 at 3072 → extend to 6144 (1971304)
+
+- 1968947 (grid no-reg `O1_P1eq1_LN+LR+ENT3_confirm`, 3072) ended COMPLETED, exit 0, at about 18:27 (9 h 18 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1971302** (s20, 2 min).
+- **Grid no-reg `LN+LR+ENT3_confirm` at 3072: 0/3 CONVERGED** (`.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+ENT3_confirm`):
+  - s20 **0.062** (s.e. 0.008) IMPROVING. Corrected in round 0, then never caught again, but it no longer reaches the goal: proxy = true = −100 in rounds 1–4 (window 0), received about 46,800 per round from the refitted g. The best response is corrected in round 0, then honest to the goal (22 ×4), received 50,036 per round.
+  - s21 **0.105** (s.e. 0.003) PLATEAU (iteration 154): same end state and true return as the best response; the gap is in received reward only.
+  - s22 **0.045** (s.e. 0.024) IMPROVING (iteration 154): corrected once, then honest; best response corrected twice (rounds 0–1), then honest.
+  - **Rule 4 (seeds IMPROVING): extend 2× to 6144** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+ENT3_confirm 6144` (dry-run: seeds 20 21 22, `--resume --extend-to 6144`) → `... submit` → **1971304**. Under your iteration-145 ruling, 3/3 at an extended length counts.
+- So the tuning run's 3/3 at 3072 (0.000 / 0.001 / 0.016) did not carry over to seeds 20–22 at the same length. Grid no-reg's confirmations still running: `LN+LR+ENT3_confirm` (1971304, to 6144) and `LN+LR+ES10_confirm` (1971176, to 12,288). Exploration still running: `LN+LR+N4` (1969486, to 6144).
+- 22 jobs in the queue: 20 campaign training + 2 checks (1971129, 1971297).
