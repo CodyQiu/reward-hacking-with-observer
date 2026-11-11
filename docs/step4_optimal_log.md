@@ -3238,3 +3238,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - In every seed PPO is corrected in round 0, then honest (true about 65 / 516.7 ×4). The best response is corrected in every round 0–3 (s0, s1: 4.00 per episode) or rounds 0–2 (s2: 3.00), with the same true return in the corrected rounds (515.8) and about 522.5 after the last correction. As in `LE` (iteration 156), PPO misses the extra corrections the refitted g pays for.
   - **Rule 6b (exploration run, seeds not CONVERGED: extend 2×)** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN+ENT3 3072` (dry-run: seeds 0 1 2, `--resume --extend-to 3072`) → `... submit` → **1972044**.
 - 23 jobs in the queue: 21 campaign training + 2 checks (1971434, 1971657).
+
+## 2026-11-10, iteration 163 (23:09): no job ended; nothing to submit
+
+- Scheduled wake-up; no training job or check ended since iteration 162. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run): nothing new (checks 1971434, 1971657 still running).
+- Progress (episodes per seed): grid no-reg `LN+LR+ES10_confirm` 11,640 / 11,664 / 11,616 of 12,288; `LN+LR+ENT3_confirm` 5160 / 4848 / 4848 of 6144; `LN+LR+N4` about 6600 of 12,288. Tomato swap confirmations `LN+ES10+N4` 864 / 744 / 432, `LN+ENT3` 1536 / 216 / 240, `LN+ES10` 216 / 288 / 240, `LN+N4` 24 ×3; `L` 12,288 / 11,808 / 12,288. tomato_large swap `LE_confirm` s22 1080 of 1536; `L` about 3920 of 6144.
+- 23 jobs in the queue: 21 campaign training + 2 checks.
