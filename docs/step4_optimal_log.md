@@ -3193,4 +3193,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Tomato swap `LN+N4` s1 at 3072: gap 0.001 (s.e. 0.000) CONVERGED** (0.422 at 1536). Corrected in round 0, then honest (46.1 / about 421 ×4); best response 46 / 422.6 ×4. At 1536 this seed never exploited in view.
 - s0 (3000 of 3072) and s2 (2856 of 3072) are still training (1968946); both were CONVERGED at 1536 (0.0015, 0.0016). Rule 4 is applied when both are checked at 3072; if both stay CONVERGED, the exploration run gets `confirm` (unless the cell is DONE by then).
 - tomato_large no-reg `LN` (1958379): 5904 / 5880 / 5856 of 6144 with about 1 h 34 min of its 48 h left; expected to end TIMEOUT and be resumed from its checkpoints.
-- 23 jobs in the queue: 21 campaign training + 1 check (1971297); 1971422 finished.
+- 22 jobs in the queue: 21 campaign training + 1 check (1971297); 1971422 finished.
+
+## 2026-11-10, iteration 158 (21:01–21:20): tomato_large no-reg `LN+N4` finished 1536 (check 1971434); Tomato swap `LN+ENT3_confirm` s20 0.437 (never exploits); `LN+N4` s0 CONVERGED at 3072
+
+- 1967623 (tomato_large no-reg `O1_P1eq1_LN+N4`, exploration, 1536) ended COMPLETED, exit 0, at about 21:01 (22 h 19 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1971432** (Tomato `O1_P2swap_LN+ENT3_confirm` s20, 12 min), **1971433** (Tomato `O1_P2swap_LN+N4` s0, 9 min), **1971434** (tomato_large `O1_P1eq1_LN+N4` s0–s2, up to 12 h).
+- **Tomato swap `LN+ENT3_confirm` s20 at 1536: gap 0.437 (s.e. 0.011), labelled IMPROVING.** It never exploits in view: honest from round 0 (true about 430 every round, 0 corrections), which is also why it finished 1536 in 6.4 h, against about 25 episodes/h for seeds that are corrected (no PBRR refits). The best response under the swap is to exploit in round 0, be corrected, then be honest (46 / 421.8 ×4): the correction's raise pays more received reward than honest play under the uncorrected proxy. s21 (168) and s22 (192) are still training; rule 4 is applied when both are checked. This confirmation cannot be 3/3 at 1536.
+- **Tomato swap `LN+N4` s0 at 3072: gap 0.001 (s.e. 0.000) CONVERGED** (0.0015 at 1536). With s1 (0.001, iteration 157), 2 of 3 CONVERGED at 3072; s2 at 2952 of 3072.
+- 22 jobs in the queue: 20 campaign training + 2 checks (1971297, 1971434).
