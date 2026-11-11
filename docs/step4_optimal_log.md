@@ -3419,3 +3419,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P1eq1_LN+ES10`: s0 **0.042** (s.e. 0.015), s1 **0.055** (s.e. 0.013), s2 **0.037** (s.e. 0.012), all PLATEAU. Same pattern as every other no-reg tomato_large config: corrected once in round 0, then honest (true 65 / about 519 ×4); the best response is corrected in (nearly) every round, 3.96–4.00 corrections per episode (true 65 / about 515.8 ×3 / 522.4).
 - **Rule 6b (exploration run, seeds unconverged, 1536 < cap 12,288): extend 2×, whatever the verdict.** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN+ES10 3072` (dry-run: `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`) → `... submit` → **1972464**.
 - Queue: 16 jobs, 14 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972233, 1972303, 1972331, 1972464) and 2 checks (1972281, 1972282). Cells DONE: 5 of 8.
+
+## 2026-11-11, iteration 184 (10:22–10:25): no events (fallback wakeup)
+
+- No job ended since iteration 183 (`sacct` since 09:20: only 1972098, handled). `git pull --no-rebase --no-edit --ff`: already up to date. No rule decisions.
+- Partial check output: 1972282 (tomato_large swap `LN` at 6144) s0 **0.041** (s.e. 0.004), not converged, corrected in round 0 then honest like the best response; s1 in progress. 1972281 (tomato_large no-reg `LN+ES10+N4` at 1536) started at s1 (s0 finished after the check began, as expected): s1 **0.045** (s.e. 0.013), not converged; s2 in progress. `br_missing` will list s0 when this check ends.
+- Progress: grid no-reg `LN+LR+N4` 9624–9696/12288; tomato_large swap `LE+N4` s1 1248/1536, `LE_confirm` 1752–1800/3072, `L` 4584–4608/6144; tomato_large no-reg `LN+ENT3` 2544/3072, `LN+N4` 2160–2184/3072. 1967617–1967620 reach 48 h at about 15:40.
+- Queue: 16 jobs, 14 campaign training and 2 checks (1972281, 1972282). Cells DONE: 5 of 8.
