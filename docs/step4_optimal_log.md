@@ -3202,3 +3202,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Tomato swap `LN+ENT3_confirm` s20 at 1536: gap 0.437 (s.e. 0.011), labelled IMPROVING.** It never exploits in view: honest from round 0 (true about 430 every round, 0 corrections), which is also why it finished 1536 in 6.4 h, against about 25 episodes/h for seeds that are corrected (no PBRR refits). The best response under the swap is to exploit in round 0, be corrected, then be honest (46 / 421.8 ×4): the correction's raise pays more received reward than honest play under the uncorrected proxy. s21 (168) and s22 (192) are still training; rule 4 is applied when both are checked. This confirmation cannot be 3/3 at 1536.
 - **Tomato swap `LN+N4` s0 at 3072: gap 0.001 (s.e. 0.000) CONVERGED** (0.0015 at 1536). With s1 (0.001, iteration 157), 2 of 3 CONVERGED at 3072; s2 at 2952 of 3072.
 - 22 jobs in the queue: 20 campaign training + 2 checks (1971297, 1971434).
+
+## 2026-11-10, iteration 159 (21:18–21:30): grid no-reg `LN+LR+N4` 2/3 at 6144 → rule 6b extend to 12,288 (1971660); tomato_large swap `LE+N4` s2 finished 1536 (check 1971657)
+
+- 1969486 (grid no-reg `O1_P1eq1_LN+LR+N4`, exploration, extension to 6144) ended COMPLETED, exit 0, at about 21:18 (8 h 52 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1971656** (grid `LN+LR+N4`, 4 min) and **1971657** (tomato_large swap `O1_P2swap_LE+N4`: s2 finished 1536; up to 12 h).
+- **Grid no-reg `LN+LR+N4` at 6144: 2/3** (`.venv/bin/python experiments/step4_convergence.py results/step4/grid/optimal/O1_P1eq1_LN+LR+N4`; gaps at 1536 / 3072 / 6144):
+  - s0 **0.000** CONVERGED (0.016 / 0.008 / 0.000).
+  - s1 **0.039** (s.e. 0.007), labelled PLATEAU (0.072 / 0.050 / 0.039). Corrected in round 0, then never caught again, but no longer reaches the goal: true −100 in every round (proxy = true, window 0), collecting the refitted g on non-goal transitions, as `LN+LR+ENT3_confirm` s20 (iteration 155). Best response corrected in round 0, then honest to the goal (22 ×4).
+  - s2 **0.000** CONVERGED (0.023 / 0.004 / 0.000).
+  - **Rule 6b (exploration run, a seed not CONVERGED: extend 2× whatever the verdict, up to the cap)** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+N4 12288` (dry-run: seeds 0 1 2, `--resume --extend-to 12288`) → `... submit` → **1971660**. 12,288 is the grid cap.
+- 23 jobs in the queue: 20 campaign training + 3 checks (1971297, 1971434, 1971657).
