@@ -3361,9 +3361,9 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Missed event, no consequence:** 1967625 (tomato_large swap `O1_P2swap_LN`, extension to 6144) ended COMPLETED, exit 0, at 04:13:51 (29 h 33 min), just before I re-armed the training wait, so no iteration logged it. Its check 1972282 was submitted at about 04:15 and started after s0 finished, so it covers all three seeds at 6144 (s1, s2 were already finished). Rule 4 is applied when 1972282 finishes.
 - 18 jobs in the queue: 14 campaign training (1972303 pending) + 4 checks (1972098, 1972174, 1972281, 1972282).
 
-### Iteration 178 (2026-11-11 07:25)
+## 2026-11-11, iteration 178 (07:22–07:25): Tomato swap `LN+ENT3_confirm` finished 1536 (information only); check 1972320
 
-- Woken by the 07:22 fallback; the training wait then fired: **1971094** (Tomato swap `O1_P2swap_LN+ENT3_confirm`, 3072 episodes) COMPLETED 07:22 (17:00:36, exit 0). All three seeds have `metrics.json`.
+- Woken by the 07:22 fallback; the training wait then fired: **1971094** (Tomato swap `O1_P2swap_LN+ENT3_confirm`, 1536 episodes; corrected in iteration 179, first written as 3072) COMPLETED 07:22 (17:00:36, exit 0). All three seeds have `metrics.json`.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `sacct` since 04:00: no other training job ended unseen.
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the AS `O1_P1eq1_LN+NET_confirm` s21/s22 line, **held** per the user; not submitted.
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_O1_P2swap_LN+ENT3_confirm`; `... br_missing submit` -> **1972320**. Tomato swap is DONE, so this is information only (no extend/confirm/resume).
@@ -3371,3 +3371,14 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Checks still running: 1972098, 1972174, 1972281, 1972282 (all tomato_large), plus 1972320.
 - No rule decisions this iteration. Cells DONE: 5 of 8.
 - Queue: 18 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972223, 1972233, 1972303) and 5 checks (1972098, 1972174, 1972281, 1972282, 1972320).
+
+## 2026-11-11, iteration 179 (07:46–07:50): Tomato swap `LN+ENT3_confirm` 2/3 at 1536 (information only)
+
+- Woken by the check wait: **1972320** (`br_tomato_O1_P2swap_LN+ENT3_confirm`, s21 and s22; s20 was checked in iteration 158) COMPLETED 07:46 (23 min).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/optimal/O1_P2swap_LN+ENT3_confirm`:
+  - s20 **0.437** (s.e. 0.011), labelled IMPROVING: never exploits, honest from round 0 (true about 428 every round); the best response is corrected in round 0, then honest (46 / 421.8 ×4).
+  - s21 **0.007** (s.e. 0.000) CONVERGED: corrected in round 0, then honest (true 46.6 / about 415 ×4; best response 46 / 421.0 ×4).
+  - s22 **0.007** (s.e. 0.000) CONVERGED: corrected in round 0, then honest (true 46.2 / about 415.5 ×4; best response 46 / 421.5 ×4).
+- **2/3 at 1536. Tomato swap is DONE (iteration 171), so this is information only:** no extend, confirm or resume. Same s20 failure mode as before (honest without ever being corrected, so it never collects the correction's raise).
+- Correction to iteration 178: 1971094 trained to 1536 episodes, not 3072.
+- Queue: 17 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972223, 1972233, 1972303) and 4 checks (1972098, 1972174, 1972281, 1972282). Cells DONE: 5 of 8.
