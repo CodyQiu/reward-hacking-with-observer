@@ -3412,3 +3412,10 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **Rule 4: 1/3 at the grid cap (12,288), so this confirmation is finished and failed.** No further extension.
 - Grid no-reg stage 1 (rule 6b): `LN+LR+ES10+N4` failed its confirmation (iteration 151), `LN+LR+ES10` failed its confirmation (iteration 164), `LN+LR+ENT3` failed its confirmation (now). `LN+LR+N4` (1971660, exploration, about 8,900/12,288) is still training. **Stage 2 is not yet due:** it starts when `LN+LR+N4` ends without the cell DONE.
 - Queue: 16 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972233, 1972303, 1972331) and 3 checks (1972098, 1972281, 1972282). Cells DONE: 5 of 8.
+
+## 2026-11-11, iteration 183 (09:21–09:25): tomato_large no-reg `LN+ES10` 0/3 at 1536 → extend to 3072 (1972464)
+
+- Woken by the check wait: **1972098** (`br_tomato_large_O1_P1eq1_LN+ES10`, s0–s2 at 1536) COMPLETED 09:21 (9:22:41). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P1eq1_LN+ES10`: s0 **0.042** (s.e. 0.015), s1 **0.055** (s.e. 0.013), s2 **0.037** (s.e. 0.012), all PLATEAU. Same pattern as every other no-reg tomato_large config: corrected once in round 0, then honest (true 65 / about 519 ×4); the best response is corrected in (nearly) every round, 3.96–4.00 corrections per episode (true 65 / about 515.8 ×3 / 522.4).
+- **Rule 6b (exploration run, seeds unconverged, 1536 < cap 12,288): extend 2×, whatever the verdict.** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN+ES10 3072` (dry-run: `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 3072`) → `... submit` → **1972464**.
+- Queue: 16 jobs, 14 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972233, 1972303, 1972331, 1972464) and 2 checks (1972281, 1972282). Cells DONE: 5 of 8.
