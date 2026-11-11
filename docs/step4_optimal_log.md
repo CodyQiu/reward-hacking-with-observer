@@ -3269,3 +3269,11 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - 1972038 (tomato_large no-reg `O1_P1eq1_LN`, resumed after the time-limit TIMEOUT, to 6144) ended COMPLETED, exit 0, at about 00:46 (2 h 46 min). `git pull --no-rebase --no-edit --ff`: already up to date.
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) listed `O1_P1eq1_LN` → `... br_missing submit` → **1972174** (up to 12 h). Gaps so far at 1536 / 3072: s0 0.063 / 0.055, s1 0.066 / 0.049, s2 0.042 / 0.031. Rule 4 when the check finishes.
 - 21 jobs in the queue: 18 campaign training + 3 checks (1971434, 1972098, 1972174).
+
+## 2026-11-11, iteration 167 (01:47–01:55): grid no-reg `LN+LR+ENT3_confirm` s20 at 6144: 0.065 (IMPROVING)
+
+- Scheduled wake-up; no training job ended. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted).
+- `... br_missing` (dry-run) listed grid `O1_P1eq1_LN+LR+ENT3_confirm` (s20 finished 6144) → `... br_missing submit` → **1972204** (1 min 35 s).
+- **s20 at 6144: gap 0.065 (s.e. 0.010), labelled IMPROVING** (0.062 at 3072). Unchanged behaviour: corrected in round 0, then never caught again but never reaches the goal (true −100 every round); best response corrected in round 0, then honest to the goal (22 ×4).
+- s21 and s22 are at 5832 of 6144 (1971304); rule 4 is applied when both are checked.
+- 21 jobs in the queue: 18 campaign training + 3 checks (1971434, 1972098, 1972174).
