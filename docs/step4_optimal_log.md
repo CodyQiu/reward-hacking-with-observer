@@ -3139,3 +3139,13 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run): nothing new (checks 1971115 and 1971129 still running).
 - Progress (episodes done per seed): grid no-reg `LN+LR+ENT3_confirm` 2472 / 2640 / 2952 of 3072; `LN+LR+ES10_confirm` about 6950 of 12,288; `LN+LR+N4` about 4750 of 6144. Tomato swap confirmations `LN+ES10+N4` 120, `LN+ENT3` 72, `LN+ES10` 48 of 1536 (about 25 episodes/h, so each will reach its 48 h limit at about 1200 episodes and be resumed from its checkpoints); `LN+N4` about 2560 of 3072; `L` 12,288 / 11,352 / 12,288. tomato_large swap `LE_confirm` s22 936 of 1536; `L` 3528 of 6144. tomato_large no-reg `LN` (1958379) about 5670 of 6144 with 4 h 45 min of its 48 h left, so it will likely end TIMEOUT before 6144 and be resumed; `L` about 7020 of 12,288.
 - 23 jobs in the queue: 21 campaign training + 2 checks (1971115, 1971129).
+
+## 2026-11-10, iteration 153 (17:20): tomato_large swap `LE_confirm` s21 checked at 1536: CONVERGED (0.017); rule 4 waits for s22
+
+- Check 1971115 (`br_tomato_large_O1_P2swap_LE_confirm`, s21 at 1536) ended COMPLETED at 17:20 (2 h 47 min).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P2swap_LE_confirm`:
+  - s20 at 1536: gap **0.100** (s.e. 0.003), labelled IMPROVING (checked earlier). PPO true by round 65.8 / 443.7 / 443.9 / 443.0 / **64.8**: corrected in round 0, honest in rounds 1–3, and exploits again in round 4. The best response stays honest in round 4 (65 / 471.5 ×4).
+  - s21 at 1536: gap **0.017** (s.e. 0.001) **CONVERGED**. Corrected in round 0, then honest (65.3 / about 447 ×4); best response 65 / 464.5 ×4.
+  - s22: training, 936 of 1536; no check yet.
+- Rule 4 is applied when s22 has finished and been checked (the run is still training, so no `extend` yet). So far 1/2 checked seeds CONVERGED, and s20 IMPROVING means the run will be extended 2× (to 3072) unless s22 changes nothing about that.
+- 22 jobs in the queue: 21 campaign training + 1 check (1971129).
