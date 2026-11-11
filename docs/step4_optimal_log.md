@@ -3213,3 +3213,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - s2 **0.000** CONVERGED (0.023 / 0.004 / 0.000).
   - **Rule 6b (exploration run, a seed not CONVERGED: extend 2× whatever the verdict, up to the cap)** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid O1_P1eq1_LN+LR+N4 12288` (dry-run: seeds 0 1 2, `--resume --extend-to 12288`) → `... submit` → **1971660**. 12,288 is the grid cap.
 - 23 jobs in the queue: 20 campaign training + 3 checks (1971297, 1971434, 1971657).
+
+## 2026-11-10, iteration 160 (21:46–22:05): Tomato swap `LN+N4` 3/3 at 3072 → `confirm` (1972035)
+
+- 1968946 (Tomato swap `O1_P2swap_LN+N4`, exploration, extension to 3072) ended COMPLETED, exit 0, at about 21:46 (12 h 38 min). `git pull --no-rebase --no-edit --ff`: already up to date.
+- `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted). `... br_missing` (dry-run) → `... br_missing submit` → **1971848** (s2, 9 min).
+- **Tomato swap `LN+N4` at 3072: 3/3 CONVERGED**: s0 **0.001** (iteration 158), s1 **0.001** (iteration 157; 0.422 at 1536), s2 **0.001** (s.e. 0.000; 0.0016 at 1536). Every seed is corrected in round 0, then honest at about 421 against its best response's 421.6–422.6.
+- **Rule 6b → rule 4 (tuning run, all CONVERGED; the cell is not DONE): `confirm`** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato O1_P2swap_LN+N4` (dry-run: seeds 20–22, `--set ppo.ent_coef=0.03 ppo.batch_size=6400 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=256 episodes=3072`, the run's own overrides at its final length) → `... submit` → **1972035**.
+- Tomato swap confirmations now: `LN+ES10+N4_confirm` (1969485), `LN+ENT3_confirm` (1971094; s20 0.437, never exploits, so not 3/3 at 1536), `LN+ES10_confirm` (1971154), `LN+N4_confirm` (1972035). The cell is DONE as soon as any is 3/3 (at its length or after extensions).
+- 23 jobs in the queue: 20 campaign training + 3 checks (1971297, 1971434, 1971657).
