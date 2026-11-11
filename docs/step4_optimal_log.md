@@ -3185,3 +3185,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
   - **Rule 4 (seeds IMPROVING): extend 2× to 12,288, the cap for tomato_large** → `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LE 12288` (dry-run: seeds 0 1 2, `--resume --extend-to 12288`) → `... submit` → **1971330**. The last extension (3072 → 6144) took 36 h 52 min, so this one will reach its 48 h limit at about 8100 and be resumed from its checkpoints.
 - tomato_large no-reg still open: `LE` (1971330, to 12,288), `L` (1968344, to 12,288), `LN` (1958379, to 6144), and exploration `LN+{ES10,N4,ES10+N4}` (1967622–1967624); `LN+ENT3` finished 1536, check 1971297 running.
 - 22 jobs in the queue: 21 campaign training + 1 check (1971297).
+
+## 2026-11-10, iteration 157 (20:25–20:40): Tomato swap `LN+N4` s1 CONVERGED at 3072 (0.422 → 0.001); rule 4 waits for s0/s2
+
+- Scheduled wake-up at 20:25; no training job ended. `git pull --no-rebase --no-edit --ff`: already up to date. `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): only the held AS `LN+NET_confirm` s21/s22 line (not submitted).
+- `... br_missing` (dry-run) listed Tomato `O1_P2swap_LN+N4` (s1 finished 3072) → `... br_missing submit` → **1971422** (11 min 50 s).
+- **Tomato swap `LN+N4` s1 at 3072: gap 0.001 (s.e. 0.000) CONVERGED** (0.422 at 1536). Corrected in round 0, then honest (46.1 / about 421 ×4); best response 46 / 422.6 ×4. At 1536 this seed never exploited in view.
+- s0 (3000 of 3072) and s2 (2856 of 3072) are still training (1968946); both were CONVERGED at 1536 (0.0015, 0.0016). Rule 4 is applied when both are checked at 3072; if both stay CONVERGED, the exploration run gets `confirm` (unless the cell is DONE by then).
+- tomato_large no-reg `LN` (1958379): 5904 / 5880 / 5856 of 6144 with about 1 h 34 min of its 48 h left; expected to end TIMEOUT and be resumed from its checkpoints.
+- 23 jobs in the queue: 21 campaign training + 1 check (1971297); 1971422 finished.
