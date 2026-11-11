@@ -3337,3 +3337,8 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 
 - Check 1972280 (`br_tomato_O1_P2swap_L`, s1 at 12,288) ended COMPLETED (9 min). **s1: gap 0.290 (s.e. 0.005), not converged.** It still exploits through every audit (4.00 corrections per episode, true 46 every round); its best response is corrected in round 0, then honest (46 / 422.7 ×4). s0 and s2 were checked at 12,288 earlier. The run is at the cap and its cell is DONE (iteration 171), so nothing follows from it (rule 6b).
 - 20 jobs in the queue: 14 campaign training + 6 checks (1972098, 1972174, 1972237, 1972281, 1972282, 1972283).
+
+## 2026-11-11, iteration 175 (04:37): Tomato swap `LN+ES10_confirm` s21 at 1536: 0.003 CONVERGED (information only)
+
+- Check 1972283 (`br_tomato_O1_P2swap_LN+ES10_confirm`, s21 at 1536) ended COMPLETED (18 min). **s21: gap 0.003 (s.e. 0.000) CONVERGED** (corrected in round 0, then honest, 46 / about 420 ×4; best response 46 / 421 ×4). The cell is DONE, so this confirmation is information only (rule 6b). s20 and s22 still training (1971154).
+- 19 jobs in the queue: 14 campaign training + 5 checks (1972098, 1972174, 1972237, 1972281, 1972282).
