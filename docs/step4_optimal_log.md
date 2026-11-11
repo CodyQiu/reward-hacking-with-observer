@@ -3382,3 +3382,13 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - **2/3 at 1536. Tomato swap is DONE (iteration 171), so this is information only:** no extend, confirm or resume. Same s20 failure mode as before (honest without ever being corrected, so it never collects the correction's raise).
 - Correction to iteration 178: 1971094 trained to 1536 episodes, not 3072.
 - Queue: 17 jobs, 13 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972223, 1972233, 1972303) and 4 checks (1972098, 1972174, 1972281, 1972282). Cells DONE: 5 of 8.
+
+## 2026-11-11, iteration 180 (07:51–07:56): tomato_large no-reg `LN` 0/3 at 6144 → extend to 12288 (1972331)
+
+- Woken by the check wait: **1972174** (`br_tomato_large_O1_P1eq1_LN`, s0–s2 at 6144) COMPLETED 07:51 (7:03:58).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato_large/optimal/O1_P1eq1_LN`:
+  - s0 **0.086** (s.e. 0.021) **IMPROVING**; s1 **0.077** (s.e. 0.012) PLATEAU; s2 **0.039** (s.e. 0.014) PLATEAU.
+  - Gap history (1536 / 3072 / 6144): s0 0.063 / 0.055 / 0.086; s1 0.066 / 0.049 / 0.077; s2 0.042 / 0.031 / 0.039. **Note:** the BR gap rose from 3072 to 6144 in all three seeds; the IMPROVING label for s0 comes from the convergence script's own trend, and I follow it as the rule says.
+  - Behaviour is unchanged: every seed is corrected once in round 0, then honest (true 65 / about 520.6 ×4). The best response is corrected in (nearly) every round, 3.95–4.00 corrections per episode, at true 65 / about 515.8 ×3 / 522.4. Each correction pays more received reward than it costs.
+- **Rule 4 (tuning run, s0 IMPROVING, 6144 < cap 12,288): extend 2×.** `EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large O1_P1eq1_LN 12288` (dry-run: `submit.sh 48 --env tomato_large --run-id O1_P1eq1_LN --seeds 0 1 2 --results-dir results/step4/tomato_large/optimal --resume --extend-to 12288`) → `... submit` → **1972331**. It will reach the 48 h limit before 12,288; resume it then.
+- Queue: 17 jobs, 14 campaign training (1967617–1967620, 1968344, 1969069, 1971330, 1971660, 1972035, 1972044, 1972223, 1972233, 1972303, 1972331) and 3 checks (1972098, 1972281, 1972282). Cells DONE: 5 of 8.
