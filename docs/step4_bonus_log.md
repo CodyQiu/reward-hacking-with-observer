@@ -110,3 +110,9 @@ Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_base_LN` (dry-run: `submit.sh 48 --env grid --run-id B1_base_LN_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`, identical to its `overrides.json`) → `... submit` → **1984741**.
 - **All three grid base wave-1 runs are 3/3 CONVERGED (all hide).** Their confirmations: `LE_confirm` 1984694, `L_confirm` 1984728, `LN_confirm` 1984741. The cell is DONE when any one is 3/3; then the others finish as information only.
 - Queue (both campaigns): 31 jobs. Cells DONE: 0 of 12.
+
+## 2026-11-14, iteration 10 (13:44–13:47): AS base `L` finished; check 1984774
+
+- Woken by the training wait: **1984529** (AS `B1_base_L`, 3072 episodes) COMPLETED 13:44 (1:59:45, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-runs, both campaigns): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `run_cmd.sh 2 4 br_absent_supervisor_B1_base_L .venv/bin/python -u experiments/step4_br.py results/step4/absent_supervisor/bonus/B1_base_L --finished-only --draws 12`) → `... br_missing submit` → **1984774**. noreg_fail: nothing missing.
+- Queue (both campaigns): 31 jobs. Cells DONE: 0 of 12.
