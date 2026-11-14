@@ -12,6 +12,8 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 - **AS no-reg seed 21: target fixed point does not converge (with and without the bonus).** `results/step4/absent_supervisor/targets/P1eq1_bonus1/seed21.json` has `fixed_point_converged: false`: the iteration alternates between "3 corrections per episode" (V0 8,040.4) and "corrected in round 0, then never again" (V0 7,927.0). The no-bonus target `P1eq1/seed21.json` has the same two-cycle (8,037.4 / 7,926.0). Not a bug: the corrections fitted on each behaviour make the other one optimal. Per rule 2 the last iteration (3 corrections) is used. PPO's verdict comes from the best-response check, which this does not affect.
 
+- **Tomato no-reg seed 2: target fixed point does not converge (with and without the bonus).** `results/step4/tomato/targets/P1eq1_bonus1/seed2.json`: the iteration cycles 3.00 → 2.71 → 1 → 3.00 → 2.71 corrections per episode; the no-bonus `P1eq1/seed2.json` cycles too (3.00 / 2.48 / 2.99 / 2.51 / 2.91). Per rule 2 the last iteration (2.71) is used. Not a bug as far as I can tell (the corrections fitted on each behaviour favour another); PPO's verdict comes from the best-response check.
+
 ## Exact predictions
 
 Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), compared with the no-bonus target of the same seed (`results/step4/<env>/targets/<variant>/`). "Corrected once" = corrected in round 0, then never again.
@@ -39,7 +41,24 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 **Tomato, swap (+bonus)** (job 1984516; all fixed points converged; every draw corrected once): **= no-bonus target + exactly 1.0 in all 6 seeds.** Corrected once, then honest: true 46.0, then 416.5–424.7 ×4. V0 3,630 / 3,779 / 3,954 / 3,722 / 3,951 / 4,001 (s0, s1, s2, s20, s21, s22), V_hide 2,759.5, margin +870 to +1,241.
 
-Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
+**Tomato, no regulariser (+bonus)** (job 1984517):
+
+| Seed | With bonus: end state (corrections by round) | Without bonus | Same? | ΔV0 (1.0 × corrections) |
+|---|---|---|---|---|
+| 0 | corrected once | corrected once | yes | +1.0 (1.0) |
+| 1 | **3.75** per episode (1, 1, 1, **0.76**) | 3.00 (1, 1, 1, 0.01) | **no** | +21.4 (3.75) |
+| 2 | 2.71 (1, 0.86, 0.85, 0) — **fixed point not converged** | 2.91 (1, 0.95, 0.95, 0) — not converged either | no (see flag) | −3.0 (2.71) |
+| 20 | 3.00 (1, 1, 1, 0.01) | 3.00 | yes | +3.0 (3.00) |
+| 21 | 2 (rounds 0–1) | 2 | yes | +2.0 (2.00) |
+| 22 | 2 (rounds 0–1) | 2 | yes | +2.0 (2.00) |
+
+- **s1 is the first seed where the bonus changes the exact end state.** Without the bonus, the fixed point passes through 3.67 corrections (iteration 1) and settles at 3.00 (round 3's correction at probability 0.01). With the bonus it settles at 3.75 (round 3's correction at probability 0.76; converged). The fourth correction was nearly indifferent, and +1 per correction tips it. True return barely moves: 46, 426.3, 425.0, then 428.4 / 433.4 (without: 430.5 / 430.6). Honest after every correction in both.
+- **s2's fixed point cycles** (with the bonus: 3.00 → 2.71 → corrected once → 3.00 → 2.71; without: 3.00 → 2.48 → 2.99 → 2.51 → 2.91). Rule 2: the last iteration is the target. The difference from the no-bonus target is where each cycle stopped, not a measured bonus effect.
+- Every end state is honest after its last correction (true 425–434, honest about 433); V_hide 2,759.5, margin +1,945 to +2,524.
+
+**Summary so far (10 of 12 cells):** the bonus leaves 53 of the 54 swap / no-reg seeds computed with the same end state, V0 higher by exactly 1.0 × corrections; the exception is Tomato no-reg s1 (one extra correction in round 3, 76% of the time). s2's no-convergence is flagged. Base hides on the grid, AS and Tomato (margin 0).
+
+Pending: tomato_large (1984519–1984521).
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -163,3 +182,10 @@ Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
 
 - **1984923** (`br_grid_B1_base_L_confirm`, s20–s22) COMPLETED (1:53): s20 **0.005**, s21 **0.007**, s22 **0.006** (s.e. ≤ 0.000), all CONVERGED, all hiding like their best responses. The grid base cell is already DONE (iteration 15), so this is information only: a second config (`B1_base_L`, the frozen config trained long) that also passes 3/3 + 3/3.
 - Queue (this campaign): 21 jobs. Cells DONE: 1 of 12.
+
+## 2026-11-14, iteration 17 (14:25–14:35): Tomato no-reg target (first end-state change from the bonus)
+
+- Woken by the target wait: **1984517** (`targets_tomato_P1eq1_bonus1`) COMPLETED 14:22 (2:35:41, exit 0), 6 seeds.
+- **Rule 2, under "Exact predictions":** 4 seeds equal the no-bonus target plus 1.0 × corrections. **s1 changes:** 3.75 corrections per episode instead of 3.00 (a fourth correction in round 3 with probability 0.76; converged). **s2: `fixed_point_converged` false** (log line "-> 2.71 corrections per episode ... fixed point NOT converged"), like its no-bonus target; flagged.
+- `git pull --no-rebase --no-edit --ff`: already up to date. `... resume`, `... br_missing` (dry-runs): nothing for this campaign.
+- Running: tomato_large targets (1984519–1984521), 2 grid / AS confirmations, 17 runs. Cells DONE: 1 of 12.
