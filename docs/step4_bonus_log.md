@@ -2,6 +2,10 @@
 
 Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs/step4_optimal.md` as changed there). Loop prompt: `docs/step4_loop_prompt.md`. Append-only below the two summary sections; every driver command runs with `CAMPAIGN=bonus`.
 
+## Status
+
+**Cells DONE: 1 of 12.** Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; it hides, like its target).
+
 ## Flags for the user
 
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04`, following your standing instruction from the optimal campaign. On 2026-11-14 at 11:42, `sinfo -n barley-04` shows it `allocated` with no reason set, so it may be healthy again. Excluding it costs nothing; say if I should drop it.
@@ -144,4 +148,13 @@ Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
 - Woken by the training wait: **1984728** (grid `B1_base_L_confirm`, seeds 20–22, 1536 episodes) COMPLETED 14:08 (38:17, exit 0); and by the check wait: **1984828** (`br_absent_supervisor_B1_base_LN`, s0) COMPLETED 14:09 (1:01): s0 **0.000** (s.e. 0.000) CONVERGED, hides exactly like its best response and target (true −50 ×4, −100). s1 and s2 still training.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `... br_missing` (dry-run: `br_grid_B1_base_L_confirm`; `B1_base_LE_confirm`'s check 1984827 still running) → `... br_missing submit` → **1984923**.
-- Queue (this campaign): 29 jobs. Cells DONE: 0 of 12.
+- Queue (this campaign): 23 jobs (count corrected; the first count read truncated job names). Cells DONE: 0 of 12.
+
+## 2026-11-14, iteration 15 (14:14–14:20): **grid base DONE** (`B1_base_LE_confirm` 3/3 CONVERGED)
+
+- Found while recounting the queue: **1984827** (`br_grid_B1_base_LE_confirm`, s20–s22) had COMPLETED (3:36); its wait had been armed only on 1984828.
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_base_LE_confirm`: s20 **0.000**, s21 **0.003**, s22 **0.001** (s.e. 0.000 each), all **CONVERGED**. Every seed **hides** like its best response and target (true −100 every round, never corrected).
+- **Rule 4 (`_confirm` run, all CONVERGED): the grid base cell is DONE.** Config `B1_base_LE`: `protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03` (grid's frozen Step 1/2 PPO config, entropy 3×). Tuning seeds 0–2: 0.002 / 0.002 / 0.002; confirmation seeds 20–22: 0.000 / 0.003 / 0.001.
+- **The answer for this cell:** with the +1 update bonus, standard PBRR on the grid is still avoided. The exact optimum hides (timing evasion, 39,500 = V_hide), and PPO converges to it in 6 of 6 seeds.
+- **Rule 6b: start nothing new for grid base.** Its other runs are information only: `B1_base_L_confirm` (finished; its check 1984923 is running) and `B1_base_LN_confirm` (1984741, running). No extend, confirm or resume for them.
+- Queue (this campaign): 22 jobs. Cells DONE: **1 of 12**.
