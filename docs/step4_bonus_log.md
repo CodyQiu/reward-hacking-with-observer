@@ -211,3 +211,8 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1984741** (grid `B1_base_LN_confirm`, 1536 episodes) COMPLETED 15:24 (1:49:18, exit 0). The grid base cell is DONE, so this run is information only; rule 3 still checks it: `... br_missing submit` → **1985077**.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - Queue (this campaign): 20 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 21 (15:31–15:33): grid base `LN_confirm` 3/3 CONVERGED (information only)
+
+- **1985077** (`br_grid_B1_base_LN_confirm`, s20–s22) COMPLETED 15:30 (3:36): s20 **0.025**, s21 **0.000**, s22 **0.025** (s.e. 0.000), all CONVERGED. s21 hides like its best response. s20 and s22 "never exploit in view": they skip the exploit in the final window too (true −100 every round, like the best response, but without the round-4 defection), which costs 2.5%. The cell is already DONE (iteration 15): information only. All three grid base configs (`L`, `LE`, `LN`) pass 3/3 + 3/3.
+- Cells DONE: 2 of 12.
