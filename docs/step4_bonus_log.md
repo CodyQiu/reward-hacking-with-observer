@@ -138,3 +138,10 @@ Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
 - Woken by the training wait: **1984694** (grid `B1_base_LE_confirm`, seeds 20–22, 1536 episodes) COMPLETED 14:04 (46:25, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_grid_B1_base_LE_confirm` and `br_absent_supervisor_B1_base_LN`) → `... br_missing submit` → **1984827** (grid `B1_base_LE_confirm`, s20–s22), **1984828** (AS `B1_base_LN` s0, finished 3072; s1 576 and s2 528 are still training: these two seeds run about 5× slower than s0).
 - Queue (both campaigns): 31 jobs. Cells DONE: 0 of 12.
+
+## 2026-11-14, iteration 14 (14:09–14:14): grid base `L_confirm` finished (check 1984923); AS base `LN` s0 CONVERGED
+
+- Woken by the training wait: **1984728** (grid `B1_base_L_confirm`, seeds 20–22, 1536 episodes) COMPLETED 14:08 (38:17, exit 0); and by the check wait: **1984828** (`br_absent_supervisor_B1_base_LN`, s0) COMPLETED 14:09 (1:01): s0 **0.000** (s.e. 0.000) CONVERGED, hides exactly like its best response and target (true −50 ×4, −100). s1 and s2 still training.
+- `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `... br_missing` (dry-run: `br_grid_B1_base_L_confirm`; `B1_base_LE_confirm`'s check 1984827 still running) → `... br_missing submit` → **1984923**.
+- Queue (this campaign): 29 jobs. Cells DONE: 0 of 12.

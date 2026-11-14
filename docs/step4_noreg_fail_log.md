@@ -80,3 +80,14 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1984547** (Boat Race `N1_P1eq1_L`, 1536 episodes) COMPLETED 14:00 (2:17:00, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `run_cmd.sh 2 4 br_boat_race_N1_P1eq1_L ... experiments/step4_br.py results/step4/boat_race/noreg_fail/N1_P1eq1_L --finished-only --draws 12`; `N1_P1eq1_LE`'s check 1984806 still running) → `... br_missing submit` → **1984820**.
 - Queue (this campaign): 0 jobs.
+
+## 2026-11-14, iteration 6 (14:09–14:14): Boat Race `LE` 2/3 at 1536, s1 IMPROVING → extend to 3072 (1984932)
+
+- Woken by the check wait: **1984806** (`br_boat_race_N1_P1eq1_LE`, s0–s2 at 1536) COMPLETED 14:08 (8:31).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE`:
+  - s0 **0.023** (s.e. 0.017) CONVERGED. Corrected in round 0, then true about −100 every round (the new exploit), exactly like its best response (−94, then −100 ×4). Its target (fitted on the exact optimum's play) takes 2 corrections and then −76; the best response fitted on PPO's own play takes 1. Both end in the new exploit, so the answer does not change (not flagged). "Above target" (value gap −0.078).
+  - s1 **0.032** (s.e. 0.017) **IMPROVING**. Corrected in round 0, then true −93 to −96 per round (best response: −100 ×4 after one correction).
+  - s2 **0.019** (s.e. 0.023) CONVERGED. Corrected in round 0, then true about −100, like its best response and its target.
+- **Every seed's behaviour after its correction is the new exploit** (window clean, true −93 to −100 against honest 50), as the target predicts.
+- **Rule 4 (tuning run, s1 IMPROVING, 1536 < cap 12,288): extend 2×.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE 3072` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`) → `... submit` → **1984932**.
+- Running: Boat Race `L` check (1984820), Boat Race `LN`, Taxi ×3. Queue (this campaign): 0 jobs. Cells DONE: 0 of 2.
