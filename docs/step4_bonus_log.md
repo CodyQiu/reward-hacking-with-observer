@@ -56,7 +56,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **s2's fixed point cycles** (with the bonus: 3.00 → 2.71 → corrected once → 3.00 → 2.71; without: 3.00 → 2.48 → 2.99 → 2.51 → 2.91). Rule 2: the last iteration is the target. The difference from the no-bonus target is where each cycle stopped, not a measured bonus effect.
 - Every end state is honest after its last correction (true 425–434, honest about 433); V_hide 2,759.5, margin +1,945 to +2,524.
 
-**Summary so far (10 of 12 cells):** the bonus leaves 53 of the 54 swap / no-reg seeds computed with the same end state, V0 higher by exactly 1.0 × corrections; the exception is Tomato no-reg s1 (one extra correction in round 3, 76% of the time). s2's no-convergence is flagged. Base hides on the grid, AS and Tomato (margin 0).
+**Summary so far (10 of 12 cells):** in 34 of the 36 swap / no-reg seeds computed (6 cells × 6 seeds) the bonus leaves the end state unchanged and raises V0 by exactly 1.0 × corrections. The exceptions are both Tomato no-reg: s1 (one extra correction in round 3, 76% of the time; converged) and s2 (a fixed point that cycles with and without the bonus, flagged). Base hides on the grid, AS and Tomato (margin 0).
 
 Pending: tomato_large (1984519–1984521).
 
