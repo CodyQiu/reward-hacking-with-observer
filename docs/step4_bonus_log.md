@@ -93,3 +93,12 @@ Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984
 - Woken by the training wait: **1984524** (grid `B1_base_L`, 1536 episodes) COMPLETED 13:22 (1:38:42, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-runs, both campaigns): nothing.
 - `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): `br_grid_B1_base_L` and `br_grid_B1_base_LN` (`LN` s0 and s2 have finished at 1536; s1 is at 1392, still training). `... br_missing submit` → **1984706** (`B1_base_L`), **1984707** (`B1_base_LN`, s0 and s2; s1 gets its own check when it finishes).
 - Queue (both campaigns): 32 jobs (bonus: 5 targets, 19 runs, 2 checks; noreg_fail: 6 runs).
+
+## 2026-11-14, iteration 8 (13:29–13:35): grid base `L` 3/3 CONVERGED → confirm (1984728); `LN` s0, s2 CONVERGED, s1 check 1984727
+
+- Woken by the check wait: **1984706** (`br_grid_B1_base_L`, 5:09) and **1984707** (`br_grid_B1_base_LN`, s0 and s2, 2:43) COMPLETED 13:29; and by the training wait: **1984526** (grid `B1_base_LN`, 1536 episodes) COMPLETED 13:29 (1:44:26, exit 0).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_base_L`: s0 **0.002** (s.e. 0.000), s1 **0.003** (s.e. 0.000), s2 **0.003** (s.e. 0.000), all **CONVERGED**; every seed hides like its best response and target (true −100 every round; target gaps value +0.010 to +0.012, window ≤ 0.020, corrections 0.02).
+- `... B1_base_LN`: s0 **0.000** (s.e. 0.000) CONVERGED, s2 **0.023** (s.e. 0.000) CONVERGED, both hiding like the best response; s1 NEEDS BR (finished 1536 after the check started).
+- **Rule 4, `B1_base_L` (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_base_L` (dry-run: `submit.sh 48 --env grid --run-id B1_base_L_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1`, identical to its `overrides.json`) → `... submit` → **1984728**. It runs alongside `B1_base_LE_confirm` (1984694); the cell is DONE when either is 3/3, as in the optimal campaign's parallel confirmations.
+- **Rule 3:** `... br_missing` (dry-run: `br_grid_B1_base_LN`) → `... br_missing submit` → **1984727** (`LN` s1).
+- Queue (both campaigns): 31 jobs (bonus: 5 targets, 19 runs incl. 2 confirmations, 1 check; noreg_fail: 6 runs). Cells DONE: 0 of 12.
