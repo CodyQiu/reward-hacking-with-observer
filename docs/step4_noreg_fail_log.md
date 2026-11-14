@@ -127,3 +127,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1984932** (Boat Race `N1_P1eq1_LE` extension to 3072) COMPLETED 15:29 (1:18:45, exit 0). **Rule 3:** `... br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE`) → `... br_missing submit` → **1985082**.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - Running: `LN_confirm` (1984995), `L_confirm` extension (1985083), `LE` check (1985082), Taxi ×3. Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 12 (15:38–15:42): Boat Race `LE` 3/3 CONVERGED at 3072 → confirm (1985090)
+
+- Woken by the check wait: **1985082** (`br_boat_race_N1_P1eq1_LE`, s0–s2 at 3072) COMPLETED 15:37 (6:00).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE` (gap history 1536 / 3072): s0 **0.014** (s.e. 0.014; 0.023 / 0.014), s1 **0.005** (s.e. 0.002; 0.032 / 0.005), s2 **0.017** (s.e. 0.051; 0.019 / 0.017), all **CONVERGED**. Every seed is corrected in round 0, then plays the new exploit (true −100, window clean). s2's best response takes a second correction in round 1 (true −94, −82, then −100 ×3); PPO takes one; the gap is within 3% and the after-correction behaviour is the same new exploit.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.09 g.use_regularization=False g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1`: the run's overrides at its final length, 3072) → `... submit` → **1985090**.
+- Boat Race confirmations now running: `L_confirm` (extension to 3072, 1985083), `LN_confirm` (1984995), `LE_confirm` (1985090). The cell is DONE when any is 3/3.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
