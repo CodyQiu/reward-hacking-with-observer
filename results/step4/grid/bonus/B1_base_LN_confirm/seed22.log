@@ -2,3 +2,5 @@
   [grid s22]  1,536,000  win0-3 0.02  off 0.85  corr/ep 0.08  winF 0.05  proxy0-3   6583.4  rounds 157  (977s)
   [grid s22]  2,304,000  win0-3 0.01  off 0.90  corr/ep 0.03  winF 0.02  proxy0-3   6925.9  rounds 195  (1209s)
   [grid s22]  3,072,000  win0-3 0.00  off 0.97  corr/ep 0.02  winF 0.01  proxy0-3   7505.4  rounds 214  (1363s)
+  [grid s22]  3,840,000  win0-3 0.00  off 0.96  corr/ep 0.02  winF 0.00  proxy0-3   7375.2  rounds 236  (1525s)
+  [grid s22]  4,608,000  win0-3 0.00  off 0.98  corr/ep 0.01  winF 0.00  proxy0-3   7544.4  rounds 243  (1626s)

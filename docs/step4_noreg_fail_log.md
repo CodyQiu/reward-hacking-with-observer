@@ -74,3 +74,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1984548** (Boat Race `N1_P1eq1_LE`, 1536 episodes) COMPLETED 13:56 (2:11:24, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `run_cmd.sh 2 4 br_boat_race_N1_P1eq1_LE .venv/bin/python -u experiments/step4_br.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE --finished-only --draws 12`) → `... br_missing submit` → **1984806**.
 - Queue (this campaign): 6 jobs (5 runs, 1 check).
+
+## 2026-11-14, iteration 5 (14:01–14:04): Boat Race `L` finished; check 1984820
+
+- Woken by the training wait: **1984547** (Boat Race `N1_P1eq1_L`, 1536 episodes) COMPLETED 14:00 (2:17:00, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `run_cmd.sh 2 4 br_boat_race_N1_P1eq1_L ... experiments/step4_br.py results/step4/boat_race/noreg_fail/N1_P1eq1_L --finished-only --draws 12`; `N1_P1eq1_LE`'s check 1984806 still running) → `... br_missing submit` → **1984820**.
+- Queue (this campaign): 0 jobs.
