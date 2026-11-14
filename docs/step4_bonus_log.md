@@ -158,3 +158,8 @@ Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
 - **The answer for this cell:** with the +1 update bonus, standard PBRR on the grid is still avoided. The exact optimum hides (timing evasion, 39,500 = V_hide), and PPO converges to it in 6 of 6 seeds.
 - **Rule 6b: start nothing new for grid base.** Its other runs are information only: `B1_base_L_confirm` (finished; its check 1984923 is running) and `B1_base_LN_confirm` (1984741, running). No extend, confirm or resume for them.
 - Queue (this campaign): 22 jobs. Cells DONE: **1 of 12**.
+
+## 2026-11-14, iteration 16 (14:20–14:22): grid base `L_confirm` 3/3 CONVERGED (information only)
+
+- **1984923** (`br_grid_B1_base_L_confirm`, s20–s22) COMPLETED (1:53): s20 **0.005**, s21 **0.007**, s22 **0.006** (s.e. ≤ 0.000), all CONVERGED, all hiding like their best responses. The grid base cell is already DONE (iteration 15), so this is information only: a second config (`B1_base_L`, the frozen config trained long) that also passes 3/3 + 3/3.
+- Queue (this campaign): 21 jobs. Cells DONE: 1 of 12.
