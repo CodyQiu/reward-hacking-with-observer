@@ -11,16 +11,19 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 
 Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
-**Taxi, no regulariser** (`results/step4/taxi/targets/P1eq1/`, seeds 0–2 from the hide-environment sweep of 2026-11-10, same game: `task.obs=onehot`, no regulariser, 1000 epochs; all `fixed_point_converged`):
+**Taxi, no regulariser** (`results/step4/taxi/targets/P1eq1/`: seeds 0–2 from the hide-environment sweep of 2026-11-10, seeds 20–22 from job 1984542; same game: `task.obs=onehot`, no regulariser, 1000 epochs; all `fixed_point_converged`):
 
 | Seed | End state | True by round (k = 0..4) | V0 | V_hide | Margin | Draws' end states |
 |---|---|---|---|---|---|---|
 | 0 | corrected in round 0, then never again | −88.2, −79.3 ×4 | 11,668 | 1,794 | 9,873 | 3 × corrected once, 2 × two corrections, 1 × three |
 | 1 | corrected in round 0, then never again | −88.2, −81.3 ×4 | 13,487 | 1,794 | 11,692 | 5 × corrected once, 1 × two |
 | 2 | corrected in round 0, then never again | −88.2, −77.6 ×4 | 12,714 | 1,794 | 10,920 | 5 × corrected once, 1 × three |
+| 20 | corrected in round 0, then never again | −88.2, −74.5 ×4 | 12,328 | 1,794 | 10,534 | 4 × corrected once, 2 × two |
+| 21 | corrected in round 0, then never again | −88.2, −69.6 ×4 | 12,646 | 1,794 | 10,852 | 3 × corrected once, 1 × two, 2 × three |
+| 22 | 2 corrections (rounds 0–1) | −88.2, −90.0, −86.4 ×3 | 13,557 | 1,794 | 11,762 | 5 × two, 1 × corrected once |
 
-- **After its correction the optimum is a new exploit:** the audit windows of rounds 1–4 are clean (window 0.0, no further correction), yet true return is −78 to −81 per round against honest 125. It is not the original bug (that is round 0's open exploit, true −88, window 1.0) and not honest. Received per round after the correction: 2,822 / 3,277 / 3,084.
-- Seeds 20–22: pending (job 1984542).
+- **After its last correction the optimum is a new exploit in all 6 seeds:** the later audit windows are clean (no further correction) and proxy = true, yet true return is −70 to −86 per round against honest 125. It is not the original bug (that is round 0's open exploit, true −88, window 1.0) and not honest. Received per round after the last correction: 2,822 / 3,277 / 3,084 / 2,987 / 3,067 / 3,401 (s0, s1, s2, s20, s21, s22). s22's second correction comes in round 1 (true −90, window 1.0, proxy −80, i.e. it uses the bug a little in the window to be corrected again).
+- Seeds 20–22: job 1984542 (2026-11-14), all fixed points converged.
 
 **Boat Race, no regulariser** (`results/step4/boat_race/targets/P1eq1/`, job 1984543; all 6 fixed points converged; A1: honest 50, proxy-optimal true −94 at proxy 200):
 
@@ -59,3 +62,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Fallback wakeup. No job ended since iteration 1. `git pull --no-rebase --no-edit --ff`: already up to date.
 - `CAMPAIGN=noreg_fail bash scripts/farmshare/step4_optimal.sh report`: every seed RUNNING, no checks yet. Boat Race `L` / `LE` / `LN` at 360–600 of 1536. Taxi at 24–72 of 768 (`LN` s0 has no checkpoint yet); Taxi is expected to need about 2 days (rule 1 resumes it).
 - Taxi target (1984542, seeds 20–22) still running. No rule decisions. Queue (this campaign): 7 jobs.
+
+## 2026-11-14, iteration 3 (13:12–13:20): Taxi target seeds 20–22
+
+- **1984542** (`targets_taxi_P1eq1`) COMPLETED 13:10 (1:26:52, exit 0). Its log skipped seeds 0–2 (existing files) and computed 20–22; all fixed points converged.
+- **Rule 2, under "Exact predictions":** s20 and s21 corrected once, s22 twice; then a **new exploit** (windows clean, proxy = true) at true −70 to −86 per round against honest 125, like seeds 0–2.
+- `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` and `... br_missing` (dry-runs): nothing. No rule decisions. Queue (this campaign): 6 runs.

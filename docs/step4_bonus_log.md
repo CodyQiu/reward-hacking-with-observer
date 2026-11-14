@@ -29,9 +29,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 **Grid, no regulariser (+bonus)** (job 1984511; all fixed points converged): **= no-bonus target + exactly 1.0 × corrections in all 6 seeds.** s0, s2, s20, s21 corrected once (true −100, then 22 ×4); s1, s22 **2 corrections per episode** (true −100, −100, then 22 ×3). Honest after the last correction in every seed. V0 182,241 / 185,849 / 184,447 / 171,520 / 171,311 / 174,096, V_hide 39,500. Draws are mixed (1–3 corrections), as without the bonus.
 
-**So far the bonus changes no end state:** in the 6 cells computed (AS ×3, grid ×3), every swap / no-reg target equals its no-bonus target plus exactly b × corrections per episode (same end state, same true return by round, same corrections per episode), and base hides (margin 0) on both envs.
+**So far the bonus changes no end state:** in the 6 cells computed (AS ×3, grid ×3), every swap / no-reg target equals its no-bonus target plus exactly b × corrections per episode (same end state, same true return by round, same corrections per episode), and base hides (margin 0) on both envs (and on Tomato).
 
-Pending: Tomato (1984516–1984518); tomato_large (1984519–1984521).
+**Tomato, standard PBRR (+bonus)** (job 1984518): **hides in all 6 seeds** and every draw: V0 = V_hide = 2,759.5 (margin 0); true 59.8 ×4, then 46.0 in round 4; window exploited only in round 4.
+
+Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984521).
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -70,3 +72,11 @@ Pending: Tomato (1984516–1984518); tomato_large (1984519–1984521).
 - `CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh report` (1 min 41 s): every seed RUNNING, no checks yet. Progress: grid base `L` / `LE` / `LN` 552–912 of 1536; grid swap 72–96 of 1536; grid no-reg 216 of 6144; AS base `L` 1128–1248 and `LN` s0 960 of 3072, the rest 168–624; Tomato: only `B1_P1eq1_LN` s0 has a checkpoint (24 of 6144); tomato_large: none yet.
 - **Tomato and tomato_large have no checkpoint after 57 min.** Checked: the jobs are running (`sstat`: about 5:48 CPU-hours per job in 58 min, i.e. all 6 CPUs busy), with no errors in their Slurm output. 22 of the 33 jobs of both campaigns are on rye-02 (512 CPUs, 430 allocated, load 427: full, not oversubscribed). The optimal campaign's Tomato runs wrote their first log line after 20–44 min (on other nodes). Not an incident; watched next iteration.
 - No rule decisions. Running: 6 target jobs (Tomato and tomato_large), 20 runs. Queue (both campaigns): 33 jobs.
+
+## 2026-11-14, iteration 5 (13:12–13:20): grid base `LE` finished (check 1984686); Tomato base target
+
+- Woken by the training wait: **1984525** (grid `B1_base_LE`, 1536 episodes) COMPLETED 13:10 (1:27:19, exit 0). Also ended: **1984518** (`targets_tomato_base_bonus1`, 1:28:36, exit 0).
+- `git pull --no-rebase --no-edit --ff`: already up to date. `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` (dry-run): nothing to resume.
+- **Rule 2:** Tomato base with the bonus hides in all 6 seeds (V0 = V_hide = 2,759.5), under "Exact predictions".
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): `run_cmd.sh 2 4 br_grid_B1_base_LE .venv/bin/python -u experiments/step4_br.py results/step4/grid/bonus/B1_base_LE --finished-only --draws 12`. `... br_missing submit` → **1984686**.
+- Queue (both campaigns): 31 jobs (bonus: 5 targets, 19 runs, 1 check; noreg_fail: 6 runs).
