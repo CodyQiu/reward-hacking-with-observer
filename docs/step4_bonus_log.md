@@ -189,3 +189,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 2, under "Exact predictions":** 4 seeds equal the no-bonus target plus 1.0 × corrections. **s1 changes:** 3.75 corrections per episode instead of 3.00 (a fourth correction in round 3 with probability 0.76; converged). **s2: `fixed_point_converged` false** (log line "-> 2.71 corrections per episode ... fixed point NOT converged"), like its no-bonus target; flagged.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume`, `... br_missing` (dry-runs): nothing for this campaign.
 - Running: tomato_large targets (1984519–1984521), 2 grid / AS confirmations, 17 runs. Cells DONE: 1 of 12.
+
+## 2026-11-14, iteration 18 (14:54–14:57): AS base `L_confirm` finished; check 1985035
+
+- Woken by the training wait: **1984790** (AS `B1_base_L_confirm`, seeds 20–22, 3072 episodes) COMPLETED 14:54 (55:13, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_base_L_confirm`) → `... br_missing submit` → **1985035**. The AS base cell is DONE if this is 3/3.
+- Queue (this campaign): 21 jobs. Cells DONE: 1 of 12.
