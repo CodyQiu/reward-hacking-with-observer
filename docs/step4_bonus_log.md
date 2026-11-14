@@ -80,3 +80,10 @@ Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984
 - **Rule 2:** Tomato base with the bonus hides in all 6 seeds (V0 = V_hide = 2,759.5), under "Exact predictions".
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): `run_cmd.sh 2 4 br_grid_B1_base_LE .venv/bin/python -u experiments/step4_br.py results/step4/grid/bonus/B1_base_LE --finished-only --draws 12`. `... br_missing submit` → **1984686**.
 - Queue (both campaigns): 31 jobs (bonus: 5 targets, 19 runs, 1 check; noreg_fail: 6 runs).
+
+## 2026-11-14, iteration 6 (13:17–13:22): grid base `LE` 3/3 CONVERGED → confirm
+
+- Woken by the check wait: **1984686** (`br_grid_B1_base_LE`, s0–s2 at 1536) COMPLETED 13:17 (2:39).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_base_LE`: s0 **0.002** (s.e. 0.000), s1 **0.002** (s.e. 0.000), s2 **0.002** (s.e. 0.000), all **CONVERGED**. Every seed **hides**, exactly like its best response and its target: true −100 in every round (timing evasion, never corrected), target gaps value +0.005 to +0.011, window ≤ 0.026, corrections ≤ 0.02. So with the bonus, standard PBRR on the grid is still avoided, and PPO finds that optimum.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_base_LE` (dry-run: `submit.sh 48 --env grid --run-id B1_base_LE_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03`, identical to the run's `overrides.json`) → `... submit` → **1984698**. The grid base cell is DONE when this confirmation is 3/3.
+- Queue (both campaigns): 31 jobs (bonus: 5 targets, 20 runs; noreg_fail: 6 runs). Cells DONE: 0 of 12.
