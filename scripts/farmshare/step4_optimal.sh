@@ -23,6 +23,9 @@
 # (standard PBRR); runs B1_<variant>_<tag> in results/step4/<env>/bonus; targets <variant>_bonus<BONUS>. Its
 # wave1 is each swap / no-reg cell's reference run from the optimal campaign (ref_run below) with the bonus,
 # and L, LE, LN for base.
+# CAMPAIGN=noreg_fail runs them for the no-regulariser campaign in the envs whose exact optimum under no-reg is not
+# the desired behaviour (docs/step4_noreg_fail.md): taxi and boat_race, variant P1eq1, runs N1_P1eq1_<tag> in
+# results/step4/<env>/noreg_fail, targets P1eq1 (Taxi's seeds 0-2 exist from the hide sweep and are reused).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -35,21 +38,26 @@ case $CAMPAIGN in
            HYP="Step 4 optimal-policy campaign (docs/step4_optimal.md): PPO reaches the self-consistent exact optimum (experiments/step4_targets.py) of ENV under this PBRR variant" ;;
   bonus) BONUS=${BONUS:-1.0}; VARIANTS=(P2swap P1eq1 base); PFX=B1; EXTRA=" protocol.update_bonus=$BONUS"
          HYP="Step 4 update-bonus campaign (docs/step4_bonus.md): with +$BONUS received reward per reward update, PPO reaches the exact optimum (experiments/step4_br.py) of ENV under this PBRR variant" ;;
+  noreg_fail) ENVS=(taxi boat_race); VARIANTS=(P1eq1); PFX=N1; EXTRA=""
+         HYP="Step 4 no-regulariser failure campaign (docs/step4_noreg_fail.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under no-regulariser PBRR, which is not the desired behaviour" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
-frozen() { case $1 in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomato_large) echo "ppo.ent_coef=0.03" ;; *) echo "" ;; esac; }
-ent3() { case $1 in grid) echo 0.03 ;; absent_supervisor) echo 0.3 ;; *) echo 0.1 ;; esac; }       # 3x the frozen entropy
-episodes() { case $1 in absent_supervisor) echo 3072 ;; *) echo 1536 ;; esac; }                 # 4x (2x for AS) Step 3's
+frozen() { case $1 in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomato_large|boat_race) echo "ppo.ent_coef=0.03" ;;
+                      taxi) echo "ppo.ent_coef=0.03" ;; *) echo "" ;; esac; }
+ent3() { case $1 in grid) echo 0.03 ;; absent_supervisor) echo 0.3 ;; taxi|boat_race) echo 0.09 ;; *) echo 0.1 ;; esac; }  # 3x the frozen entropy
+# 4x (2x for AS) Step 3's; Taxi 1x its frozen 768 (an exploiting seed took 47 h for 768 episodes: PBRR fits dominate)
+episodes() { case $1 in absent_supervisor) echo 3072 ;; taxi) echo 768 ;; *) echo 1536 ;; esac; }
 ANNEAL="anneal.last=0.25 anneal.floor=0.1"
 BR_DRAWS=12                                                       # overseer draws of the best-response check
-br_hours() { case $1 in tomato_large) echo 12 ;; tomato) echo 6 ;; *) echo 2 ;; esac; }
+br_hours() { case $1 in tomato_large) echo 12 ;; tomato|taxi) echo 6 ;; *) echo 2 ;; esac; }
 TUNE_SEEDS=(0 1 2)
 CONFIRM_SEEDS=(20 21 22)
 
 gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fit, as in its Phase A and earlier runs)
   local env=$1 v=$2 ep=""   # plus, in the bonus campaign, the update bonus (part of the game, like the g fit)
   [[ $env != grid ]] && ep=" g.epochs=1000"
+  [[ $env == taxi ]] && printf 'task.obs=onehot '              # Taxi's frozen Step 3 observation: part of its game
   case $v in
     P2swap) echo "g.l_minus_on=dispreferred$ep$EXTRA" ;;
     P1eq1) echo "g.use_regularization=False$ep$EXTRA" ;;

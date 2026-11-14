@@ -146,19 +146,4 @@ For each swap and no-regulariser cell it also compares with its no-bonus referen
 
 ## Prompt
 
-```
-/loop You are running the Step 4 "update-bonus" campaign of this repo (~/reward-hacking-with-observer) on Stanford FarmShare. Read CLAUDE.md (§4f, §6 FarmShare), docs/step4_bonus.md and docs/step4_optimal.md before doing anything. docs/step4_bonus.md is the source of truth for this campaign (the bonus, the 12 cells, wave 1, and its changes to the rules); docs/step4_optimal.md supplies the criteria, the decision rules and the commands it refers to. Follow them exactly.
-
-Goal: with the mentor's update bonus (protocol.update_bonus=1.0: +1 received reward every time the reward function is updated), PPO must reach (almost exactly) its exact optimum, i.e. be within 3% of the best response to the corrections its own play induces (experiments/step4_br.py, the verdict), for the swap (P2swap), the no-regulariser (P1eq1) and standard PBRR (base) on grid, absent_supervisor, tomato and tomato_large: 12 cells. The self-consistent targets (experiments/step4_targets.py, names <variant>_bonus1) give the exact end states; for swap and no-reg compare them with the no-bonus targets of the same seeds. Keep tuning (extend / ppo / explore, rule 6b) until every cell has a config CONVERGED in 3/3 tuning seeds and 3/3 fresh confirmation seeds; never close a cell as a finding.
-
-EVERY scripts/farmshare/step4_optimal.sh command you run starts with CAMPAIGN=bonus (and EXCLUDE=<broken nodes> while a node is broken). Never act on the optimal campaign (results/step4/*/optimal): no resume, extend, confirm, checks or new runs there; its running jobs finish on their own.
-
-Each iteration:
-0. If docs/step4_bonus_log.md does not exist yet, this is the first iteration: git pull --no-rebase --no-edit --ff; run `.venv/bin/python tests/test_step4.py` (all must pass); dry-run, check, then submit `CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh targets submit` and `CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh wave1 submit`. Create docs/step4_bonus_log.md (append-only: date, what you saw, what you decided, the exact commands, job ids; keep two sections at the top current: "Flags for the user" and "Exact predictions") and commit.
-1. git pull --no-rebase --no-edit --ff (never --rebase or --autostash); squeue -u $USER; CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh report.
-2. Apply the decision rules (docs/step4_optimal.md, as changed by docs/step4_bonus.md) in order: resume, new targets, best-response checks (CAMPAIGN=bonus ... br_missing submit), finished runs (confirm / extend / plateau), wave 2, wave 3, exploration (6b), budget. Always dry-run a command (omit "submit") and check it before submitting. Log every decision and command.
-3. As soon as a target is computed, write its end state at the top of the log under "Exact predictions", with the no-bonus comparison (swap, no-reg) or whether it hides (base). These answer whether the bonus changes the optimum; never adjust environments, criteria, b or targets to get a hoped-for result.
-4. Commit with `bash scripts/farmshare/step4_commit.sh "<short message>"` (never git add running seeds' checkpoint files by hand; never overwrite or delete a run).
-5. If something is broken (a job crashes, a script errors, a fixed point does not converge, a check fails), log it with the error text, fix only what is clearly a bug (commit the fix with a test), and otherwise flag it at the top of the log for the user instead of improvising. A run stopped by its 48 h time limit is resumed by rule 1; but if a job fails or is killed by a cluster incident, flag it for the user and don't resubmit it without the user.
-Pace: wake every ~45 min while jobs run (~2 h when only long runs remain). Stop when every cell is DONE or the user says stop, after writing the final summary at the top of the log.
-```
+The FarmShare loop prompt that runs this campaign, together with the no-regulariser failure campaign (`docs/step4_noreg_fail.md`), is in `docs/step4_loop_prompt.md`. It replaced the bonus-only prompt that was here on 2026-11-13.

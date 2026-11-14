@@ -371,7 +371,7 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - The user's theory, as stated: the no-regulariser fit "raises the honest and fines the exploit", which can "lower overall reward, leading to a smart enough agent to exploit that"; the swap should avoid this. A hypothesis to test, not a rule.
   - Sweeps (`scripts/farmshare/step4_hide.sh`, both variants, seeds 0–2): Taxi as in Step 3; the grid with `task.exploit_bonus` ∈ {200 … 3200}; and `grid_routes` (`src/step3/tasks/grid_routes.py`: the exploit at a hub, R ∈ {1, 2, 4} spokes each with its own start and goal, random start; it borrows the grid's g config through `G_FROM`) × bonus {100, 400, 1600}.
   - Map: `experiments/step4_hide_map.py`. No PPO until the map is in.
-- **Update-bonus campaign (from 2026-11-13; FarmShare; procedure, wave 1 and the loop prompt in `docs/step4_bonus.md`, decisions in `docs/step4_bonus_log.md`).**
+- **Update-bonus campaign (from 2026-11-13; FarmShare; procedure and wave 1 in `docs/step4_bonus.md`, decisions in `docs/step4_bonus_log.md`, loop prompt in `docs/step4_loop_prompt.md`).**
   - **The mentor's suggestion, as relayed:** pay "+1 if the reward function was updated and 0 otherwise", so the policy learns to seek the states where its reward is updated. The mentor's view: if each update corrects the reward, then being corrected again "would be a good thing".
   - **`protocol.update_bonus` = b.** The received reward (not proxy, not true) pays +b on the last step of every sub-episode whose audit triggers a correction, in rounds 0–3. The env, `dp.solve_levels` / `evaluate_levels(_probs)`, the targets and `step4_br.py` all include it.
   - **b = 1.0 in env units**, about one step's reward.
@@ -379,6 +379,11 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **The cells.** 12 cells: grid, Absent Supervisor, Tomato and tomato_large × swap, no-reg and standard PBRR (`base`).
   - **The runs.** `B1_*` runs in `results/step4/<env>/bonus/`, driven with `CAMPAIGN=bonus scripts/farmshare/step4_optimal.sh …`.
   - **Wave 1.** Swap and no-reg rerun each cell's optimal-campaign reference config with the bonus, on the same seeds (paired). Base runs L, LE and LN.
+- **No-regulariser failure campaign (from 2026-11-14; FarmShare; `docs/step4_noreg_fail.md`, log `docs/step4_noreg_fail_log.md`).**
+  - **The cells.** No-reg PPO must reach its exact optimum in Taxi and Boat Race, where that optimum after a correction is a new exploit (Phase A: Taxi −83 vs honest 125, Boat Race −100 vs 50).
+  - **Driver.** `CAMPAIGN=noreg_fail`; runs are `N1_P1eq1_*` in `results/step4/<env>/noreg_fail/`.
+  - **Left out.** MountainCar's exact solve is a grid approximation that the target and best-response code doesn't support, and LunarLander has no exact solve.
+  - **One FarmShare prompt runs both new campaigns:** `docs/step4_loop_prompt.md`.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 
