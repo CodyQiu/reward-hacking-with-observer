@@ -132,3 +132,9 @@ Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
 - **Rule 2, under "Exact predictions":** = no-bonus target + exactly 1.0 in all 6 seeds (corrected once, then honest). The bonus has now changed no end state in 8 of the 12 cells.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume`, `... br_missing` (dry-runs): nothing for this campaign.
 - Queue (both campaigns): 30 jobs. Cells DONE: 0 of 12.
+
+## 2026-11-14, iteration 13 (14:05–14:08): grid base `LE_confirm` finished (check 1984827); AS base `LN` s0 finished (check 1984828)
+
+- Woken by the training wait: **1984694** (grid `B1_base_LE_confirm`, seeds 20–22, 1536 episodes) COMPLETED 14:04 (46:25, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_grid_B1_base_LE_confirm` and `br_absent_supervisor_B1_base_LN`) → `... br_missing submit` → **1984827** (grid `B1_base_LE_confirm`, s20–s22), **1984828** (AS `B1_base_LN` s0, finished 3072; s1 576 and s2 528 are still training: these two seeds run about 5× slower than s0).
+- Queue (both campaigns): 31 jobs. Cells DONE: 0 of 12.
