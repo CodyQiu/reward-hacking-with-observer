@@ -205,3 +205,9 @@ Pending: tomato_large (1984519–1984521).
 - **The answer for this cell:** with the +1 update bonus, standard PBRR in Absent Supervisor is still avoided (the exact optimum hides, V0 = V_hide = 7,350), and PPO converges to hiding in 6 of 6 seeds.
 - **Rule 6b: start nothing new for AS base.** `B1_base_LE` (1984530) and `B1_base_LN` (1984531) finish as information only (no extend, confirm or resume); `br_missing` still checks them.
 - Queue (this campaign): 20 jobs. Cells DONE: **2 of 12**.
+
+## 2026-11-14, iteration 20 (15:25–15:28): grid base `LN_confirm` finished (information only); check 1985077
+
+- Woken by the training wait: **1984741** (grid `B1_base_LN_confirm`, 1536 episodes) COMPLETED 15:24 (1:49:18, exit 0). The grid base cell is DONE, so this run is information only; rule 3 still checks it: `... br_missing submit` → **1985077**.
+- `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- Queue (this campaign): 20 jobs. Cells DONE: 2 of 12.
