@@ -3426,3 +3426,12 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Partial check output: 1972282 (tomato_large swap `LN` at 6144) s0 **0.041** (s.e. 0.004), not converged, corrected in round 0 then honest like the best response; s1 in progress. 1972281 (tomato_large no-reg `LN+ES10+N4` at 1536) started at s1 (s0 finished after the check began, as expected): s1 **0.045** (s.e. 0.013), not converged; s2 in progress. `br_missing` will list s0 when this check ends.
 - Progress: grid no-reg `LN+LR+N4` 9624–9696/12288; tomato_large swap `LE+N4` s1 1248/1536, `LE_confirm` 1752–1800/3072, `L` 4584–4608/6144; tomato_large no-reg `LN+ENT3` 2544/3072, `LN+N4` 2160–2184/3072. 1967617–1967620 reach 48 h at about 15:40.
 - Queue: 16 jobs, 14 campaign training and 2 checks (1972281, 1972282). Cells DONE: 5 of 8.
+
+## 2026-11-14, iteration 185 (01:30): campaign paused by the user
+
+- The user stopped the loop ("stop this current loop, we are shifting plans") and then asked to cancel the jobs. The queue was already empty, so nothing was cancelled. The two new campaigns (`docs/step4_bonus.md`, `docs/step4_noreg_fail.md`, one loop prompt in `docs/step4_loop_prompt.md`) replace this campaign's loop.
+- How the remaining jobs ended (`sacct`, none checked or logged after iteration 184):
+  - COMPLETED: 1967619 tomato_large swap `LE+N4` (11-11 11:34), 1969069 tomato_large swap `L` (6144, 11-12 07:47), 1971660 grid no-reg `LN+LR+N4` (12,288, 11-11 21:12), 1972035 Tomato swap `LN+N4_confirm` (11-11 20:30), 1972044 tomato_large no-reg `LN+ENT3` (3072, 11-11 16:51), 1972233 tomato_large no-reg `LN+N4` (3072, 11-11 20:04), 1972303 tomato_large swap `LE_confirm` (3072, 11-12 04:27), 1972464 tomato_large no-reg `LN+ES10` (3072, 11-12 00:48); checks 1972281 (tomato_large no-reg `LN+ES10+N4`, s1–s2) and 1972282 (tomato_large swap `LN` at 6144).
+  - TIMEOUT (48 h limit, not resumed; checkpoints kept): 1967617 / 1967618 / 1967620 tomato_large swap `LE+ENT3` / `LE+ES10` / `LE+ES10+N4` (11-11 22:41), 1968344 tomato_large no-reg `L` (11-12 05:30), 1971330 tomato_large no-reg `LE` (11-12 19:24), 1972331 tomato_large no-reg `LN` (11-13 07:52).
+- Not done because of the pause: best-response checks of the runs above, grid no-reg stage 2 (due once `LN+LR+N4` ended), and the resumes of the TIMEOUTs. Cells DONE at the pause: 5 of 8 (AS swap, AS no-reg, Tomato no-reg, grid swap, Tomato swap).
+- This commit adds the finished seeds' results with `scripts/farmshare/step4_commit.sh`.
