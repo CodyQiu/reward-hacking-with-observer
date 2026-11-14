@@ -117,3 +117,13 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_boat_race_N1_P1eq1_L_confirm`: all three seeds (20–22) have finished 1536 (job 1984953 ended without the training wait seeing it yet). `... br_missing submit` → **1985079**. The Boat Race cell is DONE if this is 3/3.
 - Progress: `LE` extension at 2976 / 3072 / 3024 of 3072; `LN_confirm` at 624–840 of 1536; Taxi ×3 running.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 11 (15:29–15:34): Boat Race `L_confirm` 1/3 at 1536 → extend to 3072 (1985083); `LE` finished 3072 (check 1985082)
+
+- **1985079** (`br_boat_race_N1_P1eq1_L_confirm`, s20–s22 at 1536) COMPLETED 15:28 (2:49). `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_L_confirm`:
+  - s20 **0.024** (s.e. 0.029) CONVERGED; s21 **0.037** (s.e. 0.022) **IMPROVING**; s22 **0.032** (s.e. 0.012) **IMPROVING**.
+  - Every seed already has its best response's end state: corrected in round 0, then the new exploit (true −100 every later round, window clean). The remaining gap is in received reward only. s21's and s22's targets take 2 corrections (then −100 / −76); their best responses fitted on PPO's own play take 1; the answer (new exploit after the correction) is the same.
+- **Rule 4 (confirmation, s21 and s22 IMPROVING, 1536 < cap 12,288): extend 2×.** Confirmations may be extended and count once CONVERGED (the user, 2026-11-10). `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_L_confirm 3072` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_L_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`) → `... submit` → **1985083**.
+- Woken by the training wait: **1984932** (Boat Race `N1_P1eq1_LE` extension to 3072) COMPLETED 15:29 (1:18:45, exit 0). **Rule 3:** `... br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE`) → `... br_missing submit` → **1985082**.
+- `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- Running: `LN_confirm` (1984995), `L_confirm` extension (1985083), `LE` check (1985082), Taxi ×3. Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
