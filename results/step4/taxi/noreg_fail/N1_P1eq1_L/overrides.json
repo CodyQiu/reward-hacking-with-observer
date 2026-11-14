@@ -1,0 +1,17 @@
+{
+ "ppo": {
+  "ent_coef": 0.03
+ },
+ "task": {
+  "obs": "onehot"
+ },
+ "g": {
+  "use_regularization": false,
+  "epochs": 1000
+ },
+ "episodes": 768,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ }
+}

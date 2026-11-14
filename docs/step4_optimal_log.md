@@ -3427,7 +3427,7 @@ The grid and AS checks finished by 12:06. Verdicts: `step4_convergence.py` on ea
 - Progress: grid no-reg `LN+LR+N4` 9624–9696/12288; tomato_large swap `LE+N4` s1 1248/1536, `LE_confirm` 1752–1800/3072, `L` 4584–4608/6144; tomato_large no-reg `LN+ENT3` 2544/3072, `LN+N4` 2160–2184/3072. 1967617–1967620 reach 48 h at about 15:40.
 - Queue: 16 jobs, 14 campaign training and 2 checks (1972281, 1972282). Cells DONE: 5 of 8.
 
-## 2026-11-14, iteration 185 (01:30): campaign paused by the user
+## 2026-11-14, iteration 185 (01:22–11:41; time corrected): campaign paused by the user
 
 - The user stopped the loop ("stop this current loop, we are shifting plans") and then asked to cancel the jobs. The queue was already empty, so nothing was cancelled. The two new campaigns (`docs/step4_bonus.md`, `docs/step4_noreg_fail.md`, one loop prompt in `docs/step4_loop_prompt.md`) replace this campaign's loop.
 - How the remaining jobs ended (`sacct`, none checked or logged after iteration 184):
