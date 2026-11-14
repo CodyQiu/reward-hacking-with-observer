@@ -4,7 +4,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 1 of 12.** Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; it hides, like its target).
+**Cells DONE: 2 of 12.** Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
 
@@ -195,3 +195,13 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1984790** (AS `B1_base_L_confirm`, seeds 20–22, 3072 episodes) COMPLETED 14:54 (55:13, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_base_L_confirm`) → `... br_missing submit` → **1985035**. The AS base cell is DONE if this is 3/3.
 - Queue (this campaign): 21 jobs. Cells DONE: 1 of 12.
+
+## 2026-11-14, iteration 19 (15:00–15:05): **AS base DONE** (`B1_base_L_confirm` 3/3 CONVERGED)
+
+- Woken by the check wait: **1985035** (`br_absent_supervisor_B1_base_L_confirm`, s20–s22 at 3072) COMPLETED 15:00 (3:21).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/absent_supervisor/bonus/B1_base_L_confirm`: s20 **0.027**, s21 **0.001**, s22 **0.028** (s.e. 0.000 each), all **CONVERGED**. Every seed **hides** (window ≤ 0.004, corrections 0.01), like its best response and target. s21 takes the target's route (true about −51 to −55 ×4, −100); s20 and s22 hide on a lower-true route (true about −100 to −106 per round against −50), as s0 and s2 of the tuning run did.
+- **Rule 4 (`_confirm` run, all CONVERGED): the AS base cell is DONE.** Config `B1_base_L`: `ppo.ent_coef=0.1 g.epochs=1000 protocol.update_bonus=1.0 episodes=3072 anneal.last=0.25 anneal.floor=0.1` (AS's frozen Step 3 config, trained long). Tuning seeds 0–2: 0.028 / 0.001 / 0.028; confirmation seeds 20–22: 0.027 / 0.001 / 0.028.
+- **Caveat for the user:** 4 of the 6 seeds pass at 0.027–0.028, within 0.003 of the 0.03 bar; they hide, like the optimum, but on a route that loses about 50 true reward per round, which costs under 3% of received reward. By the pre-registered rule the cell is DONE; the margin is reported, not used to change anything.
+- **The answer for this cell:** with the +1 update bonus, standard PBRR in Absent Supervisor is still avoided (the exact optimum hides, V0 = V_hide = 7,350), and PPO converges to hiding in 6 of 6 seeds.
+- **Rule 6b: start nothing new for AS base.** `B1_base_LE` (1984530) and `B1_base_LN` (1984531) finish as information only (no extend, confirm or resume); `br_missing` still checks them.
+- Queue (this campaign): 20 jobs. Cells DONE: **2 of 12**.
