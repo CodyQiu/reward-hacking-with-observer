@@ -29,11 +29,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 **Grid, no regulariser (+bonus)** (job 1984511; all fixed points converged): **= no-bonus target + exactly 1.0 × corrections in all 6 seeds.** s0, s2, s20, s21 corrected once (true −100, then 22 ×4); s1, s22 **2 corrections per episode** (true −100, −100, then 22 ×3). Honest after the last correction in every seed. V0 182,241 / 185,849 / 184,447 / 171,520 / 171,311 / 174,096, V_hide 39,500. Draws are mixed (1–3 corrections), as without the bonus.
 
-**So far the bonus changes no end state:** in the 6 cells computed (AS ×3, grid ×3), every swap / no-reg target equals its no-bonus target plus exactly b × corrections per episode (same end state, same true return by round, same corrections per episode), and base hides (margin 0) on both envs (and on Tomato).
+**So far the bonus changes no end state:** in the 8 cells computed (AS ×3, grid ×3, Tomato swap and base), every swap / no-reg target equals its no-bonus target plus exactly b × corrections per episode (same end state, same true return by round, same corrections per episode), and base hides (margin 0) on both envs (and on Tomato).
 
 **Tomato, standard PBRR (+bonus)** (job 1984518): **hides in all 6 seeds** and every draw: V0 = V_hide = 2,759.5 (margin 0); true 59.8 ×4, then 46.0 in round 4; window exploited only in round 4.
 
-Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984521).
+**Tomato, swap (+bonus)** (job 1984516; all fixed points converged; every draw corrected once): **= no-bonus target + exactly 1.0 in all 6 seeds.** Corrected once, then honest: true 46.0, then 416.5–424.7 ×4. V0 3,630 / 3,779 / 3,954 / 3,722 / 3,951 / 4,001 (s0, s1, s2, s20, s21, s22), V_hide 2,759.5, margin +870 to +1,241.
+
+Pending: Tomato no-reg (1984517); tomato_large (1984519–1984521).
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -123,3 +125,10 @@ Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984
 - `.venv/bin/python experiments/step4_convergence.py results/step4/absent_supervisor/bonus/B1_base_L`: s0 **0.028** (s.e. 0.000), s1 **0.001** (s.e. 0.000), s2 **0.028** (s.e. 0.000), all **CONVERGED** (≤ 0.03). Every seed **hides** (never corrected; window ≤ 0.004, corrections ≤ 0.01), like its best response and target (true −50 ×4, −100). s1 matches the target closely (true about −52 ×4, −102). s0 and s2 hide on a lower-true route (true about −102 to −112 per round against −50), which costs them under 3% of received reward; the "true" target gap is 0.10–0.11 (information only).
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_base_L` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_base_L_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 g.epochs=1000 protocol.update_bonus=1.0 episodes=3072 anneal.last=0.25 anneal.floor=0.1`, identical to its `overrides.json`) → `... submit` → **1984790**.
 - Queue (both campaigns): 31 jobs. Cells DONE: 0 of 12.
+
+## 2026-11-14, iteration 12 (13:57–14:02): Tomato swap target
+
+- Woken by the target wait: **1984516** (`targets_tomato_P2swap_bonus1`) COMPLETED 13:55 (2:07:49, exit 0), 6 seeds, all fixed points converged.
+- **Rule 2, under "Exact predictions":** = no-bonus target + exactly 1.0 in all 6 seeds (corrected once, then honest). The bonus has now changed no end state in 8 of the 12 cells.
+- `git pull --no-rebase --no-edit --ff`: already up to date. `... resume`, `... br_missing` (dry-runs): nothing for this campaign.
+- Queue (both campaigns): 30 jobs. Cells DONE: 0 of 12.
