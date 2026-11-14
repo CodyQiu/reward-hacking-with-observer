@@ -104,3 +104,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1984549** (Boat Race `N1_P1eq1_LN`, 1536 episodes) COMPLETED 14:25 (2:40:47, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LN`) → `... br_missing submit` → **1984992**.
 - Running: Boat Race `L_confirm` (1984953), `LE` extension (1984932), Taxi ×3, this check. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 9 (14:31–14:35): Boat Race `LN` 3/3 CONVERGED → confirm (1984995)
+
+- Woken by the check wait: **1984992** (`br_boat_race_N1_P1eq1_LN`, s0–s2 at 1536) COMPLETED 14:30 (2:54).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LN`: s0 **0.014** (s.e. 0.016), s1 **0.019** (s.e. 0.020), s2 **0.018** (s.e. 0.030), all **CONVERGED**. Every seed is corrected in round 0, then plays the new exploit (true −100 every later round, window clean), exactly like its best response. All three are "above target" (value gap −0.13 to −0.18): PPO's corrections pay more than the target's, as in the optimal campaign. s0's and s1's targets take 2 and 3 corrections; their best responses (fitted on PPO's own play) take 1. Every one ends in the new exploit, so the answer does not change (not flagged).
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LN` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64`, identical to its `overrides.json`) → `... submit` → **1984995**. It runs alongside `L_confirm` (1984953); the Boat Race cell is DONE when either is 3/3.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
