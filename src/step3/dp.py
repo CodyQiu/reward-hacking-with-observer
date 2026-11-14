@@ -7,7 +7,8 @@ after c corrections) and the audit flag f. A step flags the copy iff it is in th
 audit window and exploits (proxy != true on that transition). At a boundary a
 flagged copy is detected with probability p and moves to level c + 1 from the next
 sub-episode; the base state is redrawn from mu0. The last audit never corrects.
-gamma = 1.
+gamma = 1. With ``proto.update_bonus`` = b, every correction also pays b (in the received return of
+the round whose audit triggers it), as in the training env (src/step3/protocol.py).
 
 ``solve_levels`` returns V at t = 0 and the optimal policy (t, s, c, f);
 ``evaluate_levels`` propagates the exact state distribution of a deterministic
@@ -54,7 +55,7 @@ def solve_levels(tb, proto, R_levels, keep_values=False):
             cont = np.zeros(tb.nxt.shape + (L, 2))
         else:
             v_clean = tb.mu0 @ V[:, :, 0]                        # (L,)
-            v_hit = p * v_clean[up] + (1 - p) * v_clean
+            v_hit = p * (proto.update_bonus + v_clean[up]) + (1 - p) * v_clean
             c0 = np.where(fl[..., None], v_hit[None, None, :], v_clean[None, None, :])
             cont = np.stack([c0, np.broadcast_to(v_hit, c0.shape)], axis=-1)
         Q = np.stack([_q(tb, R[c], cont[:, :, c, :]) for c in range(L)], axis=2)   # (S, A, L, 2)
@@ -111,6 +112,7 @@ def evaluate_levels(tb, proto, R_levels, policy):
                 lv += mf[:, 0] + (1 - p) * mf[:, 1]
                 np.add.at(lv, np.minimum(np.arange(L) + 1, L - 1), p * mf[:, 1])
                 out["corrected"][k] = p * mf[:, 1].sum()
+                out["received"][k] += proto.update_bonus * out["corrected"][k]
                 nd[:, :, 0] = tb.mu0[:, None] * lv[None, :]
         d = nd
     return out
@@ -174,6 +176,7 @@ def evaluate_levels_probs(tb, proto, R_levels, probs_at):
                 lv = mf[:, 0] + (1 - p) * mf[:, 1]
                 np.add.at(lv, np.minimum(np.arange(L) + 1, L - 1), p * mf[:, 1])
                 out["corrected"][k] = p * mf[:, 1].sum()
+                out["received"][k] += proto.update_bonus * out["corrected"][k]
                 nd[:, :, 0] = tb.mu0[:, None] * lv[None, :]
         d = nd
     return out
@@ -181,7 +184,9 @@ def evaluate_levels_probs(tb, proto, R_levels, probs_at):
 
 def value_from_occupancy(tb, occ, R_levels):
     """Received return per round (K,) of the policy whose ``occ`` (K, L, S*A) came from
-    ``evaluate_levels_probs``, under reward tables R_levels (L, S*A, F): rewards enter linearly."""
+    ``evaluate_levels_probs``, under reward tables R_levels (L, S*A, F): rewards enter linearly.
+    It holds the reward tables' part only: add ``proto.update_bonus * ev["corrected"]`` for the
+    update bonus (the policy's corrections do not depend on the tables)."""
     rbar = np.einsum("rj,lrj->lr", tb.prob, np.asarray(R_levels, float))       # (L, S*A) expected reward
     return np.einsum("klr,lr->k", occ, rbar)
 

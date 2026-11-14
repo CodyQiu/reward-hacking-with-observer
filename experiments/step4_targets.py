@@ -57,8 +57,20 @@ OUT = os.path.join(ROOT, "results", "step4")
 KEY_FIELDS = ("env", "task", "protocol", "pbrr", "g")      # what defines the game (not PPO's knobs)
 
 
+OFF = {"protocol": {"update_bonus": 0.0}}                   # fields added later, at their "off" value
+
+
 def game_key(cfg):
-    return {k: cfg[k] for k in KEY_FIELDS}
+    """What defines the game. A field added to the config later is left out at its "off" value, so the
+    runs and targets written before it existed keep matching (protocol.update_bonus, 2026-11-13)."""
+    key = {k: dict(cfg[k]) if isinstance(cfg[k], dict) else cfg[k] for k in KEY_FIELDS}
+    for group, fields in OFF.items():
+        for f, v in fields.items():
+            if key[group].get(f, v) == v:
+                key[group].pop(f, None)
+            else:
+                key[group][f] = float(key[group][f])        # "=1" and "=1.0" are the same game
+    return key
 
 
 def sub_value(tb, pol, R, T):

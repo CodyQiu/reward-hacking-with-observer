@@ -16,6 +16,11 @@ because sub-episode boundaries are fixed steps:
   from the next sub-episode. The last audit never corrects: the reward resets.
 * At t = t_ep every copy's g, preference data and count reset; ``done`` is True
   only here, so PPO bootstraps across every sub-episode boundary.
+* ``update_bonus`` (default 0, off): the received reward pays this much extra every time the
+  reward function is updated, i.e. on the last step of each sub-episode whose audit detects the
+  copy (rounds 0 .. n_sub-2; the last audit corrects nothing, so it pays nothing). It is not part of
+  the proxy or the true reward. The mentor's suggestion (2026-11-12, docs/step4_bonus.md): "+1 if
+  the reward function was updated and 0 otherwise", so seeking an update is rewarded directly.
 
 The received reward is r_proxy + g(s, a, s'), where g is the copy's current
 correction network evaluated on the task's reward-model row. Copies that share a
@@ -50,6 +55,7 @@ class Protocol:
     p_detect: float = 1.0
     show_monitor: bool = False  # add a "monitor present" bit (Absent Supervisor)
     clock: str = "onehot"       # "onehot" tau (Step 1 / 2) | "scalar": tau / t_sub and the monitor bit
+    update_bonus: float = 0.0   # extra received reward per reward update (per correction); 0 = off
 
     @property
     def t_ep(self):
@@ -189,6 +195,8 @@ class AuditedVecEnv(VecEnv):
                     self.n_corr[j] += 1
                     self.history[j] = self.history[j] + (k,)
                     self.pending[j] = True
+                if proto.update_bonus:               # paid on the step whose audit triggers the update
+                    received = received + proto.update_bonus * detected
             self.flagged[:] = False
             self.batch.reset()
             if self.t >= proto.t_ep:

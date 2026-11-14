@@ -18,13 +18,25 @@
 #   bash scripts/farmshare/step4_optimal.sh br <env> <run_id> [submit]       paired best-response check of its finished seeds
 #   bash scripts/farmshare/step4_optimal.sh br_missing [submit]               ... of every finished seed that lacks one
 # EXCLUDE=<nodes> (e.g. EXCLUDE=barley-04) keeps every submitted job off broken nodes.
+# CAMPAIGN=bonus runs every command for the update-bonus campaign instead (docs/step4_bonus.md): the received
+# reward pays BONUS (default 1.0) per reward update (protocol.update_bonus); variants P2swap, P1eq1 and base
+# (standard PBRR); runs B1_<variant>_<tag> in results/step4/<env>/bonus; targets <variant>_bonus<BONUS>. Its
+# wave1 is each swap / no-reg cell's reference run from the optimal campaign (ref_run below) with the bonus,
+# and L, LE, LN for base.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
 LAST=${*: -1}; [[ ${LAST:-} == submit ]] && GO=1 || GO=0
 
 ENVS=(grid absent_supervisor tomato tomato_large)
-VARIANTS=(P2swap P1eq1)
+CAMPAIGN=${CAMPAIGN:-optimal}
+case $CAMPAIGN in
+  optimal) VARIANTS=(P2swap P1eq1); PFX=O1; EXTRA=""
+           HYP="Step 4 optimal-policy campaign (docs/step4_optimal.md): PPO reaches the self-consistent exact optimum (experiments/step4_targets.py) of ENV under this PBRR variant" ;;
+  bonus) BONUS=${BONUS:-1.0}; VARIANTS=(P2swap P1eq1 base); PFX=B1; EXTRA=" protocol.update_bonus=$BONUS"
+         HYP="Step 4 update-bonus campaign (docs/step4_bonus.md): with +$BONUS received reward per reward update, PPO reaches the exact optimum (experiments/step4_br.py) of ENV under this PBRR variant" ;;
+  *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
+esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
 frozen() { case $1 in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomato_large) echo "ppo.ent_coef=0.03" ;; *) echo "" ;; esac; }
 ent3() { case $1 in grid) echo 0.03 ;; absent_supervisor) echo 0.3 ;; *) echo 0.1 ;; esac; }       # 3x the frozen entropy
@@ -36,15 +48,31 @@ TUNE_SEEDS=(0 1 2)
 CONFIRM_SEEDS=(20 21 22)
 
 gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fit, as in its Phase A and earlier runs)
-  local env=$1 v=$2 ep=""
+  local env=$1 v=$2 ep=""   # plus, in the bonus campaign, the update bonus (part of the game, like the g fit)
   [[ $env != grid ]] && ep=" g.epochs=1000"
   case $v in
-    P2swap) echo "g.l_minus_on=dispreferred$ep" ;;
-    P1eq1) echo "g.use_regularization=False$ep" ;;
+    P2swap) echo "g.l_minus_on=dispreferred$ep$EXTRA" ;;
+    P1eq1) echo "g.use_regularization=False$ep$EXTRA" ;;
+    base) echo "${ep# }$EXTRA" ;;                                # standard PBRR (max1), as in Steps 2-3
     *) echo "unknown variant $v" >&2; exit 1 ;;
   esac
 }
-rdir() { echo "results/step4/$1/optimal"; }
+rdir() { echo "results/step4/$1/$CAMPAIGN"; }
+tname() { if [[ $CAMPAIGN == bonus ]]; then echo "${1}_bonus${BONUS%.0}"; else echo "$1"; fi; }
+# bonus campaign, wave 1: each swap / no-reg cell starts from the optimal campaign's run that converged
+# (the cell's DONE config) or, for an open cell, its tuning run with the smallest mean best-response gap
+# (as of 2026-11-13), at that run's length; same seeds, so each bonus run pairs with its no-bonus run
+ref_run() { case $1:$2 in
+  grid:P2swap) echo "O1_P2swap_LE+NET+ENT3 1536" ;;               # DONE
+  grid:P1eq1) echo "O1_P1eq1_LN+LR 6144" ;;                       # open: 3/3 at 6144, confirmation 0/3
+  absent_supervisor:P2swap) echo "O1_P2swap_LN 3072" ;;           # DONE
+  absent_supervisor:P1eq1) echo "O1_P1eq1_LN+RS 6144" ;;          # DONE
+  tomato:P2swap) echo "O1_P2swap_LN+ES10+N4 1536" ;;              # DONE
+  tomato:P1eq1) echo "O1_P1eq1_LN 6144" ;;                        # DONE
+  tomato_large:P2swap) echo "O1_P2swap_LE 1536" ;;                # open: 3/3 at 1536, confirmation running
+  tomato_large:P1eq1) echo "O1_P1eq1_LN+ES10 1536" ;;             # open: 0/3 (best mean gap 0.045)
+  *) echo "no reference run for $1 $2" >&2; exit 1 ;;
+esac; }
 run() { if (( GO )); then "$@"; else [[ -n ${DEPENDENCY:-} ]] && printf 'DEPENDENCY=%s ' "$DEPENDENCY"
           [[ -n ${EXCLUDE:-} ]] && printf 'EXCLUDE=%s ' "$EXCLUDE"; printf '%q ' "$@"; echo; fi; }
 br_submit() {   # env run_dir
@@ -61,7 +89,7 @@ ppo_submit() {   # env run_id "sets" seeds...
   local s=($sets)
   DEPENDENCY=$dep run bash scripts/farmshare/submit.sh 48 --env "$env" --run-id "$id" --seeds "$@" \
     --results-dir "$(rdir "$env")" --set "${s[@]}" \
-    --hypothesis "Step 4 optimal-policy campaign (docs/step4_optimal.md): PPO reaches the self-consistent exact optimum (experiments/step4_targets.py) of $env under this PBRR variant"
+    --hypothesis "${HYP//ENV/$env}"
 }
 
 case $CMD in
@@ -78,15 +106,22 @@ case $CMD in
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do
       dep=""; [[ $env == tomato_large && -n ${PHASEA_JOB:-} ]] && dep="afterok:$PHASEA_JOB"
       # shellcheck disable=SC2046
-      DEPENDENCY=$dep run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$v" .venv/bin/python -u experiments/step4_targets.py \
-        --env "$env" --name "$v" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" --set $(gsets "$env" "$v")
+      DEPENDENCY=$dep run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$(tname "$v")" .venv/bin/python -u experiments/step4_targets.py \
+        --env "$env" --name "$(tname "$v")" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" --set $(gsets "$env" "$v")
     done; done ;;
   wave1)
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do
+      if [[ $CAMPAIGN == bonus && $v != base ]]; then            # the cell's reference run, with the bonus
+        read -r old eps <<< "$(ref_run "$env" "$v")"
+        words=$(.venv/bin/python scripts/farmshare/run_sets.py "results/step4/$env/optimal/$old")
+        words=$(tr ' ' '\n' <<< "$words" | grep -v '^episodes=' | tr '\n' ' ')
+        ppo_submit "$env" "${PFX}_${v}_${old#O1_${v}_}" "${words}episodes=$eps$EXTRA" "${TUNE_SEEDS[@]}"
+        continue
+      fi
       base="$(frozen "$env") $(gsets "$env" "$v") episodes=$(episodes "$env") $ANNEAL"
-      ppo_submit "$env" "O1_${v}_L" "$base" "${TUNE_SEEDS[@]}"
-      ppo_submit "$env" "O1_${v}_LE" "$base ppo.ent_coef=$(ent3 "$env")" "${TUNE_SEEDS[@]}"
-      ppo_submit "$env" "O1_${v}_LN" "$base n_envs=64 ppo.batch_size=1600" "${TUNE_SEEDS[@]}"
+      ppo_submit "$env" "${PFX}_${v}_L" "$base" "${TUNE_SEEDS[@]}"
+      ppo_submit "$env" "${PFX}_${v}_LE" "$base ppo.ent_coef=$(ent3 "$env")" "${TUNE_SEEDS[@]}"
+      ppo_submit "$env" "${PFX}_${v}_LN" "$base n_envs=64 ppo.batch_size=1600" "${TUNE_SEEDS[@]}"
     done; done ;;
   report)
     for env in "${ENVS[@]}"; do
@@ -115,7 +150,7 @@ case $CMD in
   ppo)
     env=$1 v=$2 tag=$3 extra=$4
     base="$(frozen "$env") $(gsets "$env" "$v") episodes=$(episodes "$env") $ANNEAL $extra"
-    ppo_submit "$env" "O1_${v}_$tag" "$base" "${TUNE_SEEDS[@]}" ;;
+    ppo_submit "$env" "${PFX}_${v}_$tag" "$base" "${TUNE_SEEDS[@]}" ;;
   confirm)
     env=$1 id=$2; d=$(rdir "$env")
     sets=$(.venv/bin/python scripts/farmshare/run_sets.py "$d/$id")
@@ -123,7 +158,7 @@ case $CMD in
   explore)
     env=$1 v=$2 base=$3 stage=${4:-}; d=$(rdir "$env")
     [[ $stage == stage2 ]] || stage=""
-    [[ $base == O1_${v}_* ]] || { echo "$base is not an O1_${v}_* run" >&2; exit 1; }
+    [[ $base == ${PFX}_${v}_* ]] || { echo "$base is not a ${PFX}_${v}_* run" >&2; exit 1; }
     lines=$(.venv/bin/python scripts/farmshare/explore_sets.py "$d/$base" "$(episodes "$env")" $stage)
     while IFS=$'\t' read -r tag sets; do
       if [[ -e $d/${base}+$tag ]]; then echo "# $env/${base}+$tag exists: skipped"; continue; fi

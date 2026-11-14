@@ -179,6 +179,75 @@ def test_stochastic_level_evaluation_is_exact():
         tb, P, R2, lambda t: 0.5 * oh(t) + 0.5 * oh2(t))["received"])
 
 
+def test_update_bonus_closed_forms_on_the_step1_grid():
+    """protocol.update_bonus (b per correction) in the exact DP, on the Step 1 grid with the oracle patch
+    (levels >= 1 pay the true reward). Hiding is worth 7,700 x 4 + 8,700 = 39,500. Caught in round 0 and
+    then in every round (only E in the window gets caught; after E the goal is out of reach, so a caught
+    corrected round is -100) is 8,700 + 3 x (-100) + 22 + 4b; caught in round 0 only, 8,700 + 4 x 22 + b.
+    b = 0 hides; b = 10,000 is caught in rounds 0-3 (48,422 beats caught-from-round-1, 16,222 + 3b)."""
+    from src.step3.dp import evaluate_levels, evaluate_levels_probs, onehot_probs, solve_levels
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    tb = get_task("grid").tables
+    R = np.stack([tb.proxy] + [tb.true] * 4)
+    for b, V_exp, corr, recv in ((0.0, 39_500.0, [0, 0, 0, 0, 0], [7_700] * 4 + [8_700]),
+                                 (10_000.0, 48_422.0, [1, 1, 1, 1, 0], [18_700, 9_900, 9_900, 9_900, 22])):
+        P = Protocol(update_bonus=b)
+        V, pol = solve_levels(tb, P, R)
+        assert abs(tb.mu0 @ V[:, 0, 0] - V_exp) < 1e-6, (b, tb.mu0 @ V[:, 0, 0])
+        ev = evaluate_levels(tb, P, R, pol)
+        assert np.allclose(ev["corrected"], corr) and np.allclose(ev["received"], recv), (b, ev["received"])
+        assert abs(ev["received"].sum() - V_exp) < 1e-6
+        ev2 = evaluate_levels_probs(tb, P, R, onehot_probs(pol, tb.n_actions))
+        assert np.allclose(ev2["received"], recv)
+    # off by default, and the same policy's received return moves by exactly b per correction
+    _, pol = solve_levels(tb, Protocol(update_bonus=10_000.0), R)
+    assert Protocol().update_bonus == 0.0
+    assert np.allclose(evaluate_levels(tb, Protocol(update_bonus=5.0), R, pol)["received"]
+                       - evaluate_levels(tb, Protocol(), R, pol)["received"], [5, 5, 5, 5, 0])
+
+
+def test_update_bonus_is_paid_where_the_dp_puts_it():
+    """The training env pays b on the last step of each sub-episode whose audit triggers a correction
+    (rounds 0-3), never in round 4 and never otherwise, and it is in neither the proxy nor the true reward:
+    an open exploiter's per-round received return in the env equals the exact evaluation, copy by copy."""
+    from src.step3.dp import evaluate_levels, solve_levels, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.tasks import get_task
+    task = get_task("grid")
+    tb, b = task.tables, 7.0
+    P = Protocol(update_bonus=b)
+    R = np.stack([tb.proxy] * P.n_sub)                       # no overseer runs: g stays 0, received = proxy
+    _, pol = solve_levels(tb, P, R)                           # exploit in view every round
+    fn = table_policy_fn(pol, tb.n_actions)
+    env = AuditedVecEnv(task, P, n_envs=3, seed=0)
+    env.reset()
+    extra, rec = np.zeros((P.t_ep, 3)), np.zeros((P.n_sub, 3))
+    for t in range(P.t_ep):
+        env.step_async(fn(env.batch, t, env.n_corr, env.flagged).argmax(axis=1))
+        env.step_wait()
+        L = env.last
+        extra[t] = L["received"] - L["proxy"]
+        rec[t // P.t_sub] += L["received"]
+    paid = np.zeros(P.t_ep)
+    paid[[99, 199, 299, 399]] = b
+    assert np.allclose(extra, paid[:, None])
+    assert np.allclose(rec, evaluate_levels(tb, P, R, pol)["received"][:, None])
+
+
+def test_game_key_leaves_out_an_update_bonus_that_is_off():
+    """Runs and targets written before protocol.update_bonus existed keep matching (step4_convergence)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "experiments"))
+    from step4_targets import game_key
+    from src.step3.train import resolve_config
+    new = resolve_config("grid", {"seed": 0})
+    old = {**new, "protocol": {k: v for k, v in new["protocol"].items() if k != "update_bonus"}}
+    assert "update_bonus" in new["protocol"] and game_key(new) == game_key(old) == game_key(game_key(old))
+    on = resolve_config("grid", {"seed": 0, "protocol": {"update_bonus": 1.0}})
+    assert game_key(on)["protocol"]["update_bonus"] == 1.0 and game_key(on) != game_key(new)
+    assert "update_bonus" not in old["protocol"]                         # game_key does not modify its input
+
+
 def test_best_response_check_on_an_open_exploiter():
     """experiments/step4_br.py on Absent Supervisor with a cheap g fit: the best response to the open
     exploiter's own corrections is at least as good as the exploiter (gap >= 0), and the paired per-draw
@@ -200,6 +269,16 @@ def test_best_response_check_on_an_open_exploiter():
     assert res["gap"] >= -1e-9 and res["V_br"] >= res["V_policy"] - 1e-6
     assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9
     assert res["policy"]["corrections_per_ep"] > 3.99
+    # with the update bonus (same draws: the streams depend only on seed, draw and level) the exploiter's
+    # value rises by exactly b per correction, and the paired gaps still average to the mean-table gap
+    b = 3.0
+    cfg_b = {**cfg, "protocol": {**cfg["protocol"], "update_bonus": b}}
+    res_b = best_response(cfg_b, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions), n_draws=2,
+                          log=lambda m: None)
+    assert abs(res_b["V_policy"] - res["V_policy"] - 4 * b) < 1e-6
+    assert np.allclose(np.asarray(res_b["policy"]["received_by_k"]) - res["policy"]["received_by_k"], [b] * 4 + [0])
+    assert abs(sum(res_b["best_response"]["received_by_k"]) - res_b["V_br"]) < 1e-6 * abs(res_b["V_br"])
+    assert res_b["V_br"] >= res["V_br"] - 1e-6 and abs(np.mean(res_b["gap_by_draw"]) - res_b["gap"]) < 1e-9
 
 
 def test_anneal_factor():

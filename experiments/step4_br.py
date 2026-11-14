@@ -132,10 +132,12 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     V, pol = solve_levels(tb, proto, R_lv)
     ev_b = evaluate_levels_probs(tb, proto, R_lv, onehot_probs(pol, A))
     V_br = float(tb.mu0 @ V[:, 0, 0])
-    ppo_k = value_from_occupancy(tb, ev_p["occ"], R_lv)
+    bonus_p = proto.update_bonus * np.asarray(ev_p["corrected"])       # the update bonus (protocol.py), per round
+    bonus_b = proto.update_bonus * np.asarray(ev_b["corrected"])
+    ppo_k = value_from_occupancy(tb, ev_p["occ"], R_lv) + bonus_p
     V_ppo = float(ppo_k.sum())
-    vb_d = np.einsum("klr,dlr->d", ev_b["occ"], rbar_d)               # the BR policy, draw by draw
-    vp_d = np.einsum("klr,dlr->d", ev_p["occ"], rbar_d)
+    vb_d = np.einsum("klr,dlr->d", ev_b["occ"], rbar_d) + bonus_b.sum()   # the BR policy, draw by draw
+    vp_d = np.einsum("klr,dlr->d", ev_p["occ"], rbar_d) + bonus_p.sum()
     gap_d = (vb_d - vp_d) / V_br
     pol_gt = solve_subepisode(tb, tb.true, T)
 

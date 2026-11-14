@@ -54,7 +54,7 @@ def find_target(cfg):
     for path in sorted(glob.glob(os.path.join(OUT, cfg["env"], "targets", "*", f"seed{cfg['seed']}.json"))):
         with open(path) as fh:
             t = json.load(fh)
-        if json.dumps(t["game"], sort_keys=True) == key:
+        if json.dumps(game_key(t["game"]), sort_keys=True) == key:
             return path, t
     return None, None
 
