@@ -102,3 +102,11 @@ Pending: Tomato swap and no-reg (1984516, 1984517); tomato_large (1984519–1984
 - **Rule 4, `B1_base_L` (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_base_L` (dry-run: `submit.sh 48 --env grid --run-id B1_base_L_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1`, identical to its `overrides.json`) → `... submit` → **1984728**. It runs alongside `B1_base_LE_confirm` (1984694); the cell is DONE when either is 3/3, as in the optimal campaign's parallel confirmations.
 - **Rule 3:** `... br_missing` (dry-run: `br_grid_B1_base_LN`) → `... br_missing submit` → **1984727** (`LN` s1).
 - Queue (both campaigns): 31 jobs (bonus: 5 targets, 19 runs incl. 2 confirmations, 1 check; noreg_fail: 6 runs). Cells DONE: 0 of 12.
+
+## 2026-11-14, iteration 9 (13:33–13:37): grid base `LN` 3/3 CONVERGED → confirm (1984741)
+
+- Woken by the check wait: **1984727** (`br_grid_B1_base_LN`, s1) COMPLETED 13:33 (2:08): s1 **0.002** (s.e. 0.000) CONVERGED, hides like its best response.
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_base_LN`: s0 **0.000**, s1 **0.002**, s2 **0.023** (s.e. 0.000 each), all **CONVERGED**, all hiding (true −100 every round) like their best responses and targets.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_base_LN` (dry-run: `submit.sh 48 --env grid --run-id B1_base_LN_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`, identical to its `overrides.json`) → `... submit` → **1984741**.
+- **All three grid base wave-1 runs are 3/3 CONVERGED (all hide).** Their confirmations: `LE_confirm` 1984694, `L_confirm` 1984728, `LN_confirm` 1984741. The cell is DONE when any one is 3/3; then the others finish as information only.
+- Queue (both campaigns): 31 jobs. Cells DONE: 0 of 12.
