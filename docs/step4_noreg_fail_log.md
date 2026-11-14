@@ -22,7 +22,21 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **After its correction the optimum is a new exploit:** the audit windows of rounds 1–4 are clean (window 0.0, no further correction), yet true return is −78 to −81 per round against honest 125. It is not the original bug (that is round 0's open exploit, true −88, window 1.0) and not honest. Received per round after the correction: 2,822 / 3,277 / 3,084.
 - Seeds 20–22: pending (job 1984542).
 
-**Boat Race, no regulariser:** pending (job 1984543, seeds 0–2 and 20–22).
+**Boat Race, no regulariser** (`results/step4/boat_race/targets/P1eq1/`, job 1984543; all 6 fixed points converged; A1: honest 50, proxy-optimal true −94 at proxy 200):
+
+| Seed | End state | True by round (k = 0..4) | Proxy by round | V0 | V_hide | Margin |
+|---|---|---|---|---|---|---|
+| 0 | 2 corrections (rounds 0–1) | −94, −58, −76, −76, −76 | 200, −52, −76, −76, −76 | 3,740 | 928 | 2,812 |
+| 1 | 3 corrections (rounds 0–2) | −94, −82, −58, −76, −76 | 200, −76, −52, −76, −76 | 3,794 | 928 | 2,866 |
+| 2 | corrected once (round 0) | −94, −100 ×4 | 200, −100 ×4 | 3,905 | 928 | 2,977 |
+| 20 | corrected once (round 0) | −94, −100 ×4 | 200, −100 ×4 | 3,996 | 928 | 3,068 |
+| 21 | 2 corrections (rounds 0–1) | −94, −82, −100, −100, −100 | 200, −76, −100, −100, −100 | 4,125 | 928 | 3,197 |
+| 22 | 2 corrections (rounds 0–1) | −94, −82, −76, −76, −76 | 200, −76, −76, −76, −76 | 3,860 | 928 | 2,932 |
+
+- **After its last correction the optimum is a new exploit in every seed:** the windows are clean (no further correction), proxy = true (so the original checkpoint bug is not used), and true return is **−76 to −100 per round against honest 50**. Round 0 is the original bug, exploited openly (proxy 200, true −94, window 1.0). The rounds with a second or third correction use the bug a little inside the window (proxy above true by 6) to get corrected again.
+- Received per round after the last correction: 914 / 966 / 926 / 949 / 1,028 / 940 (honest under the uncorrected proxy pays 50).
+- Draws vary from 1 to 4 corrections; every draw's true return in round 1 is −58 to −100.
+- This matches Phase A (true −100 after one correction) and the earlier PPO runs (corrected once, then true about −100).
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -33,3 +47,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Boat Race (`ppo.ent_coef=0.03`, 1536 episodes): the same three tags.
   - Checked against the doc, then `... wave1 submit` → **1984544–1984546** (Taxi L / LE / LN), **1984547–1984549** (Boat Race L / LE / LN).
 - Budget: this campaign 8 jobs (≤ 20); with bonus's 32, 40 in all (≤ 110). Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 1 (11:54–12:05): Boat Race target
+
+- Woken by the target wait: **1984543** (`targets_boat_race_P1eq1`) COMPLETED 11:54 (6:49, exit 0): seeds 0, 1, 2, 20, 21, 22, all fixed points converged.
+- **Rule 2, under "Exact predictions":** 1–3 corrections, then a **new exploit** in every seed: windows clean, proxy = true, true −76 to −100 per round against honest 50.
+- Taxi target (1984542, seeds 20–22) and the 6 runs are still running. Queue (this campaign): 7 jobs.
