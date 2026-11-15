@@ -783,3 +783,15 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - **Above target.** s20 and s21.
 - **Rule 4 (every seed IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+NET_confirm 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1987486**.
 - **Queue.** 23 jobs in this campaign (limit 60), 30 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 90 (12:51–12:55): Tomato base `L` finished at 3072; AS no-reg `+ENT3_confirm` s20/s22 at 12,288; checks 1987561 1987562
+
+- **12:51 wake-up.**
+  - Scheduled wakeup. `git pull --no-rebase --no-edit --ff`: already up to date.
+  - **1986905** (Tomato `B1_base_L`, extension to 3072) COMPLETED 12:50 (11:23:10, exit 0).
+  - `... resume` (dry-run): nothing, in either campaign.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing`. It listed AS `B1_P1eq1_LN+RS+ENT3_confirm` (s20 and s22 finished at 12,288; s21 at 12,024) and Tomato `B1_base_L` (s2 finished at 3072).
+  - Submitted: `... br_missing submit` → **1987561** (AS `+ENT3_confirm`), **1987562** (Tomato `base_L`).
+  - noreg_fail `br_missing` (dry-run): nothing.
+- The tomato_large no-reg target (1984520) is still running (25 h). Cells DONE: 4 of 12.
