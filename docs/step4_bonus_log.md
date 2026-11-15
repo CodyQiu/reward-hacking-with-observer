@@ -641,3 +641,9 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
 - **1987288** (`br_tomato_B1_base_L`, s0 at 3072) COMPLETED 09:27 (8:45): s0 **0.161** (s.e. 0.000; 0.162 at 1536), not converged; still corrected once, then honest (true about 431), while its best response hides. s1 and s2 still training (2784, 2448 of 3072); rule 4 waits for them.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 81 (09:41–09:43): AS no-reg `+N4_confirm` finished; check 1987303 
+
+- Woken by the training wait: **1987110** (AS `B1_P1eq1_LN+RS+N4_confirm`, seeds 20–22, 3072) COMPLETED 09:41 (6:00:02, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+N4_confirm`) → `... br_missing submit` → **1987303 **. The AS no-reg cell is DONE if this is 3/3.
+- Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
