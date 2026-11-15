@@ -148,3 +148,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LN_confirm`: s20 **0.013** (s.e. 0.018) CONVERGED; s21 **0.009** (s.e. 0.013) CONVERGED; s22 **0.043** (s.e. 0.021) **IMPROVING**. All three are corrected in round 0, then play the new exploit (true −100 every later round), like their best responses; s22's gap is in received reward.
 - **Rule 4 (confirmation, s22 IMPROVING, 1536 < cap 12,288): extend 2×.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LN_confirm 3072` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`) → `... submit` → **1985445**.
 - Boat Race confirmations running: `L_confirm` → 3072 (1985083), `LN_confirm` → 3072 (1985445), `LE_confirm` at 3072 (1985090). Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 15 (16:34–16:36): Boat Race `L_confirm` extension finished (3072); check 1985472
+
+- Woken by the training wait: **1985083** (Boat Race `N1_P1eq1_L_confirm` extension to 3072) COMPLETED 16:33 (1:01:20, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_L_confirm`) → `... br_missing submit` → **1985472** (s20–s22 at 3072). The Boat Race cell is DONE if this is 3/3.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
