@@ -932,3 +932,8 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - **Tomato `B1_base_LN+N4`**: s0 **0.159** (s.e. 0.000) at 1536. It is reactive: corrected in round 0, then honest (true 433). The best response hides, as in the target. s1 and s2 are still training (1344, 1248).
 - **Rule 4 (confirmation; s20 IMPROVING, 6144 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ES10+N4_confirm 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987881 **. Tomato `LN+N4` waits for its other seeds.
 - Queue: 22 jobs in this campaign (limit 60), 29 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 101 (15:07–15:10): grid no-reg `LN+LR` reached the 12,288 cap; check 1987893 
+
+- Woken by the training wait: **1987190** (grid `B1_P1eq1_LN+LR`, extension to 12,288) COMPLETED 15:06 (10:10:23, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `B1_P1eq1_LN+LR`) → `... br_missing submit` → **1987893 **. At the cap the run is finished whatever the verdict: 3/3 → `confirm`; otherwise the cell's next step comes from rule 5 (wave 2) or 6b. Cells DONE: 4 of 12.
