@@ -234,3 +234,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 4 (confirmation, s22 IMPROVING, 6144 < cap 12,288): extend 2× to the cap.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE_confirm 12288` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`) → `... submit` → **1986904**.
 - All three Boat Race confirmations (`L`, `LN`, `LE`) are now 2/3 with s22 at 0.032–0.045, and all three run to the 12,288 cap (1985883, 1986896, 1986904). If none reaches 3/3 there, every Boat Race tuning run (each 3/3 itself) will have a failed confirmation. The noreg_fail doc starts rule 6b when "none is CONVERGED 3/3"; the optimal campaign's default for this case (its log, iterations 26/33: a tuning run whose confirmation failed at the cap counts as not CONVERGED) would then start exploration from the run with the smallest mean gap. I will apply that default and say so if it comes to it.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 27 (04:21–04:25): Boat Race `L_confirm` reached the cap (12,288); check 1987159
+
+- Woken by the training wait: **1985883** (Boat Race `N1_P1eq1_L_confirm` extension to 12,288) COMPLETED 04:21 (6:27:35, exit 0). `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_L_confirm`) → `... br_missing submit` → **1987159** (s20–s22 at 12,288). At the cap this confirmation is finished whatever the verdict: 3/3 makes the Boat Race cell DONE; otherwise it has failed.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
