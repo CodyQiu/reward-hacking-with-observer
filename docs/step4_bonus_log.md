@@ -429,3 +429,11 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1985718** (AS `B1_P1eq1_LN+RS+GL`, 3072) COMPLETED 02:00 (4:42:41, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+GL`) → `... br_missing submit` → **1986946 **.
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 52 (02:06–02:09): AS no-reg wave 2 `+GL` 2/3 (s2 IMPROVING) → extend to 6144 (1987047)
+
+- Woken by the check wait: **1986946** (`br_absent_supervisor_B1_P1eq1_LN+RS+GL`, s0–s2 at 3072) COMPLETED 02:06 (2:44).
+- `B1_P1eq1_LN+RS+GL` (wave 2, `ppo.gae_lambda=1.0`): s0 **0.000** CONVERGED; s1 **0.002** (s.e. 0.032) CONVERGED (corrected once; its best response takes 2); s2 **0.038** (s.e. 0.023) **IMPROVING** (corrected once; best response 2 corrections).
+- **Rule 4 (tuning run, s2 IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+GL 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+GL --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1987047**.
+- AS no-reg wave 2 so far: `+AN` 3/3 (in confirmation); `+LR`, `+EP`, `+GL` 2/3 (s2), extending; `+NET` still training. Exploration: `+ENT3` 3/3 (in confirmation), `+ES10` 2/3 (extending), `+N4` and `+ES10+N4` training.
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
