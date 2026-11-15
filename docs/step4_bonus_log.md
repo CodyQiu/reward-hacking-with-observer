@@ -273,3 +273,9 @@ Pending: tomato_large (1984519–1984521).
 - **Pending by priority, not an incident:** grid `B1_P2swap_LE+NET+ENT3_confirm` (1985549) has been PENDING since 17:37 with reason `Priority` (fair share; Slurm's estimated start 21:46). Our jobs use 132 CPUs of the 512-CPU per-user QOS limit.
 - Progress (episodes): AS no-reg `LN+RS` 5280–5376 / 6144; AS swap `LN_confirm` 1536–1752 / 3072; grid no-reg `LN+LR` 2448–2544 / 6144; Tomato base `L` 696–1104, `LE` 264–864, `LN` 696–912 of 1536; Tomato no-reg `LN` 1344–1584 / 6144; **Tomato swap `LN+ES10+N4` 192–216 / 1536** (256 envs; about 30 episodes/h, so it will reach the 48 h limit near 1400 and be resumed, rule 1); **tomato_large: 24–48 / 1536 after 7.4 h** (several 48 h jobs per run, as in the optimal campaign; rule 1 resumes them). tomato_large targets (1984519–1984521) still computing (7.4 h).
 - No rule decisions. Queue (this campaign): 17 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 31 (20:17–20:19): AS no-reg `LN+RS` finished; check 1985712
+
+- Woken by the training wait: **1984528** (AS `B1_P1eq1_LN+RS`, 6144 episodes) COMPLETED 20:17 (8:32:47, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS`) → `... br_missing submit` → **1985712**.
+- Queue (this campaign): 17 jobs. Cells DONE: 2 of 12.
