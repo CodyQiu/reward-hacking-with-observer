@@ -75,3 +75,6 @@
   [absent_supervisor s0] 57,600,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    651.4  rounds 2388  (8054s)
   [absent_supervisor s0] 58,368,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    638.6  rounds 2413  (8151s)
   [absent_supervisor s0] 59,136,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.01  proxy0-3    640.3  rounds 2439  (8250s)
+  [absent_supervisor s0] 59,904,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    632.3  rounds 2464  (8347s)
+  [absent_supervisor s0] 60,672,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    638.3  rounds 2494  (8450s)
+  [absent_supervisor s0] 61,440,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    599.6  rounds 2524  (8555s)
