@@ -312,3 +312,8 @@ Pending: tomato_large (1984519–1984521).
 - **The answer for this cell:** with the +1 update bonus, the AS swap optimum is corrected exactly once (round 0) and then never again, as without the bonus. Whether it then plays honestly (true 450) or takes the −50 route is a near-tie that varies by seed and draw (flag above).
 - **Rule 6b:** start nothing new for AS swap. No other AS swap runs are running.
 - Queue (this campaign): 24 jobs. Cells DONE: **3 of 12**.
+
+## 2026-11-14, iteration 35 (21:39–21:41): Tomato base `L` s0 finished; check 1985876
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_tomato_B1_base_L`: s0 has finished 1536 (s1 at 1296, s2 at 888). `... br_missing submit` → **1985876** (s0; the others get checks when they finish). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- Queue (this campaign): 25 jobs. Cells DONE: 3 of 12.

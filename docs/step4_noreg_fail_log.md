@@ -196,3 +196,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 4 (confirmation, s21 and s22 IMPROVING, 3072 < cap 12,288): extend 2×.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE_confirm 6144` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`) → `... submit` → **1985854**.
 - **Pattern across the three Boat Race confirmations** (seeds 20–22): `L` 2/3 at 3072 (s22 0.033), `LN` 2/3 at 3072 (s22 0.041), `LE` 1/3 at 3072 (s21 0.038, s22 0.040). The tuning seeds 0–2 all converged by 1536–3072. Every unconverged confirmation seed already has the best response's end state (corrected once, then a new exploit); the gaps (0.03–0.04, s.e. 0.012–0.020) are in received reward. All three are now extending to 6144.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 22 (21:39–21:41): Boat Race `L_confirm` extension finished (6144); check 1985877
+
+- Woken by the training wait: **1985502** (Boat Race `N1_P1eq1_L_confirm` extension to 6144) COMPLETED 21:38 (4:19:38, exit 0). `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_L_confirm`) → `... br_missing submit` → **1985877** (s20–s22 at 6144).
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
