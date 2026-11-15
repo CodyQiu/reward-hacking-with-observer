@@ -451,3 +451,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 6b (exploration run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+N4` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=6400 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=256 reward_scale=0.01625 protocol.update_bonus=1.0 episodes=3072`, identical to its `overrides.json`) → `... submit` → **1987110**.
 - AS no-reg confirmations now running: `+ENT3_confirm` (1986437), `+AN_confirm` (1986852), `+N4_confirm` (1987110). The cell is DONE when any is 3/3.
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 55 (03:42–03:44): AS no-reg `+LR` finished 6144; `+ES10+N4` s0/s1 finished; checks 1987121, 1987122
+
+- Woken by the training wait: **1986888** (AS `B1_P1eq1_LN+RS+LR` extension to 6144) COMPLETED 03:41 (2:44:39, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4`, `br_absent_supervisor_B1_P1eq1_LN+RS+LR`) → `... br_missing submit` → **1987121** (`+ES10+N4`: s0, s1 finished 3072; s2 at 2784), **1987122** (`+LR` at 6144).
+- Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
