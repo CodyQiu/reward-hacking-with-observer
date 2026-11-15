@@ -856,3 +856,17 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
   `... br_missing submit` → **1987686** (AS `+N4_confirm`), **1987687** (Tomato no-reg `LN`).
 - **Still running.** The tomato_large no-reg target (1984520) has run 26 h. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 94 (13:48–13:52): partial checks; AS `+N4_confirm` s20 0.032, s21 0.022; Tomato no-reg `LN` s0 0.020 CONVERGED; nothing to decide
+
+- **Check jobs.** Woken by the check wait. **1987686** (`br_absent_supervisor_B1_P1eq1_LN+RS+N4_confirm`, 2:02) and **1987687** (`br_tomato_B1_P1eq1_LN`, 7:04) are COMPLETED. Verdicts from `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **AS `B1_P1eq1_LN+RS+N4_confirm` (6144).**
+    - s20: **0.032** (s.e. 0.024), PLATEAU; it was 0.065 at 3072.
+    - s21: **0.022** (s.e. 0.043), CONVERGED.
+    - Both policies are corrected once, then honest (true 450). Both best responses take 2 corrections.
+    - s22 is still training (5904/6144). Its training curve already shows 2 corrections (true 399.6 in round 1), as its best response did at 3072.
+  - **Tomato `B1_P1eq1_LN` (6144).**
+    - s0: **0.020** (s.e. 0.010), CONVERGED. PPO is corrected once, then honest (true 432–433).
+    - The best response takes 3.72 corrections (rounds 0–2, then 0.73 in round 3; true 426–434). That is the same end state as the target's (3.75 corrections for s1). The value gap is small because each further correction adds only about one bonus unit plus a few tomatoes.
+    - s1 (5616) and s2 (5472) are still training.
+- **Decision.** Rule 4 is applied to each run once its remaining seeds finish and are checked. Cells DONE: 4 of 12.
