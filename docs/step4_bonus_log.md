@@ -423,3 +423,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 4 (tuning run, s2 IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+EP 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+EP --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1986917**.
 - AS no-reg so far: s2 is the only seed that misses in `LN+RS` (0.056), `+ES10` (0.061), `+LR` (0.065) and `+EP` (0.048), always by taking 1 correction where its best response takes 2. `+ENT3` and `+AN` are 3/3 and in confirmation (1986437, 1986852).
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 51 (02:00–02:02): AS no-reg wave 2 `+GL` finished; check 1986946 
+
+- Woken by the training wait: **1985718** (AS `B1_P1eq1_LN+RS+GL`, 3072) COMPLETED 02:00 (4:42:41, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+GL`) → `... br_missing submit` → **1986946 **.
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
