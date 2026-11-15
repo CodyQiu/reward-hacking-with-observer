@@ -2,3 +2,4 @@
   [tomato s0]  6,144,000  win0-3 0.99  off 0.65  corr/ep 3.96  winF 1.00  proxy0-3    443.3  rounds 443  (8777s)
   [tomato s0]  9,216,000  win0-3 0.99  off 0.68  corr/ep 3.95  winF 1.00  proxy0-3    455.5  rounds 643  (12586s)
   [tomato s0] 12,288,000  win0-3 0.98  off 0.69  corr/ep 3.92  winF 1.00  proxy0-3    462.4  rounds 840  (16997s)
+  [tomato s0] 15,360,000  win0-3 0.56  off 0.43  corr/ep 2.22  winF 0.69  proxy0-3    360.4  rounds 1068  (22830s)

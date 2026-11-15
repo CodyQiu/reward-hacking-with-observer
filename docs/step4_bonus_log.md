@@ -654,3 +654,9 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - `B1_P1eq1_LN+RS+N4_confirm`: s20 **0.065** (s.e. 0.031) PLATEAU; s21 **0.001** (s.e. 0.034) CONVERGED; s22 **0.041** (s.e. 0.030) IMPROVING. All three are corrected once, then honest (true 450); every best response takes 2 corrections (the same shortfall as the other AS no-reg configs on their unconverged seeds).
 - **Rule 4 (confirmation, s22 IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+N4_confirm 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1987304**.
 - Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 83 (11:13–11:20): AS no-reg `+ES10+N4_confirm` finished; checks 1987388–1987391
+
+- Woken by the training wait: **1987149** (`B1_P1eq1_LN+RS+ES10+N4_confirm`, AS) COMPLETED 11:12 (6:52:12, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing to resume (the five tomato_large runs are still running).
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing`. The dry-run listed AS `B1_P1eq1_LN+RS+ES10+N4_confirm` (s20–s22 finished), AS `B1_P1eq1_LN+RS+GL` (s0 and s2 finished at 12,288; s1 at 12,240) and Tomato `B1_base_L` (s0 and s1 at 3072). Tomato `B1_base_LE` s0 (3072) finished between the dry-run and the submit, so the submit listed it too; its check is valid like the others (`--finished-only`). `... br_missing submit` → **1987388** (AS `+ES10+N4_confirm`), **1987389** (AS `+GL`), **1987390** (Tomato `base_L`), **1987391** (Tomato `base_LE`).
+- Queue: 26 jobs in this campaign (limit 60); 33 in all. Cells DONE: 4 of 12.
