@@ -60,9 +60,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **s2's fixed point cycles** (with the bonus: 3.00 → 2.71 → corrected once → 3.00 → 2.71; without: 3.00 → 2.48 → 2.99 → 2.51 → 2.91). Rule 2: the last iteration is the target. The difference from the no-bonus target is where each cycle stopped, not a measured bonus effect.
 - Every end state is honest after its last correction (true 425–434, honest about 433); V_hide 2,759.5, margin +1,945 to +2,524.
 
-**Summary so far (10 of 12 cells):** in 34 of the 36 swap / no-reg seeds computed (6 cells × 6 seeds) the bonus leaves the end state unchanged and raises V0 by exactly 1.0 × corrections. The exceptions are both Tomato no-reg: s1 (one extra correction in round 3, 76% of the time; converged) and s2 (a fixed point that cycles with and without the bonus, flagged). Base hides on the grid, AS and Tomato (margin 0).
+**Summary so far (11 of 12 cells):** in 40 of the 42 swap / no-reg seeds computed (7 cells × 6 seeds) the bonus leaves the end state unchanged and raises V0 by exactly 1.0 × corrections. The exceptions are both Tomato no-reg: s1 (one extra correction in round 3, 76% of the time; converged) and s2 (a fixed point that cycles with and without the bonus, flagged). Base hides on the grid, AS and Tomato (margin 0).
 
-Pending: tomato_large (1984519–1984521).
+**tomato_large, swap (+bonus)** (job 1984519; all fixed points converged; every draw corrected once): **= no-bonus target + exactly 1.0 in all 6 seeds.** Corrected once, then honest: true 65, then 482.9–501.4 ×4. V0 4,877 / 5,002 / 5,119 / 5,692 / 5,330 / 4,826 (s0, s1, s2, s20, s21, s22), V_hide 3,686.8, margin +1,139 to +2,005.
+
+Pending: tomato_large no-reg and base (1984520, 1984521; running for over 18 h).
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -581,4 +583,11 @@ Pending: tomato_large (1984519–1984521).
 - Tomato swap `B1_P2swap_LN+ES10+N4` at 1536: s0 **0.002**, s1 **0.001**, s2 **0.002** (s.e. ≤ 0.000), all **CONVERGED**; each corrected once, in round 0, then honest (true about 422), like its best response and the target. Paired no-bonus reference `O1_P2swap_LN+ES10+N4` (same seeds): 0.001 / 0.001 / 0.002, same end state.
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato B1_P2swap_LN+ES10+N4` (dry-run: `submit.sh 48 --env tomato --run-id B1_P2swap_LN+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/tomato/bonus --set ppo.ent_coef=0.03 ppo.batch_size=6400 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 episodes=1536 protocol.update_bonus=1.0`, identical to its `overrides.json`) → `... submit` → **1987223**. The Tomato swap cell is DONE if this is 3/3 (the run took about 18 h).
 - AS `B1_P1eq1_LN+RS+GL` at 6144 (history 3072 / 6144): s0 **0.000**, s1 **0.000** CONVERGED; s2 **0.038** (s.e. 0.030; 0.038 / 0.038) labelled IMPROVING. **Rule 4: extend 2×.** `... extend absent_supervisor B1_P1eq1_LN+RS+GL 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+GL --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987224**.
+- Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 73 (06:15–06:19): tomato_large swap target
+
+- Woken by the target wait: **1984519** (`targets_tomato_large_P2swap_bonus1`) COMPLETED 06:15 (18:26:45, exit 0), 6 seeds, all fixed points converged.
+- **Rule 2, under "Exact predictions":** = no-bonus target + exactly 1.0 in all 6 seeds (corrected once, then honest). The bonus has changed no end state in 40 of the 42 swap / no-reg seeds computed (the exceptions are both Tomato no-reg).
+- tomato_large no-reg and base targets (1984520, 1984521) still running (18.5 h).
 - Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
