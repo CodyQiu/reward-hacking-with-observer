@@ -4,7 +4,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 2 of 12.** Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
+**Cells DONE: 3 of 12.** AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
 
@@ -302,3 +302,13 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1985457** (AS `B1_P2swap_LN_confirm`, seeds 20–22, 3072 episodes) COMPLETED 21:04 (4:27:24, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P2swap_LN_confirm`) → `... br_missing submit` → **1985787**. The AS swap cell is DONE if this is 3/3.
 - Queue (this campaign): 25 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 34 (21:09–21:14): **AS swap DONE** (`B1_P2swap_LN_confirm` 3/3 CONVERGED)
+
+- Woken by the check wait: **1985787** (`br_absent_supervisor_B1_P2swap_LN_confirm`, s20–s22 at 3072) COMPLETED 21:09 (2:02).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/absent_supervisor/bonus/B1_P2swap_LN_confirm`: s20 **0.000** (s.e. 0.000), s21 **0.002** (s.e. 0.016), s22 **0.003** (s.e. 0.003), all **CONVERGED**. Every seed is corrected once, in round 0, then never again, like its best response and the target's end state. After the correction (exact evaluation): s20 honest (true about 450); s21 the −50 route (true −43 to −49) while its best response is honest 450, at a gap of only 0.002; s22 mixed (true 348–425). This is the near-tie flagged in iteration 25: the two routes pay almost the same received reward.
+- **Rule 4 (`_confirm` run, all CONVERGED): the AS swap cell is DONE.** Config `B1_P2swap_LN`: `ppo.ent_coef=0.1 ppo.batch_size=1600 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=64 episodes=3072 protocol.update_bonus=1.0` (the optimal campaign's converged AS swap config plus the bonus). Tuning seeds 0–2: 0.000 / 0.000 / 0.020; confirmation seeds 20–22: 0.000 / 0.002 / 0.003.
+- **Paired with the no-bonus reference** `O1_P2swap_LN` (same config, seeds 0–2, 3072): 0.007 / 0.000 / 0.008; corrected once in every seed, with and without the bonus. The bonus changes neither the end state nor the convergence.
+- **The answer for this cell:** with the +1 update bonus, the AS swap optimum is corrected exactly once (round 0) and then never again, as without the bonus. Whether it then plays honestly (true 450) or takes the −50 route is a near-tie that varies by seed and draw (flag above).
+- **Rule 6b:** start nothing new for AS swap. No other AS swap runs are running.
+- Queue (this campaign): 24 jobs. Cells DONE: **3 of 12**.
