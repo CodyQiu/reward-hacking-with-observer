@@ -696,3 +696,9 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - `LN` is finished (0/3, PLATEAU);
   - stage 1 from `LN` (`ENT3`, `ES10`, `N4`, `ES10+N4`; 1987173–1987176) is running.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 86 (11:34–11:38): Tomato base `LE` finished at 3072; AS no-reg `+EP_confirm` seeds at 6144; checks 1987419 1987420
+
+- Woken by the training wait: **1987172** (Tomato `B1_base_LE`, extension to 3072) COMPLETED 11:34 (6:48:24, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing, in either campaign.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing`. The dry-run listed AS `B1_P1eq1_LN+RS+EP_confirm` (s20–s22 finished at 6144) and Tomato `B1_base_LE` (s1, s2 at 3072). Submitted with `... br_missing submit` → **1987419** (AS `+EP_confirm`), **1987420** (Tomato `base_LE`). `noreg_fail br_missing` (dry-run): nothing.
+- Cells DONE: 4 of 12.
