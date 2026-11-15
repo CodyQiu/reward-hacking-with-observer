@@ -409,3 +409,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 4 (tuning run, s1 IMPROVING, 1536 < cap 12,288): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_L 3072` (dry-run: `submit.sh 48 --env tomato --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`) → `... submit` → **1986905**.
 - Tomato base status: `L` extending; `LN` finished (0/3 PLATEAU); `LE` s1/s2 IMPROVING, s0 still training. Wave 2 / exploration wait until no wave-1 run is still IMPROVING (rule 5) or every wave-1 run has a check (rule 6b, after `LE` s0).
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 49 (01:16–01:18): AS no-reg wave 2 `+EP` finished; check 1986913 
+
+- Woken by the training wait: **1985720** (AS `B1_P1eq1_LN+RS+EP`, 3072) COMPLETED 01:15 (3:41:01, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+EP`) → `... br_missing submit` → **1986913 **.
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
