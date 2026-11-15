@@ -321,5 +321,5 @@ Pending: tomato_large (1984519–1984521).
 ## 2026-11-14, iteration 36 (21:56–21:59): Tomato base `L` s0 0.162 (reactive: corrected once, then honest; the optimum hides)
 
 - **1985876** (`br_tomato_B1_base_L`, s0 at 1536) COMPLETED 21:55 (7:57): s0 **0.162** (s.e. 0.000), not converged. PPO is **corrected in round 0, then honest** (true 46, then about 430 ×4); its best response, like the target, **hides** (true 59.8 ×4, 46; never corrected). This is the "reactive avoidance" outcome seen in Step 3 Tomato (exploit until corrected, then honest), not the anticipatory hiding the optimum uses.
-- Rule 4 waits until all three seeds have a check (s1 at 1296, s2 at 888 of 1536).
+- Verdict (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_L`): s0 **PLATEAU**. Note the direction: PPO's true return after its correction (about 430, honest) is far above the optimum's (59.8: it keeps exploiting off-window and hides from every audit), so PPO is short of its optimum by being *more* honest. Rule 4 waits until all three seeds have a check (s1 at 1368, s2 at 912 of 1536).
 - Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
