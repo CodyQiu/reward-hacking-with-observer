@@ -767,3 +767,19 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - The noreg_fail job 1987354 ended; this campaign was unchanged.
   - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `B1_P1eq1_LN+RS+NET_confirm`, s20 and s21 finished at 3072, s22 at 3048) → `... br_missing submit` → **1987473**.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 89 (12:19–12:24): AS no-reg `+NET_confirm` 0/3 at 3072 → extend 6144 (1987486)
+
+- **Check results.** Woken by the check wait. **1987473** (`br_absent_supervisor_B1_P1eq1_LN+RS+NET_confirm`) COMPLETED 12:13 (1:36). The training job **1987197** had finished at 12:12 (6:39:33, COMPLETED), so the check covers all three seeds at 3072. `.venv/bin/python experiments/step4_convergence.py results/step4/absent_supervisor/bonus/B1_P1eq1_LN+RS+NET_confirm`:
+
+  | Seed | Gap | s.e. | Label |
+  |---|---|---|---|
+  | s20 | **0.062** | 0.031 | IMPROVING |
+  | s21 | **0.031** | 0.048 | IMPROVING |
+  | s22 | **0.066** | 0.034 | IMPROVING |
+
+  - **PPO.** In every seed it is corrected once, then nearly honest: true 446–449 against 450.
+  - **Best responses.** Every one takes 2 corrections (round 1 at true 400).
+  - **Above target.** s20 and s21.
+- **Rule 4 (every seed IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+NET_confirm 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1987486**.
+- **Queue.** 23 jobs in this campaign (limit 60), 30 in all. Cells DONE: 4 of 12.

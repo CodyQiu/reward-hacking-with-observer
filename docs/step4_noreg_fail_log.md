@@ -293,3 +293,17 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Wake-up.** The training wait fired for **1987354** (Boat Race `N1_P1eq1_LE+N4`, stage 1 of 6b), which COMPLETED at 12:09 (1:36:11, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+N4`) → `... br_missing submit` → **1987476**.
 - **Progress (episodes).** Boat Race: `LE+ENT3` 264–336 / 1536, `LE+ES10` 72, `LE+ES10+N4` 96. Taxi: `L` 144–192 / 768, `LE` 72–96, `LN` 120 (each about 24 h in; they reach the 48 h limit around noon on 2026-11-16). Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 33 (12:19–12:24): Boat Race `LE+N4` 2/3 at 1536 → extend 3072 (1987487)
+
+- Woken by the check wait: **1987476** (`br_boat_race_N1_P1eq1_LE+N4`) COMPLETED 12:19 (3:57). `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE+N4`:
+
+  | Seed | BR gap (s.e.) | Verdict |
+  |---|---|---|
+  | s0 | **0.019** (0.018) | CONVERGED |
+  | s1 | **0.033** (0.021) | IMPROVING |
+  | s2 | **0.015** (0.020) | CONVERGED |
+
+  PPO and every best response are corrected once in round 0, then play the new exploit (true −100 per round, window clean). s0 and s1 are "above target", s1 with 1 correction against the target's 3.
+- **Rule 6b extension rule.** s1 is unconverged and the run is at 1536, below the 12,288 cap, so it is extended 2×. `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+N4 3072` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+N4 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`) → `... submit` → **1987487**.
+- Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
