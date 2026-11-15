@@ -480,3 +480,9 @@ Pending: tomato_large (1984519–1984521).
 - `B1_P1eq1_LN+RS+ENT3_confirm` at 3072: s20 **0.049** (s.e. 0.021) and s22 **0.052** (s.e. 0.029), both labelled IMPROVING: corrected once, then honest, while their best responses take 2 corrections (the same shortfall as tuning seed 2 in `LN+RS`, `+LR`, `+EP`, `+GL`, `+ES10`). s21 still training (2976 / 3072); rule 4 waits for its check.
 - AS no-reg confirmations running: `+ENT3_confirm` (s21), `+AN_confirm` (1986852), `+N4_confirm` (1987110), `+ES10+N4_confirm` (1987149).
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 59 (04:13–04:15): AS no-reg `+ENT3_confirm` finished; `+ES10` finished 6144; checks 1987154, 1987155
+
+- Woken by the training wait: **1986437** (AS `B1_P1eq1_LN+RS+ENT3_confirm`, 3072) and **1986438** (AS `+ES10` extension to 6144) COMPLETED 04:12 (3:49:02, 3:45:53; exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: both runs) → `... br_missing submit` → **1987154** (`+ENT3_confirm` s21), **1987155** (`+ES10` at 6144).
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
