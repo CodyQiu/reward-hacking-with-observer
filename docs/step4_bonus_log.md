@@ -4,7 +4,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 3 of 12.** AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
+**Cells DONE: 4 of 12.** Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
 
@@ -563,3 +563,14 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 3:** `... br_missing submit` → **1987208** (grid swap confirm s20), **1987209** (Tomato swap s1, s2).
 - AS no-reg confirmations now: `+ENT3_confirm` → 6144 (1987156), `+N4_confirm` (1987110), `+ES10+N4_confirm` (1987149), `+NET_confirm` (1987197), `+EP_confirm` (1987207); `+AN_confirm` failed.
 - Queue (this campaign): 26 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 71 (06:03–06:08): **grid swap DONE** (`B1_P2swap_LE+NET+ENT3_confirm` 3/3 at 3072); AS no-reg `+GL` finished 6144 (check 1987217)
+
+- **1987208** (`br_grid_B1_P2swap_LE+NET+ENT3_confirm`, s20 at 3072) COMPLETED (1:30): s20 **0.007** (s.e. 0.004) CONVERGED; it now reaches the goal after its correction (true about 22), where at 1536 it never did (0.180).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_P2swap_LE+NET+ENT3_confirm` at 3072: s20 **0.007**, s21 **0.004**, s22 **0.009**, all **CONVERGED**; each corrected once, in round 0, then honest.
+- **Rule 4 (`_confirm` run, all CONVERGED after one extension; extended confirmations count, the user, 2026-11-10): the grid swap cell is DONE.** Config `B1_P2swap_LE+NET+ENT3`: `g.l_minus_on=dispreferred anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.09 ppo.net_arch=[256,256] episodes=1536 protocol.update_bonus=1.0`. Tuning seeds 0–2 at 1536: 0.015 / 0.009 / 0.008; confirmation seeds 20–22 at 3072: 0.007 / 0.004 / 0.009.
+- **Paired with the no-bonus reference** `O1_P2swap_LE+NET+ENT3` (same config and seeds): tuning 0.011 / 0.020 / 0.012 at 1536; confirmation 0.013 / 0.009 / 0.012 at 1536 (no extension needed). Same end state with and without the bonus (corrected once, then honest); the bonus run's confirmation needed one extension because s20 first failed to reach the goal.
+- **The answer for this cell:** with the +1 update bonus, the grid swap optimum is corrected exactly once and then behaves honestly, as without it; PPO converges to that in 6 of 6 seeds.
+- **Rule 6b: start nothing new for grid swap.** No other grid swap runs are running.
+- AS no-reg `+GL`: **1987047** (extension to 6144) COMPLETED 06:03 (3:32:26, exit 0). **Rule 3:** `... br_missing submit` → **1987217**.
+- Queue (this campaign): 25 jobs. Cells DONE: **4 of 12**.
