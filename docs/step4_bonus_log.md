@@ -242,3 +242,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P2swap_LN` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P2swap_LN_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=64 episodes=3072 protocol.update_bonus=1.0`, identical to its `overrides.json`) → `... submit` → **1985457**.
 - AS base `B1_base_LE` (information only; the cell is DONE): s0 **0.029**, s1 **0.029**, s2 **0.028**, all CONVERGED, all hiding on the lower-true route (true about −104 to −117 per round).
 - Queue (this campaign): 18 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 26 (17:26–17:28): grid swap `LE+NET+ENT3` finished; check 1985541
+
+- Woken by the training wait: **1984522** (grid `B1_P2swap_LE+NET+ENT3`, 1536 episodes) COMPLETED 17:26 (5:41:16, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_grid_B1_P2swap_LE+NET+ENT3`) → `... br_missing submit` → **1985541**.
+- Queue (this campaign): 18 jobs. Cells DONE: 2 of 12.
