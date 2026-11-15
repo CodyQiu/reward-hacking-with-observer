@@ -365,3 +365,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 4: every unconverged seed is PLATEAU, so the config is finished.** No extension.
 - Wave 2 (rule 5) and exploration (rule 6b) for Tomato base wait until every wave-1 run has a check: `L` s2 is still training (about 1100 / 1536), and `LE`'s check (1986123, s1) is running while `LE` s0 (456) and s2 train.
 - Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 43 (00:17–00:20): grid swap `LE+NET+ENT3_confirm` finished (check 1986794); AS no-reg `+AN` s2 finished (check 1986795)
+
+- Woken by the training wait: **1985549** (grid `B1_P2swap_LE+NET+ENT3_confirm`, seeds 20–22, 1536) COMPLETED 00:16 (5:05:37, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_grid_B1_P2swap_LE+NET+ENT3_confirm`, `br_absent_supervisor_B1_P1eq1_LN+RS+AN`) → `... br_missing submit` → **1986794** (grid swap confirmation; the cell is DONE if 3/3), **1986795** (AS no-reg wave 2 `+AN`: s2 finished 3072, s0 2952 and s1 3000 are close and may be included).
+- Queue (this campaign): 25 jobs. Cells DONE: 3 of 12.
