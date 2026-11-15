@@ -307,3 +307,8 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   PPO and every best response are corrected once in round 0, then play the new exploit (true −100 per round, window clean). s0 and s1 are "above target", s1 with 1 correction against the target's 3.
 - **Rule 6b extension rule.** s1 is unconverged and the run is at 1536, below the 12,288 cap, so it is extended 2×. `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+N4 3072` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+N4 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`) → `... submit` → **1987487**.
 - Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 34 (13:55–13:58): Boat Race `LE+N4` reached 3072; check 1987706 
+
+- Woken by the training wait: **1987487** (Boat Race `N1_P1eq1_LE+N4`, extension to 3072) COMPLETED 13:55 (1:34:29, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+N4`) → `... br_missing submit` → **1987706 **. Cells DONE: 0 of 2.
