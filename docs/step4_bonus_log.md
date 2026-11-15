@@ -825,3 +825,24 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - `... br_missing submit` also listed `+ENT3_confirm`, whose s21 finished between the two commands.
   - Submitted: **1987616** (AS `+ENT3_confirm`), **1987617** (AS `+ES10`).
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 92 (13:03–13:08): AS no-reg `+ENT3_confirm` 2/3 at 12,288 → extend to the cap 24,576 (1987629 ); `+ES10` 2/3 at 12,288 → extend to the cap (1987630 )
+
+- Woken by the check wait: **1987616** (`br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`, s21, 1:03) and **1987617** (`br_absent_supervisor_B1_P1eq1_LN+RS+ES10`, 1:20), both COMPLETED 13:01. BR gap by checkpoint (`step4_br/`) and `.venv/bin/python experiments/step4_convergence.py <run>` at 12,288:
+  - **`B1_P1eq1_LN+RS+ENT3_confirm`:**
+    - s20 0.049 / 0.034 / **0.0301** (s.e. 0.025) at 3072 / 6144 / 12,288, IMPROVING.
+    - s21 0.000 / 0.002 / **0.000**, CONVERGED.
+    - s22 0.052 / 0.039 / **0.023** (s.e. 0.030), CONVERGED.
+    - All three policies are corrected once, then honest (true 449.7–449.9). The best responses of s20 and s22 take 2 corrections.
+  - **`B1_P1eq1_LN+RS+ES10`** (rule 6b exploration run):
+    - s0 **0.000** and s1 **0.000**, CONVERGED.
+    - s2 0.061 / 0.074 / **0.075** (s.e. 0.021), IMPROVING by label; its BR gap is flat.
+    - s2 is corrected once, then honest (true 449.8–449.9). Its best response takes 2 corrections (round 1 at true 400).
+- **Rule 4, `+ENT3_confirm`** (confirmation; s20 IMPROVING, 12,288 < AS cap 24,576): extend 2× to the cap. Confirmations count once extended.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ENT3_confirm 24576` printed `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 24576`.
+  - `... submit` → **1987629 **.
+- **Rule 6b extension rule, `+ES10`** (s2 unconverged, below the cap): extend 2× to the cap, whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ES10 24576` printed `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10 --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 24576`.
+  - `... submit` → **1987630 **.
+  - At the cap, both runs are finished whatever the verdict.
+- Queue: 23 jobs in this campaign (limit 60), 30 in all. Cells DONE: 4 of 12.
