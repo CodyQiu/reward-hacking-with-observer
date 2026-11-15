@@ -391,5 +391,13 @@ Pending: tomato_large (1984519–1984521).
 ## 2026-11-15, iteration 46 (00:48–00:50): AS no-reg wave 2 `+LR` finished; check 1986872
 
 - Woken by the training wait: **1985717** (AS `B1_P1eq1_LN+RS+LR`, 3072) COMPLETED 00:47 (4:24:35, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
-- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+LR`) → `... br_missing submit` → **1986872**.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+LR`) → `... br_missing submit` → **1986871** (`+LR`) and **1986872** (Tomato `B1_base_L` s2, which had just finished). (Corrected in iteration 47: I first logged 1986872 as the `+LR` check, reading only the last id printed.)
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 47 (00:54–01:00): AS no-reg wave 2 `+LR` 2/3 (s2 IMPROVING) → extend to 6144 (1986888); Tomato base `L` finished (s2 check 1986872 running)
+
+- Woken by the check wait: **1986871** (`br_absent_supervisor_B1_P1eq1_LN+RS+LR`, s0–s2 at 3072) COMPLETED 00:54 (2:37). Also ended: **1984534** (Tomato `B1_base_L`, 1536, 13:05:20, exit 0); its s2 check is **1986872** (running).
+- Correction: iteration 46 logged 1986872 as the `+LR` check; it was 1986871 (1986872 is the Tomato base `L` s2 check, submitted in the same call). Fixed in place there.
+- `B1_P1eq1_LN+RS+LR` (wave 2, `ppo.learning_rate=0.0001`) at 3072: s0 **0.000**, s1 **0.000** CONVERGED (corrected once, then honest); s2 **0.065** (s.e. 0.018) **IMPROVING**: corrected once, then honest, while its best response takes 2 corrections (the same s2 shortfall as `LN+RS` and `+ES10`).
+- **Rule 4 (tuning run, s2 IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+LR 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1986888**.
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
