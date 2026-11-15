@@ -899,3 +899,14 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
 - Woken by the training wait: **1987173** (Tomato `B1_base_LN+ENT3`, rule 6b stage 1) COMPLETED 14:10 (9:25:05, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: Tomato `B1_base_LN+ENT3`) → `... br_missing submit` → **1987750 **. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 98 (14:32–14:36): Tomato base `LN+ENT3` 0/3 at 1536 (still reactive) → extend 3072 (1987845 )
+
+- Woken by the check wait: **1987750** (`br_tomato_B1_base_LN+ENT3`, 18:34) COMPLETED 14:31. `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_LN+ENT3` (1536):
+  - s0 **0.163**, s1 **0.162**, s2 **0.162** (s.e. 0.000 each). All three are labelled IMPROVING.
+  - Every seed is reactive: corrected in round 0 (true 46), then honest (true 428–431).
+  - Every best response hides: true 59.8 ×4, then 46.0, the same as the target. Entropy 3× has not changed the behaviour of `LN` (0.16).
+- **Rule 6b extension rule.** This is an exploration run and a seed is unconverged, so it is extended 2× (to 3072, under the 12,288 cap), whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ENT3 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1987845 **.
+- Queue: 22 jobs in this campaign (limit 60), 29 in all. Cells DONE: 4 of 12.
