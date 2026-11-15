@@ -533,3 +533,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 4 (tuning run, s2 IMPROVING, 6144 < grid cap 12,288): extend 2× to the cap.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR 12288` (dry-run: `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`) → `... submit` → **1987190**.
 - AS `B1_P1eq1_LN+RS+AN_confirm` at 3072: s20 **0.038** (s.e. 0.028) not converged (corrected once; best response 2 corrections); s21 **0.015** (s.e. 0.029) CONVERGED (corrected once; best response 3). s22 still training (2520 / 3072); rule 4 waits for it.
 - Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 67 (05:25–05:27): AS no-reg wave 2 `+NET` finished; check 1987194 
+
+- Woken by the training wait: **1985719** (AS `B1_P1eq1_LN+RS+NET`, 3072) COMPLETED 05:24 (7:57:19, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+NET`) → `... br_missing submit` → **1987194 **. This is the last AS no-reg wave-2 run to get a check.
+- Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
