@@ -8,6 +8,7 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 - **Taxi runs will hit the 48 h limit** (the doc: an exploiting seed took 47 h for 768 episodes in Step 3). Rule 1 resumes them from their checkpoints; that is not an incident.
 
 - **Boat Race confirmations: one seed sits just above 0.03 with a flat best-response gap, but is labelled IMPROVING.** `N1_P1eq1_L_confirm` s22: gap 0.032 / 0.033 / 0.032 (s.e. 0.012) at 1536 / 3072 / 6144; its 12 per-draw gaps are nearly identical at all three checkpoints, so its exact policy has stopped changing (corrected once, then the new exploit at true −100, like its best response). The convergence script labels it IMPROVING because that label is defined on the training curve's target gaps, not on the best-response gap. Rule 4 therefore extends it to the 12,288 cap (iteration 23), where it is finished whatever the verdict. `LN_confirm` s22 (0.044 → 0.041) and `LE_confirm` s21/s22 (0.038 / 0.040) look similar. No action needed from you; reported because the cell's DONE now hinges on gaps of 0.03–0.04 that training does not seem to move.
+- **Boat Race: every confirmation failed at the cap, so I applied a default the rules don't spell out (iteration 31, 2026-11-15).** `L`, `LE` and `LN` were each CONVERGED 3/3 as tuning runs, but all three confirmations finished at 12,288 at 2/3. In each, s22 sat at 0.034 / 0.042 / 0.035 while its policy already matched its best response's end state (corrected in round 0, then the new exploit at true −100). The noreg_fail doc starts rule 6b when "none is CONVERGED 3/3". I applied the optimal campaign's default (its log, iterations 26/33): a tuning run whose confirmation failed at the cap counts as not CONVERGED. So I started rule 6b stage 1 from `N1_P1eq1_LE`, the run with the smallest mean BR gap (0.012, against `LN` 0.017 and `L` 0.020): runs 1987352–1987355. Tell me if you want otherwise.
 
 ## Exact predictions
 
@@ -262,3 +263,27 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1986896** (Boat Race `N1_P1eq1_LN_confirm` extension to 12,288) COMPLETED 10:22 (9:17:57, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`, `br_boat_race_N1_P1eq1_LN_confirm`) → `... br_missing submit` → **1987343 1987344 ** (in that order). Both runs are at the cap: 3/3 makes the Boat Race cell DONE, otherwise the confirmation has failed.
 - Queue (this campaign): 5 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 31 (10:32–10:40): Boat Race `LE_confirm` and `LN_confirm` 2/3 at the cap → every confirmation failed; rule 6b stage 1 from `LE` (1987352–1987355)
+
+- Woken by the check wait: **1987343** (`br_boat_race_N1_P1eq1_LE_confirm`, 6:06) and **1987344** (`br_boat_race_N1_P1eq1_LN_confirm`, 4:35) COMPLETED 10:29. `git pull --no-rebase --no-edit --ff`: already up to date. `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_{LE,LN}_confirm`, at 12,288:
+
+  | Run | Seed | BR gap (s.e.) | Verdict | PPO true by round | Best response |
+  |---|---|---|---|---|---|
+  | `LE_confirm` | 20 | +0.016 (0.023) | CONVERGED | −94, −100 ×4 | corrected once (round 0), −94, −100 ×4 |
+  | | 21 | +0.011 (0.014) | CONVERGED | −94, −100 ×4 | the same |
+  | | 22 | +0.042 (0.017) | not converged (IMPROVING label) | −94, −98.9, −98.9, −98.8, −98.8 | the same |
+  | `LN_confirm` | 20 | +0.015 (0.023) | CONVERGED | −94, −100 ×4 | the same |
+  | | 21 | +0.008 (0.015) | CONVERGED | −94, −100 ×4 | the same |
+  | | 22 | +0.035 (0.012) | PLATEAU | −94, −100 ×4 | the same |
+
+  Every seed's best response, and PPO itself, is corrected once in round 0 and then plays the new exploit (true −100, window clean). s21 and s22 are "above target" (the target takes 2 corrections; their corrections pay more than the target's). That is evidence, not a problem to fix.
+- **Rule 4: both are at the cap, so both are finished at 2/3: these confirmations failed.** With `L_confirm` (iteration 28), all three Boat Race confirmations have failed, each on s22 (0.034 / 0.042 / 0.035).
+- **Rule 6b: start exploration.** The default pre-noted in iteration 29 applies: a tuning run whose confirmation failed at the cap counts as not CONVERGED, as in the optimal campaign (iterations 26/33). It is flagged at the top. Mean BR gap of the tuning runs, last check on seeds 0–2: `LE` 0.012 (0.014 / 0.005 / 0.017, at 3072), `LN` 0.017 (0.014 / 0.019 / 0.018), `L` 0.020 (0.012 / 0.028 / 0.019). With the confirmation seeds included, `LE` is still the smallest (0.0175, against 0.018 and 0.0195). Base: **`N1_P1eq1_LE`**.
+  - `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore boat_race P1eq1 N1_P1eq1_LE` (dry-run). Each run is the base's `overrides.json` (`ppo.ent_coef=0.09 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1`) at the wave-1 length, `episodes=1536`, on seeds 0–2, plus:
+    - `+ENT3`: `ppo.ent_coef=0.27`;
+    - `+ES10`: `anneal.ent_start=10 anneal.ent_episodes=768`;
+    - `+N4`: `n_envs=64 ppo.batch_size=1600`;
+    - `+ES10+N4`: both.
+  - Then `... explore boat_race P1eq1 N1_P1eq1_LE submit` → **1987352** (`+ENT3`), **1987353** (`+ES10`), **1987354** (`+N4`), **1987355** (`+ES10+N4`). The rule 6b extension rule applies: while any seed is unconverged, extend 2× whatever the verdict, up to the 12,288 cap.
+- Budget: this campaign has 7 jobs (3 Taxi + these 4; limit 20). I have 30 jobs in all (limit 110). Cells DONE: 0 of 2.
