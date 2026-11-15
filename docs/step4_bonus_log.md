@@ -621,3 +621,10 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - `B1_P1eq1_LN+RS+ENT3_confirm` (history 3072 / 6144): s20 **0.034** (s.e. 0.016; 0.049 / 0.034) IMPROVING; s21 **0.002** (s.e. 0.032; 0.000 / 0.002) CONVERGED; s22 **0.039** (s.e. 0.032; 0.052 / 0.039) IMPROVING. All three are corrected once, then honest; s20's and s22's best responses take 2 corrections.
 - **Rule 4 (confirmation, two seeds IMPROVING, 6144 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ENT3_confirm 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987264**.
 - Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 78 (09:14–09:20): AS no-reg `+LR` finished 12,288 (check 1987287); Tomato base `L` s0 finished 3072 (check 1987288)
+
+- Fallback wakeup; the training wait then fired for **1987131** (AS `B1_P1eq1_LN+RS+LR` extension to 12,288), COMPLETED 09:15:12 (5:14:29, exit 0).
+- **A race again, not a stopped run:** the first `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` dry-run (09:14) listed `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR --seeds 2 ... --resume`, because s2 was in its last seconds. Checked: the job COMPLETED 09:15:12, and all three seeds have `metrics.json` at 12,288. A second dry-run lists nothing. Not submitted.
+- **Rule 3:** `... br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+LR`, `br_tomato_B1_base_L`) → `... br_missing submit` → **1987287** (`+LR` at 12,288), **1987288** (Tomato base `L`: s0 finished 3072; s1 2784, s2 2448).
+- `git pull --no-rebase --no-edit --ff`: already up to date. Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
