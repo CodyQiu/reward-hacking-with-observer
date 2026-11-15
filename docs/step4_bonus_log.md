@@ -870,3 +870,8 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
     - The best response takes 3.72 corrections (rounds 0–2, then 0.73 in round 3; true 426–434). s0's own target is corrected once, then honest (true 433.4), which PPO matches; the 3.72 correction pattern resembles the s1 target (3.75). The value gap stays small because each further correction adds only about one bonus unit plus a few tomatoes.
     - s1 (5616) and s2 (5472) are still training.
 - **Decision.** Rule 4 is applied to each run once its remaining seeds finish and are checked. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 95 (14:05–14:08): AS no-reg `+N4_confirm` finished at 6144; check 1987732 
+
+- Woken by the training wait: **1987304** (AS `B1_P1eq1_LN+RS+N4_confirm`, extension to 6144) COMPLETED 14:05 (4:15:19, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `B1_P1eq1_LN+RS+N4_confirm`, s22) → `... br_missing submit` → **1987732 **. s20 (0.032, PLATEAU) and s21 (0.022, CONVERGED) were checked in iteration 94. Cells DONE: 4 of 12.
