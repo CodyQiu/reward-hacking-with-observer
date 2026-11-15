@@ -188,3 +188,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1985090** (Boat Race `N1_P1eq1_LE_confirm`, seeds 20–22, 3072 episodes) COMPLETED 21:16 (5:36:52, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`) → `... br_missing submit` → **1985840**. The Boat Race cell is DONE if this is 3/3.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 21 (21:25–21:29): Boat Race `LE_confirm` 1/3 at 3072 → extend to 6144 (1985854)
+
+- Woken by the check wait: **1985840** (`br_boat_race_N1_P1eq1_LE_confirm`, s20–s22 at 3072) COMPLETED 21:24 (5:19).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE_confirm`: s20 **0.015** (s.e. 0.022) CONVERGED; s21 **0.038** (s.e. 0.020) **IMPROVING**; s22 **0.040** (s.e. 0.016) **IMPROVING**. All corrected in round 0 and never again, with the window clean afterwards. s20 and s22 then play the new exploit at true −100, like their best responses. s21 plays a variant at true about −76 (best response −100): still a new exploit (honest is 50), but not quite the best-paying one.
+- **Rule 4 (confirmation, s21 and s22 IMPROVING, 3072 < cap 12,288): extend 2×.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE_confirm 6144` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`) → `... submit` → **1985854**.
+- **Pattern across the three Boat Race confirmations** (seeds 20–22): `L` 2/3 at 3072 (s22 0.033), `LN` 2/3 at 3072 (s22 0.041), `LE` 1/3 at 3072 (s21 0.038, s22 0.040). The tuning seeds 0–2 all converged by 1536–3072. Every unconverged confirmation seed already has the best response's end state (corrected once, then a new exploit); the gaps (0.03–0.04, s.e. 0.012–0.020) are in received reward. All three are now extending to 6144.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
