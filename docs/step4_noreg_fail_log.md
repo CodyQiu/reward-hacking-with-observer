@@ -7,6 +7,8 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04` (your standing instruction from the optimal campaign). On 2026-11-14 at 11:42, `sinfo` shows barley-04 `allocated` with no reason set; say if I should drop the exclusion.
 - **Taxi runs will hit the 48 h limit** (the doc: an exploiting seed took 47 h for 768 episodes in Step 3). Rule 1 resumes them from their checkpoints; that is not an incident.
 
+- **Boat Race confirmations: one seed sits just above 0.03 with a flat best-response gap, but is labelled IMPROVING.** `N1_P1eq1_L_confirm` s22: gap 0.032 / 0.033 / 0.032 (s.e. 0.012) at 1536 / 3072 / 6144; its 12 per-draw gaps are nearly identical at all three checkpoints, so its exact policy has stopped changing (corrected once, then the new exploit at true −100, like its best response). The convergence script labels it IMPROVING because that label is defined on the training curve's target gaps, not on the best-response gap. Rule 4 therefore extends it to the 12,288 cap (iteration 23), where it is finished whatever the verdict. `LN_confirm` s22 (0.044 → 0.041) and `LE_confirm` s21/s22 (0.038 / 0.040) look similar. No action needed from you; reported because the cell's DONE now hinges on gaps of 0.03–0.04 that training does not seem to move.
+
 ## Exact predictions
 
 Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
@@ -201,4 +203,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
 - Woken by the training wait: **1985502** (Boat Race `N1_P1eq1_L_confirm` extension to 6144) COMPLETED 21:38 (4:19:38, exit 0). `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_L_confirm`) → `... br_missing submit` → **1985877** (s20–s22 at 6144).
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 23 (21:50–21:56): Boat Race `L_confirm` 2/3 at 6144 → extend to the cap, 12,288 (1985883)
+
+- Woken by the check wait: **1985877** (`br_boat_race_N1_P1eq1_L_confirm`, s20–s22 at 6144) COMPLETED 21:49 (3:19).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_L_confirm` (gap history 1536 / 3072 / 6144): s20 **0.013** (s.e. 0.018) CONVERGED; s21 **0.008** (s.e. 0.015) CONVERGED; s22 **0.032** (s.e. 0.012; 0.032 / 0.033 / 0.032) labelled **IMPROVING**. s22's 12 per-draw gaps are nearly identical at all three checkpoints (e.g. 0.016 / 0.018 / 0.016 and 0.107 / 0.107 / 0.107 for two of them): its policy has stopped changing; it is corrected once, then plays the new exploit (true −100), like its best response.
+- **Rule 4 (confirmation, s22 IMPROVING by the script's label, 6144 < cap 12,288): extend 2× to the cap.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_L_confirm 12288` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_L_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`) → `... submit` → **1985883**. At the cap the run is finished whatever the verdict. Flag added at the top (IMPROVING label against a flat best-response gap).
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
