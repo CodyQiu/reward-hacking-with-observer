@@ -471,3 +471,12 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1985725** (AS `B1_P1eq1_LN+RS+ES10+N4`, 3072) COMPLETED 04:01 (6:13:40, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`, `br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4`) → `... br_missing submit` → **1987146** (`+ENT3_confirm`: s20, s22 finished 3072; s21 at 2856) and **1987147** (`+ES10+N4` s2) (order as printed by the driver).
 - Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 58 (04:07–04:11): AS no-reg `+ES10+N4` 3/3 CONVERGED → confirm (1987149); `+ENT3_confirm` s20/s22 0.049/0.052
+
+- Woken by the check wait: **1987146** (`br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`, s20, s22) COMPLETED 04:07 (2:07). **1987147** (`+ES10+N4` s2) had also COMPLETED.
+- `B1_P1eq1_LN+RS+ES10+N4` (exploration): s0 **0.000**, s1 **0.000**, s2 **0.015** (s.e. ≤ 0.02), all **CONVERGED**; each corrected once, then honest.
+- **Rule 6b (exploration run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+ES10+N4` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=6400 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 reward_scale=0.01625 protocol.update_bonus=1.0 episodes=3072`, identical to its `overrides.json`) → `... submit` → **1987149**.
+- `B1_P1eq1_LN+RS+ENT3_confirm` at 3072: s20 **0.049** (s.e. 0.021) and s22 **0.052** (s.e. 0.029), both labelled IMPROVING: corrected once, then honest, while their best responses take 2 corrections (the same shortfall as tuning seed 2 in `LN+RS`, `+LR`, `+EP`, `+GL`, `+ES10`). s21 still training (2976 / 3072); rule 4 waits for its check.
+- AS no-reg confirmations running: `+ENT3_confirm` (s21), `+AN_confirm` (1986852), `+N4_confirm` (1987110), `+ES10+N4_confirm` (1987149).
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
