@@ -608,3 +608,9 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - Woken by the target wait: **1984521** (`targets_tomato_large_base_bonus1`) COMPLETED 07:16 (19:27:51, exit 0), 6 seeds, all fixed points converged.
 - **Rule 2, under "Exact predictions":** tomato_large base with the bonus **hides** in all 6 seeds (V0 = V_hide = 3,686.8). Base now hides in all four environments with the bonus.
 - tomato_large no-reg target (1984520) still running (19.5 h). Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 76 (07:32–07:34): AS no-reg `+ENT3_confirm` finished 6144; check 1987260 
+
+- Woken by the training wait: **1987156** (AS `B1_P1eq1_LN+RS+ENT3_confirm` extension to 6144) COMPLETED 07:32 (3:05:20, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`) → `... br_missing submit` → **1987260 ** (s20–s22 at 6144). The AS no-reg cell is DONE if this is 3/3.
+- Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
