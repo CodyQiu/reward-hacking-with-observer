@@ -182,3 +182,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Boat Race `LN_confirm` extension (1985586) PENDING, reason `Priority` (Slurm's estimated start 20:45); not an incident.
 - Progress (episodes): Boat Race `L_confirm` 4344–4368 / 6144, `LE_confirm` 1680–1776 / 3072. **Taxi: `L` 72–96, `LE` 24, `LN` 24–48 of 768 after 7.4 h** (about 3–13 episodes/h per seed: the PBRR refits dominate, as the doc expects); each will reach the 48 h limit far short of 768, and rule 1 resumes it (likely several times).
 - No rule decisions. Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 20 (21:17–21:19): Boat Race `LE_confirm` finished (3072); check 1985840
+
+- Woken by the training wait: **1985090** (Boat Race `N1_P1eq1_LE_confirm`, seeds 20–22, 3072 episodes) COMPLETED 21:16 (5:36:52, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`) → `... br_missing submit` → **1985840**. The Boat Race cell is DONE if this is 3/3.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
