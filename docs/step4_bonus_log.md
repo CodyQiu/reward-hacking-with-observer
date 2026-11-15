@@ -591,3 +591,10 @@ Pending: tomato_large no-reg and base (1984520, 1984521; running for over 18 h).
 - **Rule 2, under "Exact predictions":** = no-bonus target + exactly 1.0 in all 6 seeds (corrected once, then honest). The bonus has changed no end state in 40 of the 42 swap / no-reg seeds computed (the exceptions are both Tomato no-reg).
 - tomato_large no-reg and base targets (1984520, 1984521) still running (18.5 h).
 - Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 74 (07:04–07:12): no events (fallback); reports and progress
+
+- No job ended since iteration 73. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume`, `... br_missing` (dry-runs): nothing. `CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh report` run.
+- Progress (episodes): AS no-reg `+ENT3_confirm` 5664–5856 / 6144, `+N4_confirm` 1800–1896 / 3072, `+ES10+N4_confirm` 1080–1416 / 3072, `+NET_confirm` about 700 / 3072, `+EP_confirm` 1320–1440 / 6144, `+LR` about 9900 / 12,288, `+ES10` about 8340 / 12,288; grid no-reg `LN+LR` 7416 / 12,288; Tomato no-reg `LN` 4152–4680 / 6144, base `L` 2184–2664 / 3072, base `LE` about 2100 / 3072, base exploration 24–264 / 1536, swap `LN+ES10+N4_confirm` no checkpoint yet; tomato_large swap `LE` 144, no-reg `LN+ES10` about 300, base `L` 192–792, `LE` 120–144, `LN` 600–672 (all of 1536).
+- The wave-1 jobs started 2026-11-14 11:43 reach the 48 h limit at about 11:43 on 2026-11-16 (tomato_large ×5, Tomato no-reg `LN`); rule 1 resumes them then.
+- tomato_large no-reg and base targets (1984520, 1984521) still running (19.3 h). No rule decisions. Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.

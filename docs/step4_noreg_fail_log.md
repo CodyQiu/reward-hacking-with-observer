@@ -250,3 +250,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - s22 **0.034** (s.e. 0.012; 0.032 / 0.033 / 0.032 / 0.034) **PLATEAU**: flat over an 8× increase in training, 0.3 s.e. above 0.03. It is corrected once, then plays the new exploit (true −100), exactly like its best response.
 - **Rule 4: at the cap the run is finished; 2/3, so this confirmation failed.** The Boat Race cell's other chances: `LN_confirm` (1986896) and `LE_confirm` (1986904), both running to the cap, both 2/3 at 6144 with s22 at 0.044 / 0.045.
 - Queue (this campaign): 5 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 29 (07:04–07:12): no events (fallback); reports and progress
+
+- No job ended since iteration 28. `CAMPAIGN=noreg_fail bash scripts/farmshare/step4_optimal.sh report` run.
+- Progress: Boat Race `LN_confirm` about 9850 / 12,288, `LE_confirm` about 9950 / 12,288 (both running to the cap). **Taxi: `L` 120–168, `LE` 72, `LN` 96 of 768 after 19.3 h** (about 4–9 episodes/h); the jobs reach the 48 h limit at about 11:44 on 2026-11-16 near 200–400 episodes, and rule 1 resumes them.
+- No rule decisions. Queue (this campaign): 5 jobs. Cells DONE: 0 of 2.
