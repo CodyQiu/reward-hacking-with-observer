@@ -296,3 +296,9 @@ Pending: tomato_large (1984519–1984521).
   - **`RS` skipped:** the base already has `reward_scale=0.01625`, which is exactly the `RS` factor (0.25 × AS's Phase A scale 0.065), so `LN+RS+RS` would duplicate the base. Logged rather than submitted.
 - **Rule 6b (exploration):** every wave-1 run of the cell has a check and none is CONVERGED 3/3, so exploration starts now, alongside wave 2, from the cell's run with the smallest mean gap (the only one). `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore absent_supervisor P1eq1 B1_P1eq1_LN+RS` (dry-run: 4 runs at 3072: `+ENT3` `ppo.ent_coef=0.3`; `+ES10` `anneal.ent_start=10 anneal.ent_episodes=768`; `+N4` `n_envs=256 ppo.batch_size=6400`; `+ES10+N4`) → `... submit` → **1985722** (ENT3), **1985723** (ES10), **1985724** (N4), **1985725** (ES10+N4).
 - Budget: this campaign 25 jobs (≤ 60); all jobs 31 (≤ 110). Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 33 (21:05–21:07): AS swap `LN_confirm` finished; check 1985787
+
+- Woken by the training wait: **1985457** (AS `B1_P2swap_LN_confirm`, seeds 20–22, 3072 episodes) COMPLETED 21:04 (4:27:24, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P2swap_LN_confirm`) → `... br_missing submit` → **1985787**. The AS swap cell is DONE if this is 3/3.
+- Queue (this campaign): 25 jobs. Cells DONE: 2 of 12.
