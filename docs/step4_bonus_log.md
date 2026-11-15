@@ -279,3 +279,18 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1984528** (AS `B1_P1eq1_LN+RS`, 6144 episodes) COMPLETED 20:17 (8:32:47, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS`) → `... br_missing submit` → **1985712**.
 - Queue (this campaign): 17 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 32 (20:21–20:35): AS no-reg `LN+RS` 2/3 (s2 PLATEAU) → config finished; wave 2 (5 runs) and exploration (4 runs) submitted
+
+- Woken by the check wait: **1985712** (`br_absent_supervisor_B1_P1eq1_LN+RS`, s0–s2 at 6144) COMPLETED 20:21 (1:32).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/absent_supervisor/bonus/B1_P1eq1_LN+RS`:
+  - s0 **0.001** (s.e. 0.027) CONVERGED: corrected once, then honest (true about 450); its best response takes 3 corrections (rounds 0–2; true −100, 400, 400, 450, 450).
+  - s1 **0.000** (s.e. 0.000) CONVERGED: corrected once, then honest, like its best response.
+  - s2 **0.056** (s.e. 0.027) **PLATEAU**: corrected once, then honest (true about 450); its best response takes 2 corrections (true −100, 400, then 450 ×3).
+  - **Paired no-bonus reference** `O1_P1eq1_LN+RS` (same config, same seeds, 6144): 0.000 / 0.000 / **0.020**, same end states (s2's best response there also takes 2 corrections). The bonus makes the extra correction worth +1 more, which alone is about 0.0001 of V; s2's larger gap here comes from a different trained policy and its refitted corrections (round-0 true −101 here against −125 there), within about 1.3 s.e. of the reference. Not attributed to the bonus.
+- **Rule 4: the only unconverged seed is PLATEAU, so the config is finished** (no extension; 6144 < AS cap 24,576 is irrelevant for PLATEAU).
+- **Rule 5 (wave 2):** the cell's one wave-1 run is finished and is neither CONVERGED 3/3 nor IMPROVING. Extras = its overrides minus `episodes=` (`.venv/bin/python scripts/farmshare/run_sets.py results/step4/absent_supervisor/bonus/B1_P1eq1_LN+RS`): `ppo.ent_coef=0.1 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625 protocol.update_bonus=1.0`. Commands, each dry-run then submitted, `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh ppo absent_supervisor P1eq1 "LN+RS+<tag>" "<extras> <factor>" submit` (3072 episodes, the AS wave-1 length; later duplicate keys win):
+  - `LR` (`ppo.learning_rate=0.0001`) → **1985717**; `GL` (`ppo.gae_lambda=1.0`) → **1985718**; `NET` (`ppo.net_arch=[256,256]`) → **1985719**; `EP` (`ppo.n_epochs=20`) → **1985720**; `AN` (`anneal.last=0.5`) → **1985721**.
+  - **`RS` skipped:** the base already has `reward_scale=0.01625`, which is exactly the `RS` factor (0.25 × AS's Phase A scale 0.065), so `LN+RS+RS` would duplicate the base. Logged rather than submitted.
+- **Rule 6b (exploration):** every wave-1 run of the cell has a check and none is CONVERGED 3/3, so exploration starts now, alongside wave 2, from the cell's run with the smallest mean gap (the only one). `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore absent_supervisor P1eq1 B1_P1eq1_LN+RS` (dry-run: 4 runs at 3072: `+ENT3` `ppo.ent_coef=0.3`; `+ES10` `anneal.ent_start=10 anneal.ent_episodes=768`; `+N4` `n_envs=256 ppo.batch_size=6400`; `+ES10+N4`) → `... submit` → **1985722** (ENT3), **1985723** (ES10), **1985724** (N4), **1985725** (ES10+N4).
+- Budget: this campaign 25 jobs (≤ 60); all jobs 31 (≤ 110). Cells DONE: 2 of 12.
