@@ -127,3 +127,4 @@
   [tomato s2] 24,192,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    470.1  rounds 6424  (40118s)
   [tomato s2] 24,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    469.8  rounds 6462  (40537s)
   [tomato s2] 24,576,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    469.3  rounds 6500  (40955s)
+  [tomato s2] resumed at episode 3072 -> 6144

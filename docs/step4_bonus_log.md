@@ -795,3 +795,33 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - Submitted: `... br_missing submit` → **1987561** (AS `+ENT3_confirm`), **1987562** (Tomato `base_L`).
   - noreg_fail `br_missing` (dry-run): nothing.
 - The tomato_large no-reg target (1984520) is still running (25 h). Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 91 (12:58–13:05): Tomato base `L` 0/3 at 3072 → extend 6144 (1987620 ); AS no-reg `+ES10` finished; checks 1987616 1987617
+
+- **Wake-ups:**
+  - The check wait: **1987562** (`br_tomato_B1_base_L`, s2) COMPLETED 12:58 (7:04).
+  - The training wait: **1987157** (AS `B1_P1eq1_LN+RS+ES10`, extension to 12,288) COMPLETED 12:59 (8:18:11, exit 0).
+  - **1987561** (`br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`, s20 and s22 at 12,288) COMPLETED 12:53 (1:09).
+  - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing, in either campaign.
+- **Tomato `B1_base_L` (3072)** (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_L`):
+
+  | Seed | BR gap | s.e. | Label | Policy |
+  |---|---|---|---|---|
+  | s0 | **0.161** | 0.000 | PLATEAU | reactive: corrected in round 0, then honest |
+  | s1 | **0.161** | 0.000 | IMPROVING | reactive: corrected in round 0, then honest |
+  | s2 | **0.161** | 0.000 | PLATEAU | partly honest already in round 0 (true 191), then honest (296 → 430) |
+
+  Every best response hides (true 59.8 ×4, then 46.0), as the target does.
+- **Rule 4 (s1 IMPROVING, 3072 < cap 12,288): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_L 6144` printed `submit.sh 48 --env tomato --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted with `... submit` → **1987620 **.
+- **AS `B1_P1eq1_LN+RS+ENT3_confirm` (12,288; check 1987561):**
+  - s20: **0.0301** (s.e. 0.025), not converged by 0.0001.
+  - s22: **0.0225** (s.e. 0.030), CONVERGED.
+  - Both policies are corrected once, then honest (true 449.7–449.9). Both best responses take 2 corrections.
+  - s21 was at 12,024 then. It is no longer listed as running, and the next `br_missing` submit included it (below), so it has finished. Rule 4 for this run waits for s21's check.
+- **Rule 3:**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed AS `+ES10`.
+  - `... br_missing submit` also listed `+ENT3_confirm`, whose s21 finished between the two commands.
+  - Submitted: **1987616** (AS `+ENT3_confirm`), **1987617** (AS `+ES10`).
+- Cells DONE: 4 of 12.
