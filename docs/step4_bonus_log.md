@@ -387,3 +387,9 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+AN` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+AN_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 protocol.update_bonus=1.0 episodes=3072 anneal.last=0.5 anneal.floor=0.1 n_envs=64 reward_scale=0.01625`, identical to its `overrides.json`) → `... submit` → **1986852**. It runs alongside `+ENT3_confirm` (1986437); the AS no-reg cell is DONE when either is 3/3.
 - Tomato base `B1_base_LE`: s1 **0.167**, s2 **0.166** (s.e. ≤ 0.000), labelled IMPROVING; both corrected in round 0, then honest (true about 427), while the best response hides. s0 is still training (552 / 1536); rule 4 waits for its check.
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 46 (00:48–00:50): AS no-reg wave 2 `+LR` finished; check 1986872
+
+- Woken by the training wait: **1985717** (AS `B1_P1eq1_LN+RS+LR`, 3072) COMPLETED 00:47 (4:24:35, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+LR`) → `... br_missing submit` → **1986872**.
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
