@@ -504,3 +504,8 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1984535** (Tomato `B1_base_LE`, 1536) COMPLETED 04:25 (16:41:31, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_tomato_B1_base_LE`, s0) → `... br_missing submit` → **1987163 **. With it, every Tomato base wave-1 run will have a check: rule 4 decides `LE`, and then rules 5 / 6b decide the cell.
 - Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 63 (04:33–04:38): Tomato swap `LN+ES10+N4` s0 CONVERGED
+
+- **1987158** (`br_tomato_B1_P2swap_LN+ES10+N4`, s0 at 1536) COMPLETED 04:32 (7:28): s0 **0.002** (s.e. 0.000) CONVERGED; corrected in round 0, then honest (true about 422), like its best response and the target. s1, s2 still training (about 1230 / 1536). Rule 4 waits for them.
+- Cells DONE: 3 of 12.

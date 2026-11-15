@@ -127,3 +127,7 @@
   [absent_supervisor s21] 97,536,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    724.7  rounds 3625  (13641s)
   [absent_supervisor s21] 98,304,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    724.6  rounds 3649  (13707s)
   [absent_supervisor s21] resumed at episode 3072 -> 6144
+  [absent_supervisor s21] 99,072,000  win0-3 0.12  off 0.69  corr/ep 0.48  winF 0.28  proxy0-3    724.2  rounds 3724  (146s)
+  [absent_supervisor s21] 99,840,000  win0-3 0.02  off 0.93  corr/ep 0.07  winF 0.81  proxy0-3    911.0  rounds 3784  (265s)
+  [absent_supervisor s21] 100,608,000  win0-3 0.01  off 0.95  corr/ep 0.04  winF 0.93  proxy0-3   1024.7  rounds 3821  (357s)
+  [absent_supervisor s21] 101,376,000  win0-3 0.01  off 0.95  corr/ep 0.03  winF 0.93  proxy0-3   1041.2  rounds 3859  (448s)

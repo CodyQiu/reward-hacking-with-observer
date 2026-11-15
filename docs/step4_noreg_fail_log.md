@@ -240,3 +240,13 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1985883** (Boat Race `N1_P1eq1_L_confirm` extension to 12,288) COMPLETED 04:21 (6:27:35, exit 0). `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_L_confirm`) → `... br_missing submit` → **1987159** (s20–s22 at 12,288). At the cap this confirmation is finished whatever the verdict: 3/3 makes the Boat Race cell DONE; otherwise it has failed.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 28 (04:33–04:38): Boat Race `L_confirm` 2/3 at the 12,288 cap → finished, confirmation failed
+
+- **1987159** (`br_boat_race_N1_P1eq1_L_confirm`, s20–s22 at 12,288) COMPLETED (4:39).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_L_confirm`, gap history 1536 / 3072 / 6144 / 12,288:
+  - s20 **0.015** (s.e. 0.023; 0.024 / 0.011 / 0.013 / 0.015) CONVERGED.
+  - s21 **0.009** (s.e. 0.014; 0.037 / 0.014 / 0.008 / 0.009) CONVERGED.
+  - s22 **0.034** (s.e. 0.012; 0.032 / 0.033 / 0.032 / 0.034) **PLATEAU**: flat over an 8× increase in training, 0.3 s.e. above 0.03. It is corrected once, then plays the new exploit (true −100), exactly like its best response.
+- **Rule 4: at the cap the run is finished; 2/3, so this confirmation failed.** The Boat Race cell's other chances: `LN_confirm` (1986896) and `LE_confirm` (1986904), both running to the cap, both 2/3 at 6144 with s22 at 0.044 / 0.045.
+- Queue (this campaign): 5 jobs. Cells DONE: 0 of 2.
