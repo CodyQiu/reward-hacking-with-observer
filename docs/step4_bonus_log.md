@@ -680,3 +680,19 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - confirmations: `+ENT3_confirm` → 12,288 (1987264), `+N4_confirm` → 6144 (1987304), `+NET_confirm` (1987197), `+EP_confirm` (1987207), `+LR_confirm` (1987290), `+ES10+N4_confirm` → 6144 (1987395);
   - tuning: `+ES10` → 12,288 (1987157), `+GL` → 24,576 (1987396).
 - Queue: 24 jobs in this campaign (limit 60), 31 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 85 (11:26–11:30): Tomato base checks `L` s1 and `LE` s0 at 3072: still reactive, gap 0.16; nothing to decide
+
+- Woken by the check wait. **1987390** (`br_tomato_B1_base_L`, 9:04) and **1987391** (`br_tomato_B1_base_LE`) are COMPLETED. `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_{L,LE}`:
+  - **`B1_base_L` (3072):**
+    - s0: **0.161** (s.e. 0.000), PLATEAU (iteration 80).
+    - s1: **0.161** (s.e. 0.000), IMPROVING.
+    - s2: still training, 2784/3072.
+  - **`B1_base_LE` (3072):**
+    - s0: **0.165** (s.e. 0.000), IMPROVING.
+    - s1 and s2: still training, 3024/3072.
+  - Every checked seed is reactive: corrected in round 0 (true 46), then honest (true 425–431). Every best response hides (true 59.8 ×4, then 46.0 in round 4). This matches the exact target, so the best responses are not flagged.
+- **Rule 4 waits until each run's remaining seeds finish and are checked.** Neither run has an unchecked finished seed now. Tomato base status:
+  - `LN` is finished (0/3, PLATEAU);
+  - stage 1 from `LN` (`ENT3`, `ES10`, `N4`, `ES10+N4`; 1987173–1987176) is running.
+- Cells DONE: 4 of 12.
