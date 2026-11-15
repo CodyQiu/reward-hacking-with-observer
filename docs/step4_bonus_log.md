@@ -846,3 +846,13 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - `... submit` → **1987630 **.
   - At the cap, both runs are finished whatever the verdict.
 - Queue: 23 jobs in this campaign (limit 60), 30 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 93 (13:40–13:44): AS no-reg `+N4_confirm` s20/s21 at 6144, Tomato no-reg `LN` s0 at 6144; checks 1987686 1987687
+
+- **Scheduled wakeup.** `git pull --no-rebase --no-edit --ff`: already up to date. No campaign job has ended since 13:03. `... resume` (dry-run): nothing in either campaign.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - AS `B1_P1eq1_LN+RS+N4_confirm`: s20 and s21 finished at 6144, s22 at 5808.
+  - Tomato `B1_P1eq1_LN`: s0 finished at 6144, s1 at 5592, s2 at 5424.
+
+  `... br_missing submit` → **1987686** (AS `+N4_confirm`), **1987687** (Tomato no-reg `LN`).
+- **Still running.** The tomato_large no-reg target (1984520) has run 26 h. Cells DONE: 4 of 12.
