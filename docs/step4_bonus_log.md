@@ -916,3 +916,19 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - **Trigger.** The training wait fired: **1987395** (AS `B1_P1eq1_LN+RS+ES10+N4_confirm`, extension to 6144) COMPLETED 14:50 (3:29:23, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `+ES10+N4_confirm` and Tomato `B1_base_LN+N4` (s0 finished at 1536; s1 at 1344, s2 at 1248). Then `... br_missing submit` → **1987870** (AS `+ES10+N4_confirm`) and **1987871** (Tomato `base_LN+N4`).
 - **Cells DONE:** 4 of 12.
+
+## 2026-11-15, iteration 100 (15:00–15:04): AS no-reg `+ES10+N4_confirm` 1/3 at 6144 → extend 12,288 (1987881 ); Tomato base `LN+N4` s0 0.159
+
+- Woken by the check wait: **1987870** (`br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4_confirm`, 1:21) and **1987871** (`br_tomato_B1_base_LN+N4`, 8:49) COMPLETED. Verdicts from `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **`B1_P1eq1_LN+RS+ES10+N4_confirm`**, BR gap at 3072 / 6144:
+
+    | Seed | Gap at 3072 | Gap at 6144 (s.e.) | Verdict | Best response |
+    |---|---|---|---|---|
+    | s20 | 0.070 | **0.0305** (0.027) | IMPROVING | 4 corrections (rounds 1–3 at true 400) |
+    | s21 | 0.000 | **0.012** (0.037) | CONVERGED | 2 corrections |
+    | s22 | 0.041 | **0.049** (0.037) | PLATEAU | 2 corrections |
+
+    All three policies are corrected once, then honest (true 450).
+  - **Tomato `B1_base_LN+N4`**: s0 **0.159** (s.e. 0.000) at 1536. It is reactive: corrected in round 0, then honest (true 433). The best response hides, as in the target. s1 and s2 are still training (1344, 1248).
+- **Rule 4 (confirmation; s20 IMPROVING, 6144 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ES10+N4_confirm 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987881 **. Tomato `LN+N4` waits for its other seeds.
+- Queue: 22 jobs in this campaign (limit 60), 29 in all. Cells DONE: 4 of 12.
