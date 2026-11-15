@@ -257,3 +257,8 @@
   [absent_supervisor s2] 196,608,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    724.9  rounds 8091  (13515s)
   [absent_supervisor s2] resumed at episode 6144 -> 12288
   [absent_supervisor s2] 197,376,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    709.3  rounds 8115  (96s)
+  [absent_supervisor s2] 198,144,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    703.1  rounds 8139  (194s)
+  [absent_supervisor s2] 198,912,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    706.2  rounds 8163  (291s)
+  [absent_supervisor s2] 199,680,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    709.7  rounds 8187  (389s)
+  [absent_supervisor s2] 200,448,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    697.7  rounds 8211  (480s)
+  [absent_supervisor s2] 201,216,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    699.8  rounds 8235  (572s)
