@@ -728,3 +728,42 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - **`+EP_confirm`.** Command: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+EP_confirm 12288`. Dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+EP_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`. Then `... submit` → **1987446**.
   - **`B1_base_LE`.** Command: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LE 6144`. Dry-run: `submit.sh 48 --env tomato --run-id B1_base_LE --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`. Then `... submit` → **1987447**.
 - Queue: 23 jobs in this campaign (limit 60), 30 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 88 (12:02–12:15): quiet tick at 12:02; AS no-reg `+NET_confirm` s20/s21 at 3072 → check 1987473
+
+- **12:02 (scheduled wakeup).**
+  - `git pull --no-rebase --no-edit --ff`: already up to date.
+  - No campaign job had ended since 11:56.
+  - Dry-runs of `br_missing` and `resume`: nothing in either campaign.
+  - `CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh report`: every seed is either running or its last check is already logged.
+  - Progress (episodes): AS no-reg
+    - `+ENT3_confirm` 10,896–11,544 / 12,288
+    - `+ES10` 11,640–11,712 / 12,288
+    - `+NET_confirm` 3000–3024 / 3072
+    - `+N4_confirm` 4752–4944 / 6144
+    - `+LR_confirm` 2472–4296 / 12,288
+    - `+ES10+N4_confirm` 3696–3720 / 6144
+    - `+GL` 13,416–13,440 / 24,576
+    - `+EP_confirm` 6288 / 12,288
+  - Progress (episodes): grid no-reg `LN+LR` 10,104–10,128 / 12,288.
+  - Progress (episodes): Tomato
+    - no-reg `LN` 5088–5736 / 6144
+    - swap `LN+ES10+N4_confirm` 216–312 / 1536
+    - base `L` s2 2904 / 3072
+    - base `LE` 3096 / 6144
+    - base `LN+ENT3` 1032–1080 / 1536
+    - base `LN+ES10` 192–264 / 1536
+    - base `LN+N4` 768–1056 / 1536
+    - base `LN+ES10+N4` 120–144 / 1536
+  - Progress (episodes): tomato_large
+    - `P2swap_LE` 192
+    - `P1eq1_LN+ES10` 576–600
+    - `base_L` 264–1056
+    - `base_LE` 168–312
+    - `base_LN` 888–960, all / 1536
+    - These runs have been running about 24 h, so they reach the 48 h limit around noon on 2026-11-16.
+  - The tomato_large no-reg target (1984520) is still running (24 h).
+- **12:11 (training wait).**
+  - The noreg_fail job 1987354 ended; this campaign was unchanged.
+  - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `B1_P1eq1_LN+RS+NET_confirm`, s20 and s21 finished at 3072, s22 at 3048) → `... br_missing submit` → **1987473**.
+- Cells DONE: 4 of 12.

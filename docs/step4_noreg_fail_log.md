@@ -287,3 +287,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
     - `+ES10+N4`: both.
   - Then `... explore boat_race P1eq1 N1_P1eq1_LE submit` → **1987352** (`+ENT3`), **1987353** (`+ES10`), **1987354** (`+N4`), **1987355** (`+ES10+N4`). The rule 6b extension rule applies: while any seed is unconverged, extend 2× whatever the verdict, up to the 12,288 cap.
 - Budget: this campaign has 7 jobs (3 Taxi + these 4; limit 20). I have 30 jobs in all (limit 110). Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 32 (12:11–12:15): Boat Race `LE+N4` finished at 1536; check 1987476
+
+- **Wake-up.** The training wait fired for **1987354** (Boat Race `N1_P1eq1_LE+N4`, stage 1 of 6b), which COMPLETED at 12:09 (1:36:11, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+N4`) → `... br_missing submit` → **1987476**.
+- **Progress (episodes).** Boat Race: `LE+ENT3` 264–336 / 1536, `LE+ES10` 72, `LE+ES10+N4` 96. Taxi: `L` 144–192 / 768, `LE` 72–96, `LN` 120 (each about 24 h in; they reach the 48 h limit around noon on 2026-11-16). Cells DONE: 0 of 2.
