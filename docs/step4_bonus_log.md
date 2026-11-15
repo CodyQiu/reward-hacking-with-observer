@@ -867,6 +867,6 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
     - s22 is still training (5904/6144). Its training curve already shows 2 corrections (true 399.6 in round 1), as its best response did at 3072.
   - **Tomato `B1_P1eq1_LN` (6144).**
     - s0: **0.020** (s.e. 0.010), CONVERGED. PPO is corrected once, then honest (true 432–433).
-    - The best response takes 3.72 corrections (rounds 0–2, then 0.73 in round 3; true 426–434). That is the same end state as the target's (3.75 corrections for s1). The value gap is small because each further correction adds only about one bonus unit plus a few tomatoes.
+    - The best response takes 3.72 corrections (rounds 0–2, then 0.73 in round 3; true 426–434). s0's own target is corrected once, then honest (true 433.4), which PPO matches; the 3.72 correction pattern resembles the s1 target (3.75). The value gap stays small because each further correction adds only about one bonus unit plus a few tomatoes.
     - s1 (5616) and s2 (5472) are still training.
 - **Decision.** Rule 4 is applied to each run once its remaining seeds finish and are checked. Cells DONE: 4 of 12.
