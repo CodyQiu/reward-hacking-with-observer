@@ -875,3 +875,22 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
 - Woken by the training wait: **1987304** (AS `B1_P1eq1_LN+RS+N4_confirm`, extension to 6144) COMPLETED 14:05 (4:15:19, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `B1_P1eq1_LN+RS+N4_confirm`, s22) → `... br_missing submit` → **1987732 **. s20 (0.032, PLATEAU) and s21 (0.022, CONVERGED) were checked in iteration 94. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 96 (14:08–14:12): AS no-reg `+N4_confirm` 2/3 at 6144, s20 PLATEAU → finished; this confirmation failed
+
+- **Check result.** Woken by the check wait: **1987732** (`br_absent_supervisor_B1_P1eq1_LN+RS+N4_confirm`, s22, 0:40) COMPLETED 14:07. Verdicts from `.venv/bin/python experiments/step4_convergence.py results/step4/absent_supervisor/bonus/B1_P1eq1_LN+RS+N4_confirm` (BR gap at 3072 / 6144):
+
+  | Seed | Gap at 3072 | Gap at 6144 (s.e.) | Verdict | Policy | Best response |
+  |---|---|---|---|---|---|
+  | s20 | 0.065 | **0.032** (0.024) | PLATEAU | corrected once, then honest | 2 corrections |
+  | s21 | 0.001 | **0.022** (0.043) | CONVERGED | corrected once, then honest | 2 corrections |
+  | s22 | 0.041 | **0.002** (0.024) | CONVERGED | 2 corrections (round 1 at true 400), then honest | 3 corrections (rounds 1–2 at true 400) |
+
+- **Rule 4: the only unconverged seed is PLATEAU, so the config is finished and not extended. This confirmation failed (2/3).**
+  - Confirmations follow rule 4, not the rule 6b extension rule ("Confirmation works as in rule 4").
+  - The optimal campaign treated a 6b run's confirmation the same way (its log, iteration 151: `LN+LR+ES10+N4` failed its confirmation with its unconverged seeds PLATEAU).
+  - s20 missed by 0.002.
+- **AS no-reg status.** Failed confirmations: `+AN_confirm` and `+N4_confirm`. Still running:
+  - confirmations `+ENT3_confirm` → 24,576 (1987629), `+ES10+N4_confirm` → 6144 (1987395), `+NET_confirm` → 6144 (1987486), `+EP_confirm` → 12,288 (1987446) and `+LR_confirm` → 12,288 (1987290);
+  - exploration and wave-2 runs `+ES10` → 24,576 (1987630) and `+GL` → 24,576 (1987396).
+- Cells DONE: 4 of 12.
