@@ -539,3 +539,11 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1985719** (AS `B1_P1eq1_LN+RS+NET`, 3072) COMPLETED 05:24 (7:57:19, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+NET`) → `... br_missing submit` → **1987194 **. This is the last AS no-reg wave-2 run to get a check.
 - Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 68 (05:31–05:35): AS no-reg wave 2 `+NET` 3/3 CONVERGED → confirm (1987197)
+
+- Woken by the check wait: **1987194** (`br_absent_supervisor_B1_P1eq1_LN+RS+NET`, s0–s2 at 3072) COMPLETED 05:31 (2:27).
+- `B1_P1eq1_LN+RS+NET` (wave 2, `ppo.net_arch=[256,256]`): s0 **0.000**, s1 **0.000**, s2 **0.002** (s.e. 0.027), all **CONVERGED**; each corrected once, then honest (true about 450). (s2's best response takes 3 corrections; the gap is within 3%.)
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+NET` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+NET_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.net_arch=[256,256] g.use_regularization=False g.epochs=1000 protocol.update_bonus=1.0 episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625`, identical to its `overrides.json`) → `... submit` → **1987197**.
+- AS no-reg confirmations running: `+ENT3_confirm` (extending to 6144, 1987156), `+AN_confirm` (1986852; s20 0.038, s21 0.015, s22 training), `+N4_confirm` (1987110), `+ES10+N4_confirm` (1987149), `+NET_confirm` (1987197).
+- Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
