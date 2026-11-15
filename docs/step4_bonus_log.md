@@ -628,3 +628,11 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - **A race again, not a stopped run:** the first `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` dry-run (09:14) listed `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR --seeds 2 ... --resume`, because s2 was in its last seconds. Checked: the job COMPLETED 09:15:12, and all three seeds have `metrics.json` at 12,288. A second dry-run lists nothing. Not submitted.
 - **Rule 3:** `... br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+LR`, `br_tomato_B1_base_L`) → `... br_missing submit` → **1987287** (`+LR` at 12,288), **1987288** (Tomato base `L`: s0 finished 3072; s1 2784, s2 2448).
 - `git pull --no-rebase --no-edit --ff`: already up to date. Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 79 (09:21–09:25): AS no-reg `+LR` 3/3 CONVERGED at 12,288 → confirm (1987290)
+
+- Woken by the check wait: **1987287** (`br_absent_supervisor_B1_P1eq1_LN+RS+LR`, s0–s2 at 12,288) COMPLETED 09:21 (2:34).
+- `B1_P1eq1_LN+RS+LR` (wave 2, `ppo.learning_rate=0.0001`) at 12,288: s0 **0.000**, s1 **0.000**, s2 **0.000** (s.e. ≤ 0.000), all **CONVERGED**. s2's history 0.065 / 0.039 / 0.000 at 3072 / 6144 / 12,288: it escaped with training length, as rule 6b's note describes (corrected once, then honest; at 12,288 its best response also takes 1 correction).
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+LR` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.learning_rate=0.0001 g.use_regularization=False g.epochs=1000 protocol.update_bonus=1.0 episodes=12288 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625`: the run's config at its final length) → `... submit` → **1987290**. At 12,288 episodes this will take several 48 h jobs (rule 1 resumes it).
+- AS no-reg confirmations: `+ENT3` → 12,288 (1987264), `+N4` (1987110), `+ES10+N4` (1987149), `+NET` (1987197), `+EP` at 6144 (1987207), `+LR` at 12,288 (1987290).
+- Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
