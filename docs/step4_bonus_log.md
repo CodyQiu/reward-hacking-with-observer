@@ -357,3 +357,11 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 6b (exploration run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+ENT3` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.3 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625 protocol.update_bonus=1.0 episodes=3072`, identical to its `overrides.json`) → `... submit` → **1986437**. The AS no-reg cell is DONE if this is 3/3.
 - **Rule 6b (exploration run, a seed unconverged): extend 2× whatever the verdict**, up to the AS cap 24,576. `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ES10 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10 --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1986438**.
 - Queue (this campaign): 25 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 42 (00:14–00:17): Tomato base `LN` 0/3 (all PLATEAU, reactive) → config finished
+
+- Woken by the check wait: **1986124** (`br_tomato_B1_base_LN`, s0–s2 at 1536; s1 and s2 finished while it ran and were included) COMPLETED 00:14 (22:25).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_LN`: s0 **0.160**, s1 **0.160**, s2 **0.160** (s.e. ≤ 0.000), all **PLATEAU**. Every seed is corrected in round 0, then honest (true about 432 ×4); every best response hides (true 59.8 ×4, 46; never corrected), like the target. Same reactive pattern as `B1_base_L` s0/s1 (0.162 / 0.163).
+- **Rule 4: every unconverged seed is PLATEAU, so the config is finished.** No extension.
+- Wave 2 (rule 5) and exploration (rule 6b) for Tomato base wait until every wave-1 run has a check: `L` s2 is still training (about 1100 / 1536), and `LE`'s check (1986123, s1) is running while `LE` s0 (456) and s2 train.
+- Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
