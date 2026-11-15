@@ -261,3 +261,8 @@ Pending: tomato_large (1984519–1984521).
 
 - `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_absent_supervisor_B1_base_LN` (s1 has finished 3072). The AS base cell is DONE: information only; `... br_missing submit` → **1985581**.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. Queue (this campaign): 18 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 29 (18:17–18:22): AS base `LN` s1 CONVERGED (information only)
+
+- **1985581** (`br_absent_supervisor_B1_base_LN`, s1) COMPLETED (0:56): s1 **0.000** (s.e. 0.000) CONVERGED, hides like its best response (true about −50 ×4, −107). `B1_base_LN` is 3/3 CONVERGED (0.000 / 0.000 / 0.000). The AS base cell is DONE: information only (no confirm).
+- Queue (this campaign): 17 jobs. Cells DONE: 2 of 12.

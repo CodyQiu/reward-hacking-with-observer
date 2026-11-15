@@ -167,3 +167,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1985445** (Boat Race `N1_P1eq1_LN_confirm` extension to 3072) COMPLETED 18:08 (1:46:18, exit 0). `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LN_confirm`) → `... br_missing submit` → **1985582** (s20–s22 at 3072).
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 18 (18:17–18:22): Boat Race `LN_confirm` 2/3 at 3072 → extend to 6144 (1985586)
+
+- Woken by the check wait: **1985582** (`br_boat_race_N1_P1eq1_LN_confirm`, s20–s22 at 3072) COMPLETED 18:16 (5:10).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LN_confirm`: s20 **0.011** (s.e. 0.020) CONVERGED; s21 **0.014** (s.e. 0.010) CONVERGED; s22 **0.041** (s.e. 0.018; 0.044 at 1536) **IMPROVING**. All corrected in round 0, then the new exploit (true −100), like their best responses. (s20/s21's gaps nearly equal `L_confirm`'s s20/s21 at 3072, 0.011 / 0.014: both configs settle on the same deterministic exploit, checked against the same seed's draws; the values differ in the third decimal, so not a file mix-up.)
+- **Rule 4 (confirmation, s22 IMPROVING, 3072 < cap 12,288): extend 2×.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LN_confirm 6144` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`) → `... submit` → **1985586**.
+- Boat Race confirmations: `L_confirm` → 6144 (1985502, s22 0.033 at 3072), `LN_confirm` → 6144 (1985586, s22 0.041), `LE_confirm` at 3072 (1985090, running). In all three so far, two of three seeds converge and s22 stays at 0.03–0.04.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
