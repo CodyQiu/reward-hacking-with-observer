@@ -1,0 +1,95 @@
+[
+ {
+  "seed_dir": "results/step4/tomato_large/bonus/B1_P1eq1_LN+ES10/seed0",
+  "target": "step4/tomato_large/targets/P1eq1_bonus1/seed0.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.6131294369697571,
+   "window": 0.7696828369924549,
+   "true": 0.6516378227870642,
+   "corr": 1.4381503233023294
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.873046875,
+    0.291015625,
+    0.22981770833333334,
+    0.16796875,
+    0.14973958333333334
+   ],
+   "true_by_k": [
+    113.36653900146484,
+    217.6100311279297,
+    231.7272186279297,
+    240.8313751220703,
+    246.89453125
+   ],
+   "received_by_k": [
+    516.009765625,
+    678.93212890625,
+    709.3063354492188,
+    724.7366333007812,
+    733.5610961914062
+   ],
+   "corrections_per_ep": 1.5618489583333333
+  },
+  "target_summary": {
+   "V0": 8691.65648671015,
+   "received_by_k": [
+    786.962049999996,
+    1753.2802576308704,
+    1834.1456771533126,
+    2158.4755501759564,
+    2158.792951749873
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    515.7805507732353,
+    515.6208048059719,
+    522.1157453205808,
+    522.1221061932383
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.9995208141103002,
+    0.9995005453257882,
+    0.0009779221995870613,
+    0.0
+   ],
+   "corrections_per_ep": 2.9999992816356627,
+   "end_state": "3.00 corrections per episode (by round [1.0, 1.0, 1.0, 0.0])"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.6131294369697571,
+    "window": 0.7696828369924549,
+    "true": 0.6516378227870642,
+    "corr": 1.4381503233023294
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/bonus/B1_P1eq1_LN+ES10/seed1",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/bonus/B1_P1eq1_LN+ES10/seed2",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ }
+]

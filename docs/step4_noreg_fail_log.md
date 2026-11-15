@@ -175,3 +175,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 4 (confirmation, s22 IMPROVING, 3072 < cap 12,288): extend 2×.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LN_confirm 6144` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`) → `... submit` → **1985586**.
 - Boat Race confirmations: `L_confirm` → 6144 (1985502, s22 0.033 at 3072), `LN_confirm` → 6144 (1985586, s22 0.041), `LE_confirm` at 3072 (1985090, running). In all three so far, two of three seeds converge and s22 stays at 0.03–0.04.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 19 (19:05–19:15): no events (fallback); reports and progress
+
+- No job ended since iteration 18. `CAMPAIGN=noreg_fail bash scripts/farmshare/step4_optimal.sh report` run.
+- Boat Race `LN_confirm` extension (1985586) PENDING, reason `Priority` (Slurm's estimated start 20:45); not an incident.
+- Progress (episodes): Boat Race `L_confirm` 4344–4368 / 6144, `LE_confirm` 1680–1776 / 3072. **Taxi: `L` 72–96, `LE` 24, `LN` 24–48 of 768 after 7.4 h** (about 3–13 episodes/h per seed: the PBRR refits dominate, as the doc expects); each will reach the 48 h limit far short of 768, and rule 1 resumes it (likely several times).
+- No rule decisions. Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.

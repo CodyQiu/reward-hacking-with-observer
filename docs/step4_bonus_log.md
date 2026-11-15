@@ -266,3 +266,10 @@ Pending: tomato_large (1984519–1984521).
 
 - **1985581** (`br_absent_supervisor_B1_base_LN`, s1) COMPLETED (0:56): s1 **0.000** (s.e. 0.000) CONVERGED, hides like its best response (true about −50 ×4, −107). `B1_base_LN` is 3/3 CONVERGED (0.000 / 0.000 / 0.000). The AS base cell is DONE: information only (no confirm).
 - Queue (this campaign): 17 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 30 (19:05–19:15): no events (fallback); reports and progress
+
+- No job ended since iteration 29. `git pull --no-rebase --no-edit --ff`: already up to date. `CAMPAIGN=bonus bash scripts/farmshare/step4_optimal.sh report` run.
+- **Pending by priority, not an incident:** grid `B1_P2swap_LE+NET+ENT3_confirm` (1985549) has been PENDING since 17:37 with reason `Priority` (fair share; Slurm's estimated start 21:46). Our jobs use 132 CPUs of the 512-CPU per-user QOS limit.
+- Progress (episodes): AS no-reg `LN+RS` 5280–5376 / 6144; AS swap `LN_confirm` 1536–1752 / 3072; grid no-reg `LN+LR` 2448–2544 / 6144; Tomato base `L` 696–1104, `LE` 264–864, `LN` 696–912 of 1536; Tomato no-reg `LN` 1344–1584 / 6144; **Tomato swap `LN+ES10+N4` 192–216 / 1536** (256 envs; about 30 episodes/h, so it will reach the 48 h limit near 1400 and be resumed, rule 1); **tomato_large: 24–48 / 1536 after 7.4 h** (several 48 h jobs per run, as in the optimal campaign; rule 1 resumes them). tomato_large targets (1984519–1984521) still computing (7.4 h).
+- No rule decisions. Queue (this campaign): 17 jobs. Cells DONE: 2 of 12.
