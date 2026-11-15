@@ -135,3 +135,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.09 g.use_regularization=False g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1`: the run's overrides at its final length, 3072) → `... submit` → **1985090**.
 - Boat Race confirmations now running: `L_confirm` (extension to 3072, 1985083), `LN_confirm` (1984995), `LE_confirm` (1985090). The cell is DONE when any is 3/3.
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-14, iteration 13 (16:09–16:12): Boat Race `LN_confirm` finished; check 1985422
+
+- Woken by the training wait: **1984995** (Boat Race `N1_P1eq1_LN_confirm`, seeds 20–22, 1536 episodes) COMPLETED 16:09 (1:36:38, exit 0). `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LN_confirm`) → `... br_missing submit` → **1985422**. The Boat Race cell is DONE if this is 3/3.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
