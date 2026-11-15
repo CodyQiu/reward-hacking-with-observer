@@ -66,3 +66,7 @@
   [tomato s2] 12,480,000  win0-3 0.25  off 0.25  corr/ep 0.99  winF 0.01  proxy0-3    465.7  rounds 3166  (533s)
   [tomato s2] 12,672,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    465.8  rounds 3220  (1211s)
   [tomato s2] 12,864,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    465.0  rounds 3280  (1945s)
+  [tomato s2] 13,056,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.01  proxy0-3    463.6  rounds 3342  (2696s)
+  [tomato s2] 13,248,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.01  proxy0-3    465.4  rounds 3388  (3289s)
+  [tomato s2] 13,440,000  win0-3 0.20  off 0.20  corr/ep 0.82  winF 0.05  proxy0-3    455.2  rounds 3432  (3843s)
+  [tomato s2] 13,632,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    465.0  rounds 3483  (4527s)
