@@ -401,3 +401,11 @@ Pending: tomato_large (1984519–1984521).
 - `B1_P1eq1_LN+RS+LR` (wave 2, `ppo.learning_rate=0.0001`) at 3072: s0 **0.000**, s1 **0.000** CONVERGED (corrected once, then honest); s2 **0.065** (s.e. 0.018) **IMPROVING**: corrected once, then honest, while its best response takes 2 corrections (the same s2 shortfall as `LN+RS` and `+ES10`).
 - **Rule 4 (tuning run, s2 IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+LR 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1986888**.
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 48 (01:07–01:12): Tomato base `L` 0/3 (s1 IMPROVING) → extend to 3072 (1986905)
+
+- **1986872** (`br_tomato_B1_base_L`, s2 at 1536) had COMPLETED (12:58): s2 **0.163** (s.e. 0.000). s2 is honest in round 0 (true 427), exploits and is corrected in round 1 (window 0.96), then honest; its best response hides.
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_L`: s0 **0.162** PLATEAU, s1 **0.163** **IMPROVING**, s2 **0.163** PLATEAU. Every seed is reactive (corrected once, then honest, true about 430), while the optimum hides (true 59.8).
+- **Rule 4 (tuning run, s1 IMPROVING, 1536 < cap 12,288): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_L 3072` (dry-run: `submit.sh 48 --env tomato --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`) → `... submit` → **1986905**.
+- Tomato base status: `L` extending; `LN` finished (0/3 PLATEAU); `LE` s1/s2 IMPROVING, s0 still training. Wave 2 / exploration wait until no wave-1 run is still IMPROVING (rule 5) or every wave-1 run has a check (rule 6b, after `LE` s0).
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.

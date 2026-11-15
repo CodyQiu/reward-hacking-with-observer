@@ -226,3 +226,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - `N1_P1eq1_LE_confirm` at 6144: s21 **0.010** (s.e. 0.014) CONVERGED; s22 **0.045** (s.e. 0.023; 0.040 at 3072) labelled IMPROVING; s20 NEEDS BR. **Rule 3:** `... br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`) → `... br_missing submit` → **1986897 ** (s20). Rule 4 for `LE_confirm` waits for it.
 - In all three Boat Race confirmations, s22 now sits at 0.032–0.045 with a flat best-response gap (flag at the top). `L_confirm` is running to the cap (1985883).
 - Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 26 (01:07–01:12): Boat Race `LE_confirm` 2/3 at 6144 → extend to the cap, 12,288 (1986904)
+
+- Woken by the check wait: **1986897** (`br_boat_race_N1_P1eq1_LE_confirm`, s20 at 6144) COMPLETED 01:06 (1:51): s20 **0.011** (s.e. 0.010) CONVERGED (corrected once, then the −76 variant of the exploit; best response −100).
+- `N1_P1eq1_LE_confirm` at 6144: s20 **0.011** CONVERGED, s21 **0.010** CONVERGED, s22 **0.045** (s.e. 0.023) labelled IMPROVING.
+- **Rule 4 (confirmation, s22 IMPROVING, 6144 < cap 12,288): extend 2× to the cap.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE_confirm 12288` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`) → `... submit` → **1986904**.
+- All three Boat Race confirmations (`L`, `LN`, `LE`) are now 2/3 with s22 at 0.032–0.045, and all three run to the 12,288 cap (1985883, 1986896, 1986904). If none reaches 3/3 there, every Boat Race tuning run (all 3/3) will have a failed confirmation, and rule 6b's exploration starts for the cell.
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
