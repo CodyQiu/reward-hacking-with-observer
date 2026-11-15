@@ -486,3 +486,10 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1986437** (AS `B1_P1eq1_LN+RS+ENT3_confirm`, 3072) and **1986438** (AS `+ES10` extension to 6144) COMPLETED 04:12 (3:49:02, 3:45:53; exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: both runs) → `... br_missing submit` → **1987154** (`+ENT3_confirm` s21), **1987155** (`+ES10` at 6144).
 - Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 60 (04:19–04:23): AS no-reg `+ENT3_confirm` 1/3 → extend to 6144 (1987156); `+ES10` 2/3 at 6144 → extend to 12,288 (1987157)
+
+- Woken by the check wait: **1987155** (`+ES10` at 6144; 2:46) COMPLETED 04:19; **1987154** (`+ENT3_confirm` s21) had COMPLETED.
+- `B1_P1eq1_LN+RS+ENT3_confirm` at 3072: s20 **0.049** IMPROVING, s21 **0.000** (s.e. 0.000) CONVERGED, s22 **0.052** IMPROVING. **Rule 4 (confirmation, two seeds IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ENT3_confirm 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1987156**.
+- `B1_P1eq1_LN+RS+ES10` (exploration) at 6144 (gap history 3072 / 6144): s0 **0.000**, s1 **0.000** CONVERGED; s2 **0.074** (s.e. 0.029; 0.061 / 0.074) IMPROVING (corrected once; best response 2 corrections). **Rule 6b (exploration run, a seed unconverged): extend 2× whatever the verdict.** `... extend absent_supervisor B1_P1eq1_LN+RS+ES10 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10 --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987157**.
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
