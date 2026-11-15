@@ -226,3 +226,9 @@ Pending: tomato_large (1984519–1984521).
 
 - **1985421** (`br_absent_supervisor_B1_base_LN`, s2) COMPLETED 16:14 (0:55): s2 **0.000** (s.e. 0.000) CONVERGED, hides like its best response and target (true about −52 to −55 ×4, −103). With s0 (0.000), 2 of 3 seeds of `B1_base_LN` are CONVERGED; s1 is still training (1272 of 3072). The AS base cell is DONE: information only.
 - Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 24 (16:20–16:24): AS base `LE` finished (information only); AS swap `LN` s1 finished; checks 1985446, 1985447
+
+- Woken by the training wait: **1984530** (AS `B1_base_LE`, 3072 episodes) COMPLETED 16:19 (4:35:20, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P2swap_LN` and `br_absent_supervisor_B1_base_LE`) → `... br_missing submit` → **1985446** (AS swap `B1_P2swap_LN`: s1 has finished 3072; s0 3048 and s2 3024 are about to finish and are likely included, since `--finished-only` tests each seed lazily), **1985447** (AS base `B1_base_LE`, information only: the cell is DONE).
+- Queue (this campaign): 20 jobs. Cells DONE: 2 of 12.
