@@ -702,3 +702,29 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - Woken by the training wait: **1987172** (Tomato `B1_base_LE`, extension to 3072) COMPLETED 11:34 (6:48:24, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing, in either campaign.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing`. The dry-run listed AS `B1_P1eq1_LN+RS+EP_confirm` (s20–s22 finished at 6144) and Tomato `B1_base_LE` (s1, s2 at 3072). Submitted with `... br_missing submit` → **1987419** (AS `+EP_confirm`), **1987420** (Tomato `base_LE`). `noreg_fail br_missing` (dry-run): nothing.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 87 (11:56–12:02): AS no-reg `+EP_confirm` 1/3 at 6144 → extend 12,288 (1987446); Tomato base `LE` 0/3 at 3072 → extend 6144 (1987447)
+
+- Woken by the check wait. **1987419** (`br_absent_supervisor_B1_P1eq1_LN+RS+EP_confirm`, 1:22) and **1987420** (`br_tomato_B1_base_LE`, 18:26) are COMPLETED. A correction to iteration 86: the `+EP_confirm` training job **1987207** also ended at 11:34 (5:50:54, COMPLETED, exit 0). `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **`B1_P1eq1_LN+RS+EP_confirm` (6144):**
+
+    | Seed | Gap (s.e.) | Verdict |
+    |---|---|---|
+    | s20 | **0.032** (0.030) | IMPROVING |
+    | s21 | **0.000** (0.000) | CONVERGED |
+    | s22 | **0.057** (0.031) | IMPROVING |
+
+    PPO is corrected once, then nearly honest in every seed. s20's best response takes 2 corrections (round 1 at true 400). s22's takes 3 (rounds 1–2 at true 400). It is the same shortfall as the other AS no-reg seeds. s20 and s21 are "above target".
+  - **`B1_base_LE` (3072):**
+
+    | Seed | Gap (s.e.) at 1536 | Gap (s.e.) at 3072 | Verdict |
+    |---|---|---|---|
+    | s0 | 0.167 | **0.165** (0.000) | IMPROVING |
+    | s1 | 0.167 | **0.164** (0.000) | IMPROVING |
+    | s2 | 0.166 | **0.164** (0.000) | IMPROVING |
+
+    Every seed is reactive: corrected in round 0 (true 46), then honest (true 425–427). Every best response hides (true 59.8 ×4, then 46.0), as the target does. The BR gap has barely moved; the IMPROVING label comes from the training curve's target gaps.
+- **Rule 4 (any seed IMPROVING, below the cap): extend 2×.**
+  - **`+EP_confirm`.** Command: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+EP_confirm 12288`. Dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+EP_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`. Then `... submit` → **1987446**.
+  - **`B1_base_LE`.** Command: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LE 6144`. Dry-run: `submit.sh 48 --env tomato --run-id B1_base_LE --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`. Then `... submit` → **1987447**.
+- Queue: 23 jobs in this campaign (limit 60), 30 in all. Cells DONE: 4 of 12.
