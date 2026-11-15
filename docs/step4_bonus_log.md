@@ -937,3 +937,37 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
 - Woken by the training wait: **1987190** (grid `B1_P1eq1_LN+LR`, extension to 12,288) COMPLETED 15:06 (10:10:23, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `B1_P1eq1_LN+LR`) → `... br_missing submit` → **1987893 **. At the cap the run is finished whatever the verdict: 3/3 → `confirm`; otherwise the cell's next step comes from rule 5 (wave 2) or 6b. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 102 (15:12–15:22): grid no-reg `LN+LR` 2/3 at the 12,288 cap → finished; wave 2 (1987902–1987906) and rule 6b stage 1 (1987907–1987910)
+
+- **The check.** Woken by the check wait: **1987893** (`br_grid_B1_P1eq1_LN+LR`, 3:24) COMPLETED 15:11. `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_P1eq1_LN+LR`, BR gap at 6144 / 12,288:
+
+  | Seed | 6144 | 12,288 | Verdict | Behaviour |
+  |---|---|---|---|---|
+  | s0 | 0.002 | **0.000** | CONVERGED | corrected once, then honest (true 22 ×4), like its best response |
+  | s1 | 0.011 | **0.000** | CONVERGED | the same |
+  | s2 | 0.055 | **0.067** (s.e. 0.031) | PLATEAU | corrected once, then never reaches the goal (true −100 every round). Its best response takes 2 corrections, then is honest (true −100, −100, 22 ×3). |
+
+- **Rule 4: at the cap, 2/3 → the run is finished.**
+- **A missed step, corrected now.** Rule 6b as changed by docs/step4_bonus.md starts exploration "once every wave-1 run of that cell has a check and none is CONVERGED 3/3". Grid no-reg met that in iteration 66 (2/3 at 6144), but I only extended the run then and did not start exploration. I start it now, together with wave 2. This is the same order as AS no-reg, whose wave 2 and exploration started together in iteration 32.
+- **Rule 5 (wave 2).** The cell's one wave-1 run is finished, and it is neither CONVERGED 3/3 nor IMPROVING.
+  - Extras: `.venv/bin/python scripts/farmshare/run_sets.py results/step4/grid/bonus/B1_P1eq1_LN+LR`, minus `episodes=`, which gives `g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 protocol.update_bonus=1.0`.
+  - Command for each: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh ppo grid P1eq1 "LN+LR+<tag>" "<extras> <factor>" submit`, at 1536 episodes (the grid wave-1 length). Each was dry-run first; later duplicate keys win.
+
+    | Run | Factor | Job |
+    |---|---|---|
+    | `GL` | `ppo.gae_lambda=1.0` | **1987902** |
+    | `NET` | `ppo.net_arch=[256,256]` | **1987903** |
+    | `RS` | `reward_scale=0.0025`, i.e. 0.25 × grid's 0.01, as in the optimal campaign's `O1_P1eq1_LN+RS` | **1987904** |
+    | `EP` | `ppo.n_epochs=20` | **1987905** |
+    | `AN` | `anneal.last=0.5` | **1987906** |
+
+  - **`LR` skipped:** the base already has `ppo.learning_rate=0.0001`, which is exactly the `LR` factor. This is the same as `RS` being skipped for AS no-reg.
+- **Rule 6b (exploration, stage 1)** from the cell's run with the smallest mean gap (the only one).
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore grid P1eq1 B1_P1eq1_LN+LR`. It gives 4 runs at 1536, each the base's overrides plus:
+    - `+ENT3`: `ppo.ent_coef=0.03`
+    - `+ES10`: `anneal.ent_start=10 anneal.ent_episodes=768`
+    - `+N4`: `n_envs=256 ppo.batch_size=6400`
+    - `+ES10+N4`
+  - Submitted with `... submit` → **1987907** (ENT3), **1987908** (ES10), **1987909** (N4), **1987910** (ES10+N4).
+- **Budget:** this campaign has 30 jobs (≤ 60); all jobs 37 (≤ 110). Cells DONE: 4 of 12.
