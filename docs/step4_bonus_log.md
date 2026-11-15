@@ -341,3 +341,10 @@ Pending: tomato_large (1984519–1984521).
 
 - **1986003** (`br_tomato_B1_base_L`, s1 at 1536) COMPLETED 23:49 (12:25): s1 **0.163** (s.e. 0.000), not converged; corrected in round 0, then honest (true about 430), while its best response hides (true 59.8 ×4, 46), exactly like s0 (0.162). s2 still training. Rule 4 waits for s2's check.
 - Checks running: 1986123 (`LE` s1), 1986124 (`LN` s0). Cells DONE: 3 of 12.
+
+## 2026-11-14, iteration 40 (23:50–23:56): AS no-reg exploration `+ENT3` and `+ES10` finished; checks 1986300, 1986301; Tomato base `LN` finished
+
+- Woken by the training wait: **1985722** (AS `B1_P1eq1_LN+RS+ENT3`, 3072) COMPLETED 23:50 (2:11:15, exit 0). Also ended: **1985723** (`+ES10`, 23:51, 2:12:43, exit 0) and **1984536** (Tomato `B1_base_LN`, 1536, 12:06:48, exit 0).
+- **A race, not a stopped run:** the first `... resume` dry-run (23:50) listed `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10 --seeds 2 ... --resume`, because s2 was in its last seconds and its job had just left the queue. Checked: the job COMPLETED 23:51:15 with "seed 2 exit 0", and s2 has `metrics.json` at 3072. A second dry-run lists nothing. Not submitted.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `+ENT3`, `+ES10`) → `... br_missing submit` → **1986300** (`B1_P1eq1_LN+RS+ENT3`), **1986301** (`B1_P1eq1_LN+RS+ES10`). Tomato `B1_base_LN` s1 and s2 get their check after the running one (1986124, s0) ends.
+- Queue (this campaign): 25 jobs. Cells DONE: 3 of 12.
