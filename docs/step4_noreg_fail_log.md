@@ -256,3 +256,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - No job ended since iteration 28. `CAMPAIGN=noreg_fail bash scripts/farmshare/step4_optimal.sh report` run.
 - Progress: Boat Race `LN_confirm` about 9850 / 12,288, `LE_confirm` about 9950 / 12,288 (both running to the cap). **Taxi: `L` 120–168, `LE` 72, `LN` 96 of 768 after 19.3 h** (about 4–9 episodes/h); the jobs reach the 48 h limit at about 11:44 on 2026-11-16 near 200–400 episodes, and rule 1 resumes them.
 - No rule decisions. Queue (this campaign): 5 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 30 (10:23–10:26): Boat Race `LN_confirm` reached the cap (12,288); `LE_confirm` seeds at the cap; checks 1987343 1987344 
+
+- Woken by the training wait: **1986896** (Boat Race `N1_P1eq1_LN_confirm` extension to 12,288) COMPLETED 10:22 (9:17:57, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`, `br_boat_race_N1_P1eq1_LN_confirm`) → `... br_missing submit` → **1987343 1987344 ** (in that order). Both runs are at the cap: 3/3 makes the Boat Race cell DONE, otherwise the confirmation has failed.
+- Queue (this campaign): 5 jobs. Cells DONE: 0 of 2.
