@@ -60,11 +60,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **s2's fixed point cycles** (with the bonus: 3.00 → 2.71 → corrected once → 3.00 → 2.71; without: 3.00 → 2.48 → 2.99 → 2.51 → 2.91). Rule 2: the last iteration is the target. The difference from the no-bonus target is where each cycle stopped, not a measured bonus effect.
 - Every end state is honest after its last correction (true 425–434, honest about 433); V_hide 2,759.5, margin +1,945 to +2,524.
 
-**Summary so far (11 of 12 cells):** in 40 of the 42 swap / no-reg seeds computed (7 cells × 6 seeds) the bonus leaves the end state unchanged and raises V0 by exactly 1.0 × corrections. The exceptions are both Tomato no-reg: s1 (one extra correction in round 3, 76% of the time; converged) and s2 (a fixed point that cycles with and without the bonus, flagged). Base hides on the grid, AS and Tomato (margin 0).
+**Summary so far (11 of 12 cells):** in 40 of the 42 swap / no-reg seeds computed (7 cells × 6 seeds) the bonus leaves the end state unchanged and raises V0 by exactly 1.0 × corrections. The exceptions are both Tomato no-reg: s1 (one extra correction in round 3, 76% of the time; converged) and s2 (a fixed point that cycles with and without the bonus, flagged). Base hides on the grid, AS, Tomato and tomato_large (margin 0).
 
 **tomato_large, swap (+bonus)** (job 1984519; all fixed points converged; every draw corrected once): **= no-bonus target + exactly 1.0 in all 6 seeds.** Corrected once, then honest: true 65, then 482.9–501.4 ×4. V0 4,877 / 5,002 / 5,119 / 5,692 / 5,330 / 4,826 (s0, s1, s2, s20, s21, s22), V_hide 3,686.8, margin +1,139 to +2,005.
 
-Pending: tomato_large no-reg and base (1984520, 1984521; running for over 18 h).
+**tomato_large, standard PBRR (+bonus)** (job 1984521): **hides in all 6 seeds** and every draw: V0 = V_hide = 3,686.8 (margin 0); true 84.2 ×4, then 65.0 in round 4; window exploited only in round 4.
+
+**Base hides in all four environments with the bonus** (grid, AS, Tomato, tomato_large; 24 of 24 seeds, margin 0): +1 per update never makes a standard-PBRR correction worth taking.
+
+Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -598,3 +602,9 @@ Pending: tomato_large no-reg and base (1984520, 1984521; running for over 18 h).
 - Progress (episodes): AS no-reg `+ENT3_confirm` 5664–5856 / 6144, `+N4_confirm` 1800–1896 / 3072, `+ES10+N4_confirm` 1080–1416 / 3072, `+NET_confirm` about 700 / 3072, `+EP_confirm` 1320–1440 / 6144, `+LR` about 9900 / 12,288, `+ES10` about 8340 / 12,288; grid no-reg `LN+LR` 7416 / 12,288; Tomato no-reg `LN` 4152–4680 / 6144, base `L` 2184–2664 / 3072, base `LE` about 2100 / 3072, base exploration 24–264 / 1536, swap `LN+ES10+N4_confirm` no checkpoint yet; tomato_large swap `LE` 144, no-reg `LN+ES10` about 300, base `L` 192–792, `LE` 120–144, `LN` 600–672 (all of 1536).
 - The wave-1 jobs started 2026-11-14 11:43 reach the 48 h limit at about 11:43 on 2026-11-16 (tomato_large ×5, Tomato no-reg `LN`); rule 1 resumes them then.
 - tomato_large no-reg and base targets (1984520, 1984521) still running (19.3 h). No rule decisions. Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 75 (07:17–07:20): tomato_large base target (hides)
+
+- Woken by the target wait: **1984521** (`targets_tomato_large_base_bonus1`) COMPLETED 07:16 (19:27:51, exit 0), 6 seeds, all fixed points converged.
+- **Rule 2, under "Exact predictions":** tomato_large base with the bonus **hides** in all 6 seeds (V0 = V_hide = 3,686.8). Base now hides in all four environments with the bonus.
+- tomato_large no-reg target (1984520) still running (19.5 h). Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
