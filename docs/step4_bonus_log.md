@@ -660,3 +660,23 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - Woken by the training wait: **1987149** (`B1_P1eq1_LN+RS+ES10+N4_confirm`, AS) COMPLETED 11:12 (6:52:12, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing to resume (the five tomato_large runs are still running).
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing`. The dry-run listed AS `B1_P1eq1_LN+RS+ES10+N4_confirm` (s20–s22 finished), AS `B1_P1eq1_LN+RS+GL` (s0 and s2 finished at 12,288; s1 at 12,240) and Tomato `B1_base_L` (s0 and s1 at 3072). Tomato `B1_base_LE` s0 (3072) finished between the dry-run and the submit, so the submit listed it too; its check is valid like the others (`--finished-only`). `... br_missing submit` → **1987388** (AS `+ES10+N4_confirm`), **1987389** (AS `+GL`), **1987390** (Tomato `base_L`), **1987391** (Tomato `base_LE`).
 - Queue: 26 jobs in this campaign (limit 60); 33 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 84 (11:20–11:28): AS no-reg `+ES10+N4_confirm` 1/3 at 3072 → extend 6144 (1987395); `+GL` 2/3 at 12,288 → extend 24,576 (1987396)
+
+- Woken by the check wait. **1987388** (`br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4_confirm`, 3:08) and **1987389** (`br_absent_supervisor_B1_P1eq1_LN+RS+GL`, 2:07; s1 had reached 12,288 by the time the check ran) are COMPLETED. The Tomato base checks 1987390 and 1987391 are still running. The `+GL` training job **1987224** ended at 11:14 (3:45:14, COMPLETED). It ended before the training wait was re-armed, so that wait never reported it. `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **`B1_P1eq1_LN+RS+ES10+N4_confirm` (3072):**
+    - s20: **0.070** (s.e. 0.018), IMPROVING.
+    - s21: **0.000** (s.e. 0.000), CONVERGED.
+    - s22: **0.041** (s.e. 0.035), IMPROVING.
+    - s20 and s22 are corrected once, then honest (true 450 ×4). Their best responses take 2 corrections: round 1 at true 400, then 450. s21 and its best response are both corrected once, then honest. This is the same shortfall as every other unconverged AS no-reg seed.
+  - **`B1_P1eq1_LN+RS+GL` (12,288):**
+    - s0: **0.000**, CONVERGED (0.000 at 3072 / 6144 too).
+    - s1: **0.000**, CONVERGED (0.002 / 0.000 at 3072 / 6144).
+    - s2: **0.085** (s.e. 0.022), labelled IMPROVING. Its BR gap was 0.038 / 0.038 at 3072 / 6144, so it rose this time. s2's policy is corrected once, then honest (true 449.5–449.9). Its best response takes 2 corrections (round 1 at true 400). The label comes from the training curve's target gaps, not from the BR gap.
+- **Rule 4 (any seed IMPROVING, below the AS cap of 24,576): extend 2×.**
+  - **`+ES10+N4_confirm`.** Confirmations count once extended (the user, 2026-11-10). `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+ES10+N4_confirm 6144`. Dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`. Submitted with `... submit` → **1987395**.
+  - **`+GL`** (wave 2), to the cap. `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+GL 24576`. Dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+GL --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 24576`. Submitted with `... submit` → **1987396**. At the cap the run is finished, whatever the verdict.
+- AS no-reg is still open. Running:
+  - confirmations: `+ENT3_confirm` → 12,288 (1987264), `+N4_confirm` → 6144 (1987304), `+NET_confirm` (1987197), `+EP_confirm` (1987207), `+LR_confirm` (1987290), `+ES10+N4_confirm` → 6144 (1987395);
+  - tuning: `+ES10` → 12,288 (1987157), `+GL` → 24,576 (1987396).
+- Queue: 24 jobs in this campaign (limit 60), 31 in all. Cells DONE: 4 of 12.
