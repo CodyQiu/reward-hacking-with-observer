@@ -524,3 +524,12 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1984523** (grid `B1_P1eq1_LN+LR`, 6144) COMPLETED 04:49 (17:05:09, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_grid_B1_P1eq1_LN+LR`, `br_absent_supervisor_B1_P1eq1_LN+RS+AN_confirm`) → `... br_missing submit` → **1987183** (grid no-reg `B1_P1eq1_LN+LR` at 6144, the paired rerun of the no-bonus reference), **1987184** (AS `+AN_confirm`: s20, s21 finished 3072; s22 at 2520).
 - Queue (this campaign): 28 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 66 (04:55–04:59): grid no-reg `LN+LR` 2/3 at 6144 → extend to 12,288 (1987190); AS `+AN_confirm` s20 0.038, s21 CONVERGED
+
+- Woken by the check wait: **1987183** (`br_grid_B1_P1eq1_LN+LR`, 3:20) and **1987184** (`br_absent_supervisor_B1_P1eq1_LN+RS+AN_confirm`, s20, s21; 1:57) COMPLETED 04:55.
+- `B1_P1eq1_LN+LR` (grid no-reg, the reference config with the bonus) at 6144: s0 **0.002** (s.e. 0.003) CONVERGED, s1 **0.011** (s.e. 0.002) CONVERGED (both corrected once, then honest, true 22; s1 misses the goal in round 4); s2 **0.055** (s.e. 0.037) **IMPROVING**: corrected once, then never reaches the goal (true −100 every round), while its best response takes 2 corrections and is then honest.
+- **Paired no-bonus reference** `O1_P1eq1_LN+LR` at 6144 (same seeds): 0.000 / 0.002 / 0.000, all corrected once then honest. So s2's failure to reach the goal is specific to this run; from one seed it cannot be attributed to the bonus.
+- **Rule 4 (tuning run, s2 IMPROVING, 6144 < grid cap 12,288): extend 2× to the cap.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR 12288` (dry-run: `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`) → `... submit` → **1987190**.
+- AS `B1_P1eq1_LN+RS+AN_confirm` at 3072: s20 **0.038** (s.e. 0.028) not converged (corrected once; best response 2 corrections); s21 **0.015** (s.e. 0.029) CONVERGED (corrected once; best response 3). s22 still training (2520 / 3072); rule 4 waits for it.
+- Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
