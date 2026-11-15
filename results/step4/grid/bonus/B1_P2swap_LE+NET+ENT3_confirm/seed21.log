@@ -64,3 +64,5 @@
   [grid s21] 12,288,000  win0-3 0.25  off 0.22  corr/ep 1.00  winF 0.00  proxy0-3   1858.0  rounds 3018  (18305s)
   [grid s21] resumed at episode 1536 -> 3072
   [grid s21] 12,480,000  win0-3 0.25  off 0.11  corr/ep 0.99  winF 0.01  proxy0-3    905.4  rounds 3061  (318s)
+  [grid s21] 12,672,000  win0-3 0.25  off 0.07  corr/ep 1.01  winF 0.00  proxy0-3    575.2  rounds 3105  (627s)
+  [grid s21] 12,864,000  win0-3 0.25  off 0.08  corr/ep 1.00  winF 0.01  proxy0-3    719.6  rounds 3137  (871s)

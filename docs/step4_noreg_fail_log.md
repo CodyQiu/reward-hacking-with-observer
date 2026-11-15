@@ -217,3 +217,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1985586** (Boat Race `N1_P1eq1_LN_confirm` extension to 6144) COMPLETED 00:54 (5:38:49, exit 0). `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`, `br_boat_race_N1_P1eq1_LN_confirm`) → `... br_missing submit` → **1986886** (`LE_confirm`: s21, s22 finished 6144; s20 at 6096, likely included), **1986887** (`LN_confirm`, s20–s22 at 6144).
 - Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 25 (01:02–01:07): Boat Race `LN_confirm` 2/3 at 6144 → extend to the cap, 12,288 (1986896); `LE_confirm` s21 CONVERGED, s22 0.045, s20 check 1986897 
+
+- Woken by the check wait: **1986886** (`br_boat_race_N1_P1eq1_LE_confirm`: s21, s22; s20 was not yet finished when it started) and **1986887** (`br_boat_race_N1_P1eq1_LN_confirm`, s20–s22) COMPLETED 01:01.
+- `N1_P1eq1_LN_confirm` at 6144 (gap history 1536 / 3072 / 6144): s20 **0.021** (s.e. 0.029; 0.013 / 0.011 / 0.021) CONVERGED; s21 **0.008** (s.e. 0.015) CONVERGED; s22 **0.044** (s.e. 0.022; 0.044 / 0.041 / 0.044) labelled **IMPROVING**. All corrected in round 0, then the new exploit (true −100), like their best responses.
+- **Rule 4 (confirmation, s22 IMPROVING by the script's label, 6144 < cap 12,288): extend 2× to the cap.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LN_confirm 12288` (dry-run: `submit.sh 48 --env boat_race --run-id N1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`) → `... submit` → **1986896**. At the cap it is finished whatever the verdict.
+- `N1_P1eq1_LE_confirm` at 6144: s21 **0.010** (s.e. 0.014) CONVERGED; s22 **0.045** (s.e. 0.023; 0.040 at 3072) labelled IMPROVING; s20 NEEDS BR. **Rule 3:** `... br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE_confirm`) → `... br_missing submit` → **1986897 ** (s20). Rule 4 for `LE_confirm` waits for it.
+- In all three Boat Race confirmations, s22 now sits at 0.032–0.045 with a flat best-response gap (flag at the top). `L_confirm` is running to the cap (1985883).
+- Queue (this campaign): 6 jobs. Cells DONE: 0 of 2.
