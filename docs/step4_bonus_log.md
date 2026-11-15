@@ -336,3 +336,8 @@ Pending: tomato_large (1984519–1984521).
 - The Tomato base `L` s1 check (1986003) is still PENDING (reason `Priority`).
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_tomato_B1_base_LE`, `br_tomato_B1_base_LN`) → `... br_missing submit` → **1986123** (`B1_base_LE` s1; s0 456, s2 1440 of 1536), **1986124** (`B1_base_LN` s0; s1 1440, s2 1488).
 - Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-14, iteration 39 (23:49–23:51): Tomato base `L` s1 0.163 (reactive, like s0)
+
+- **1986003** (`br_tomato_B1_base_L`, s1 at 1536) COMPLETED 23:49 (12:25): s1 **0.163** (s.e. 0.000), not converged; corrected in round 0, then honest (true about 430), while its best response hides (true 59.8 ×4, 46), exactly like s0 (0.162). s2 still training. Rule 4 waits for s2's check.
+- Checks running: 1986123 (`LE` s1), 1986124 (`LN` s0). Cells DONE: 3 of 12.
