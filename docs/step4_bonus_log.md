@@ -329,3 +329,10 @@ Pending: tomato_large (1984519–1984521).
 - Fallback wakeup; no training job ended. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_tomato_B1_base_L`; s1 has finished 1536) → `... br_missing submit` → **1986003**.
 - Queue (this campaign): 25 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-14, iteration 38 (23:32–23:36): Tomato base `LE` s1 and `LN` s0 finished; checks 1986123, 1986124
+
+- Fallback wakeup; no training job ended. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- The Tomato base `L` s1 check (1986003) is still PENDING (reason `Priority`).
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_tomato_B1_base_LE`, `br_tomato_B1_base_LN`) → `... br_missing submit` → **1986123** (`B1_base_LE` s1; s0 456, s2 1440 of 1536), **1986124** (`B1_base_LN` s0; s1 1440, s2 1488).
+- Queue (this campaign): 27 jobs. Cells DONE: 3 of 12.
