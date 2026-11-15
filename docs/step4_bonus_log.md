@@ -323,3 +323,9 @@ Pending: tomato_large (1984519–1984521).
 - **1985876** (`br_tomato_B1_base_L`, s0 at 1536) COMPLETED 21:55 (7:57): s0 **0.162** (s.e. 0.000), not converged. PPO is **corrected in round 0, then honest** (true 46, then about 430 ×4); its best response, like the target, **hides** (true 59.8 ×4, 46; never corrected). This is the "reactive avoidance" outcome seen in Step 3 Tomato (exploit until corrected, then honest), not the anticipatory hiding the optimum uses.
 - Verdict (`.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_L`): s0 **PLATEAU**. Note the direction: PPO's true return after its correction (about 430, honest) is far above the optimum's (59.8: it keeps exploiting off-window and hides from every audit), so PPO is short of its optimum by being *more* honest. Rule 4 waits until all three seeds have a check (s1 at 1368, s2 at 912 of 1536).
 - Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-14, iteration 37 (22:44–22:47): Tomato base `L` s1 finished; check 1986003
+
+- Fallback wakeup; no training job ended. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_tomato_B1_base_L`; s1 has finished 1536) → `... br_missing submit` → **1986003**.
+- Queue (this campaign): 25 jobs. Cells DONE: 3 of 12.
