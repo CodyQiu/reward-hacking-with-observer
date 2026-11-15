@@ -910,3 +910,9 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ENT3 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
   - Submitted with `... submit` → **1987845 **.
 - Queue: 22 jobs in this campaign (limit 60), 29 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 99 (14:50–14:54): AS no-reg `+ES10+N4_confirm` finished at 6144; Tomato base `LN+N4` s0 at 1536; checks 1987870 1987871
+
+- **Trigger.** The training wait fired: **1987395** (AS `B1_P1eq1_LN+RS+ES10+N4_confirm`, extension to 6144) COMPLETED 14:50 (3:29:23, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `+ES10+N4_confirm` and Tomato `B1_base_LN+N4` (s0 finished at 1536; s1 at 1344, s2 at 1248). Then `... br_missing submit` → **1987870** (AS `+ES10+N4_confirm`) and **1987871** (Tomato `base_LN+N4`).
+- **Cells DONE:** 4 of 12.
