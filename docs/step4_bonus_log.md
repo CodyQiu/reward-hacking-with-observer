@@ -971,3 +971,13 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
     - `+ES10+N4`
   - Submitted with `... submit` → **1987907** (ENT3), **1987908** (ES10), **1987909** (N4), **1987910** (ES10+N4).
 - **Budget:** this campaign has 30 jobs (≤ 60); all jobs 37 (≤ 110). Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 103 (15:55–15:59): Tomato no-reg `LN` s1 and Tomato base `LN+N4` s1 finished; checks 1988088 1988089
+
+- Woken by the training wait. The job that ended was noreg_fail's (1987355); this campaign's run states had moved on since the last check. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - Tomato `B1_P1eq1_LN`: s1 finished at 6144; s2 at 6120.
+  - Tomato `B1_base_LN+N4`: s1 finished at 1536; s2 at 1512.
+
+  `... br_missing submit` → **1988088** (Tomato no-reg `LN`), **1988089** (Tomato base `LN+N4`).
+- Cells DONE: 4 of 12.

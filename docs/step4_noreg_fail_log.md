@@ -330,3 +330,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - The Boat Race cell is DONE when this confirmation is 3/3; it may be extended, as before.
   - The other stage-1 runs (`LE+ENT3`, `LE+ES10`, `LE+ES10+N4`; 1987352, 1987353, 1987355) keep running.
 - Queue (this campaign): 7 jobs (limit 20); 30 in all. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 36 (15:55–15:59): Boat Race `LE+ES10+N4` finished at 1536; check 1988090
+
+- Woken by the training wait: **1987355** (Boat Race `N1_P1eq1_LE+ES10+N4`, rule 6b stage 1) COMPLETED 15:54 (5:21:06, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10+N4`) → `... br_missing submit` → **1988090**.
+- Cells DONE: 0 of 2.
