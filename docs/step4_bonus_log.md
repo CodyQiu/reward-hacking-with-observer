@@ -636,3 +636,8 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+LR` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.learning_rate=0.0001 g.use_regularization=False g.epochs=1000 protocol.update_bonus=1.0 episodes=12288 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625`: the run's config at its final length) → `... submit` → **1987290**. At 12,288 episodes this will take several 48 h jobs (rule 1 resumes it).
 - AS no-reg confirmations: `+ENT3` → 12,288 (1987264), `+N4` (1987110), `+ES10+N4` (1987149), `+NET` (1987197), `+EP` at 6144 (1987207), `+LR` at 12,288 (1987290).
 - Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 80 (09:28–09:30): Tomato base `L` s0 at 3072: 0.161 (still reactive)
+
+- **1987288** (`br_tomato_B1_base_L`, s0 at 3072) COMPLETED 09:27 (8:45): s0 **0.161** (s.e. 0.000; 0.162 at 1536), not converged; still corrected once, then honest (true about 431), while its best response hides. s1 and s2 still training (2784, 2448 of 3072); rule 4 waits for them.
+- Cells DONE: 4 of 12.
