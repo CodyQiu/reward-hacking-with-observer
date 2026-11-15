@@ -217,7 +217,12 @@ Pending: tomato_large (1984519–1984521).
 - **1985077** (`br_grid_B1_base_LN_confirm`, s20–s22) COMPLETED 15:30 (3:36): s20 **0.025**, s21 **0.000**, s22 **0.025** (s.e. 0.000), all CONVERGED. s21 hides like its best response. s20 and s22 "never exploit in view": they skip the exploit in the final window too (true −100 every round, like the best response, but without the round-4 defection), which costs 2.5%. The cell is already DONE (iteration 15): information only. All three grid base configs (`L`, `LE`, `LN`) pass 3/3 + 3/3.
 - Cells DONE: 2 of 12.
 
-## 2026-11-14, iteration 22 (16:09–16:12): AS base `LN` s1 or s2 finished; check 1985421 (information only)
+## 2026-11-14, iteration 22 (16:09–16:12): AS base `LN` s2 finished; check 1985421 (information only)
 
-- `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_absent_supervisor_B1_base_LN` (a second seed has finished 3072). The AS base cell is DONE (iteration 19), so this is information only; `... br_missing submit` → **1985421**.
+- `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_absent_supervisor_B1_base_LN` (s2 has finished 3072; s1 is at 1272). The AS base cell is DONE (iteration 19), so this is information only; `... br_missing submit` → **1985421**.
 - `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing. Queue (this campaign): 20 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 23 (16:14–16:15): AS base `LN` s2 CONVERGED (information only)
+
+- **1985421** (`br_absent_supervisor_B1_base_LN`, s2) COMPLETED 16:14 (0:55): s2 **0.000** (s.e. 0.000) CONVERGED, hides like its best response and target (true about −52 to −55 ×4, −103). With s0 (0.000), 2 of 3 seeds of `B1_base_LN` are CONVERGED; s1 is still training (1272 of 3072). The AS base cell is DONE: information only.
+- Cells DONE: 2 of 12.
