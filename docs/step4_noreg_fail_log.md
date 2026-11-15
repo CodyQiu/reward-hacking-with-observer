@@ -312,3 +312,21 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
 - Woken by the training wait: **1987487** (Boat Race `N1_P1eq1_LE+N4`, extension to 3072) COMPLETED 13:55 (1:34:29, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+N4`) → `... br_missing submit` → **1987706 **. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 35 (14:02–14:06): Boat Race `LE+N4` 3/3 CONVERGED at 3072 → `confirm` (1987728 )
+
+- Woken by the check wait: **1987706** (`br_boat_race_N1_P1eq1_LE+N4`, 5:49) COMPLETED 14:02. Result of `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE+N4` at 3072:
+
+  | Seed | Gap (s.e.) at 3072 | Verdict | Gap at 1536 |
+  |---|---|---|---|
+  | s0 | **0.015** (0.018) | CONVERGED | 0.019 |
+  | s1 | **0.023** (0.010) | CONVERGED | 0.033 |
+  | s2 | **0.023** (0.015) | CONVERGED | 0.015 |
+
+  PPO and every best response are corrected once in round 0, then play the new exploit: true −100 per round (−150 below honest 50), window clean. All three seeds are "above target", meaning PPO's corrections pay more than the target's. The target takes 2 corrections for s0, 3 for s1 and 1 for s2.
+- **Rule 4 (rule 6b exploration run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE+N4`. It printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.09 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 episodes=3072 n_envs=64`. That is the run's `overrides.json` at its final length, 3072.
+  - Submitted: `... submit` → **1987728 **.
+  - The Boat Race cell is DONE when this confirmation is 3/3; it may be extended, as before.
+  - The other stage-1 runs (`LE+ENT3`, `LE+ES10`, `LE+ES10+N4`; 1987352, 1987353, 1987355) keep running.
+- Queue (this campaign): 7 jobs (limit 20); 30 in all. Cells DONE: 0 of 2.
