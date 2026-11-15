@@ -574,3 +574,11 @@ Pending: tomato_large (1984519–1984521).
 - **Rule 6b: start nothing new for grid swap.** No other grid swap runs are running.
 - AS no-reg `+GL`: **1987047** (extension to 6144) COMPLETED 06:03 (3:32:26, exit 0). **Rule 3:** `... br_missing submit` → **1987217**.
 - Queue (this campaign): 25 jobs. Cells DONE: **4 of 12**.
+
+## 2026-11-15, iteration 72 (06:10–06:15): Tomato swap `LN+ES10+N4` 3/3 CONVERGED → confirm (1987223); AS no-reg `+GL` 2/3 at 6144 → extend to 12,288 (1987224)
+
+- Woken by the check wait: **1987217** (`br_absent_supervisor_B1_P1eq1_LN+RS+GL` at 6144; 2:29) COMPLETED 06:10; **1987209** (Tomato swap s1, s2) had COMPLETED.
+- Tomato swap `B1_P2swap_LN+ES10+N4` at 1536: s0 **0.002**, s1 **0.001**, s2 **0.002** (s.e. ≤ 0.000), all **CONVERGED**; each corrected once, in round 0, then honest (true about 422), like its best response and the target. Paired no-bonus reference `O1_P2swap_LN+ES10+N4` (same seeds): 0.001 / 0.001 / 0.002, same end state.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato B1_P2swap_LN+ES10+N4` (dry-run: `submit.sh 48 --env tomato --run-id B1_P2swap_LN+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/tomato/bonus --set ppo.ent_coef=0.03 ppo.batch_size=6400 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 episodes=1536 protocol.update_bonus=1.0`, identical to its `overrides.json`) → `... submit` → **1987223**. The Tomato swap cell is DONE if this is 3/3 (the run took about 18 h).
+- AS `B1_P1eq1_LN+RS+GL` at 6144 (history 3072 / 6144): s0 **0.000**, s1 **0.000** CONVERGED; s2 **0.038** (s.e. 0.030; 0.038 / 0.038) labelled IMPROVING. **Rule 4: extend 2×.** `... extend absent_supervisor B1_P1eq1_LN+RS+GL 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+GL --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987224**.
+- Queue (this campaign): 24 jobs. Cells DONE: 4 of 12.
