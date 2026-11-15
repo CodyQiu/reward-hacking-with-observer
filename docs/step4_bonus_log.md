@@ -509,3 +509,12 @@ Pending: tomato_large (1984519–1984521).
 
 - **1987158** (`br_tomato_B1_P2swap_LN+ES10+N4`, s0 at 1536) COMPLETED 04:32 (7:28): s0 **0.002** (s.e. 0.000) CONVERGED; corrected in round 0, then honest (true about 422), like its best response and the target. s1, s2 still training (about 1230 / 1536). Rule 4 waits for them.
 - Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 64 (04:41–04:48): Tomato base `LE` 0/3 (IMPROVING) → extend to 3072 (1987172); **Tomato base exploration started** from `LN` (1987173–1987176)
+
+- Woken by the check wait: **1987163** (`br_tomato_B1_base_LE`, s0 at 1536) COMPLETED 04:41 (11:20): s0 **0.167** (s.e. 0.000), reactive (corrected once, then honest, true about 427); its best response hides.
+- `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_base_LE`: s0 **0.167**, s1 **0.167**, s2 **0.166**, all labelled **IMPROVING**.
+- **Rule 4 (tuning run, seeds IMPROVING, 1536 < cap 12,288): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LE 3072` (dry-run: `submit.sh 48 --env tomato --run-id B1_base_LE --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`) → `... submit` → **1987172**.
+- **Rule 6b (exploration): every Tomato base wave-1 run now has a check and none is CONVERGED 3/3** (`L` 0.162 / 0.163 / 0.163, extending to 3072; `LE` 0.167 / 0.167 / 0.166, extending; `LN` 0.160 / 0.160 / 0.160, PLATEAU). Base = the run with the smallest mean gap: **`B1_base_LN`** (mean 0.160; `L` 0.163, `LE` 0.167). Order: grid and AS base are DONE, so Tomato is next. `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore tomato base B1_base_LN` (dry-run: 4 runs at 1536, all with `g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1`: `+ENT3` `ppo.ent_coef=0.09`, n_envs 64; `+ES10` `anneal.ent_start=10 anneal.ent_episodes=768`; `+N4` `n_envs=256 ppo.batch_size=6400`; `+ES10+N4`) → `... submit` → **1987173** (ENT3), **1987174** (ES10), **1987175** (N4), **1987176** (ES10+N4).
+- What exploration has to overcome here: every base seed so far is corrected once and then honest (true about 430), while the optimum keeps exploiting off-window and hides from every audit (true 59.8). PPO needs to find the hiding policy, not more honesty.
+- Budget: this campaign 27 jobs (≤ 60); all jobs 32 (≤ 110). Cells DONE: 3 of 12.
