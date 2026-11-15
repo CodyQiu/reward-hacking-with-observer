@@ -457,3 +457,11 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1986888** (AS `B1_P1eq1_LN+RS+LR` extension to 6144) COMPLETED 03:41 (2:44:39, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4`, `br_absent_supervisor_B1_P1eq1_LN+RS+LR`) → `... br_missing submit` → **1987121** (`+ES10+N4`: s0, s1 finished 3072; s2 at 2784), **1987122** (`+LR` at 6144).
 - Queue (this campaign): 24 jobs. Cells DONE: 3 of 12.
+
+## 2026-11-15, iteration 56 (03:48–03:51): AS no-reg `+LR` 2/3 at 6144 → extend to 12,288 (1987131); `+ES10+N4` s0/s1 CONVERGED
+
+- Woken by the check wait: **1987121** (`+ES10+N4`, s0, s1 at 3072; 2:21) and **1987122** (`+LR` at 6144; 2:54) COMPLETED 03:47.
+- `B1_P1eq1_LN+RS+LR` at 6144 (gap history 3072 / 6144): s0 **0.000**, s1 **0.000** CONVERGED; s2 **0.039** (s.e. 0.024; 0.065 / 0.039) **IMPROVING** (corrected once, then honest; best response 2 corrections).
+- **Rule 4 (tuning run, s2 IMPROVING, 6144 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+LR 12288` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+LR --seeds 0 1 2 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 12288`) → `... submit` → **1987131**.
+- `B1_P1eq1_LN+RS+ES10+N4` (exploration): s0 **0.000**, s1 **0.000** CONVERGED (corrected once, then honest, like their best responses); s2 still training (2856 / 3072).
+- Queue (this campaign): 23 jobs. Cells DONE: 3 of 12.
