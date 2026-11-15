@@ -248,3 +248,11 @@ Pending: tomato_large (1984519–1984521).
 - Woken by the training wait: **1984522** (grid `B1_P2swap_LE+NET+ENT3`, 1536 episodes) COMPLETED 17:26 (5:41:16, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_grid_B1_P2swap_LE+NET+ENT3`) → `... br_missing submit` → **1985541**.
 - Queue (this campaign): 18 jobs. Cells DONE: 2 of 12.
+
+## 2026-11-14, iteration 27 (17:33–17:38): grid swap `LE+NET+ENT3` 3/3 CONVERGED → confirm (1985549)
+
+- Woken by the check wait: **1985541** (`br_grid_B1_P2swap_LE+NET+ENT3`, s0–s2 at 1536) COMPLETED 17:33 (4:45).
+- `.venv/bin/python experiments/step4_convergence.py results/step4/grid/bonus/B1_P2swap_LE+NET+ENT3`: s0 **0.015** (s.e. 0.003), s1 **0.009** (s.e. 0.001), s2 **0.008** (s.e. 0.001), all **CONVERGED**. Every seed is corrected once, in round 0, then honest (exact true about 20–22 per round against 22), like its best response and target.
+- **Paired with the no-bonus reference** `O1_P2swap_LE+NET+ENT3` (same config and seeds, at 1536): gaps 0.011 / 0.020 / 0.012, also corrected once then honest (true 21.3–21.9). With the bonus: 0.015 / 0.009 / 0.008. Same behaviour; no systematic change in the gap.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_P2swap_LE+NET+ENT3` (dry-run: `submit.sh 48 --env grid --run-id B1_P2swap_LE+NET+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set g.l_minus_on=dispreferred anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.09 ppo.net_arch=[256,256] episodes=1536 protocol.update_bonus=1.0`, identical to its `overrides.json`) → `... submit` → **1985549**.
+- Queue (this campaign): 18 jobs. Cells DONE: 2 of 12.
