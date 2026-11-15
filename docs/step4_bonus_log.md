@@ -647,3 +647,10 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 - Woken by the training wait: **1987110** (AS `B1_P1eq1_LN+RS+N4_confirm`, seeds 20–22, 3072) COMPLETED 09:41 (6:00:02, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_absent_supervisor_B1_P1eq1_LN+RS+N4_confirm`) → `... br_missing submit` → **1987303 **. The AS no-reg cell is DONE if this is 3/3.
 - Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 82 (09:49–09:52): AS no-reg `+N4_confirm` 1/3 at 3072 → extend to 6144 (1987304)
+
+- Woken by the check wait: **1987303** (`br_absent_supervisor_B1_P1eq1_LN+RS+N4_confirm`, s20–s22 at 3072) COMPLETED 09:48 (2:24).
+- `B1_P1eq1_LN+RS+N4_confirm`: s20 **0.065** (s.e. 0.031) PLATEAU; s21 **0.001** (s.e. 0.034) CONVERGED; s22 **0.041** (s.e. 0.030) IMPROVING. All three are corrected once, then honest (true 450); every best response takes 2 corrections (the same shortfall as the other AS no-reg configs on their unconverged seeds).
+- **Rule 4 (confirmation, s22 IMPROVING, 3072 < AS cap 24,576): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+N4_confirm 6144` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+N4_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 6144`) → `... submit` → **1987304**.
+- Queue (this campaign): 23 jobs. Cells DONE: 4 of 12.
