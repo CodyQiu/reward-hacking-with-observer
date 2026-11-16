@@ -1275,3 +1275,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   | `+LR+N4`, `+LR+ES10+N4` | training |
 
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 121 (19:13–19:16): Tomato base `LN+ES10+N4` s0 finished at 1536 → check 1988849
+
+- **Wake-up.** Scheduled wakeup. `git pull --no-rebase --no-edit --ff`: already up to date. No job of this campaign has ended since 18:33. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed Tomato `B1_base_LN+ES10+N4`.
+  - s0 has finished at 1536. Its training curve hid in iteration 115.
+  - s1 was already checked: 0.000, hides.
+  - s2 is at 552 of 1536.
+  - The finished state was confirmed with `ls`.
+
+  `... br_missing submit` → **1988849**.
+- Cells DONE: 5 of 12.
