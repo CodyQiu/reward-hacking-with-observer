@@ -1668,3 +1668,32 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s0 and s1 hide at 0.000. If s2 converges, the run goes to confirmation.
   - The checks of Tomato base `L` s2 (1989736) and tomato_large base `LN` / `L` (1989712, 1989737) are running or queued.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 149 (23:22–23:28): Tomato base `LN+ES10+N4` 2/3 (s0, s1 hide) → extend 3072 (1989820); `L` 0/3 at 6144 → extend to the cap 12,288 (1989821)
+
+- **Checks returned.** **1989796** (Tomato `B1_base_LN+ES10+N4`, s2) and **1989736** (Tomato `B1_base_L`, s2) COMPLETED. `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **`B1_base_LN+ES10+N4`** (rule 6b stage 1, 1536):
+    - s0 **0.000** CONVERGED, hides.
+    - s1 **0.000** CONVERGED, hides.
+    - s2 **0.158** PLATEAU, reactive (true 433 after the correction). Its best response hides.
+  - **`B1_base_L`** (6144):
+    - s0 **0.160** PLATEAU.
+    - s1 **0.160** PLATEAU.
+    - s2 **0.161**, labelled IMPROVING.
+    - All three are reactive; every best response hides.
+- **Rule 6b extension rule, `LN+ES10+N4`.** This is an exploration run and s2 is unconverged, so it is extended 2× to 3072.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
+  - `... submit` → **1989820**.
+- **Rule 4, `B1_base_L`.** s2 is labelled IMPROVING and 6144 is below the cap, so it is extended 2× to the cap.
+  - Dry-run: `... extend tomato B1_base_L 12288` printed `submit.sh 48 --env tomato --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - `... submit` → **1989821**.
+  - At the cap the run is finished, whatever the verdict.
+- **Tomato base status.**
+  - `LN` is finished at 0/3.
+  - `L` and `LE` are extending to the cap.
+  - Stage 1:
+    - `LN+ENT3` is extending to 6144.
+    - `LN+N4` is extending to 3072.
+    - `LN+ES10` has s1 still training.
+    - `LN+ES10+N4` is 2/3 and extending.
+- Cells DONE: 5 of 12.
