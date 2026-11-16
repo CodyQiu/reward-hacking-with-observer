@@ -2203,6 +2203,6 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Tick.** No job failed. Nothing to resume.
 - **Rule 3.**
-  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+N4+ES30`, a stage-2 run in a cell that is already DONE.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+N4+ES30` (s0 finished; s1 and s2 still training), a stage-2 run in a cell that is already DONE.
   - Submitted: `... br_missing submit` → **1990351 **, for the record (AS checks take minutes).
 - Cells DONE: 7 of 12.
