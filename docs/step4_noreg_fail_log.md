@@ -703,3 +703,16 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... br_missing submit` → **1990230 **.
   - If s22 converges, the Boat Race cell is DONE (the tuning run `LE+ES10+N4` was 3/3).
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 70 (06:57–07:05): Boat Race `LE+ES10+N4_confirm` 2/3 at 6144 (s22 0.032 IMPROVING) → extend to the cap, 12,288 (1990231)
+
+- **The check.** **1990230** (s22 at 6144) COMPLETED (1:32). `step4_convergence.py`:
+  - s20 **0.014**, CONVERGED;
+  - s21 **0.011**, CONVERGED;
+  - s22 **0.032** (s.e. 0.012), IMPROVING. Its gaps went 0.041 (1536) → 0.033 (3072) → 0.032 (6144).
+  - All three behave like the best response: corrected in round 0, then the new exploit at true −100 (s22: −99.6).
+- **Rule 4 (confirmation, one seed IMPROVING, below the cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10+N4_confirm 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990231**.
+  - 12,288 is the Boat Race cap, so this is the confirmation's last extension.
+- **Still running in Boat Race:** `LE+ES10_confirm` (1989721, 6144) and the exploration run `LE+ENT3` (→ 6144, 1989627). Cells DONE: 0 of 2.

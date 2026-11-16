@@ -556,3 +556,20 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LN`.
   - Submitted: `... br_missing submit` → **1990218**.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 33 (06:57–07:05): Tomato `C1_comp_LN` 3/3 → `confirm` (1990232), alongside `C1_comp_LE_confirm`
+
+- **The check.** **1990218** (Tomato `C1_comp_LN` s1, s2 at 1536) COMPLETED (16:12). `step4_convergence.py`:
+
+  | Seed | BR gap | Verdict | PPO's true by round | Best response | Target |
+  |---|---|---|---|---|---|
+  | s0 | **0.002** | CONVERGED | 46, 431.8, 431.7, 431.9, 431.7 | corrected once, then honest (434.1) | corrected once, then honest |
+  | s1 | **0.002** | CONVERGED | 46, 431.7, 432.1, 431.5, 432.2 | corrected once, then honest | 3 corrections (farms) |
+  | s2 | **0.006** | CONVERGED | 46, 431.3, 431.6, 431.2, 431.2 | 2.82 corrections | 3.96 corrections (farms) |
+
+  - In all three seeds PPO is corrected once, then nearly honest (true about 432 against 434). In two of the three, the best response under PPO's own corrections is honest too.
+- **Rule 4: a tuning run with all seeds CONVERGED → `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato C1_comp_LN` printed `submit.sh 48 --env tomato --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/tomato/comp --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ...`. That equals `C1_comp_LN/overrides.json`.
+  - Submitted: `... submit` → **1990232**.
+  - The Tomato cell is DONE when either `C1_comp_LE_confirm` (1990201) or `C1_comp_LN_confirm` is 3/3.
+- Cells DONE: 1 of 6.
