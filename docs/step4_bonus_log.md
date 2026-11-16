@@ -1774,3 +1774,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   Finished without DONE: `LN+LR`, `+NET` and `+GL`; `+LR+ES10`'s confirmation failed.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 154 (00:13–00:15): tomato_large base `L` s1 0.227 (reactive; partial)
+
+- **Check result.** **1989737** (tomato_large `B1_base_L`, s1 at 1536) COMPLETED 00:12 (1:19:36): s1 **0.227** (s.e. 0.000).
+  - The policy is reactive: corrected once, then honest, at true about 516.
+  - The best response hides (true 84.2 ×4, then 65.0), as the target does.
+- **Run status.** s2 was 0.226 (iteration 147); s0 is still training. Rule 4 waits for s0.
+- **Next check.** The tomato_large base `LN` check (1989712, s0) is still running.
+- Cells DONE: 5 of 12.
