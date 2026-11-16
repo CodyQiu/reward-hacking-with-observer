@@ -25,6 +25,8 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
   - **The fix.** `step4_commit.sh`, the `step4_optimal.sh` resume test, `step4_br.py` (`finished()`, used by `--missing` / `br_missing` and `--finished-only`) and `step4_convergence.py` now read the directory listing. The new test is `test_finished_seed_is_read_from_the_directory_listing`; all 21 tests in `tests/test_step4.py` pass.
   - **Optimal campaign.** It uses the same scripts. It is paused, and its runs are not affected.
 
+- **Rule 6b for tomato_large no-reg submits 2 of the 4 stage-1 runs (iteration 183).** The base `B1_P1eq1_LN+ES10` already has the ES10 schedule (`anneal.ent_start=10 anneal.ent_episodes=768`). So `+ES10` would rerun the base config on the same seeds, and `+ES10+N4` would duplicate `+N4`. As with `RS` above, I submitted only the distinct ones, `+ENT3` (1990239) and `+N4` (1990240). Say if you want the duplicates run anyway, or a different ES factor here (for example a longer or stronger schedule).
+
 - **Wave 2 for AS no-reg skips the `RS` factor (iteration 32).** The base `B1_P1eq1_LN+RS` already has `reward_scale=0.01625`, which is exactly what `RS` sets (0.25 × AS's Phase A reward_scale), so `LN+RS+RS` would rerun the base config on the same seeds. I submitted the other five factors (LR, GL, NET, EP, AN). If you want a different reading of `RS` here (e.g. a further 0.25×, 0.0040625), say so and I'll add it.
 
 ## Exact predictions
@@ -2126,3 +2128,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... submit` → **1990237 **.
   - The wave-1 run took 39:12 h for 1536 episodes, so the extension may reach the 48 h limit; rule 1 then resumes it.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 183 (07:08–07:15): rule 6b starts in tomato_large no-reg: `+ENT3` (1990239), `+N4` (1990240)
+
+- **When to start (docs/step4_bonus.md, rule 6b).** The cell's one wave-1 run, `B1_P1eq1_LN+ES10`, now has a check, and it is 0/3 (iteration 182). So exploration starts now, in parallel with its extension (1990237).
+- **The base** is that run, the only one in the cell.
+- **Dry-run.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore tomato_large P1eq1 B1_P1eq1_LN+ES10` printed 4 submits on seeds 0–2, at 1536 episodes, all with the base's `ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 protocol.update_bonus=1.0`:
+  - `B1_P1eq1_LN+ES10+ENT3`: `ppo.ent_coef=0.09`, ES10 schedule, `n_envs=64`;
+  - `B1_P1eq1_LN+ES10+ES10`: `ppo.ent_coef=0.03`, ES10 schedule, `n_envs=64`. **This is identical to the base**;
+  - `B1_P1eq1_LN+ES10+N4`: `ppo.ent_coef=0.03`, ES10, `n_envs=256 ppo.batch_size=6400`;
+  - `B1_P1eq1_LN+ES10+ES10+N4`: **identical to `+N4`**.
+- **Submitted the two distinct runs.** I ran their printed `submit.sh` lines exactly as the driver prints them: **1990239** (`+ENT3`) and **1990240** (`+N4`). The two duplicates are skipped and flagged at the top.
+- **Budget.** Bonus jobs 20 (limit 60); all my jobs 44 (limit 110). Cells DONE: 7 of 12.
