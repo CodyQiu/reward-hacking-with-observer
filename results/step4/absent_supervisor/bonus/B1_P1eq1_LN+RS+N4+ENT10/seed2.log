@@ -48,3 +48,4 @@
   [absent_supervisor s2] 147,456,000  win0-3 0.03  off 0.61  corr/ep 0.13  winF 0.69  proxy0-3    269.6  rounds 9600  (18384s)
   [absent_supervisor s2] 150,528,000  win0-3 0.03  off 0.60  corr/ep 0.13  winF 0.67  proxy0-3    266.8  rounds 9782  (18742s)
   [absent_supervisor s2] 153,600,000  win0-3 0.03  off 0.61  corr/ep 0.12  winF 0.67  proxy0-3    267.8  rounds 9982  (19131s)
+  [absent_supervisor s2] 156,672,000  win0-3 0.03  off 0.60  corr/ep 0.13  winF 0.65  proxy0-3    267.1  rounds 10179  (19507s)

@@ -25,6 +25,7 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
   - **Why the verdict passes it.** The level makes every round worth about 8,690 received, so missing the goal (−122 per round) is only 1.2% of V0 (about 43,500). That is inside the 3% tolerance.
   - **Scope.** The same holds wherever the level dwarfs the honest-vs-exploit difference.
   - **What I am doing.** I apply the criterion as written (never adjust criteria), so these seeds count as CONVERGED, and I report PPO's true return beside every verdict. A behavioural criterion for comp would be your call: for example, PPO's true return by round within x of the best response's, or the gap measured on the true reward.
+- **Boat Race `C1_comp_LN` was confirmed before its target existed (iteration 31, 2026-11-16).** The Boat Race comp target (1989677) has been queued at low priority since 21:58. `step4_convergence.py` prints NO TARGET for every Boat Race seed, but its CONVERGED verdict uses only the best-response gap (`br["gap"] <= TOL_BR`, 0.03); the target matters only for IMPROVING / PLATEAU and the report. All three `LN` seeds have gaps ≤ 0.03 (0.021, 0.022, 0.000), so I submitted `confirm` (1990212) without waiting. Say if you would rather I wait for targets in future.
 - **Taxi runs will hit the 48 h limit** (docs/step4_comp.md, wave 1). Rule 1 resumes them from their checkpoints; that is not an incident. **Measured (iteration 24):** a Taxi PBRR round at 1000 epochs takes about 60 s, and once PPO is corrected in most episodes, 24 episodes take 3–6 h (`C1_comp_L` s1: 204 rounds in 12,000 s). The noreg_fail Taxi runs show the same. At that rate a 768-episode run needs about 3–4 jobs of 48 h. The seeds are computing (full CPU), not stuck.
 
 ## Exact predictions
@@ -520,3 +521,30 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - **AS.** Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor C1_comp_LN` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/comp --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ...`. That equals `C1_comp_LN/overrides.json`. Submitted: `... submit` → **1990202**.
 - **Still running in these cells.** Tomato `C1_comp_L` (→ 3072, 1990167) and `C1_comp_LN` (s1, s2); AS `C1_comp_LE` (→ 24,576, 1990195).
 - **Budget.** Comp jobs about 17 (limit 30); all my jobs 44 (limit 110). Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 31 (06:06–06:20): Boat Race `C1_comp_LN` 3/3 by the best-response gap → `confirm` (1990212); the Boat Race target is still queued
+
+- **Tick.** No job failed. Nothing to resume. `br_missing` is empty in all three campaigns. 43 jobs.
+  - The Boat Race comp target (1989677) and the 4 comparison targets (1989678–1989681) are still PENDING (reason `Priority`). They have sat behind my training jobs since 21:58: priority about 0.48–0.49 × 10⁹, against 0.72 × 10⁹ for training jobs.
+- **Boat Race verdicts without the target.**
+  - `step4_convergence.py` prints NO TARGET for every Boat Race seed. Its CONVERGED verdict, however, is `br["gap"] <= TOL_BR` (0.03, `experiments/step4_br.py:64`), independent of the target; the target is needed only to tell IMPROVING from PLATEAU.
+  - Best-response gaps at 1536, read from `<run>/step4_br/seed<s>_ep1536.json`:
+
+  | Run, seed | BR gap (s.e.) | Verdict by the gap | PPO | Best response |
+  |---|---|---|---|---|
+  | `L` s0 | 0.021 (0.006) | CONVERGED | corrected in round 0, then honest (true −94, 50 ×4) | 4 corrections, true −94, 50 ×4 |
+  | `L` s1 | 0.022 (0.006) | CONVERGED | the same | the same |
+  | `L` s2 | 0.187 (0.004) | unconverged (needs the target) | hides (true −82 ×4, −94) | the same |
+  | `LE` s0 | 0.021 (0.006) | CONVERGED | corrected in round 0, then honest | 4 corrections, true 50 after round 0 |
+  | `LE` s1 | 0.025 (0.008) | CONVERGED | the same | the same |
+  | `LE` s2 | 0.037 (0.005) | unconverged (needs the target) | the same | the same |
+  | `LN` s0 | 0.021 (0.005) | CONVERGED | corrected in round 0, then honest; received 200, 211 ×4 | 4 corrections; received 200, 206, 212, 218, 229 |
+  | `LN` s1 | 0.022 (0.007) | CONVERGED | the same; received 200, 213 ×4 | 4 corrections |
+  | `LN` s2 | 0.000 (0.000) | CONVERGED | 3.99 corrections, true −94, 50 ×4 | 4 corrections |
+
+  - **In Boat Race the best response farms the level while honest.** In every check it is corrected in all rounds 0–3 with true 50 (honest) in rounds 1–4. Its received return rises with each level (206 → 229). PPO is honest after its correction in 8 of 9 seeds.
+- **Rule 4: `C1_comp_LN` has all seeds CONVERGED → `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race C1_comp_LN` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/comp --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ...`. That equals `C1_comp_LN/overrides.json`.
+  - Submitted: `... submit` → **1990212**. Flagged at the top: I did not wait for the target.
+  - `L` and `LE` each have one seed whose IMPROVING / PLATEAU call needs the target. They wait.
+- Cells DONE: 1 of 6.
