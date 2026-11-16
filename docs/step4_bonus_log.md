@@ -1312,3 +1312,39 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   Submitted with `... br_missing submit` → **1988867** (grid `+N4`), **1988868** (grid `+RS`), **1988870** (AS `+GL`), **1988871** (Tomato base `LN+ENT3`).
 - **What the cap means.** AS `+GL` is at the cap, so it is finished whatever the verdict.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 124 (19:38–19:50): **AS no-reg `+GL` 3/3 CONVERGED at the 24,576 cap → `confirm` (1988882)**; grid `+RS` 1/3 → extend 6144 (1988883); grid `+N4` partial
+
+- **What woke me.** The training wait fired for **1988600** (grid `+GL`, extension to 3072), COMPLETED 19:38 (2:20:24). Three checks also COMPLETED: **1988867** (grid `+N4`), **1988868** (grid `+RS`) and **1988870** (AS `+GL`). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Verdicts.** From `.venv/bin/python experiments/step4_convergence.py <run>`, with BR gap histories from `step4_br/`:
+  - **AS `B1_P1eq1_LN+RS+GL`** (wave 2, `ppo.gae_lambda=1.0`), BR gap at 3072 / 6144 / 12,288 / 24,576:
+
+    | Seed | 3072 | 6144 | 12,288 | 24,576 | Verdict |
+    |---|---|---|---|---|---|
+    | s0 | 0.000 | 0.000 | 0.000 | **0.000** | CONVERGED |
+    | s1 | 0.002 | 0.000 | 0.000 | **0.018** (s.e. 0.029) | CONVERGED |
+    | s2 | 0.038 | 0.038 | 0.085 | **0.000** | CONVERGED |
+
+    - All three policies are corrected once, then nearly honest (true 445–448).
+    - The best responses of s0 and s2 are the same as their policies. s1's best response takes 2 corrections.
+    - s2 escaped only in the last doubling, from 0.085 to 0.000. This matches the rule 6b note that seeds escape after long flat stretches.
+  - **grid `B1_P1eq1_LN+LR+RS`**, BR gap at 1536 / 3072:
+
+    | Seed | 1536 | 3072 | Verdict |
+    |---|---|---|---|
+    | s0 | 0.044 | **0.000** | CONVERGED |
+    | s1 | 0.047 | **0.044** | IMPROVING |
+    | s2 | 0.065 | **0.068** | IMPROVING |
+
+    s1 never reaches the goal after its correction. s2 does not either, and its best response takes 2 corrections.
+  - **grid `B1_P1eq1_LN+LR+N4`** (rule 6b, 1536): s0 **0.109** and s1 **0.046**, both IMPROVING. Both are corrected once, then never reach the goal (true −100). s2 is still training (1488) and its curve is honest (true about 22). The extension rule waits for s2.
+- **Rule 4: AS `+GL` is all CONVERGED, so it goes to `confirm`.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor B1_P1eq1_LN+RS+GL` printed `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+GL_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.gae_lambda=1.0 g.use_regularization=False g.epochs=1000 protocol.update_bonus=1.0 episodes=24576 anneal.last=0.25 anneal.floor=0.1 n_envs=64 reward_scale=0.01625`. That is the run's overrides at its final length, the same as `run_sets.py`.
+  - Submitted: `... submit` → **1988882**.
+  - Time: the tuning run took about 15 h in total across its extensions, within the 48 h limit.
+  - **The AS no-reg cell is DONE when this confirmation is 3/3** (or when any of the other running AS no-reg confirmations is).
+- **Rule 4: grid `+RS` (wave 2) has seeds IMPROVING, so extend 2×.**
+  - Dry-run: `... extend grid B1_P1eq1_LN+LR+RS 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+RS --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1988883**.
+- **Rule 3.** `br_missing` (dry-run: grid `+GL` at 3072) → `... br_missing submit` → **1988884**. Tomato base `LN+ENT3` (1988871) is still pending.
+- Queue: 28 jobs in this campaign (limit 60), 35 in all. Cells DONE: 5 of 12.
