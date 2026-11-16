@@ -282,3 +282,15 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   - Dry-run: `... extend absent_supervisor C1_comp_LE 12288` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/absent_supervisor/comp --resume --extend-to 12288`.
   - Submitted: `... submit` → **1989932 **.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 15 (01:38–01:41): first Tomato comp check. `C1_comp_L` s1 is honest from round 0 and never corrected (gap 0.286)
+
+- **Check result.** **1989924** (Tomato `C1_comp_L`, s1 at 1536) COMPLETED: s1 **0.286** (s.e. 0.000), labelled IMPROVING.
+  - **PPO** is honest from round 0: true 429–431 in every round, never exploits, 0 corrections.
+  - **Its best response** exploits in round 0 (true 46), is corrected once, and is then honest (433.6–433.9).
+  - **Why the gap is large.** Under comp a correction pays a level for the rest of the episode. Never being caught gives up that level, about 1.6 per step for 400 steps. That is 28.6% of V.
+- **The other seeds** are still training (s0 at 792, s2 at 816):
+  - s0's curve is corrected once, then reaches true about 422. That is below honest (434), with the window clean.
+  - s2's curve already looks like its farming target: window 0.998, about 3 corrections, true about 422 in rounds 1–3.
+- **Next.** Rule 4 waits for s0 and s2.
+- Cells DONE: 0 of 6.
