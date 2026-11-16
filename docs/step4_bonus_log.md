@@ -1241,3 +1241,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Rule 4 (wave-2 run, s1 IMPROVING, below the cap): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 3072` (dry-run: `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`) → `... submit` → **1988664 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 118 (17:53–17:56): Tomato base `LN+ES10+N4` s1 **0.000 CONVERGED: hides**, the first Tomato base seed to reach its optimum
+
+- **Check.** **1988637** (`br_tomato_B1_base_LN+ES10+N4`, s1 at 1536) COMPLETED 17:53 (14:13).
+  - Gap **0.0000** (s.e. 0.0000), CONVERGED.
+  - **Policy: hides**, true 59.8 ×4, then 46.0. The best response does exactly the same, and so does the target.
+- **What changed.** Every earlier Tomato base seed was reactive: corrected once, then honest, with gap 0.16. That covers `L`, `LE` and `LN` at up to 3072, and the stage-1 runs `LN+ENT3` and `LN+N4`. The difference here is the exploration schedule ES10 combined with N4: entropy 10× falling to 1× by episode 768, and 256 envs.
+- **The other seeds.** s0 (1032/1536) also hides on its training curve, with every target gap below 0.001. s2 (288/1536) is still reactive.
+- **Rule 4** waits for s0 and s2. Cells DONE: 5 of 12.
