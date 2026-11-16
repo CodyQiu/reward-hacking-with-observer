@@ -323,3 +323,10 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   - I record this as the rules define it and do not adjust the criterion. The Status section and the flag at the top state that PPO's behaviour after the correction is not honest. By a behavioural criterion the cell would not be DONE.
 - **Rule 6b: nothing new for grid comp.** Its other confirmations, `C1_comp_LE_confirm` (1989878) and `C1_comp_LN_confirm` (1989931), finish as information only.
 - **Cells DONE:** 1 of 6.
+
+## 2026-11-16, iteration 18 (02:27–02:30): grid `C1_comp_LE_confirm` finished (information only) → check 1990076 
+
+- **Training finished.** **1989878** (grid `C1_comp_LE_confirm`) COMPLETED 02:27 (1:12:53, exit 0).
+- **Information only.** The grid comp cell is DONE (iteration 17), so this run is information only.
+- **Rule 3.** `br_missing` still checks it for the record: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `C1_comp_LE_confirm`) → `... br_missing submit` → **1990076 **.
+- Cells DONE: 1 of 6.
