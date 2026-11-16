@@ -2158,3 +2158,22 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - Cells DONE: 7 of 12.
 - **Its check.** **1990269** COMPLETED (3:31); verdicts are in the line below (information only).
   - Verdicts at 12,288 (the cap): s0 0.000 CONVERGED; s1 0.050 PLATEAU; s2 0.056 IMPROVING. The run ends here: it is at the cap, and the cell is already DONE.
+
+## 2026-11-16, iteration 186 (09:24–09:30): Tomato base `LN+ENT3` (6b) 0/3 at 6144 (all reactive) → extend to the cap, 12,288 (1990294 )
+
+- **The check.** **1990255** (Tomato `B1_base_LN+ENT3` at 6144) COMPLETED (24:22).
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.163 / 0.161 / **0.160** | IMPROVING | 46, then about 430 | hides (59.8 ×4, then 46) |
+  | s1 | 0.162 / 0.161 / **0.161** | IMPROVING | the same | the same |
+  | s2 | 0.162 / 0.161 / **0.160** | IMPROVING | the same | the same |
+
+  - All three are reactive: corrected in round 0, then honest. The best response hides.
+  - The BR gap is flat at 0.160; the IMPROVING call comes from the script's 24-episode curve.
+- **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ENT3 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990294 **.
+  - The 3072 → 6144 leg took 12:09 h, so this one should take about 24 h.
+- **Tomato base so far.** Every run in this cell (`L`, `LE`, `LN`, `LN+ENT3`, `LN+N4`, `LN+ES10`, `LN+ES10+N4`) has seeds that are reactive, at a BR gap of about 0.16. Only `LN+ES10+N4` s0/s1 hide (0.000).
+- Cells DONE: 7 of 12.
