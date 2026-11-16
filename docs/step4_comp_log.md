@@ -9,6 +9,11 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
   - **End state.** All 6 AS comp targets are corrected in every round 0–3. In rounds 1–3 the optimum uses the original bug inside the audit window (true 400 against honest 450), and each correction's level rises (11.8 → 13.5 per step).
   - **Why.** The level formula carries the previous level inside V_before. So each correction adds (R_caught − V_ref,after) / T_sub, and in AS the reference's return under the new correction (about 372) is below the agent's own nearly honest caught play (420–442).
   - **What I am doing.** This is the exact answer for this mechanism. I am not changing anything; wave 1 runs as planned, and PPO's target is this end state. A different level rule would be a mechanism change, which is your call (for example, basing V_ref,after on the agent's own honest play, or not compounding the level).
+- **Under comp, the 3% verdict can pass a policy that is not honest after its correction (iteration 4, 2026-11-15).**
+  - **Example.** Grid `C1_comp_L` s1 and s2 are CONVERGED (0.012 and 0.011), but PPO's true return is −100 in every round. It is corrected in round 0, keeps the windows clean, then never reaches the goal. The best response and the target are honest after the correction (true 22).
+  - **Why the verdict passes it.** The level makes every round worth about 8,690 received, so missing the goal (−122 per round) is only 1.2% of V0 (about 43,500). That is inside the 3% tolerance.
+  - **Scope.** The same holds wherever the level dwarfs the honest-vs-exploit difference.
+  - **What I am doing.** I apply the criterion as written (never adjust criteria), so these seeds count as CONVERGED, and I report PPO's true return beside every verdict. A behavioural criterion for comp would be your call: for example, PPO's true return by round within x of the best response's, or the gap measured on the true reward.
 - **Taxi runs will hit the 48 h limit** (docs/step4_comp.md, wave 1). Rule 1 resumes them from their checkpoints; that is not an incident.
 
 ## Exact predictions
@@ -124,3 +129,23 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 
   `... br_missing submit` → **1989826** (grid `L`), **1989827** (AS `L`), **1989828** (AS `LE`), **1989829** (Boat Race `L`).
 - **Budget.** This campaign has 29 jobs (limit 30); all my jobs come to 60. Cells DONE: 0 of 6.
+
+## 2026-11-15, iteration 4 (23:37–23:50): first comp verdicts. Grid `L` passes 2/2 (but not honest, flagged); AS mostly hides; AS `LE` → extend 6144 (1989830)
+
+- **Checks back.** **1989826–1989829** COMPLETED; **1989682** (grid `C1_comp_L`) COMPLETED 23:37. Verdicts from `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **grid `C1_comp_L`** (1536):
+    - s1 **0.012** CONVERGED; s2 **0.011** CONVERGED.
+    - Both policies are corrected in round 0, then **true −100** every round: they never reach the goal. They receive about 8,565–8,583 per round, against the best response's 8,692–8,705, which is honest after the correction (true 22). Flagged at the top: the 3% gap is loose under the level.
+    - s0 finished after the check started → check **1989831**.
+  - **AS `C1_comp_L`** (3072):
+    - s1 **0.107** PLATEAU. It **hides**: 0 corrections, true about −62 per round. The best response and target take 4 corrections.
+    - s0 (768) and s2 (2736) are still training. Their curves already take 1.6 and 3.2 corrections per episode, with true 320–410 and 220–303 per round.
+  - **AS `C1_comp_LE`** (3072):
+    - s0 **0.146** IMPROVING; s2 **0.143** IMPROVING. Both hide: 0 corrections, true about −108.
+    - s1 **0.015** CONVERGED. It takes about 3.5 corrections with mixed rounds (true −72, 45, 168, 174, 148). Its best response takes 3 corrections.
+  - **Boat Race `C1_comp_L`:** `NO TARGET`. The Boat Race comp target (1989677) is still queued, so its checks cannot be judged yet.
+- **Rule 4, AS `C1_comp_LE`.** Seeds are labelled IMPROVING and 3072 is below the AS cap of 24,576, so extend 2×.
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor C1_comp_LE 6144` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/absent_supervisor/comp --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989830**.
+- **Rule 3.** `br_missing` (dry-run: grid `C1_comp_L` s0; Boat Race `C1_comp_L` s0/s1, now finished) → `... br_missing submit` → **1989831**, **1989832**.
+- **Budget.** This campaign has 26 jobs. Cells DONE: 0 of 6.
