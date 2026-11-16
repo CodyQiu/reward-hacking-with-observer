@@ -801,3 +801,20 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Seeds 20–22: corrected in round 0, then a new exploit (true −48.1 / −65.7 / −50.3), as in seeds 0–2 (−56.9 to −66.5). All fixed points converged.
   - Added to the Taxi entry under "Exact predictions". In Taxi the swap never ends honest after its correction. Comp ends honest in 4 of 6 seeds (s0, s1, s2, s20) and farms in s21 and s22.
 - Still queued: Taxi base (1989679) and Boat Race swap and base (1989680, 1989681). Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 49 (14:38–14:43): Taxi `C1_comp_LN` 0/3 at 768 (all hide; s1, s2 IMPROVING) → extend 1536 (1990638 )
+
+- **The check.** **1990425** (Taxi `C1_comp_LN` at 768) COMPLETED (58:27). It checked all three seeds: `step4_br/seed{0,1,2}_ep768.json` exist.
+
+  | Seed | BR gap (s.e.) | Verdict | PPO's true by round | Best response and target |
+  |---|---|---|---|---|
+  | s0 | **0.180** (0.002) | PLATEAU | about −85 every round (hides, never corrected) | corrected in round 0, then honest (124.8) |
+  | s1 | **0.121** (0.000) | IMPROVING | about −79 (hides) | the same (124.7) |
+  | s2 | **0.099** (0.001) | IMPROVING | about −85 (hides) | the same (124.7) |
+
+  - Like `C1_comp_L` s0 and s2, every Taxi `LN` seed hides: it exploits off-window and keeps the audit windows clean. The best response is to be corrected in round 0 and then be honest.
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the Taxi cap of 6144): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN 1536` printed `submit.sh 48 --env taxi --run-id C1_comp_LN --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1990638 **.
+- **Taxi rule 6b** starts once every wave-1 run has a check and none is 3/3. `C1_comp_L` s1 and `C1_comp_LE` are still training.
+- Cells DONE: 2 of 6.
