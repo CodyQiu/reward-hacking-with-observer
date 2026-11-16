@@ -1250,3 +1250,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **What changed.** Every earlier Tomato base seed was reactive: corrected once, then honest, with gap 0.16. That covers `L`, `LE` and `LN` at up to 3072, and the stage-1 runs `LN+ENT3` and `LN+N4`. The difference here is the exploration schedule ES10 combined with N4: entropy 10× falling to 1× by episode 768, and 256 envs.
 - **The other seeds.** s0 (1032/1536) also hides on its training curve, with every target gap below 0.001. s2 (288/1536) is still reactive.
 - **Rule 4** waits for s0 and s2. Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 119 (18:26–18:38): quiet at 18:26; grid `+LR+NET` finished at 1536 → check 1988827 
+
+- **18:26 (scheduled wakeup):** no job had ended since 17:45, and `br_missing` / `resume` (dry-run) showed nothing in either campaign.
+- **18:35 (training wait):** **1987903** (grid `B1_P1eq1_LN+LR+NET`, wave 2) COMPLETED 18:33 (3:20:29, exit 0).
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+NET`) → `... br_missing submit` → **1988827 **. Cells DONE: 5 of 12.
