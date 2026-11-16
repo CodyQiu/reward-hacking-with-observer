@@ -1492,3 +1492,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The gaps have not moved since 1536 (0.161 / 0.165 then).
 - **Remaining seeds.** `L` s1 and s2 are still training. `LE` s1 and s2 finished at 20:44; 1989563 is checking them now, or a follow-up check will.
 - **Rule 4** waits for the remaining seeds. Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 138 (21:03–21:06): AS no-reg `+ES10` reached the 24,576 cap → check 1989610
+
+- **Training finished.** **1987630** (AS `B1_P1eq1_LN+RS+ES10`, extended to the cap of 24,576) COMPLETED 21:02 (7:58:43, exit 0).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `+ES10`; s0 and s1 finished, s2 just finishing) → `... br_missing submit` → **1989610**. It covers all three seeds when it starts.
+- **At the cap** the run is finished, whatever the verdict. s2 was 0.075 at 12,288; s0 and s1 were 0.000.
+- Cells DONE: 5 of 12.
