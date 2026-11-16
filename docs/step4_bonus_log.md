@@ -1525,3 +1525,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `+NET_confirm` → 12,288 (1988582);
   - `+LR_confirm` (s22 still training).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 140 (21:09–21:11): AS no-reg `+LR_confirm` finished at 12,288 → check 1989621 (s22)
+
+- **1987290** (AS `B1_P1eq1_LN+RS+LR_confirm`, 12,288) COMPLETED 21:03 (11:41:47, exit 0). s20 (0.058, PLATEAU) and s21 (0.000) are already checked. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `+LR_confirm`, s22) → `... br_missing submit` → **1989621 **.
+- Cells DONE: 5 of 12.

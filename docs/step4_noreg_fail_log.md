@@ -486,3 +486,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted with `... submit` → **1989602 **.
 - **Other route.** `LE+ES10+N4_confirm` (1988346) is still training.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 51 (21:09–21:11): Boat Race `LE+ENT3` reached 3072 → check 1989622 (s0)
+
+- **1988602** (Boat Race `N1_P1eq1_LE+ENT3`, extension to 3072) COMPLETED 21:07 (3:44:53, exit 0). s1 (0.049) and s2 (0.052) are already checked.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `LE+ENT3`, s0) → `... br_missing submit` → **1989622 **.
+- Cells DONE: 0 of 2.
