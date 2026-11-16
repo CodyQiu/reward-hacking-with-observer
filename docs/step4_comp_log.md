@@ -548,3 +548,11 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - Submitted: `... submit` → **1990212**. Flagged at the top: I did not wait for the target.
   - `L` and `LE` each have one seed whose IMPROVING / PLATEAU call needs the target. They wait.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 32 (06:24–06:27): Tomato `C1_comp_LN` finished → check 1990218 (s1, s2)
+
+- **Training wait.** **1989690** (Tomato `C1_comp_LN`, 1536) COMPLETED 06:24 (8:02:12, exit 0). s0 was already CONVERGED (0.002).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LN`.
+  - Submitted: `... br_missing submit` → **1990218**.
+- Cells DONE: 1 of 6.
