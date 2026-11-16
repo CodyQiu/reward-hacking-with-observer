@@ -626,3 +626,14 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Submitted: `... submit` → **1990246 **.
 - **Still running:** check **1990245** (Taxi `C1_comp_L` s2).
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 36 (08:28–08:32): Taxi `C1_comp_L` s2 0.146 IMPROVING (hides); s0 finished → check 1990251 
+
+- **The check.** **1990245** (Taxi `C1_comp_L` s2 at 768) COMPLETED (26:42).
+  - s2: BR gap **0.146** (s.e. 0.001), IMPROVING. PPO hides: never corrected, with true −82 per round.
+  - The best response and the target are "corrected in round 0, then honest" (true 124.7).
+- **Rule 3.** s0 has now finished at 768; it also hides (true about −80 per round). s1 is at 456/768.
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_L`.
+  - Submitted: `... br_missing submit` → **1990251 **.
+  - The run is extended only after s1 finishes and is checked: extending overwrites a seed's model.
+- Cells DONE: 1 of 6.
