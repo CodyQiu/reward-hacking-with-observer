@@ -1445,3 +1445,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_P1eq1_LN+LR+ENT3` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 ppo.ent_coef=0.03 protocol.update_bonus=1.0 episodes=3072`. This is the run's overrides at its final length, matching `run_sets.py`.
   - Submitted: `... submit` → **1989566 **.
 - **Status.** It runs alongside `+LR+ES10_confirm` (1988633). The grid no-reg cell is DONE when either confirmation is 3/3. Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 134 (20:33–20:35): grid no-reg `+AN` 2/3 at 3072 → extend 6144 (1989569 )
+
+- **Check.** **1989562** (`br_grid_B1_P1eq1_LN+LR+AN`, s1) COMPLETED. s1: **0.003**, CONVERGED (it was 0.027 at 1536).
+- **Run state at 3072.** s0 0.000 and s1 0.003 are CONVERGED. s2 is 0.054 and IMPROVING; it takes the honest route, while its best response takes a true-20 route (iteration 132).
+- **Rule 4 (wave-2 run, s2 IMPROVING, below the cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+AN 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+AN --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted with `... submit` → **1989569 **.
+- Cells DONE: 5 of 12.
