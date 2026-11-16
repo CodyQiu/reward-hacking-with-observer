@@ -1228,3 +1228,16 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
     - Tomato no-reg: `LN_confirm` running (1988344);
     - Tomato base: stage 1 exploration; `LN+ES10+N4` hides in s0 and s1;
     - tomato_large: all three cells in wave 1.
+
+## 2026-11-15, iteration 117 (17:52–17:55): grid no-reg `+EP` 2/3 at 1536 → extend 3072 (1988664 )
+
+- Check **1988646** (grid `B1_P1eq1_LN+LR+EP`, s1) COMPLETED. Verdicts at 1536:
+
+  | Seed | BR gap | Verdict | Behaviour |
+  |---|---|---|---|
+  | s0 | **0.001** | CONVERGED | corrected once, then honest |
+  | s1 | **0.044** (s.e. 0.008) | IMPROVING | corrected once, then never reaches the goal (true −100); its best response is corrected once, then honest |
+  | s2 | **0.002** | CONVERGED | corrected once, then honest |
+
+- **Rule 4 (wave-2 run, s1 IMPROVING, below the cap): extend 2×.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 3072` (dry-run: `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`) → `... submit` → **1988664 **.
+- Cells DONE: 5 of 12.
