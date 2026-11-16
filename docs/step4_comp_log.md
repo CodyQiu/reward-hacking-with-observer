@@ -499,3 +499,24 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_C1_comp_LN` (s1).
   - Submitted: `... br_missing submit` → **1990200**. If s1 converges, `LN` is 3/3 and goes to `confirm`.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 30 (05:53–06:00): Tomato `C1_comp_LE` 3/3 and AS `C1_comp_LN` 3/3 → `confirm` both (1990201, 1990202)
+
+- **Checks.** **1990194** (Tomato `LE` s1, s2; 24:00) and **1990200** (AS `LN` s1; 0:57) COMPLETED. `step4_convergence.py`:
+
+  | Run, seed | BR gap | Verdict | PPO's true by round | PPO's end state | Best response | Target |
+  |---|---|---|---|---|---|---|
+  | Tomato `LE` s0 | **0.009** | CONVERGED | 46, 424, 424, 425, 425 | corrected once, then nearly honest | corrected once, then honest (434) | corrected once, then honest |
+  | Tomato `LE` s1 | **0.009** | CONVERGED | 46, 425, 425, 425, 425 | corrected once, then nearly honest | corrected once, then honest | 3 corrections (farms) |
+  | Tomato `LE` s2 | **0.012** | CONVERGED | 45, 424, 423, 424, 425 | corrected once, then nearly honest | 2.77 corrections | 3.96 corrections (farms) |
+  | AS `LN` s0 | **0.001** | CONVERGED | −108, 400, 400, 400, 449 | 4 corrections (farms) | 3 corrections | 4 corrections (farms) |
+  | AS `LN` s1 | **0.001** | CONVERGED | −100, 400, 400, 430, 450 | about 3.4 corrections | 2 corrections | 4 corrections (farms) |
+  | AS `LN` s2 | **0.002** | CONVERGED | −100, 400, 400, 409, 450 | about 3.8 corrections | 4 corrections | 4 corrections (farms) |
+
+  - In Tomato, PPO's true return after its correction (423–425) is about 10 below honest (434). That is close to the farming targets' rounds 1–3 (421–424), and the best response under PPO's own corrections is honest or nearly so. All three seeds pass the verdict.
+  - In AS, PPO farms the level just as the target does: corrected in rounds 0–2 or 0–3, using the bug inside the window (true 400).
+- **Rule 4: all seeds CONVERGED in tuning runs → `confirm`.**
+  - **Tomato.** Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato C1_comp_LE` printed `submit.sh 48 --env tomato --run-id C1_comp_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato/comp --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1 ...`. That equals `C1_comp_LE/overrides.json`. Submitted: `... submit` → **1990201**.
+  - **AS.** Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor C1_comp_LN` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/comp --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ...`. That equals `C1_comp_LN/overrides.json`. Submitted: `... submit` → **1990202**.
+- **Still running in these cells.** Tomato `C1_comp_L` (→ 3072, 1990167) and `C1_comp_LN` (s1, s2); AS `C1_comp_LE` (→ 24,576, 1990195).
+- **Budget.** Comp jobs about 17 (limit 30); all my jobs 44 (limit 110). Cells DONE: 1 of 6.
