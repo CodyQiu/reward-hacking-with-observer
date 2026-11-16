@@ -1566,3 +1566,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+ES10+N4`) → `... br_missing submit` → **1989701**.
 - **Check result.** **1989628** (Tomato `B1_base_L`, s1 at 6144): **0.160**, PLATEAU, reactive. The best response hides. s0 is at 0.160 PLATEAU; s2 is at 5760/6144, so Rule 4 waits for s2.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 143 (22:13–22:16): AS `+ES10+N4_confirm` finished at 12,288; checks 1989710–1989712
+
+- **Trigger.** The training wait reported **1987881** (AS `B1_P1eq1_LN+RS+ES10+N4_confirm`, extended to 12,288) COMPLETED 22:13 (7:11:38, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing, in all three campaigns.
+- **Rule 3.** The dry-run of `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed:
+  - grid `+EP`: s2 finished at 3072; s0 and s1 are at 3048.
+  - AS `+ES10+N4_confirm`: all three seeds finished at 12,288.
+  - tomato_large `B1_base_LN`: s0 finished at 1536; s1 and s2 are at 1488.
+
+  Submitted with `... br_missing submit` → **1989710** (grid `+EP`), **1989711** (AS `+ES10+N4_confirm`), **1989712** (tomato_large `base_LN`).
+- **Queue.** Checks are queueing behind fair-share priority.
+- Cells DONE: 5 of 12.
