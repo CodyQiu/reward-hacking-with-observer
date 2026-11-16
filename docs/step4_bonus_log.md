@@ -2109,3 +2109,20 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - PPO is corrected once, then honest (true 22) in all six seeds, which is the target's end state.
 - **The cell's other runs are now information only:** `+LR+EP` (→ 12,288, 1990173), `+LR+ES10+N4_confirm` (1989995), `+LR+N4` (1989885), `+LR+RS` (1989863). They keep running; I cancel nothing. Status updated at the top.
 - **Cells DONE: 7 of 12.** Open: Tomato no-reg, Tomato base, tomato_large swap, no-reg and base.
+
+## 2026-11-16, iteration 182 (07:00–07:08): tomato_large no-reg `LN+ES10` 0/3 at 1536 (s1, s2 IMPROVING) → extend 3072 (1990237 )
+
+- **The check.** **1990119** (tomato_large `B1_P1eq1_LN+ES10`, wave 1, all three seeds at 1536) COMPLETED (3:55:12). `step4_convergence.py`:
+
+  | Seed | BR gap (s.e.) | Verdict | PPO | Best response | Target |
+  |---|---|---|---|---|---|
+  | s0 | **0.073** (0.016) | PLATEAU | 3 corrections; true 65, then about 518 | 4 corrections | 3 corrections |
+  | s1 | **0.055** (0.009) | IMPROVING | 4 corrections; true 65, then about 518 | 4 corrections | 4 corrections |
+  | s2 | **0.037** (0.012) | IMPROVING | 3 corrections; true 65, then about 518 | 3 corrections | 3 corrections |
+
+  - PPO's end states match the targets' (3–4 corrections per episode; true about 518 in rounds 1–4 against honest about 523). The shortfall is in value.
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_P1eq1_LN+ES10 3072` printed `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1990237 **.
+  - The wave-1 run took 39:12 h for 1536 episodes, so the extension may reach the 48 h limit; rule 1 then resumes it.
+- Cells DONE: 7 of 12.
