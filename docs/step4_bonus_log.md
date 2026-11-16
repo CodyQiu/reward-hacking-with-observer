@@ -1145,3 +1145,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Tomato swap confirmation.** Check 1988396 started at about 16:50, before s21 finished, so it covers s20 and s22. s21 gets its own check once 1988396 ends (`br_missing` skips a run while its check is queued).
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): grid `B1_P1eq1_LN+LR+ENT3`, s1 finished at 1536 (checked with `ls`). `... br_missing submit` → **1988605**.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 112 (17:23–17:25): grid `+LR+ES10` finished at 1536 → check 1988611 
+
+- Woken by the training wait: **1987908** (grid `B1_P1eq1_LN+LR+ES10`, rule 6b stage 1) COMPLETED 17:22 (1:59:37, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+ES10`) → `... br_missing submit` → **1988611 **. Cells DONE: 4 of 12.
