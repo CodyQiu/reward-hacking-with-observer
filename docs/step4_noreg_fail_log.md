@@ -465,3 +465,24 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
     - s21 is at 3048 of 3072.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `LE+N4_confirm`, s20) → `... br_missing submit` → **1989597 **.
 - Rule 4 for each run waits until its remaining seeds are checked. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 50 (20:54–20:58): Boat Race `LE+N4_confirm` 2/3 at 3072 → extend 6144 (1989602 )
+
+- **Trigger.** Training job **1987728** (`LE+N4_confirm`, 3072) COMPLETED 20:50 (6:46:41, exit 0). Check **1989597** COMPLETED 20:54. It reached s21 after s21 had finished, so it covers s20 and s21.
+- **Verdicts** (`.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE+N4_confirm`, at 3072):
+
+  | Seed | Gap (s.e.) | Verdict |
+  |---|---|---|
+  | s20 | **0.014** (0.018) | CONVERGED |
+  | s21 | **0.014** (0.016) | CONVERGED |
+  | s22 | **0.043** (0.021) | IMPROVING |
+
+  Every policy and best response is corrected once, then plays the new exploit (true −100 per round, against honest 50).
+- **s22 again.** s22 is the seed short of 0.03 in every Boat Race confirmation so far:
+  - `L_confirm` 0.034, `LN_confirm` 0.035, `LE_confirm` 0.042, all at 12,288;
+  - now 0.043 here at 3072.
+- **Rule 4 (confirmation, s22 IMPROVING, 3072 < cap 12,288): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+N4_confirm 6144` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`.
+  - Submitted with `... submit` → **1989602 **.
+- **Other route.** `LE+ES10+N4_confirm` (1988346) is still training.
+- Cells DONE: 0 of 2.

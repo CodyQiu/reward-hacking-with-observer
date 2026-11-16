@@ -2,7 +2,7 @@
  {
   "seed_dir": "results/step4/boat_race/noreg_fail/N1_P1eq1_LE+N4_confirm/seed20",
   "target": "step4/boat_race/targets/P1eq1/seed20.json",
-  "verdict": "NEEDS BR",
+  "verdict": "CONVERGED",
   "finished": true,
   "episodes": 3072,
   "of_episodes": 3072,
@@ -22,7 +22,115 @@
   "matches_target": false,
   "above_target": true,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/boat_race/noreg_fail/N1_P1eq1_LE+N4_confirm/step4_br/seed20_ep3072.json",
+   "gap": 0.01417902179229602,
+   "gap_se": 0.018058392036986153,
+   "best_response": {
+    "received_by_k": [
+     200.0,
+     1084.4570544560752,
+     1084.4570544560752,
+     1084.4570544560752,
+     1084.4570544560752
+    ],
+    "true_by_k": [
+     -94.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "proxy_by_k": [
+     200.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     199.38835881133392,
+     1068.5519763934763,
+     1068.49051699884,
+     1068.5065880888646,
+     1068.548812341558
+    ],
+    "true_by_k": [
+     -93.9999998772773,
+     -99.99859990990721,
+     -99.99885133002859,
+     -99.99823436906918,
+     -99.99929847727496
+    ],
+    "proxy_by_k": [
+     199.3883588113341,
+     -99.99848672978793,
+     -99.99884619478205,
+     -99.99822238167516,
+     -99.9992953872057
+    ],
+    "window_by_k": [
+     0.9999996234411825,
+     9.150789917882404e-07,
+     7.20834482616134e-07,
+     1.6668754890954128e-06,
+     3.872675087378944e-07
+    ],
+    "corrected_by_k": [
+     0.9999996234411825,
+     9.150789917882404e-07,
+     7.20834482616134e-07,
+     1.6668754890954128e-06,
+     0.0
+    ],
+    "corrections_per_ep": 1.000002926230146,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999996234411825
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 1.6652443761660996e-06
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 1.5972627061343633e-09
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 3.385022311073827e-11
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,
@@ -976,27 +1084,135 @@
  {
   "seed_dir": "results/step4/boat_race/noreg_fail/N1_P1eq1_LE+N4_confirm/seed21",
   "target": "step4/boat_race/targets/P1eq1/seed21.json",
-  "verdict": "RUNNING",
-  "finished": false,
-  "episodes": 3048,
+  "verdict": "CONVERGED",
+  "finished": true,
+  "episodes": 3072,
   "of_episodes": 3072,
-  "last_episodes": 305,
+  "last_episodes": 307,
   "gaps": {
-   "value": -0.029021143913269043,
+   "value": -0.03432190418243408,
    "window": 1.0,
-   "true": 0.1232966317070855,
+   "true": 0.12486002180311415,
    "corr": 1.0
   },
   "pass": {
-   "value": true,
+   "value": false,
    "window": false,
    "true": false,
    "corr": false
   },
   "matches_target": false,
-  "above_target": false,
+  "above_target": true,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/boat_race/noreg_fail/N1_P1eq1_LE+N4_confirm/step4_br/seed21_ep3072.json",
+   "gap": 0.014166045304883412,
+   "gap_se": 0.01573505095185546,
+   "best_response": {
+    "received_by_k": [
+     200.0,
+     1113.8939243952434,
+     1113.8939243952434,
+     1113.8939243952434,
+     1113.8939243952434
+    ],
+    "true_by_k": [
+     -94.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "proxy_by_k": [
+     200.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     199.8426162344084,
+     1096.4210455235916,
+     1097.7413576598376,
+     1097.970622967117,
+     1097.6489589437729
+    ],
+    "true_by_k": [
+     -93.99999990284905,
+     -99.99810535783755,
+     -99.99803490767448,
+     -99.99786395159222,
+     -99.99797055330929
+    ],
+    "proxy_by_k": [
+     199.8426162344084,
+     -99.99802881991188,
+     -99.99800375872228,
+     -99.99782674317419,
+     -99.99792828109564
+    ],
+    "window_by_k": [
+     0.9999998273059552,
+     3.495497512238975e-06,
+     2.864095409596038e-06,
+     2.976262109700315e-06,
+     3.482448165907216e-06
+    ],
+    "corrected_by_k": [
+     0.9999998273059552,
+     3.495497512238975e-06,
+     2.864095409596038e-06,
+     2.976262109700315e-06,
+     0.0
+    ],
+    "corrections_per_ep": 1.0000091631609866,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999998273059552
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 3.3343344726763707e-06
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 6.198027857579164e-10
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 8.137177750599251e-14
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,
@@ -1007,17 +1223,17 @@
    ],
    "true_by_k": [
     -94.0,
-    -99.75471496582031,
-    -99.7494888305664,
-    -99.7390365600586,
-    -99.77592468261719
+    -99.97984313964844,
+    -99.98503875732422,
+    -99.98290252685547,
+    -99.99053192138672
    ],
    "received_by_k": [
-    196.31178283691406,
-    1006.1888427734375,
-    1009.9822998046875,
-    1014.2916870117188,
-    1018.1976318359375
+    197.92926025390625,
+    1011.564453125,
+    1015.099365234375,
+    1019.1511840820312,
+    1023.0945434570312
    ],
    "corrections_per_ep": 1.0
   },
@@ -1934,6 +2150,13 @@
    {
     "episode": 3048,
     "value": -0.05084693431854248,
+    "window": 1.0,
+    "true": 0.125,
+    "corr": 1.0
+   },
+   {
+    "episode": 3072,
+    "value": -0.024028420448303223,
     "window": 1.0,
     "true": 0.125,
     "corr": 1.0
