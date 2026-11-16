@@ -598,3 +598,8 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - `LE+ES10_confirm` (1989721).
 - **Comp targets.** The comp campaign's Boat Race targets (comp, swap and standard PBRR, 1000 epochs) are queued; see `docs/step4_comp_log.md`.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 61 (23:43–23:50): Boat Race `LE+N4_confirm` s20/s21 at 6144 → check 1989833
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LE+N4_confirm`: s20 and s21 have finished at 6144, and s22 is at 6144 but not yet finished. `... br_missing submit` → **1989833**.
+- Cells DONE: 0 of 2.

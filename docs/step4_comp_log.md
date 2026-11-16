@@ -149,3 +149,17 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
   - Submitted: `... submit` → **1989830**.
 - **Rule 3.** `br_missing` (dry-run: grid `C1_comp_L` s0; Boat Race `C1_comp_L` s0/s1, now finished) → `... br_missing submit` → **1989831**, **1989832**.
 - **Budget.** This campaign has 26 jobs. Cells DONE: 0 of 6.
+
+## 2026-11-15, iteration 5 (23:43–23:50): grid `C1_comp_L` 3/3 by the verdict (but true −100 after the correction) → `confirm` (1989835 ); Boat Race `LE` s0 → check 1989834
+
+- **Grid result.** **1989831** (grid `C1_comp_L`, s0) COMPLETED 23:40.
+  - s0 is **0.011**, CONVERGED. The run is **3/3 CONVERGED** (0.011 / 0.012 / 0.011).
+  - In every seed PPO is corrected in round 0, then has **true −100** in every round, while the best response and the target are honest (22).
+  - So the cell passes the 3% verdict without the honest behaviour (flag at the top, iteration 4).
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.** I apply the criterion as written and do not adjust it.
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid C1_comp_L` printed `submit.sh 48 --env grid --run-id C1_comp_L_confirm --seeds 20 21 22 --results-dir results/step4/grid/comp --set g.fine_only=True g.offset=True g.offset_margin=0.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. That matches `run_sets.py`.
+  - Submitted: `... submit` → **1989835 **.
+  - If it is 3/3, the grid comp cell is DONE by the rules, with PPO's true return reported beside it. You may want to override that (flag).
+- **Boat Race.** **1989697** (Boat Race `C1_comp_L`) COMPLETED 23:38. Check **1989832** (s0, s1) is done, but its verdicts wait for the Boat Race comp target (1989677, queued).
+- **Rule 3.** `br_missing` (dry-run: Boat Race `C1_comp_LE`, s0 at 1536) → `... br_missing submit` → **1989834**.
+- Cells DONE: 0 of 6.
