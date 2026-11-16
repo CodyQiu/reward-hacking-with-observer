@@ -787,3 +787,10 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LE 6144` printed `submit.sh 48 --env boat_race --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/boat_race/comp --resume --extend-to 6144`.
   - Submitted: `... submit` → **1990524 **.
 - **Boat Race's cell** rests on `C1_comp_LN_confirm`: s21 and s22 are CONVERGED, and s20 is still training. Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 47 (13:59–14:02): Taxi `C1_comp_LN` finished (all three seeds at 768)
+
+- **Training wait.** **1989696** (Taxi `C1_comp_LN`) COMPLETED 13:59 (15:28:46, exit 0).
+  - s0 and s2 went from 384 / 264 episodes at 12:16 to 768. Once PPO stopped being corrected, episodes became fast. s0's last blocks: windows 0–3 0.00, off-window 0.96, corrections 0.00–0.01 per episode, so it hides.
+- **Rule 3.** Check **1990425** started at 13:38, before s0 and s2 finished, so it covers only s1. `br_missing` will list s0 and s2 once 1990425 ends; I'll submit them then.
+- Cells DONE: 2 of 6.
