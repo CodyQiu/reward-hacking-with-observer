@@ -492,3 +492,19 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **1988602** (Boat Race `N1_P1eq1_LE+ENT3`, extension to 3072) COMPLETED 21:07 (3:44:53, exit 0). s1 (0.049) and s2 (0.052) are already checked.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `LE+ENT3`, s0) → `... br_missing submit` → **1989622 **.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 52 (21:22–21:28): Boat Race `LE+ENT3` 1/3 at 3072 → extend 6144 (1989627)
+
+- **Check result.** **1989622** (`br_boat_race_N1_P1eq1_LE+ENT3`, s0) COMPLETED 21:21. Gaps at 3072:
+
+  | Seed | Gap (s.e.) | Verdict |
+  |---|---|---|
+  | s0 | **0.025** (0.008) | CONVERGED |
+  | s1 | **0.049** (0.010) | IMPROVING |
+  | s2 | **0.052** (0.020) | IMPROVING |
+
+  Every best response is corrected once, then plays the new exploit (true −100).
+- **Rule 6b extension rule.** This is an exploration run with seeds still unconverged, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ENT3 6144` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`.
+  - Submitted with `... submit` → **1989627**.
+- Cells DONE: 0 of 2.

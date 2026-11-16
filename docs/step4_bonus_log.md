@@ -1531,3 +1531,27 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **1987290** (AS `B1_P1eq1_LN+RS+LR_confirm`, 12,288) COMPLETED 21:03 (11:41:47, exit 0). s20 (0.058, PLATEAU) and s21 (0.000) are already checked. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `+LR_confirm`, s22) → `... br_missing submit` → **1989621 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 141 (21:22–21:28): AS `+LR_confirm` 2/3 at 12,288, s20 PLATEAU → failed; Tomato base `LE` 0/3 at 6144 → extend to the cap 12,288 (1989626); checks 1989628 1989629
+
+- **Checks back.** **1989621** (AS `+LR_confirm`, s22) and **1989563** (Tomato `B1_base_LE`, s1 and s2) COMPLETED. Verdicts from `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **AS `B1_P1eq1_LN+RS+LR_confirm`** (12,288):
+    - s20 **0.058**, PLATEAU.
+    - s21 **0.000**, CONVERGED.
+    - s22 **0.001**, CONVERGED. It is corrected once, then honest; its best response takes 2 corrections, at a negligible value difference.
+  - **Tomato `B1_base_LE`** (6144), BR gaps flat since 1536 (0.167):
+    - s0 **0.162**, s1 **0.163**, s2 **0.163**, all labelled IMPROVING by the training curve.
+    - All three are reactive: corrected once, then honest, true about 430. Their best responses hide.
+- **Rule 4, AS `+LR_confirm`.** The only unconverged seed is PLATEAU, so the run is finished and this confirmation failed (2/3, s20 at 0.058).
+  - AS no-reg confirmations failed so far: `+AN`, `+N4`, `+LR`.
+  - Still running: `+GL_confirm`, `+ENT3_confirm`, `+EP_confirm`, `+NET_confirm`, `+ES10+N4_confirm`.
+- **Rule 4, Tomato `B1_base_LE`.** Seeds are labelled IMPROVING and the run is below the cap, so extend 2× to the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LE 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LE --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1989626**.
+  - At the cap the run is finished whatever the verdict.
+- **Rule 3.** The `br_missing` dry-run listed two runs:
+  - Tomato `B1_base_L`: s1 finished at 6144; s2 at 5232.
+  - Tomato `B1_base_LN+ES10`: s0 finished at 1536; s1 at 504, s2 at 1296.
+
+  Submitted: `... br_missing submit` → **1989628** (`base_L`) and **1989629** (`base_LN+ES10`).
+- Cells DONE: 5 of 12.
