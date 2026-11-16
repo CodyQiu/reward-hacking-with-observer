@@ -1906,3 +1906,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **s2.** Still training at 2496 of 3072. Its training curve is still reactive (corrected in round 0, then honest).
 - **Next.** Rule 4 waits for s2.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 166 (02:57–03:00): tomato_large no-reg `LN+ES10` finished at 1536 (39 h); grid `+LR+ENT3_confirm` seeds finished → checks 1990118 1990119 
+
+- **Training finished.** **1984538** (tomato_large `B1_P1eq1_LN+ES10`, wave 1) COMPLETED 02:56 (1-15:12:25, exit 0), inside the 48 h limit.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `+LR+ENT3_confirm` (its finished seeds, per `ls`) and tomato_large `B1_P1eq1_LN+ES10`. `... br_missing submit` → **1990118 1990119 **.
+  - The tomato_large no-reg check is that cell's first. Its target is 3–4 corrections, then honest.
+  - The grid no-reg cell is DONE if `+LR+ENT3_confirm` is 3/3.
+- Cells DONE: 5 of 12.
