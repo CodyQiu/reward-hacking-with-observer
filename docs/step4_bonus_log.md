@@ -2188,3 +2188,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1990306** (Tomato), **1990307** (tomato_large).
 - **tomato_large base, rule 6b.** It starts once `LE` has a check and no wave-1 run is 3/3: `L` is extending, `LN` finished 0/3. This check is the first for `LE`.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 188 (10:13–10:16): Tomato base `LN+ES10+N4` s0, s1 still hide at 6144 (0.000); s2 still reactive
+
+- **The check.** **1990306** (Tomato `B1_base_LN+ES10+N4` s0, s1 at 6144) COMPLETED (11:50).
+  - s0: **0.000**, CONVERGED.
+  - s1: **0.000**, CONVERGED.
+  - Both hide, matching the target exactly (true 59.8 ×4, then 46).
+  - s2 (4776/6144) is still training and still reactive (corrected once, then true about 430). It was 0.158 PLATEAU at 3072.
+- **Next.** Once s2 finishes and is checked: 3/3 → `confirm`. Otherwise, as an exploration run, it is extended 2× (to 12,288, the cap) whatever the verdict.
+- Cells DONE: 7 of 12.
