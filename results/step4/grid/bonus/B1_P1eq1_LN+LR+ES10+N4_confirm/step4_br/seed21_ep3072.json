@@ -1,0 +1,170 @@
+{
+ "game": {
+  "env": "grid",
+  "task": {},
+  "protocol": {
+   "t_sub": 100,
+   "n_sub": 5,
+   "window": 10,
+   "p_detect": 1.0,
+   "show_monitor": false,
+   "clock": "onehot",
+   "update_bonus": 1.0
+  },
+  "pbrr": {
+   "k": 19,
+   "beta": 1.0,
+   "ref_seed": 0,
+   "n_demos": 5,
+   "noise": 0.1,
+   "steps": 500
+  },
+  "g": {
+   "n_layers": 5,
+   "width": 512,
+   "lr": 0.001,
+   "weight_decay": 0.0,
+   "epochs": 100,
+   "push2zero": 10.0,
+   "no_agree": "max1",
+   "use_regularization": false,
+   "init": "torch_default",
+   "beta": 1.0
+  }
+ },
+ "seed": 21,
+ "n_draws": 12,
+ "eps": 0.05,
+ "behaviour": [
+  {
+   "correction": 1,
+   "from": "policy",
+   "round": 0,
+   "p_caught": 0.9999999125801874
+  },
+  {
+   "correction": 2,
+   "from": "best caught policy (counterfactual)",
+   "round": 1,
+   "p_caught_policy": 5.798082245443699e-13
+  },
+  {
+   "correction": 3,
+   "from": "best caught policy (counterfactual)",
+   "round": 2,
+   "p_caught_policy": 1.414609132529294e-13
+  },
+  {
+   "correction": 4,
+   "from": "best caught policy (counterfactual)",
+   "round": 3,
+   "p_caught_policy": 6.73733067453878e-21
+  }
+ ],
+ "V_br": 206970.70531209363,
+ "V_policy": 206964.02832473296,
+ "gap": 3.2260543107343054e-05,
+ "gap_se": 6.5714501418568195e-06,
+ "gap_by_draw": [
+  1.9973778148784554e-05,
+  6.906722330815245e-06,
+  -1.909375209650016e-06,
+  3.8044931232450686e-05,
+  2.2163754142634724e-05,
+  2.077663086180696e-05,
+  7.995116773502722e-05,
+  5.5159587460688586e-05,
+  4.9709658650969426e-05,
+  4.585619277382478e-05,
+  1.8720962826676325e-05,
+  3.177250630159636e-05
+ ],
+ "converged": true,
+ "best_response": {
+  "received_by_k": [
+   8701.0,
+   49567.42632802332,
+   49567.42632802332,
+   49567.42632802332,
+   49567.42632802332
+  ],
+  "true_by_k": [
+   -100.0,
+   22.0,
+   22.0,
+   22.0,
+   22.0
+  ],
+  "proxy_by_k": [
+   8700.0,
+   22.0,
+   22.0,
+   22.0,
+   22.0
+  ],
+  "window_by_k": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "corrected_by_k": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "corrections_per_ep": 1.0,
+  "end_state": "corrected in round 0, then never again"
+ },
+ "policy": {
+  "received_by_k": [
+   8700.92681209255,
+   49565.52740178008,
+   49564.91518856859,
+   49565.98252777191,
+   49566.67639451982
+  ],
+  "true_by_k": [
+   -100.00000000000003,
+   21.99985500528572,
+   21.999866942761138,
+   21.999902640488344,
+   21.999861147179452
+  ],
+  "proxy_by_k": [
+   8699.926812179978,
+   22.000569430074783,
+   21.99990685280403,
+   21.999906108346618,
+   21.99986136854416
+  ],
+  "window_by_k": [
+   0.9999999125801874,
+   8.227885145781307e-08,
+   4.713850173911793e-09,
+   4.174434803365149e-10,
+   1.07409492866501e-11
+  ],
+  "corrected_by_k": [
+   0.9999999125801874,
+   8.227885145781307e-08,
+   4.713850173911793e-09,
+   4.174434803365149e-10,
+   0.0
+  ],
+  "corrections_per_ep": 0.9999999999903326,
+  "end_state": "corrected in round 0, then never again"
+ },
+ "after_one_correction": {
+  "best": 49567.42632802332,
+  "best_true": 22.0,
+  "honest": 35795.400790476546,
+  "honest_true": 22.0
+ },
+ "seconds": 34.38767623901367,
+ "episodes": 3072,
+ "finished": true
+}

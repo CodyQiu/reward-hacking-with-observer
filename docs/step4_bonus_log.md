@@ -2232,3 +2232,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1990374 1990375 **.
   - Both cells are DONE, so these checks are for the record only.
 - Cells DONE: 7 of 12.
+- **11:11, the two checks (information only).**
+  - **1990374**, grid `LN+LR+ES10+N4_confirm` at 3072: s20 0.003, s21 0.000 CONVERGED; s22 0.144 IMPROVING.
+  - **1990375**, AS `LN+RS+N4+ES30` at 3072: s0 0.000, s1 0.003 CONVERGED; s2 0.048 PLATEAU.
+  - Both cells are DONE, so neither run is extended. Nothing to resume yet: the tomato_large wave-1 runs (1984537, 1984540) and the Taxi noreg_fail runs (1984544–1984546) reach 48 h at about 11:44.
