@@ -1355,3 +1355,20 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+N4`, s2) → `... br_missing submit` → **1988901 **.
 - **Next.** When this check returns, the rule 6b extension rule applies to the run: s0 and s1 are unconverged (iteration 124).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 126 (19:48–19:52): grid no-reg `+GL` 0/3 at 3072 → extend 6144 (1988904)
+
+- **The check.** **1988884** (`br_grid_B1_P1eq1_LN+LR+GL`, 3072) COMPLETED 19:47 (3:54). BR gap at 1536 → 3072:
+
+  | Seed | 1536 | 3072 | s.e. | Verdict |
+  |---|---|---|---|---|
+  | s0 | 0.043 | **0.053** | 0.007 | IMPROVING |
+  | s1 | 0.014 | **0.052** | 0.001 | IMPROVING |
+  | s2 | 0.080 | **0.049** | 0.004 | IMPROVING |
+
+  - **What PPO does.** Every policy is corrected once, then honest (true 21.8–22.0).
+  - **Where the gap comes from.** The best responses are also corrected once, but s1 and s2 then take a route with true 20. The gap is in received reward under the refitted no-reg corrections, which raise some non-honest transitions. So the best response earns about 5% more on a slightly different route, while PPO keeps the honest one. s1 moved from 0.014 to 0.052 because the corrections refitted on its later play reward a different route.
+- **Rule 4 (wave-2 run, seeds IMPROVING, below the cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+GL 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1988904**.
+- **Status.** Cells DONE: 5 of 12.
