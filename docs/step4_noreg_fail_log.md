@@ -514,3 +514,13 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Wake-up.** Scheduled. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`; only s22 finished at 1536 per `ls`, s20 at 1152, s21 at 552) → `... br_missing submit` → **1989645 **.
 - **What depends on it.** The Boat Race cell is DONE once this confirmation is 3/3 (s20 and s21 still training). Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 54 (21:38–21:41): Boat Race `LE+ES10+N4_confirm` s22 0.041 at 1536 (partial)
+
+- **Check result.** **1989645** (`br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`, s22) COMPLETED 21:38 (1:26).
+  - s22: **0.041** (s.e. 0.012), not converged.
+  - Policy: corrected once, then the new exploit at true about −99.9. Its best response is the same at −100.
+  - Confirmation seed 22 is now short of 0.03 in all five Boat Race confirmations: `L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.043, and 0.041 here.
+- **Remaining seeds.** s20 (1152/1536) and s21 (552/1536) are still training. Rule 4 for this run waits for them.
+- **A failed wait.** My wait script for this check exited with an error because the check finished (1:26) before the script looked the job id up. It was a scripting slip on my side, not a job failure.
+- Cells DONE: 0 of 2.
