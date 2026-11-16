@@ -2140,3 +2140,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `B1_P1eq1_LN+ES10+ES10+N4`: **identical to `+N4`**.
 - **Submitted the two distinct runs.** I ran their printed `submit.sh` lines exactly as the driver prints them: **1990239** (`+ENT3`) and **1990240** (`+N4`). The two duplicates are skipped and flagged at the top.
 - **Budget.** Bonus jobs 20 (limit 60); all my jobs 44 (limit 110). Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 184 (08:32–08:35): Tomato base `LN+ENT3` finished at 6144 → check 1990255 
+
+- **Training wait.** **1989207** (Tomato `B1_base_LN+ENT3`, 6b, extended to 6144) COMPLETED 08:32 (12:09:30, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ENT3`.
+  - Submitted: `... br_missing submit` → **1990255 **.
+- Cells DONE: 7 of 12.
