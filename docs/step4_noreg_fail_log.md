@@ -538,3 +538,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
   `... br_missing submit` → **1989702** and **1989703**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 56 (22:07–22:10): Boat Race `LE+ES10` reached 6144; its check 1989703 is queued
+
+- **Finished run.** **1988855** (Boat Race `N1_P1eq1_LE+ES10`, extension to 6144) COMPLETED 22:07 (2:22:46, exit 0).
+- **Its check is still queued.** Check **1989703** has not started yet, so it will cover all three seeds when it does.
+- **Queue state.** 30 of my 63 jobs are PENDING with reason `Priority`; that is fair-share after comp added 28 jobs. Nothing is held for any other reason.
+- Cells DONE: 0 of 2.
