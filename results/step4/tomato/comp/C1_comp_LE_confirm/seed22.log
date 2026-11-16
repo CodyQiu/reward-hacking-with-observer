@@ -62,3 +62,5 @@
   [tomato s22] 11,904,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    466.7  rounds 1627  (18711s)
   [tomato s22] 12,096,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    466.7  rounds 1651  (18975s)
   [tomato s22] 12,288,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    466.7  rounds 1675  (19242s)
+  [tomato s22] resumed at episode 1536 -> 3072
+  [tomato s22] 12,480,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    449.5  rounds 1699  (245s)
