@@ -13,3 +13,4 @@
   [taxi s2]  2,496,000  win0-3 0.33  off 0.17  corr/ep 1.32  winF 0.09  proxy0-3    -61.3  rounds 1656  (151189s)
   [taxi s2]  2,688,000  win0-3 0.30  off 0.17  corr/ep 1.21  winF 0.06  proxy0-3    -59.9  rounds 1748  (167280s)
   [taxi s2] resumed at episode 336 -> 768
+  [taxi s2]  2,880,000  win0-3 0.28  off 0.15  corr/ep 1.13  winF 0.03  proxy0-3    -68.3  rounds 1821  (5920s)

@@ -2321,3 +2321,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The run is at the cap and the cell is DONE, so nothing follows.
 - **Queued.** Tomato base `LN+ES10+N4` s2 (1990510) and `LN+N4` s0 (1990511). Cells DONE: 7 of 12.
 - **13:52.** **1989933** (Tomato `B1_base_LN+N4`, rule 6b, extended to 6144) COMPLETED 13:51 (10:29:07, exit 0). s1 and s2 have finished. Check **1990511** is still PENDING and reads the finished seeds when it starts, so it covers all three.
+
+## 2026-11-16, iteration 198 (14:33–14:38): Tomato base `LN+ES10+N4` 2/3 at 6144 (s2 reactive, PLATEAU) → 6b extension to the cap, 12,288 (1990613 )
+
+- **The check.** **1990510** (Tomato `B1_base_LN+ES10+N4` s2 at 6144) COMPLETED (15:13).
+  - s0: **0.000**, CONVERGED. Hides (true 59.8 ×4, then 46), exactly the target.
+  - s1: **0.000**, CONVERGED. The same.
+  - s2: **0.158**, PLATEAU, unchanged since 1536. Reactive: corrected once, then honest (true 433). Its best response hides.
+- **Rule 6b extension rule (exploration run, s2 unconverged): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990613 **.
+  - Extending re-trains s0 and s1 as well, from their checkpoints. Their converged checks at 6144 stay on record (`step4_br/seed*_ep6144.json`).
+- Cells DONE: 7 of 12.
