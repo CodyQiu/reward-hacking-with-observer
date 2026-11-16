@@ -1012,3 +1012,25 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Seed 1's fixed point does not converge, with or without the bonus.
 - **The log.** I wrote all of this under "Exact predictions" at the top, with the all-12-cell summary, and added the s1 flag under "Flags for the user".
 - **What follows.** All 12 bonus targets are computed. Rule 2 needs nothing more. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 105 (16:15–16:22): Tomato no-reg `LN` 3/3 CONVERGED at 6144 → `confirm` (1988344); Tomato base `LN+N4` 0/3 → extend 3072 (1988345)
+
+- **Checks.** Woken by the check wait: **1988088** (`br_tomato_B1_P1eq1_LN`) and **1988089** (`br_tomato_B1_base_LN+N4`) COMPLETED. Both training jobs had ended before their checks ran: **1984533** (Tomato `B1_P1eq1_LN`, 6144) COMPLETED 15:56 (1-04:11:09) and **1987175** (Tomato `B1_base_LN+N4`) COMPLETED 15:57 (11:10:39). So every seed was checked. Results of `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **Tomato `B1_P1eq1_LN` (6144, the cell's wave-1 run), all CONVERGED:**
+
+    | Seed | Gap (s.e.) | PPO | Best response | Own target |
+    |---|---|---|---|---|
+    | s0 | **0.020** (0.010) | corrected once, then honest (true 432) | 3.72 corrections | corrected once, which PPO matches |
+    | s1 | **0.002** (0.000) | corrected once, then honest (true 432) | corrected once | 3.75 corrections |
+    | s2 | **0.009** (0.009) | corrected once, then honest (true 432) | 2 corrections | 2.71 corrections, fixed point not converged |
+
+    Further corrections are worth only about 1–2% of V here, so a policy that takes one correction is within 3% of best responses that take 2–3.7.
+  - **Tomato `B1_base_LN+N4` (1536, rule 6b stage 1):** s0 **0.159**, s1 **0.159**, s2 **0.158** (s.e. 0.000), all PLATEAU. Every seed is reactive: corrected in round 0, then honest (true 433). Every best response hides, as the target does.
+- **Rule 4, Tomato `B1_P1eq1_LN`: tuning run, all CONVERGED → `confirm`.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato B1_P1eq1_LN` printed `submit.sh 48 --env tomato --run-id B1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/tomato/bonus --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 n_envs=64 episodes=6144 protocol.update_bonus=1.0`. That matches `run_sets.py` on the run.
+  - Submitted with `... submit` → **1988344**. The Tomato no-reg cell is DONE when this is 3/3.
+  - Timing: its tuning run took 28 h for 6144 episodes, within the 48 h limit.
+- **Rule 6b extension rule, Tomato `B1_base_LN+N4`: exploration run with seeds unconverged → extend 2× whatever the verdict.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1988345**.
+- **Queue.** 29 jobs in this campaign (limit 60), 36 in all. Cells DONE: 4 of 12.

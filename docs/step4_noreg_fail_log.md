@@ -336,3 +336,20 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Woken by the training wait: **1987355** (Boat Race `N1_P1eq1_LE+ES10+N4`, rule 6b stage 1) COMPLETED 15:54 (5:21:06, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10+N4`) → `... br_missing submit` → **1988090**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 37 (16:15–16:22): Boat Race `LE+ES10+N4` 3/3 CONVERGED at 1536 → `confirm` (1988346)
+
+- Woken by the check wait. **1988090** (`br_boat_race_N1_P1eq1_LE+ES10+N4`) COMPLETED. Verdicts from `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE+ES10+N4`:
+
+  | Seed | BR gap (s.e.) | Verdict | Best response |
+  |---|---|---|---|
+  | s0 | **0.022** (0.017) | CONVERGED | corrected once |
+  | s1 | **0.026** (0.019) | CONVERGED | corrected once |
+  | s2 | **0.008** (0.064) | CONVERGED | 2 corrections (round 1 at true −82) |
+
+  PPO is corrected once in round 0 in every seed. It then plays the new exploit: true −100 per round against honest 50, window clean. All three seeds are "above target".
+- **Rule 4 (rule 6b exploration run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE+ES10+N4` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.09 ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 episodes=1536 n_envs=64`. That is the run's overrides.
+  - Submitted with `... submit` → **1988346**.
+  - It runs in parallel with `LE+N4_confirm` (1987728). The Boat Race cell is DONE when either is 3/3; both may be extended.
+- Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
