@@ -577,3 +577,24 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s21) → `... br_missing submit` → **1989738**.
 - **Next.** Rule 4 is applied once s21 has a result. s22 is at 0.041, so the run cannot be 3/3 at 1536.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 60 (22:51–23:12): Boat Race `LE+ES10+N4_confirm` 2/3 at 1536 → extend 3072 (1989795)
+
+- **Check 1989738** (`LE+ES10+N4_confirm`, s21) COMPLETED 22:34. Verdicts at 1536:
+
+  | Seed | Gap (s.e.) | Verdict |
+  |---|---|---|
+  | s20 | **0.018** | CONVERGED |
+  | s21 | **0.012** (0.019) | CONVERGED |
+  | s22 | **0.041** (0.012) | IMPROVING |
+
+  Every policy is corrected once, then plays the new exploit.
+- **Rule 4 (confirmation, s22 IMPROVING, 1536 < cap 12,288): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10+N4_confirm 3072`. It printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1989795**.
+- **Boat Race confirmations now running**, all with s20 and s21 converged and s22 short:
+  - `LE+N4_confirm` → 6144 (1989602);
+  - `LE+ES10+N4_confirm` → 3072 (1989795);
+  - `LE+ES10_confirm` (1989721).
+- **Comp targets.** The comp campaign's Boat Race targets (comp, swap and standard PBRR, 1000 epochs) are queued; see `docs/step4_comp_log.md`.
+- Cells DONE: 0 of 2.

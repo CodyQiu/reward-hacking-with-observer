@@ -1645,3 +1645,26 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   `... br_missing submit` → **1989735** (grid confirmation), **1989736** (Tomato base `L`), **1989737** (tomato_large base `L`).
 - **Grid no-reg.** The cell is DONE if 1989735 is 3/3.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 148 (22:51–23:12): grid no-reg `+LR+ES10_confirm` 2/3 at 3072, s21 PLATEAU → failed; Tomato base `LN+ES10+N4` finished → check 1989796
+
+- **Wake-up.** Scheduled. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Finished training jobs** (all exit 0):
+  - **1989595**, grid `+LR+ES10_confirm` → 3072, 22:30;
+  - **1987620**, Tomato `B1_base_L` → 6144, 22:30;
+  - **1984541**, tomato_large `B1_base_LN` → 1536, 22:33, after 34:50 h;
+  - **1987176**, Tomato `B1_base_LN+ES10+N4`, 22:50.
+- **Check 1989735: grid `B1_P1eq1_LN+LR+ES10_confirm` at 3072.**
+
+  | Seed | BR gap, 1536 → 3072 | Verdict |
+  |---|---|---|
+  | s20 | 0.003 → **0.000** | CONVERGED |
+  | s21 | 0.129 → **0.119** (s.e. 0.003) | PLATEAU |
+  | s22 | 0.034 → **0.025** | CONVERGED |
+
+  - s21's policy is corrected once, then needs an extra dishonest round (iteration 136); its best response is corrected once, then honest.
+- **Rule 4: the only unconverged seed is PLATEAU, so the run is finished; this confirmation failed (2/3).** Grid no-reg's other confirmation, `+LR+ENT3_confirm` (1989566), is still running.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: Tomato `B1_base_LN+ES10+N4`, s2) → `... br_missing submit` → **1989796**.
+  - s0 and s1 hide at 0.000. If s2 converges, the run goes to confirmation.
+  - The checks of Tomato base `L` s2 (1989736) and tomato_large base `LN` / `L` (1989712, 1989737) are running or queued.
+- Cells DONE: 5 of 12.
