@@ -1930,3 +1930,17 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3.** `br_missing` (dry-run: s20) → `... br_missing submit` → **1990132**.
 - **What this means.** With s21 and s22 unconverged, the confirmation cannot be 3/3 at 3072. Rule 4 is applied once s20 is in.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 168 (03:24–03:28): grid no-reg `+LR+ENT3_confirm` 1/3 at 3072 → extend 6144 (1990151 ); AS `+EP_confirm` at the cap → check 1990150
+
+- **Grid check result.** **1990132** (grid `+LR+ENT3_confirm`, s20) COMPLETED 03:23. At 3072:
+  - s20 **0.020** CONVERGED (honest; its best response takes a true-20 route).
+  - s21 **0.121** PLATEAU (iteration 167).
+  - s22 **0.041** IMPROVING.
+- **Rule 4.** This is a confirmation, s22 is IMPROVING and 3072 is below the cap, so extend 2×. The s21 PLATEAU does not stop the extension, because rule 4 extends when any seed is IMPROVING.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+ENT3_confirm 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1990151 **.
+- **AS confirmation reached the cap.** **1988581** (AS `+EP_confirm`, extended to the cap of 24,576) COMPLETED 03:22 (10:13:45, exit 0).
+  - `br_missing` (dry-run: AS `+EP_confirm`) → `... br_missing submit` → **1990150**.
+  - At the cap the run is finished, whatever the verdict.
+- Cells DONE: 5 of 12.
