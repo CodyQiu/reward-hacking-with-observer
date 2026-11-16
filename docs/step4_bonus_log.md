@@ -1985,15 +1985,18 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s0 and s1 hide at 0.000. If s2 now hides too, the run goes to `confirm`.
 - Cells DONE: 6 of 12.
 
-## 2026-11-16, iteration 171 (04:11–04:14): tomato_large base `L` 0/3 at 1536, all PLATEAU → finished
+## 2026-11-16, iteration 171 (04:11–04:16): tomato_large base `L` 0/3 at 1536 → extend 3072 (1990168 ) (corrected: s0 is IMPROVING)
 
 - **The check.** **1989944** (tomato_large `B1_base_L`, s0) COMPLETED 04:10 (1:07:26).
-  - s0 is **0.227**, PLATEAU.
-  - The run is now complete: s0 0.227, s1 0.227, s2 0.226, all PLATEAU.
+  - s0 is **0.227**, labelled **IMPROVING**.
+  - The run is now complete: s0 0.227 (IMPROVING), s1 0.227 (PLATEAU), s2 0.226 (PLATEAU).
   - Every policy is reactive (corrected in round 0, then honest, true about 516). Every best response hides, as the target does.
-- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished.
+- **Rule 4.** s0 is IMPROVING and 1536 is below the cap of 12,288, so extend 2×.
+  - Correction: my first draft of this entry read all three seeds as PLATEAU; the script labels s0 IMPROVING. I fixed the entry before committing the extension.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_L 3072` printed `submit.sh 48 --env tomato_large --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1990168 **.
 - **tomato_large base.**
-  - `L` and `LN` are finished at 0/3.
+  - `LN` is finished at 0/3. `L` is extending to 3072.
   - `LE` is still training (wave 1). It reaches the 48 h limit at about 11:43; rule 1 resumes it.
-  - Rule 6b exploration starts once `LE` has a check and is not 3/3. Rule 5 (wave 2) then applies too.
+  - Rule 6b exploration starts once `LE` has a check and no wave-1 run is 3/3.
 - Cells DONE: 6 of 12.
