@@ -2074,3 +2074,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ES10`.
   - Submitted: `... br_missing submit` → **1990210 ** (s1, s2).
 - The 6b extension to 6144 follows once this check is in. Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 179 (06:40–06:45): grid no-reg `LN+LR+ENT3_confirm` finished at 6144 → check 1990221
+
+- **Training wait.** **1990151** (grid `B1_P1eq1_LN+LR+ENT3_confirm`, extended to 6144) COMPLETED 06:39 (2:51:18, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+ENT3_confirm`.
+  - Submitted: `... br_missing submit` → **1990221**.
+- Cells DONE: 6 of 12.

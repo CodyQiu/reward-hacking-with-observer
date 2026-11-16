@@ -666,3 +666,14 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`. s20 finished at 6144; s21 and s22 are still training in 1989942.
   - Submitted: `... br_missing submit` → **1990217**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 67 (06:40–06:45): Boat Race `LE+ES10+N4_confirm` s20 0.014 CONVERGED at 6144; checks 1990222 (s21), 1990223 (`LE+N4_confirm`)
+
+- **The check.** **1990217** (Boat Race `N1_P1eq1_LE+ES10+N4_confirm` s20 at 6144) COMPLETED (2:04).
+  - s20: BR gap **0.014** (s.e. 0.019), CONVERGED. PPO is corrected in round 0, then plays the new exploit (true −94, −100 ×4). That is the target's and the best response's end state.
+  - s21 finished at 6144 and needs a check. s22 is at 5928/6144.
+- **`LE+N4_confirm` (extended to the 12,288 cap):** s20 and s21 have finished.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1990222** (`LE+ES10+N4_confirm`), **1990223** (`LE+N4_confirm`).
+- Cells DONE: 0 of 2.
