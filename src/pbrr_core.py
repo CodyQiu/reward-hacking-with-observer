@@ -88,6 +88,10 @@ class GConfig:
     # agent rollouts' mean return under r_hat_{k-1} and V_ref_after the reference rollouts' under proxy + g_k
     offset: bool = False
     offset_margin: float = 0.02
+    # Step 4 fines only (applied by the overseer, not the fit; docs/step4_comp.md): the correction in force
+    # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
+    # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)
+    fine_only: bool = False
 
     def with_(self, **kw):
         return replace(self, **kw)

@@ -22,6 +22,12 @@ It ignores one thing PPO could in principle exploit: choosing an odd behaviour i
 shape the correction it gets. A run whose received return clearly exceeds the target's V0 is doing
 something outside this model (step4_converge.py flags it).
 
+With g.offset (the compensated correction, docs/step4_comp.md) each correction also installs a level per
+draw: level_offset(V_before, V_ref_after), with V_before the caught policy's exact value in its caught
+round under that draw's reward in force (dp.round_value, without the rollouts' action noise: the agent is
+the deterministic optimum, and its own rollouts would carry no noise) and V_ref_after the run's reference
+rollouts' mean under proxy + the draw's new g, as the overseer computes it in training.
+
 Also reported: the value of never being corrected (hiding) and the margin by which the target beats
 it, and each single draw's own optimum (how robust the end state is to the overseer's randomness).
 
@@ -45,10 +51,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from step3_ppo import parse_sets  # noqa: E402
 from src.pbrr_core import GConfig, boltzmann_label  # noqa: E402
-from src.step3.dp import (evaluate_levels, solve_levels, solve_subepisode,  # noqa: E402
-                          solve_subepisode_caught, table_policy_fn)
-from src.step3.pbrr import fit_correction_rows, g_table, rollouts  # noqa: E402
-from src.step3.protocol import Protocol  # noqa: E402
+from src.step3.dp import (evaluate_levels, round_probs, round_value, solve_levels,  # noqa: E402
+                          solve_subepisode, solve_subepisode_caught, table_policy_fn)
+from src.step3.pbrr import fit_correction_rows, g_table, level_offset, rollout_returns, rollouts  # noqa: E402
+from src.step3.protocol import MinCorrection, Protocol  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
 from src.step3.train import ROOT, resolve_config  # noqa: E402
@@ -126,34 +132,56 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
     for it in range(max_iter):
         t_it = time.time()
         Rbar, D, draws, behaviour = [tb.proxy.copy()], [[] for _ in range(n_draws)], [[] for _ in range(n_draws)], []
+        # each draw's expected reward in force (offset only); rebound, never written in place
+        rprev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws if gcfg.offset else None
+        corr = [None] * n_draws                               # each draw's correction in force
+        G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
         for c in range(1, K):
             w = None if ev is None else np.asarray(ev["window_by_level"])[:K - 1, c - 1]
             if w is not None and w.max() >= 0.05:            # the optimum's own caught round
                 k = int(w.argmax())
-                fn = table_policy_fn(pol, A, eps)
+                fn, exact = table_policy_fn(pol, A, eps), round_probs(pol, A, level=c - 1)
                 behaviour.append({"correction": c, "from": "optimum", "round": k, "p_caught": float(w[k])})
             else:                                             # counterfactual: the best policy that is caught
                 k = c - 1
-                fn = table_policy_fn(solve_subepisode_caught(tb, Rbar[c - 1], T, W), A, eps)
+                pol_c = solve_subepisode_caught(tb, Rbar[c - 1], T, W)
+                fn, exact = table_policy_fn(pol_c, A, eps), round_probs(pol_c, A)
                 behaviour.append({"correction": c, "from": "best caught policy (counterfactual)", "round": k})
-            acc = np.zeros_like(tb.proxy)
+            acc, lv = np.zeros_like(tb.proxy), []
             for d in range(n_draws):
                 rng = np.random.default_rng([seed, d, c, 4])    # common random numbers across iterations
                 agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
                                  t0=k * T, n_corr=c - 1)
                 D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
                 params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)))
-                Rd = tb.proxy + g_table(params, task)
+                if gcfg.fine_only:                               # fines only, never relaxed (min with the last)
+                    G_in[d] = np.minimum(G_in[d], g_table(params, task)).astype(np.float32)
+                    corr[d] = (corr[d] or MinCorrection(())).then(params)
+                    Rd = tb.proxy + G_in[d]
+                else:
+                    corr[d] = params
+                    Rd = tb.proxy + g_table(params, task)
+                if gcfg.offset:                               # the compensated correction's level
+                    v_before = round_value(tb, proto, rprev[d], exact, k)
+                    v_ref = float(rollout_returns(ref_trajs, task, corr[d]).mean())
+                    lv.append({"level": level_offset(gcfg, v_before, v_ref, T), "v_before": v_before,
+                               "v_ref_after": v_ref})
+                    Rd = Rd + lv[-1]["level"]
+                    rprev[d] = (tb.prob * Rd).sum(axis=1)
                 acc += Rd
                 if per_draw:
                     draws[d].append(Rd.astype(np.float32))
+            if lv:
+                behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
             Rbar.append(acc / n_draws)
         R_lv = np.stack(Rbar)
         V0, pol = solve_levels(tb, proto, R_lv)
         ev = evaluate_levels(tb, proto, R_lv, pol)
         rec = {"iteration": it, "behaviour": behaviour,
                **summarise(ev, float(tb.mu0 @ V0[:, 0, 0]), K, T), "seconds": time.time() - t_it}
-        rec["best_after_one_correction"] = sub_value(tb, solve_subepisode(tb, R_lv[1], T), R_lv[1], T)
+        pol_1 = solve_subepisode(tb, R_lv[1], T)
+        rec["best_after_one_correction"] = sub_value(tb, pol_1, R_lv[1], T)
+        rec["best_after_one_correction_true"] = sub_value(tb, pol_1, tb.true, T)
         rec["honest_after_one_correction"] = sub_value(tb, pol_gt, R_lv[1], T)
         rec["exploit_after_one_correction"] = sub_value(tb, pol_px, R_lv[1], T)
         iters.append(rec)

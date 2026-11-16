@@ -22,9 +22,12 @@ because sub-episode boundaries are fixed steps:
   the proxy or the true reward. The mentor's suggestion (2026-11-12, docs/step4_bonus.md): "+1 if
   the reward function was updated and 0 otherwise", so seeking an update is rewarded directly.
 
-The received reward is r_proxy + g(s, a, s'), where g is the copy's current
-correction network evaluated on the task's reward-model row. Copies that share a
-correction (identical catch history) are evaluated in one batched call.
+The received reward is r_proxy + g(s, a, s') + level, where g is the copy's current
+correction network evaluated on the task's reward-model row and ``level`` a constant per step
+that the overseer installs with it (0 unless GConfig.offset: the compensated correction,
+docs/step4_comp.md). Copies that share a correction (identical catch history) are evaluated
+in one batched call. A constant per step cannot change which behaviour is best within a
+sub-episode, since every sub-episode has exactly t_sub steps and gamma = 1.
 
 Observation: base features | one-hot tau | one-hot k | one-hot correction count |
 audit flag | (optionally) a "monitor present" bit = tau is in the audit window. With
@@ -44,7 +47,7 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
 from ..pbrr_core import mlp_apply
 
-__all__ = ["Protocol", "obs_dim", "encode_obs", "AuditedVecEnv", "g_apply"]
+__all__ = ["Protocol", "obs_dim", "encode_obs", "AuditedVecEnv", "g_apply", "MinCorrection"]
 
 
 @dataclass(frozen=True)
@@ -108,6 +111,24 @@ def encode_obs(proto, base, t, n_corr, flagged):
 g_apply = jax.jit(mlp_apply)
 
 
+class MinCorrection:
+    """The correction in force under GConfig.fine_only: min(0, g_1(x), ..., g_k(x)) over the networks fitted
+    so far in the episode -- fines only, never relaxed (docs/step4_comp.md). Evaluated wherever a single
+    network's parameters would be (AuditedVecEnv.correction, pbrr.g_on_rows)."""
+
+    def __init__(self, params):
+        self.params = tuple(params)
+
+    def then(self, params):
+        return MinCorrection(self.params + (params,))
+
+    def apply(self, X):
+        out = np.zeros(X.shape[0])
+        for p in self.params:
+            out = np.minimum(out, np.asarray(g_apply(p, X), float))
+        return out
+
+
 class AuditedVecEnv(VecEnv):
     """``n_envs`` copies of ``task`` under the protocol. ``reward_scale`` multiplies
     the reward handed to the learner; ``self.last`` holds the unscaled received,
@@ -133,10 +154,12 @@ class AuditedVecEnv(VecEnv):
         self.pending = np.zeros(n, bool)
         self.history = [()] * n           # sub-episodes at which each copy was caught
         self.g_params = [None] * n        # current correction network per copy
+        self.level = np.zeros(n)          # constant received per step with it (the compensated correction)
 
-    def set_correction(self, indices, params):
+    def set_correction(self, indices, params, level=0.0):
         for j in indices:
             self.g_params[j] = params
+            self.level[j] = level
             self.pending[j] = False
 
     def state_key(self, j):
@@ -153,7 +176,8 @@ class AuditedVecEnv(VecEnv):
         for p, idx in groups.values():
             X = np.zeros((n, feat.shape[1]), np.float32)
             X[:len(idx)] = feat[idx]
-            corr[idx] = np.asarray(g_apply(p, jnp.asarray(X)), float)[:len(idx)]
+            g = p.apply(jnp.asarray(X)) if isinstance(p, MinCorrection) else g_apply(p, jnp.asarray(X))
+            corr[idx] = np.asarray(g, float)[:len(idx)]
         return corr
 
     def _obs(self):
@@ -180,7 +204,7 @@ class AuditedVecEnv(VecEnv):
         in_win = bool(proto.in_window(self.t))
         out = self.batch.step(self._actions)
         exploit = out.exploit
-        received = out.proxy + self.correction(out.feat)
+        received = out.proxy + self.correction(out.feat) + self.level
         if in_win:
             self.flagged |= exploit
         self.t += 1

@@ -338,6 +338,7 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **But it pays per correction, and each c_k builds on the previous level,** so it grows (grid: 80 → 117 → 150 → 181/step). The optimum then seeks corrections and keeps exploiting: 5 of 8 grid cases, and Tomato is corrected every round.
   - **In Absent Supervisor it is too small, and the optimum hides.** V_before comes from noisy rollouts (1,213, while hiding earns 1,450).
   - **Not pursued:** no regulariser alone does better on all three.
+  - **Revisited on 2026-11-16** as the compensated correction (below): no margin, fines only and never relaxed, and V_before taken from the agent's own caught play. These checks forced a correction at every level and fitted on a softened exploiter. Their one realistic sequence, the grid's open exploiter with the neural fit, already gave "corrected in round 0, then honest".
 - **Timelines.**
   - Grid: `experiments/step2_figures.py --prefix step4 --results-dir results/step4/ppo ...`.
   - Step 3 tasks: `experiments/step3_figures.py --prefix step4 --results-dir results/step4/<env>/ppo ...`.
@@ -384,6 +385,17 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **Driver.** `CAMPAIGN=noreg_fail`; runs are `N1_P1eq1_*` in `results/step4/<env>/noreg_fail/`.
   - **Left out.** MountainCar's exact solve is a grid approximation that the target and best-response code doesn't support, and LunarLander has no exact solve.
   - **One FarmShare prompt runs both new campaigns:** `docs/step4_loop_prompt.md`.
+- **Compensated-correction campaign (from 2026-11-16; FarmShare; `docs/step4_comp.md`, log `docs/step4_comp_log.md`).**
+  - **Why.** The user's framing, 2026-11-15: standard PBRR makes the agent avoid correction but creates no new exploits; the swap gets it corrected quickly but can create new exploits. The goal: corrected quickly, then behaves, in mostly all environments, without changing the setup.
+  - **The mechanism.** Standard PBRR's fit is unchanged. The overseer applies it as fines only, never relaxed within an episode (`g.fine_only=True`: the correction in force is min(0, g_1, …, g_k)). With each correction it also installs a level, a constant per step until the episode ends: c = [V_before − V_ref,after]⁺ / T_sub (`g.offset=True g.offset_margin=0.0`).
+    - V_before is the caught play's return under the reward in force when it was caught.
+    - V_ref,after is the reference's return under the new correction.
+    - So after a correction, honest play earns what the caught play earned before it.
+  - **Why it should work.** A constant per step cannot change which behaviour is best within a round, because every round is exactly T_sub steps and γ = 1. Fines only cannot raise a route above honest. Being corrected costs nothing, while hiding still gives up the audit window, so the optimum exploits in view in round 0, is corrected, and is honest after (oracle grid: 43,500 vs 39,500 for hiding). With no margin and no relaxed fines, a second correction pays less than staying honest.
+  - **Why the fines must never relax.** In a 1-draw grid code check, the level alone farms corrections: a refit from scratch, fitted on a play that only touches the bug, weakened the fine. With fines never relaxed, the same check gives "corrected in round 0, then honest".
+  - **The cells.** Grid, AS, Tomato, tomato_large, Taxi and Boat Race. `CAMPAIGN=comp`; runs `C1_comp_*` in `results/step4/<env>/comp/`. `compare` adds the swap's and standard PBRR's 1000-epoch targets in Taxi and Boat Race.
+  - **Expected.** Honest after one correction in grid, AS, Tomato and tomato_large, where the 1000-epoch standard correction already makes honest the best round. Taxi and Boat Race are open: with fewer epochs, standard PBRR under-corrected there.
+  - **The FarmShare prompt** (`docs/step4_loop_prompt.md`) now runs three campaigns.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 

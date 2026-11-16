@@ -21,7 +21,7 @@ exploited. ``solve_subepisode`` is the single-sub-episode optimum of a fixed rew
 import numpy as np
 
 __all__ = ["solve_levels", "evaluate_levels", "evaluate_levels_probs", "value_from_occupancy", "onehot_probs",
-           "solve_subepisode", "solve_subepisode_caught", "table_policy_fn",
+           "solve_subepisode", "solve_subepisode_caught", "table_policy_fn", "round_value", "round_probs",
            "refs_from_eval"]
 
 
@@ -229,6 +229,49 @@ def solve_subepisode_caught(tb, R, T, window):
         pol[tau] = Q.argmax(axis=1)
         V = Q.max(axis=1)
     return pol
+
+
+def round_value(tb, proto, rbar, probs_at, k):
+    """Exact expected received return of one sub-episode -- round k, at a fixed correction level, from mu0
+    with the audit flag at 0 -- of the policy ``probs_at(t)`` -> (S, 2, A) (action probabilities by audit
+    flag), under the expected reward ``rbar`` (S*A,) in force. This is what the overseer's rollouts of that
+    policy in that round estimate: the compensated correction's V_before (docs/step4_comp.md)."""
+    S, A, T = tb.n_states, tb.n_actions, proto.t_sub
+    ex, rbar = tb.exploit, np.asarray(rbar, float)
+    d = np.zeros((S, 2))
+    d[:, 0] = tb.mu0
+    fbit = np.arange(2).astype(bool)[None, :, None]
+    tot = 0.0
+    for tau in range(T):
+        t = k * T + tau
+        P = np.asarray(probs_at(t), float)                                     # (S, 2, A)
+        win = bool(proto.in_window(t))
+        nd = np.zeros((S, 2))
+        for a in range(A):
+            r = np.arange(S) * A + a
+            w = d * P[:, :, a]                                                  # (S, 2)
+            if not w.any():
+                continue
+            tot += float(w.sum(axis=1) @ rbar[r])
+            if tau < T - 1:
+                m = w[:, :, None] * tb.prob[r][:, None, :]                      # (S, 2, F)
+                f2 = fbit | (ex[r][:, None, :] & win)
+                flat = tb.nxt[r][:, None, :] * 2 + f2.astype(np.int64)
+                nd += np.bincount(flat.ravel(), weights=m.ravel(), minlength=S * 2).reshape(S, 2)
+        d = nd
+    return tot
+
+
+def round_probs(pol, n_actions, level=0):
+    """``probs_at`` for ``round_value`` from a deterministic policy table: (t_ep, S, L, 2) from
+    ``solve_levels`` (at correction ``level``), (T, S, 2) by audit flag (``solve_subepisode_caught``) or
+    (T, S) (``solve_subepisode``)."""
+    pol, E = np.asarray(pol), np.eye(n_actions)
+    if pol.ndim == 4:
+        return lambda t: E[pol[t, :, level, :]]
+    if pol.ndim == 3:
+        return lambda t: E[pol[t % pol.shape[0]]]
+    return lambda t: np.repeat(E[pol[t % pol.shape[0]]][:, None, :], 2, axis=1)
 
 
 def table_policy_fn(pol, n_actions, eps=0.0):

@@ -21,6 +21,11 @@ same Algorithm 1 round (C1 = 0), same sharing of one round between copies with a
 identical catch history, same per-round and per-step logs, plus two numbers the
 grid did not need -- g on the exploit's own transitions and g on the reference's
 (honest) transitions, the correction's collateral damage.
+
+The compensated correction (GConfig.offset, docs/step4_comp.md): with every correction the
+overseer also installs a level, a constant received on every step until the episode ends,
+sized from the round's own rollouts so that the reference under the new reward earns what the
+caught play earned under the reward in force when it was caught (``level_offset``).
 """
 
 import time
@@ -33,10 +38,11 @@ import optax
 from stable_baselines3.common.callbacks import BaseCallback
 
 from ..pbrr_core import GConfig, boltzmann_label, mlp_apply, mlp_init
-from .protocol import encode_obs, g_apply
+from .protocol import MinCorrection, encode_obs, g_apply
 from .task import exploit_mask
 
-__all__ = ["Rollout", "rollouts", "policy_probs_fn", "fit_correction_rows", "g_on_rows", "Overseer"]
+__all__ = ["Rollout", "rollouts", "policy_probs_fn", "fit_correction_rows", "g_on_rows", "rollout_returns",
+           "level_offset", "Overseer"]
 
 
 # ---------------------------------------------------------------------------------
@@ -234,8 +240,14 @@ def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
 
 
 def g_on_rows(params, X, chunk=65_536):
-    """Evaluate a correction network on many rows (chunked, padded to fixed shapes)."""
+    """Evaluate a correction network -- or a MinCorrection, min(0, g_1, ..., g_k) -- on many rows (chunked,
+    padded to fixed shapes)."""
     X = np.asarray(X, np.float32)
+    if isinstance(params, MinCorrection):
+        out = np.zeros(len(X))
+        for p in params.params:
+            out = np.minimum(out, g_on_rows(p, X, chunk))
+        return out
     out = np.zeros(len(X))
     for i in range(0, len(X), chunk):
         part = X[i:i + chunk]
@@ -261,6 +273,26 @@ def _traj_rows(trajs, task):
     if trajs[0].keys is not None:
         return task.g_rows_from_keys(np.concatenate([t.keys for t in trajs]))
     return np.concatenate([t.feats for t in trajs])
+
+
+def rollout_returns(trajs, task, params=None, level=0.0):
+    """Each rollout's return under proxy + g (``params`` None: no correction) + ``level`` per step."""
+    ret = np.array([t.proxy + level * t.length for t in trajs], float)
+    if params is not None:
+        g = g_on_rows(params, _traj_rows(trajs, task))
+        ret += np.add.reduceat(g, np.cumsum([0] + [t.length for t in trajs[:-1]]))
+    return ret
+
+
+def level_offset(gcfg, v_before, v_ref_after, t_sub):
+    """The level installed with a correction (GConfig.offset; docs/step4_comp.md), per step:
+    c = ([V_before - V_ref_after]^+ + offset_margin |V_before|) / t_sub, where V_before is the caught
+    play's return under the reward in force when it was caught (its own level included) and V_ref_after
+    the reference's under proxy + the new g (no level). With offset_margin = 0 the reference earns,
+    after the correction, exactly what the caught play earned before it. 0 when the offset is off."""
+    if not gcfg.offset:
+        return 0.0
+    return (max(0.0, v_before - v_ref_after) + gcfg.offset_margin * abs(v_before)) / t_sub
 
 
 # ---------------------------------------------------------------------------------
@@ -343,19 +375,30 @@ class Overseer(BaseCallback):
             t0 = time.time()
             D_prev = self.cache.get((episode, history[:-1]), [])
             k = history[-1]
+            # the reward in force when the group was caught (identical catch history: one correction)
+            old_params, old_level = v.g_params[members[0]], float(v.level[members[0]])
+            assert np.allclose(v.level[members], old_level)
             agent = rollouts(self.batch, policy, self.proto, self.rng, t0=k * self.proto.t_sub,
                              n_corr=len(history) - 1)
             new = [(a, r, boltzmann_label(a, r, self.rng, self.beta)) for a in agent for r in self.ref_trajs]
             D = D_prev + new
             params, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)))
             self.cache[(episode, history)] = D
-            v.set_correction(members, params)
+            if self.gcfg.fine_only:                      # fines only, never relaxed: min(0, g_1, ..., g_k)
+                params = (old_params if old_params is not None else MinCorrection(())).then(params)
+            lv = {}
+            if self.gcfg.offset:                         # the compensated correction (docs/step4_comp.md)
+                v_before = float(rollout_returns(agent, self.task, old_params, old_level).mean())
+                v_ref = float(rollout_returns(self.ref_trajs, self.task, params).mean())
+                lv = {"level": level_offset(self.gcfg, v_before, v_ref, self.proto.t_sub),
+                      "level_v_before": v_before, "level_v_ref_after": v_ref}
+            v.set_correction(members, params, lv.get("level", 0.0))
             rec = {"timesteps": int(self.num_timesteps), "episode": int(episode), "k": int(k),
                    "n_round": len(history), "n_envs": len(members), "n_pairs": info["n_pairs"],
                    "n_agree": info["n_agree"], "fit_loss": info["loss"],
                    "max_g": float(info["g_rows"].max()), "min_g": float(info["g_rows"].min()),
                    "agent_proxy_mean": float(np.mean([a.proxy for a in agent])),
-                   "agent_true_mean": float(np.mean([a.true for a in agent]))}
+                   "agent_true_mean": float(np.mean([a.true for a in agent])), **lv}
             rec.update(self._g_summary(params, agent))
             rec["seconds"] = time.time() - t0
             self.rounds.append(rec)

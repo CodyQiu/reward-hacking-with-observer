@@ -281,6 +281,195 @@ def test_best_response_check_on_an_open_exploiter():
     assert res_b["V_br"] >= res["V_br"] - 1e-6 and abs(np.mean(res_b["gap_by_draw"]) - res_b["gap"]) < 1e-9
 
 
+def _experiments():
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "experiments"))
+
+
+def test_compensated_correction_closed_forms_on_the_step1_grid():
+    """The compensated correction (g.offset, offset_margin 0; docs/step4_comp.md) on the Step 1 grid with the
+    oracle patch (a correction makes the reward the true one) and the honest optimum as the reference (true 22
+    a round). Level 1 pays (8,700 - 22) / 100 = 86.78 a step, so honest play after the correction receives
+    8,700, what the open exploit received before it: being corrected costs nothing. Hiding still gives up the
+    audit window (7,700 instead of 8,700 a round), so the optimum exploits in view in round 0, is corrected
+    and is honest from then on: 5 x 8,700 = 43,500 against 39,500 for hiding. A second correction pays back
+    only what the play that triggered it earned (true -100: after E the goal is out of reach), 8,578 < 8,700,
+    so it is not sought. A constant per step leaves every round's ranking unchanged."""
+    _experiments()
+    from step4_targets import sub_value
+    from src.pbrr_core import GConfig
+    from src.step3.dp import (evaluate_levels, round_probs, round_value, solve_levels, solve_subepisode,
+                              solve_subepisode_caught)
+    from src.step3.pbrr import level_offset
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    tb, P = get_task("grid").tables, Protocol()
+    T, W, A = P.t_sub, P.window, tb.n_actions
+    gc = GConfig(offset=True, offset_margin=0.0)
+    rbar = lambda R: (tb.prob * R).sum(axis=1)                                 # noqa: E731
+    honest = sub_value(tb, solve_subepisode(tb, tb.true, T), tb.true, T)
+    v_before = round_value(tb, P, rbar(tb.proxy), round_probs(solve_subepisode(tb, tb.proxy, T), A), 0)
+    assert abs(honest - 22) < 1e-9 and abs(v_before - 8_700) < 1e-9
+    R, levels = [tb.proxy], []
+    for c in range(1, P.n_sub):
+        levels.append(level_offset(gc, v_before, honest, T))
+        R.append(tb.true + levels[-1])
+        # the play that would trigger the next correction: the best caught round at this level
+        v_before = round_value(tb, P, rbar(R[-1]), round_probs(solve_subepisode_caught(tb, R[-1], T, W), A), c)
+    assert np.allclose(levels, [86.78, 85.56, 84.34, 83.12])
+    V, pol = solve_levels(tb, P, np.stack(R))
+    ev = evaluate_levels(tb, P, np.stack(R), pol)
+    assert abs(tb.mu0 @ V[:, 0, 0] - 43_500) < 1e-6
+    assert np.allclose(ev["corrected"], [1, 0, 0, 0, 0]) and np.allclose(ev["true"], [-100, 22, 22, 22, 22])
+    assert np.allclose(ev["received"], [8_700] * 5)
+    hide = np.stack([tb.proxy] + [tb.proxy - 1e6] * (P.n_sub - 1))
+    assert abs(tb.mu0 @ solve_levels(tb, P, hide)[0][:, 0, 0] - 39_500) < 1e-6
+    # off by default; a constant per step leaves the best round honest (true 22)
+    assert level_offset(GConfig(), 8_700, 22, T) == 0.0
+    assert abs(sub_value(tb, solve_subepisode(tb, tb.true + levels[0], T), tb.true, T) - 22) < 1e-9
+
+
+def test_round_value_is_the_exact_round_return():
+    """dp.round_value (the compensated correction's V_before) equals the level evaluations' round-0 return,
+    for the open exploiter (8,700) and for a random stochastic policy."""
+    from src.step3.dp import evaluate_levels, evaluate_levels_probs, round_probs, round_value, solve_levels
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    tb, P = get_task("grid").tables, Protocol()
+    R = np.stack([tb.proxy] * P.n_sub)
+    rb = (tb.prob * tb.proxy).sum(axis=1)
+    _, pol = solve_levels(tb, P, R)                                            # exploit in view every round
+    v = round_value(tb, P, rb, round_probs(pol, tb.n_actions, level=0), 0)
+    assert abs(v - 8_700) < 1e-6 and abs(v - evaluate_levels(tb, P, R, pol)["received"][0]) < 1e-6
+    probs = np.random.default_rng(0).dirichlet(np.ones(tb.n_actions), size=(tb.n_states, P.n_levels, 2))
+    ev = evaluate_levels_probs(tb, P, R, lambda t: probs)
+    assert abs(round_value(tb, P, rb, lambda t: probs[:, 0], 0) - ev["received"][0]) < 1e-6
+
+
+def test_env_pays_the_level_until_the_episode_ends():
+    """AuditedVecEnv pays a correction's level on every step of the copies it was installed for, and resets
+    it with the reward at the end of the episode; without one the received reward is unchanged."""
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.tasks import get_task
+    P = Protocol()
+    env = AuditedVecEnv(get_task("grid"), P, n_envs=3, seed=0)
+    env.reset()
+    env.set_correction([1], None, 5.0)
+    extra = np.zeros((P.t_ep, 3))
+    for t in range(P.t_ep):                                                    # stay at the start: never caught
+        env.step_async(np.zeros(3, np.int64))
+        env.step_wait()
+        extra[t] = env.last["received"] - env.last["proxy"]
+    assert np.allclose(extra, [0.0, 5.0, 0.0]) and np.all(env.level == 0.0)
+
+
+def test_rollout_returns_and_the_level_formula():
+    """pbrr.rollout_returns (the overseer's V_before and V_ref_after) and pbrr.level_offset."""
+    import jax
+    from src.pbrr_core import GConfig, mlp_init
+    from src.step3.pbrr import _traj_rows, g_on_rows, level_offset, rollout_returns, rollouts
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    task, P = get_task("grid"), Protocol()
+    uniform = lambda b, t, n, f: np.full((b.n, task.n_actions), 1.0 / task.n_actions)   # noqa: E731
+    trajs = rollouts(task.make_batch(3, seed=0), uniform, P, np.random.default_rng(0))
+    assert np.allclose(rollout_returns(trajs, task, None, 2.0), [t.proxy + 2.0 * P.t_sub for t in trajs])
+    rows = _traj_rows(trajs, task)
+    params = mlp_init(jax.random.PRNGKey(0), [rows.shape[1], 8, 1], "torch_default")
+    g = g_on_rows(params, rows).reshape(3, -1).sum(axis=1)
+    assert np.allclose(rollout_returns(trajs, task, params, 0.5), np.array([t.proxy + 50.0 for t in trajs]) + g)
+    gc = GConfig(offset=True, offset_margin=0.0)
+    assert level_offset(gc, 900.0, 100.0, 100) == 8.0 and level_offset(gc, 100.0, 900.0, 100) == 0.0
+    assert abs(level_offset(GConfig(offset=True), 1_000.0, 0.0, 100) - 10.2) < 1e-12   # default margin 0.02
+    assert level_offset(GConfig(), 900.0, 100.0, 100) == 0.0
+
+
+def test_best_response_check_with_the_compensated_correction():
+    """experiments/step4_br.py with g.offset on Absent Supervisor (cheap g fit, same draws as without): each
+    correction's level follows the formula from the play it is fitted on (the open exploiter, so correction
+    1's V_before is its exact round-0 value), the levels are in the tables (the exploiter's received return
+    in round k rises by T x the mean level k), and the paired gaps still average to the mean-table gap."""
+    _experiments()
+    from step4_br import best_response
+    from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    cfg = resolve_config("absent_supervisor", {"seed": 0, "g": {"epochs": 20}})
+    task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
+    tb, T = task.tables, P.t_sub
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))              # exploit in view every round
+    args = (table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions))
+    res = best_response(cfg, *args, n_draws=2, log=lambda m: None)
+    cfg_o = {**cfg, "g": {**cfg["g"], "offset": True, "offset_margin": 0.0}}
+    res_o = best_response(cfg_o, *args, n_draws=2, log=lambda m: None)
+    lv = [b["level"] for b in res_o["behaviour"]]
+    assert len(lv) == P.n_sub - 1 and all(b["from"] == "policy" for b in res_o["behaviour"])
+    assert np.allclose(lv[0]["v_before"], res["policy"]["received_by_k"][0])
+    for x in lv:
+        assert np.allclose(x["level"], np.maximum(0.0, np.subtract(x["v_before"], x["v_ref_after"])) / T)
+    diff = np.subtract(res_o["policy"]["received_by_k"], res["policy"]["received_by_k"])
+    assert np.allclose(diff, [0.0] + [T * np.mean(x["level"]) for x in lv])
+    assert abs(np.mean(res_o["gap_by_draw"]) - res_o["gap"]) < 1e-9 and res_o["gap"] >= -1e-9
+    # the campaign's game: fines only as well; the levels again sit on top of the same (fines-only) tables
+    cfg_f = {**cfg, "g": {**cfg["g"], "fine_only": True}}
+    res_f = best_response(cfg_f, *args, n_draws=2, log=lambda m: None)
+    res_fo = best_response({**cfg_f, "g": {**cfg_f["g"], "offset": True, "offset_margin": 0.0}}, *args,
+                           n_draws=2, log=lambda m: None)
+    lv = [b["level"] for b in res_fo["behaviour"]]
+    diff = np.subtract(res_fo["policy"]["received_by_k"], res_f["policy"]["received_by_k"])
+    assert np.allclose(diff, [0.0] + [T * np.mean(x["level"]) for x in lv])
+    assert res_fo["game"]["g"]["fine_only"] is True and abs(np.mean(res_fo["gap_by_draw"]) - res_fo["gap"]) < 1e-9
+
+
+def test_compensated_target_runs_on_the_grid():
+    """experiments/step4_targets.py in the campaign's game (g.offset, offset_margin 0, g.fine_only), one draw
+    and one iteration on the grid: correction 1 is fitted on the best caught policy (iteration 0 has no
+    optimum yet), whose exact round-0 value is the open exploit's 8,700; every level follows the formula."""
+    _experiments()
+    from step4_targets import target
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid", {"seed": 0, "g": {"offset": True, "offset_margin": 0.0, "fine_only": True}})
+    out = target(cfg, n_draws=1, max_iter=1, per_draw=False, log=lambda m: None)
+    beh = out["target"]["behaviour"]
+    assert [b["from"] for b in beh] == ["best caught policy (counterfactual)"] * 4
+    assert abs(beh[0]["level"]["v_before"][0] - 8_700) < 1e-6
+    for b in beh:
+        x = b["level"]
+        assert np.allclose(x["level"], np.maximum(0.0, np.subtract(x["v_before"], x["v_ref_after"])) / 100)
+    assert out["game"]["g"]["offset"] is True and out["game"]["g"]["offset_margin"] == 0.0
+    assert out["game"]["g"]["fine_only"] is True
+
+
+def test_fines_only_correction_is_the_running_minimum():
+    """GConfig.fine_only: the correction in force is min(0, g_1, ..., g_k), in pbrr.g_on_rows / g_table and in
+    AuditedVecEnv.correction alike, so no transition is ever raised and a later correction never relaxes an
+    earlier fine."""
+    import jax
+    from src.pbrr_core import mlp_init
+    from src.step3.pbrr import g_on_rows, g_table
+    from src.step3.protocol import AuditedVecEnv, MinCorrection, Protocol
+    from src.step3.tasks import get_task
+    task = get_task("grid")
+    X = task.g_rows_from_keys(task.support_keys().ravel()[:500])
+    nets = []
+    for i in range(2):                                    # centre each random net's output: it raises some rows
+        p = mlp_init(jax.random.PRNGKey(i), [X.shape[1], 8, 1], "torch_default")
+        W, bias = p[-1]
+        nets.append(p[:-1] + [(W, bias - float(np.median(g_on_rows(p, X))))])
+    g1, g2 = (g_on_rows(p, X) for p in nets)
+    assert (g1 > 0).any() and (g2 > 0).any() and (g1 < 0).any()
+    m1 = MinCorrection(()).then(nets[0])
+    m2 = m1.then(nets[1])
+    assert np.allclose(g_on_rows(m1, X), np.minimum(0.0, g1))
+    assert np.allclose(g_on_rows(m2, X), np.minimum(0.0, np.minimum(g1, g2)))
+    assert (g_on_rows(m2, X) <= g_on_rows(m1, X) + 1e-12).all()
+    assert np.allclose(g_table(m2, task), np.minimum(0.0, np.minimum(g_table(nets[0], task), g_table(nets[1], task))))
+    env = AuditedVecEnv(task, Protocol(), n_envs=2, seed=0)
+    env.reset()
+    env.set_correction([0], m2, 0.0)
+    assert np.allclose(env.correction(X[:2]), [g_on_rows(m2, X[:1])[0], 0.0])
+
+
 def test_anneal_factor():
     from src.step3.train import _anneal_factor
     an = {"last": 0.25, "floor": 0.1}

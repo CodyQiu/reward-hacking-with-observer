@@ -27,6 +27,12 @@ beats it by more than epsilon against the overseer's response to the run's own b
 target, it does not search over odd behaviours in a caught round that would induce other corrections.
 Pre-registered (docs/step4_optimal.md, 2026-11-05): CONVERGED iff gap <= 0.03.
 
+With g.offset (the compensated correction, docs/step4_comp.md) each draw's correction c also installs its
+level, sized as in training from the play the correction is fitted on: V_before = that play's exact value
+in its caught round under the draw's reward in force (PPO's own probabilities, or the counterfactual caught
+policy without its rollout noise), V_ref_after = the reference rollouts' mean under proxy + the new g. The
+levels are part of the tables, so V_PPO and V_BR include them.
+
     .venv/bin/python experiments/step4_br.py results/step4/<env>/optimal/<run> [...] [--finished-only]
     .venv/bin/python experiments/step4_br.py --missing results/step4/*/optimal/*/   (runs that need one)
 
@@ -46,10 +52,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from step4_targets import end_state, game_key, sub_value  # noqa: E402
 from src.pbrr_core import GConfig, boltzmann_label  # noqa: E402
-from src.step3.dp import (evaluate_levels_probs, onehot_probs, solve_levels, solve_subepisode,  # noqa: E402
-                          solve_subepisode_caught, table_policy_fn, value_from_occupancy)
-from src.step3.pbrr import fit_correction_rows, g_table, policy_probs_fn, rollouts  # noqa: E402
-from src.step3.protocol import Protocol, encode_obs  # noqa: E402
+from src.step3.dp import (evaluate_levels_probs, onehot_probs, round_probs, round_value,  # noqa: E402
+                          solve_levels, solve_subepisode, solve_subepisode_caught, table_policy_fn,
+                          value_from_occupancy)
+from src.step3.pbrr import (fit_correction_rows, g_table, level_offset, policy_probs_fn,  # noqa: E402
+                            rollout_returns, rollouts)
+from src.step3.protocol import MinCorrection, Protocol, encode_obs  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
 
@@ -105,27 +113,47 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     Rbar, D, behaviour = [tb.proxy.copy()], [[] for _ in range(n_draws)], []
     rbar_d = np.zeros((n_draws, K, tb.n_states * A))                   # each draw's expected reward tables
     rbar_d[:, 0] = (tb.prob * tb.proxy).sum(axis=1)
+    corr = [None] * n_draws                                            # each draw's correction in force
+    G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
     for c in range(1, K):
         w = wbl[:K - 1, c - 1]
         if w.max() >= P_MIN:                                           # PPO's own caught round
             k = int(w.argmax())
             fn = policy_fn
             behaviour.append({"correction": c, "from": "policy", "round": k, "p_caught": float(w[k])})
+            if gcfg.offset:                                            # PPO's probabilities at level c-1, round k
+                Pk = np.stack([np.asarray(probs_at(k * T + tau), float)[:, c - 1] for tau in range(T)])
+                exact = (lambda P, t0: (lambda t: P[t - t0]))(Pk, k * T)
         else:                                                          # counterfactual: the best caught policy
             k = c - 1
-            fn = table_policy_fn(solve_subepisode_caught(tb, Rbar[c - 1], T, W), A, eps)
+            pol_c = solve_subepisode_caught(tb, Rbar[c - 1], T, W)
+            fn, exact = table_policy_fn(pol_c, A, eps), round_probs(pol_c, A)
             behaviour.append({"correction": c, "from": "best caught policy (counterfactual)", "round": k,
                               "p_caught_policy": float(w.max())})
-        acc = np.zeros_like(tb.proxy)
+        acc, lv = np.zeros_like(tb.proxy), []
         for d in range(n_draws):
             rng = np.random.default_rng([seed, d, c, 5])               # own stream (the targets use ..., 4)
             agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
                              t0=k * T, n_corr=c - 1)
             D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
             params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)))
-            Rd = tb.proxy + g_table(params, task)
+            if gcfg.fine_only:                               # fines only, never relaxed (min with the last)
+                G_in[d] = np.minimum(G_in[d], g_table(params, task)).astype(np.float32)
+                corr[d] = (corr[d] or MinCorrection(())).then(params)
+                Rd = tb.proxy + G_in[d]
+            else:
+                corr[d] = params
+                Rd = tb.proxy + g_table(params, task)
+            if gcfg.offset:                                            # the compensated correction's level
+                v_before = round_value(tb, proto, rbar_d[d, c - 1], exact, k)
+                v_ref = float(rollout_returns(ref_trajs, task, corr[d]).mean())
+                lv.append({"level": level_offset(gcfg, v_before, v_ref, T), "v_before": v_before,
+                           "v_ref_after": v_ref})
+                Rd = Rd + lv[-1]["level"]
             acc += Rd
             rbar_d[d, c] = (tb.prob * Rd).sum(axis=1)
+        if lv:
+            behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
         Rbar.append(acc / n_draws)
         log(f"  correction {c}: fitted on {behaviour[-1]['from']} in round {k} ({time.time() - t0:.0f}s)")
     R_lv = np.stack(Rbar)
@@ -140,6 +168,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     vp_d = np.einsum("klr,dlr->d", ev_p["occ"], rbar_d) + bonus_p.sum()
     gap_d = (vb_d - vp_d) / V_br
     pol_gt = solve_subepisode(tb, tb.true, T)
+    pol_1 = solve_subepisode(tb, R_lv[1], T)                           # the best round after one correction
 
     def summ(ev, received):
         return {"received_by_k": np.asarray(received).tolist(), "true_by_k": ev["true"].tolist(),
@@ -151,7 +180,8 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
             "gap_se": float(gap_d.std(ddof=1) / np.sqrt(n_draws)) if n_draws > 1 else None,
             "gap_by_draw": gap_d.tolist(), "converged": bool(1.0 - V_ppo / V_br <= TOL_BR),
             "best_response": summ(ev_b, ev_b["received"]), "policy": summ(ev_p, ppo_k),
-            "after_one_correction": {"best": sub_value(tb, solve_subepisode(tb, R_lv[1], T), R_lv[1], T),
+            "after_one_correction": {"best": sub_value(tb, pol_1, R_lv[1], T),
+                                     "best_true": sub_value(tb, pol_1, tb.true, T),
                                      "honest": sub_value(tb, pol_gt, R_lv[1], T),
                                      "honest_true": sub_value(tb, pol_gt, tb.true, T)},
             "seconds": time.time() - t0}

@@ -26,6 +26,12 @@
 # CAMPAIGN=noreg_fail runs them for the no-regulariser campaign in the envs whose exact optimum under no-reg is not
 # the desired behaviour (docs/step4_noreg_fail.md): taxi and boat_race, variant P1eq1, runs N1_P1eq1_<tag> in
 # results/step4/<env>/noreg_fail, targets P1eq1 (Taxi's seeds 0-2 exist from the hide sweep and are reused).
+# CAMPAIGN=comp runs them for the compensated-correction campaign (docs/step4_comp.md): standard PBRR's fit, applied as
+# fines only that are never relaxed within an episode (g.fine_only=True), plus a level per step that pays back each
+# correction (g.offset=True g.offset_margin=0.0); variant comp, all six exact envs, runs
+# C1_comp_<tag> in results/step4/<env>/comp, targets comp. Its extra command
+#   CAMPAIGN=comp bash scripts/farmshare/step4_optimal.sh compare [submit]   the swap's and standard PBRR's
+# targets in Taxi and Boat Race (the other four envs have them from the optimal and bonus campaigns).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -40,6 +46,8 @@ case $CAMPAIGN in
          HYP="Step 4 update-bonus campaign (docs/step4_bonus.md): with +$BONUS received reward per reward update, PPO reaches the exact optimum (experiments/step4_br.py) of ENV under this PBRR variant" ;;
   noreg_fail) ENVS=(taxi boat_race); VARIANTS=(P1eq1); PFX=N1; EXTRA=""
          HYP="Step 4 no-regulariser failure campaign (docs/step4_noreg_fail.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under no-regulariser PBRR, which is not the desired behaviour" ;;
+  comp) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race); VARIANTS=(comp); PFX=C1; EXTRA=""
+        HYP="Step 4 compensated-correction campaign (docs/step4_comp.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, never relaxed, plus the level that pays back each correction" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
@@ -65,6 +73,7 @@ gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fi
     P2swap) echo "g.l_minus_on=dispreferred$ep$EXTRA" ;;
     P1eq1) echo "g.use_regularization=False$ep$EXTRA" ;;
     base) echo "${ep# }$EXTRA" ;;                                # standard PBRR (max1), as in Steps 2-3
+    comp) echo "g.fine_only=True g.offset=True g.offset_margin=0.0$ep$EXTRA" ;;   # fines only + the paying level
     *) echo "unknown variant $v" >&2; exit 1 ;;
   esac
 }
@@ -178,6 +187,13 @@ case $CMD in
   br)
     env=$1 id=$2
     br_submit "$env" "$(rdir "$env")/$id" ;;
+  compare)   # comp campaign: the swap's and standard PBRR's targets where the other campaigns left none
+    [[ $CAMPAIGN == comp ]] || { echo "compare is a CAMPAIGN=comp command" >&2; exit 1; }
+    for env in taxi boat_race; do for v in P2swap base; do
+      # shellcheck disable=SC2046
+      run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$v" .venv/bin/python -u experiments/step4_targets.py \
+        --env "$env" --name "$v" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" --set $(gsets "$env" "$v")
+    done; done ;;
   br_missing)
     for env in "${ENVS[@]}"; do
       d=$(rdir "$env"); [[ -d $d ]] || continue
