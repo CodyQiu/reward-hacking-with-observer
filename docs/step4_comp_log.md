@@ -211,3 +211,11 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
   - It runs alongside `C1_comp_L_confirm` (1989835).
 - **Boat Race.** Check **1989868** (Boat Race `C1_comp_LN`, s0 and s1) is done; its verdicts wait for the target.
 - **Budget.** This campaign has 24 jobs. Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 11 (00:37–00:42): grid `C1_comp_LN` finished → check 1989884
+
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `C1_comp_LN`, the last grid wave-1 run. `... br_missing submit` → **1989884**.
+- **Targets still pending.**
+  - The comp targets for Tomato (1989674) and tomato_large (1989675) are still running, about 2 h in.
+  - Taxi, Boat Race and the comparison targets are queued.
+- Cells DONE: 0 of 6.

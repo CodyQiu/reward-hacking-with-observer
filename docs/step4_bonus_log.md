@@ -1806,3 +1806,23 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+N4`, s0 and s2) → `... br_missing submit` → **1989881 **.
 - **Pending checks.** The Tomato base `LN+N4` / `LN+ES10` and tomato_large base `LN` checks are still running.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 158 (00:37–00:42): grid `+LR+N4` 1/3 at 3072 → extend 6144 (1989885 ); checks 1989882 (AS `+ENT3_confirm` s21) and 1989883 (Tomato base `LN+N4` s1/s2)
+
+- **What finished.**
+  - **1989881** (grid `+LR+N4`, s0 and s2 at 3072) COMPLETED.
+  - **1989866** (Tomato `B1_base_LN+N4`, s0) COMPLETED.
+  - Training jobs **1987629** (AS `+ENT3_confirm`, 24,576) and **1988345** (Tomato `B1_base_LN+N4`, 3072) COMPLETED 00:37 and 00:35.
+- **Check results.**
+  - **grid `B1_P1eq1_LN+LR+N4`** (3072):
+    - s0 **0.062** IMPROVING (0.109 at 1536);
+    - s1 **0.052** IMPROVING;
+    - s2 **0.004** CONVERGED.
+    - s0 and s1 are corrected once, then never reach the goal. Their best responses are honest.
+  - **Tomato `B1_base_LN+N4`** s0 **0.158** (3072), PLATEAU, reactive. s1 and s2 have finished but are not checked yet.
+- **Rule 6b extension rule.** The grid exploration run has seeds unconverged, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+N4 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+N4 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989885 **.
+- **Rule 3.** `br_missing` (dry-run: AS `+ENT3_confirm` s21; Tomato `LN+N4` s1 and s2) → `... br_missing submit` → **1989882**, **1989883**.
+  - `+ENT3_confirm` already failed (iteration 151); s21's check is for the record.
+- Cells DONE: 5 of 12.
