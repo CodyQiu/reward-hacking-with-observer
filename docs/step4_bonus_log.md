@@ -2039,3 +2039,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 12288` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`.
   - Submitted: `... submit` → **1990173**.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 175 (05:28–05:30): AS no-reg `LN+RS+NET_confirm` finished (information only; the cell is DONE) → check 1990197 
+
+- **The run.** **1988582** (AS `B1_P1eq1_LN+RS+NET_confirm`) COMPLETED 05:28 (12:18:55, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+NET_confirm`.
+  - Submitted: `... br_missing submit` → **1990197 **. AS checks take about a minute. The cell is DONE (`LN+RS+EP`), so this is for the record only.
+- Cells DONE: 6 of 12.
