@@ -1465,3 +1465,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   `... br_missing submit` → **1989578** (grid confirmation) and **1989579** (Tomato base `L` s0).
 - **What the grid check decides.** **The grid no-reg cell is DONE if 1989578 is 3/3.**
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 136 (20:46–20:50): grid no-reg `+LR+ES10_confirm` 1/3 at 1536 → extend 3072 (1989595 )
+
+- **Check result.** **1989578** (`br_grid_B1_P1eq1_LN+LR+ES10_confirm`) COMPLETED 20:46 (2:34). Verdicts from `.venv/bin/python experiments/step4_convergence.py <run>`:
+
+  | Seed | Gap (s.e.) | Verdict | Policy | Best response |
+  |---|---|---|---|---|
+  | s20 | **0.003** (0.003) | CONVERGED | corrected once, then honest | corrected once, then honest |
+  | s21 | **0.129** (0.005) | IMPROVING | corrected once; round 1 is still at true −99, then honest | corrected once, then honest (true 22 from round 1) |
+  | s22 | **0.034** (0.024) | IMPROVING | corrected once, then honest | takes 2 corrections |
+
+- **Rule 4 (confirmation, seeds IMPROVING, 1536 < grid cap 12,288): extend 2×.** Confirmations count once extended.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+ES10_confirm 3072` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ES10_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1989595 **.
+- **Grid no-reg's other confirmation.** `+LR+ENT3_confirm` (1989566) is still running.
+- Cells DONE: 5 of 12.
