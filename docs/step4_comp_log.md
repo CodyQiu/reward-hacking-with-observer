@@ -743,3 +743,19 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
     - Submitted: `... br_missing submit` → **1990449**.
 - **wheat-06** now shows `mixed-` in `sinfo`. I keep excluding it until it has run cleanly for a while; you can drop the exclusion.
 - **Cells DONE: 2 of 6** (grid by the verdict only, AS). Open: Tomato (3 confirmations running; `LE_confirm`'s check 1990424 is running), tomato_large (target still running), Taxi (slow), Boat Race (`LN_confirm` s20 training).
+
+## 2026-11-16, iteration 44 (13:10–13:15): Tomato `C1_comp_LE_confirm` 2/3 at 1536 (s21 0.032 IMPROVING) → extend 3072 (1990482 )
+
+- **The check.** **1990424** (Tomato `C1_comp_LE_confirm` at 1536) COMPLETED (23:08). `step4_convergence.py`:
+
+  | Seed | BR gap (s.e.) | Verdict | PPO's true by round | Best response | Target |
+  |---|---|---|---|---|---|
+  | s20 | **0.029** (0.001) | CONVERGED | 47, about 424 ×4 | 3.98 corrections, true about 426 | 3.99 corrections (farms) |
+  | s21 | **0.032** (0.001) | IMPROVING | 46, 423–425 | 3.99 corrections | 3.99 corrections (farms) |
+  | s22 | **0.012** (0.000) | CONVERGED | 45, 423–425 | 2.59 corrections | 3.97 corrections (farms) |
+
+  - PPO is corrected about once per episode, then plays nearly honest (true about 424). The targets and best responses farm the level (3–4 corrections, true 423–426), so the gap is the farming PPO doesn't do.
+- **Rule 4 (confirmation, one seed IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato C1_comp_LE_confirm 3072` printed `submit.sh 48 --env tomato --run-id C1_comp_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1990482 **.
+- **Other Tomato confirmations running:** `LN_confirm` (1990232) and `L_confirm` (1990357). Cells DONE: 2 of 6.
