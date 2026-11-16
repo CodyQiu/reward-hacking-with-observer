@@ -1707,3 +1707,36 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   `... br_missing submit` → **1989840**.
 - **What this run decides.** It is at the cap, so it is finished after this check. If s20 is now ≤ 0.03 and s21 holds, the AS no-reg cell is DONE.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 151 (23:53–23:57): AS no-reg `+ENT3_confirm` not 3/3 at the 24,576 cap → finished; this confirmation failed
+
+- **Check result.** **1989840** (`br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`, s20 and s22 at 24,576) COMPLETED 23:53. BR gap over the extensions:
+
+  | Seed | 3072 | 6144 | 12,288 | 24,576 |
+  |---|---|---|---|---|
+  | s20 | 0.049 | 0.034 | 0.030 | **0.037** (s.e. 0.035) |
+  | s21 | 0.000 | 0.002 | 0.000 | still training (24,000) |
+  | s22 | 0.052 | 0.039 | 0.023 | **0.078** (s.e. 0.041) |
+
+  - Both checked policies are corrected once, then honest (true about 449.8).
+  - Both best responses take 2 corrections (round 1 at true 400). s22's best response now pays more for the second correction than at 12,288.
+- **Rule 4: at the cap the run is finished, and s20 and s22 are unconverged, so this confirmation failed.** s21 cannot change that.
+- **AS no-reg confirmations:**
+  - failed: `+AN`, `+N4`, `+LR`, `+ES10+N4`, `+ENT3`;
+  - still running: `+GL_confirm` (1988882, 24,576 episodes), `+EP_confirm` → 24,576 (1988581), `+NET_confirm` → 12,288 (1988582).
+- **Rule 6b stage 1 for AS no-reg is now complete without the cell DONE:**
+  - `ENT3` and `ES10+N4`: confirmations failed;
+  - `N4`: confirmation failed;
+  - `ES10`: 2/3 at the cap.
+
+  So stage 2 is due: take the stage-1 run with the smallest mean BR gap and run `explore ... stage2`.
+  - Mean BR gap at each run's last tuning check (seeds 0–2): `+N4` 0.000 / 0.000 / 0.000 → **0.0000**; `+ENT3` 0.0002; `+ES10+N4` 0.005; `+ES10` 0.016 (at 24,576).
+  - Base: **`B1_P1eq1_LN+RS+N4`**, the smallest. I corrected this line before submitting; my first draft named `+ENT3` from memory, and the computed means put `+N4` first.
+- Cells DONE: 5 of 12.
+- **Rule 6b stage 2 for AS no-reg.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore absent_supervisor P1eq1 B1_P1eq1_LN+RS+N4 stage2`. Both runs are the base's overrides at 3072 episodes:
+    - `+ENT10`: `ppo.ent_coef=1`, i.e. 10× the base's 0.1.
+    - `+ES30`: `anneal.ent_start=30 anneal.ent_episodes=1536`.
+  - `ES30+N4` is not submitted: the base already has N4 (`n_envs=256 ppo.batch_size=6400`), so it would be `ES30` again.
+  - Submitted: `... stage2 submit` → **1989843 1989844 **.
+  - The extension rule applies to both.
