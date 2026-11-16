@@ -515,3 +515,7 @@
   [absent_supervisor s1] resumed at episode 12288 -> 24576
   [absent_supervisor s1] 98,496,000  win0-3 0.25  off 0.26  corr/ep 1.01  winF 0.11  proxy0-3    574.4  rounds 9103  (50s)
   [absent_supervisor s1] 98,688,000  win0-3 0.07  off 0.88  corr/ep 0.27  winF 0.77  proxy0-3    907.2  rounds 9153  (120s)
+  [absent_supervisor s1] 98,880,000  win0-3 0.01  off 0.95  corr/ep 0.05  winF 0.95  proxy0-3    902.6  rounds 9173  (160s)
+  [absent_supervisor s1] 99,072,000  win0-3 0.01  off 0.94  corr/ep 0.02  winF 0.98  proxy0-3    931.1  rounds 9180  (189s)
+  [absent_supervisor s1] 99,264,000  win0-3 0.02  off 0.89  corr/ep 0.09  winF 0.92  proxy0-3    806.8  rounds 9207  (237s)
+  [absent_supervisor s1] 99,456,000  win0-3 0.02  off 0.88  corr/ep 0.08  winF 0.94  proxy0-3    789.6  rounds 9231  (281s)
