@@ -2274,3 +2274,27 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 1.** `... resume` (dry-run) lists Tomato `B1_P1eq1_LN_confirm`. It is **not submitted**: it was killed by NODE_FAIL, and the user has not answered the flag at the top yet.
 - **wheat-06** now shows `mixed-` in `sinfo` (back in service). The exclusion stays until the user says otherwise.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 195 (13:06–13:12): tomato_large base `LE` s0 0.231 (reactive); rule 6b starts in tomato_large base (1990468–1990471)
+
+- **The check.** **1990307** (tomato_large `B1_base_LE`, s0 at 1536) COMPLETED (1:26:46).
+  - s0: BR gap **0.231**, IMPROVING. PPO is reactive (true 65, then about 508). The best response hides (84.2 ×4, then 65).
+  - s1 and s2 are at 360/1536 after the resume (1990406).
+- **Rule 6b: when to start (docs/step4_bonus.md).** Every wave-1 run of tomato_large base now has a check, and none is CONVERGED 3/3:
+
+  | Run | Gaps at 1536 | Status |
+  |---|---|---|
+  | `L` | 0.227 / 0.227 / 0.226 | extending to 3072 |
+  | `LE` | s0 0.231 | s1, s2 training |
+  | `LN` | 0.223 / 0.223 / 0.223 | PLATEAU, finished |
+
+- **The base** is the run with the smallest mean BR gap: `B1_base_LN` (0.223).
+- **Dry-run.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large base B1_base_LN` printed 4 submits on seeds 0–2 at 1536 episodes, with the base's `g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1`:
+  - `B1_base_LN+ENT3`: `ppo.ent_coef=0.09`, `n_envs=64 ppo.batch_size=1600`;
+  - `B1_base_LN+ES10`: `ppo.ent_coef=0.03`, `anneal.ent_start=10 anneal.ent_episodes=768`, `n_envs=64`;
+  - `B1_base_LN+N4`: `n_envs=256 ppo.batch_size=6400`;
+  - `B1_base_LN+ES10+N4`: both.
+  - All four are distinct: the base has no ES schedule.
+- **Submitted:** `... submit` → **1990468** (`+ENT3`), **1990469** (`+ES10`), **1990470** (`+N4`), **1990471** (`+ES10+N4`).
+  - tomato_large's wave-1 runs needed more than 48 h for 1536 episodes, so these will need rule-1 resumes (N4 likely more than one).
+- **Budget.** Bonus jobs 19 (limit 60); all my jobs 44 (limit 110). Cells DONE: 7 of 12.
