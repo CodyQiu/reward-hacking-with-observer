@@ -383,3 +383,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ENT3 3072` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`.
   - Submitted with `... submit` → **1988602**.
 - Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 42 (17:18–17:22): Boat Race `LE+ES10` finished at 1536 → check 1988606
+
+- **Training finished.** Woken by the training wait: **1987353** (Boat Race `N1_P1eq1_LE+ES10`, rule 6b stage 1) COMPLETED 17:17 (6:43:32, exit 0).
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10`; s0 and s1, since s2 was checked in iteration 40) → `... br_missing submit` → **1988606**.
+- **Stage 1 status.** `LE+N4` (confirmation running, 1987728), `LE+ES10+N4` (confirmation running, 1988346), `LE+ENT3` (extending to 3072, 1988602), `LE+ES10` (this check).
+- Cells DONE: 0 of 2.

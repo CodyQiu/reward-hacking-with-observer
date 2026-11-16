@@ -1133,3 +1133,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `... submit` → **1988599** (`+AN`), **1988600** (`+GL`), **1988601** (`+RS`).
   - `+NET` and `+EP` (wave 2) and the four exploration runs are still training.
 - Queue: 29 jobs in this campaign (limit 60), 36 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 111 (17:18–17:22): Tomato swap confirmation and grid `+AN`/`+GL` training ended; grid `+LR+ENT3` s1 at 1536 → check 1988605
+
+- **Finished training jobs** (all exit 0):
+  - **1987223**, Tomato `B1_P2swap_LN+ES10+N4_confirm`, COMPLETED 17:09 (10:37:55).
+  - **1987906**, grid `+AN`, COMPLETED 17:05.
+  - **1987902**, grid `+GL`, COMPLETED 17:10.
+
+  Their extensions (iteration 110) are queued.
+- **Tomato swap confirmation.** Check 1988396 started at about 16:50, before s21 finished, so it covers s20 and s22. s21 gets its own check once 1988396 ends (`br_missing` skips a run while its check is queued).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): grid `B1_P1eq1_LN+LR+ENT3`, s1 finished at 1536 (checked with `ls`). `... br_missing submit` → **1988605**.
+- Cells DONE: 4 of 12.
