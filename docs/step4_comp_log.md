@@ -491,3 +491,11 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - s0: BR gap **0.002**, CONVERGED. PPO is corrected in round 0, then honest (true 46, then 431.7–431.9 against 434.1), which matches the target's end state for s0.
   - s1 and s2 (episode 1248/1536) are still training. Both are corrected once and then nearly honest (true about 429), while their targets farm.
 - **No action.** `br_missing` has nothing new; Tomato `LE` s1/s2's check (1990194) is queued. Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 29 (05:43–05:47): AS `C1_comp_LN` finished (s1) → check 1990200
+
+- **Training wait.** **1989687** (AS `C1_comp_LN`, 3072) COMPLETED 05:43 (7:26:48, exit 0). s0 (0.001) and s2 (0.002) were already CONVERGED.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_C1_comp_LN` (s1).
+  - Submitted: `... br_missing submit` → **1990200**. If s1 converges, `LN` is 3/3 and goes to `confirm`.
+- Cells DONE: 1 of 6.

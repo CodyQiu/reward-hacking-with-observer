@@ -2047,3 +2047,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+NET_confirm`.
   - Submitted: `... br_missing submit` → **1990197 **. AS checks take about a minute. The cell is DONE (`LN+RS+EP`), so this is for the record only.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 176 (05:43–05:47): AS no-reg `LN+RS+NET_confirm` 1/3 at 12,288 (information only); Tomato base `LN+ES10` s0 at 3072 → check 1990199
+
+- **The check.** **1990197** (AS `B1_P1eq1_LN+RS+NET_confirm`, 12,288) COMPLETED (2:11). Verdicts:
+  - s20: 0.044 (s.e. 0.029), IMPROVING;
+  - s21: 0.000, CONVERGED (corrected once, then honest);
+  - s22: 0.078 (s.e. 0.035), IMPROVING.
+  - The cell is DONE (`LN+RS+EP`), so this run is information only and is not extended.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ES10` (s0 finished at 3072; s1 and s2 are still training in 1989902).
+  - Submitted: `... br_missing submit` → **1990199**. The run is not extended until all three seeds are checked.
+- Cells DONE: 6 of 12.
