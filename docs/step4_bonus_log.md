@@ -1287,3 +1287,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   `... br_missing submit` → **1988849**.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 122 (19:30–19:33): Tomato base `LN+ES10+N4` s0 **0.000 CONVERGED (hides)**; 2/3 seeds now at the optimum
+
+- **Check result.** **1988849** (`br_tomato_B1_base_LN+ES10+N4`, s0 at 1536) COMPLETED 19:30 (8:41).
+  - Gap **0.0000** (s.e. 0.0000), CONVERGED.
+  - The policy hides: true 59.8 ×4, then 46.0. Its best response and the target do the same.
+- **Run status.** s0 and s1 are both at the exact optimum. s2 is still training and reactive.
+- **Rule 4** waits for s2. If s2 converges, the run is confirmed (seeds 20–22). If not, the rule 6b extension rule applies.
+- Cells DONE: 5 of 12.
