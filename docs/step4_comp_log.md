@@ -2,6 +2,17 @@
 
 Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/step4_optimal.md` as changed there). Loop prompt: `docs/step4_loop_prompt.md`, campaign (C). Append-only below the two summary sections; every driver command runs with `CAMPAIGN=comp`.
 
+## Status
+
+**Cells DONE: 1 of 6. Grid is DONE by the verdict, but PPO is not honest after its correction.**
+- **The config.** `C1_comp_L`, the env's frozen Step 3 config with the comp settings, at 1536 episodes.
+  - Tuning seeds 0–2: 0.011 / 0.012 / 0.011.
+  - Confirmation seeds 20–22: 0.011 / 0.011 / 0.011.
+  - Neither run was extended.
+- **The caveat.** In all six seeds PPO is corrected in round 0 and then never reaches the goal (true −100 every round). The target and the best response are honest (true 22). The 3% verdict passes it because the level makes missing the goal only about 1.2% of V (flag below).
+- **By a behavioural criterion this cell is not DONE.**
+- **Other grid runs.** `C1_comp_LE` and `C1_comp_LN` show the same thing. Their confirmations (1989878, 1989931) are information only now.
+
 ## Flags for the user
 
 - **barley-04.** Every submit carries `EXCLUDE=barley-04`, your standing instruction from the optimal campaign, kept in the bonus and noreg_fail campaigns too. On 2026-11-14 `sinfo` showed barley-04 `allocated` with no reason set. Say if I should drop the exclusion.
@@ -301,3 +312,14 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
 - **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `C1_comp_L_confirm`) → `... br_missing submit` → **1990058 **.
 - **What the check decides.** If it is 3/3, the grid comp cell is DONE by the rules as written. Those rules count a policy that is not honest after its correction (true −100) as converged; see the flag at the top.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 17 (02:24–02:30): **grid DONE by the verdict** (`C1_comp_L_confirm` 3/3), with PPO not honest after its correction
+
+- **Confirmation check.** **1990058** (grid `C1_comp_L_confirm`, seeds 20–22) COMPLETED 02:24.
+  - s20 **0.011**, s21 **0.011**, s22 **0.011**, all CONVERGED.
+  - Every policy is corrected in round 0, then has true −100 in every round. The best responses are honest (true 22 ×4).
+- **Rule 4: the confirmation is 3/3, so the grid comp cell is DONE by the rules.**
+  - Tuning run `C1_comp_L` was 3/3; the confirmation is 3/3; no extension.
+  - I record this as the rules define it and do not adjust the criterion. The Status section and the flag at the top state that PPO's behaviour after the correction is not honest. By a behavioural criterion the cell would not be DONE.
+- **Rule 6b: nothing new for grid comp.** Its other confirmations, `C1_comp_LE_confirm` (1989878) and `C1_comp_LN_confirm` (1989931), finish as information only.
+- **Cells DONE:** 1 of 6.
