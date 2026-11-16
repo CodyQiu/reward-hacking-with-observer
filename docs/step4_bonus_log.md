@@ -1578,3 +1578,24 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   Submitted with `... br_missing submit` → **1989710** (grid `+EP`), **1989711** (AS `+ES10+N4_confirm`), **1989712** (tomato_large `base_LN`).
 - **Queue.** Checks are queueing behind fair-share priority.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 144 (22:18–22:22): grid no-reg `+LR+ES10+N4` 2/3 at 1536 → extend 3072 (1989713 ); Tomato base `LN+ES10` s0/s2 0.159 (partial)
+
+- **Checks back.** **1989701** (grid `+LR+ES10+N4`) and **1989629** (Tomato `B1_base_LN+ES10`, s0 and s2) COMPLETED.
+- **Grid `B1_P1eq1_LN+LR+ES10+N4` (1536).**
+
+  | Seed | Gap (s.e.) | Verdict |
+  |---|---|---|
+  | s0 | **0.001** | CONVERGED |
+  | s1 | **0.016** | CONVERGED |
+  | s2 | **0.035** (0.032) | IMPROVING |
+
+  s2 is corrected once, then honest. Its best response takes 2 corrections.
+- **Tomato `B1_base_LN+ES10` (1536).**
+  - s0 **0.160** and s2 **0.159**, both reactive (true 432 after the correction). Their best responses hide.
+  - s1 is still training. It was at 504 when the check was submitted.
+  - So ES10 alone has not repeated what ES10+N4 did, where 2 of 3 seeds hid.
+- **Rule 6b extension rule.** The grid exploration run has s2 unconverged, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+ES10+N4 3072` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ES10+N4 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1989713 **.
+- Cells DONE: 5 of 12.

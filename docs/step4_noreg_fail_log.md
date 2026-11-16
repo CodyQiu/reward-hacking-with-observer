@@ -545,3 +545,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Its check is still queued.** Check **1989703** has not started yet, so it will cover all three seeds when it does.
 - **Queue state.** 30 of my 63 jobs are PENDING with reason `Priority`; that is fair-share after comp added 28 jobs. Nothing is held for any other reason.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 57 (22:18–22:22): Boat Race `LE+ES10+N4_confirm` s20 0.018 CONVERGED (partial)
+
+- **Check 1989702** (`LE+ES10+N4_confirm`, s20) COMPLETED: **0.018** (s.e. 0.020), CONVERGED. The seed is corrected once, then plays the new exploit.
+- **The other seeds.** s22 is at **0.041** (iteration 54). s21 is still training at 1320/1536; its training curve is at true −75 to −83 in later rounds.
+- **Next.** Rule 4 waits for s21.
+- **Status.** Cells DONE: 0 of 2.
