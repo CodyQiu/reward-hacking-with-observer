@@ -827,3 +827,15 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Submitted: `... br_missing submit` → **1990660 **.
   - If s20 converges, **Boat Race is DONE**. s20 is the seed whose target uses the original bug in every round.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 51 (15:25–15:30): Boat Race `C1_comp_LN_confirm` 2/3 (s20 0.074 IMPROVING) → extend 3072 (1990749 )
+
+- **The check.** **1990660** (Boat Race `C1_comp_LN_confirm` s20 at 1536) COMPLETED (2:58).
+  - s20: BR gap **0.074** (s.e. 0.004), IMPROVING.
+  - **PPO plays exactly the target's end state:** the original bug in every round, 4 corrections per episode, true −94 every round (target gaps: window 0.000, true 0.000, corrections 0.00).
+  - But the best response under PPO's own corrections is "corrected in round 0, then honest" (true 50). Those corrections are fitted on PPO's play, and they fine the bug harder than the target's (fitted on the exact optimum's softened play). So the original bug no longer pays, and PPO falls 7.4% short.
+  - s21 **0.015** and s22 **0.023** are CONVERGED (corrected once, then honest).
+- **Rule 4 (confirmation, s20 IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN_confirm 3072` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1990749 **.
+- Cells DONE: 2 of 6.
