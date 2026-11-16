@@ -1481,3 +1481,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted with `... submit` → **1989595 **.
 - **Grid no-reg's other confirmation.** `+LR+ENT3_confirm` (1989566) is still running.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 137 (21:00–21:03): Tomato base `L` s0 0.160 and `LE` s0 0.162 at 6144 (still reactive; partial)
+
+- **What came back.** **1989579** (`br_tomato_B1_base_L`, s0 at 6144) COMPLETED. **1989563** (`br_tomato_B1_base_LE`) has checked s0 at 6144 and is now on its next seed.
+- **Verdicts.**
+  - `B1_base_L` s0: **0.160** (s.e. 0.000).
+  - `B1_base_LE` s0: **0.162** (s.e. 0.000).
+  - Both are reactive: corrected once, then honest, true about 431. Both best responses hide.
+  - The gaps have not moved since 1536 (0.161 / 0.165 then).
+- **Remaining seeds.** `L` s1 and s2 are still training. `LE` s1 and s2 finished at 20:44; 1989563 is checking them now, or a follow-up check will.
+- **Rule 4** waits for the remaining seeds. Cells DONE: 5 of 12.
