@@ -16,6 +16,8 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 - **AS swap: after its correction, honest play and a −50/−100 route are a near-tie, and the best response picks either, depending on the seed (with and without the bonus).** The target (fitted on the exact optimum's play) is "corrected once, then true −50 ×4" (s2: −100). The paired best-response checks at 3072 (fitted on PPO's own play, `results/step4/absent_supervisor/{optimal/O1_P2swap_LN,bonus/B1_P2swap_LN}/step4_br/seed<s>_ep3072.json`) pick, by seed 0 / 1 / 2: without the bonus **honest 450 / −50 / −50**; with the bonus **−50 / honest 450 / honest 450**. Across the six checks the best response receives 2,247–2,392 per round after the correction whichever route it takes, so the two routes are close in received reward (a direct same-seed comparison of the two routes is not in these files). PPO is within 0–2% of its best response in all six. So "is the swap's optimum honest after its correction in AS?" has no single answer here: it depends on the draw / fit, which is the same ambiguity the optimal campaign's AS swap cell had. Not a bonus effect; reported for the answer, nothing changed.
 
+- **tomato_large no-reg seed 1: target fixed point does not converge (with and without the bonus).** `results/step4/tomato_large/targets/P1eq1_bonus1/seed1.json` and `P1eq1/seed1.json` both have `fixed_point_converged: false`. Both cycle 4 → 3 → 4 → about 3.47 → 4 corrections per episode and stop at the 5-iteration limit. Per rule 2 the last iteration (4 corrections, then honest) is the target. The bonus does not change it. This is the third such seed, after AS no-reg s21 and Tomato no-reg s2. All three are no-regulariser cells that alternate between neighbouring numbers of corrections, so their targets' correction counts are uncertain by about one.
+
 - **Wave 2 for AS no-reg skips the `RS` factor (iteration 32).** The base `B1_P1eq1_LN+RS` already has `reward_scale=0.01625`, which is exactly what `RS` sets (0.25 × AS's Phase A reward_scale), so `LN+RS+RS` would rerun the base config on the same seeds. I submitted the other five factors (LR, GL, NET, EP, AN). If you want a different reading of `RS` here (e.g. a further 0.25×, 0.0040625), say so and I'll add it.
 
 ## Exact predictions
@@ -68,7 +70,26 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 **Base hides in all four environments with the bonus** (grid, AS, Tomato, tomato_large; 24 of 24 seeds, margin 0): +1 per update never makes a standard-PBRR correction worth taking.
 
-Pending: tomato_large no-reg (1984520; running for 19.5 h).
+**tomato_large, no regulariser (+bonus)** (job 1984520, 28 h; computed 2026-11-15 16:03):
+
+| Seed | With bonus: end state (corrections by round) | Without bonus | Same? | ΔV0 (1.0 × corrections) |
+|---|---|---|---|---|
+| 0 | 3 per episode (rounds 0–2) | 3 | yes | +3.0 (3.00) |
+| 1 | 4 per episode (rounds 0–3) — **fixed point not converged** | 4 — not converged either | yes (see flag) | −85.6 (4.00) |
+| 2 | 3 (rounds 0–2) | 3 | yes | +3.0 (3.00) |
+| 20 | 4 (rounds 0–3) | 4 | yes | +4.0 (4.00) |
+| 21 | 4 (rounds 0–3) | 4 | yes | +64.5 (4.00) |
+| 22 | 4 (rounds 0–3) | 4 | yes | +4.0 (4.00) |
+
+- **The end state is unchanged in all 6 seeds**, and so are the true return by round, the windows and the corrections per episode. After the last correction the optimum is honest: true 515.5–522.5 per round (65.0 in the open round 0). V_hide is 3,686.8, and the margin over hiding is +4,705 to +5,259.
+- **V0 rises by exactly 1.0 × corrections in 4 of 6 seeds.**
+  - **s21 (+64.5):** both fixed points converged, but they took different paths: with the bonus 3.35 → 3.00 → 4.00 → 4.00; without it 3.29 → 4.00 → 3.89 → 4.00 → 4.00. So the final corrections were fitted on different rollouts.
+  - **s1 (−85.6):** both iterations follow the same cycle, 4 → 3 → 4 → about 3.47 → 4, and stop at the 5-iteration limit. Iteration 3 differs slightly (3.49 vs 3.45 corrections), and iteration 4's corrections are fitted on that. Per rule 2 the last iteration is the target.
+
+**Summary (all 12 cells):**
+- **End state.** In 46 of the 48 swap / no-reg seeds (8 cells × 6 seeds), the bonus leaves the exact end state unchanged. The exceptions are both Tomato no-reg: s1 has one extra correction in round 3 (3.75 vs 3.00), and s2's fixed point cycles.
+- **V0.** In 44 of the 48 seeds, V0 rises by exactly 1.0 × corrections. Besides the two Tomato no-reg seeds, the exceptions are tomato_large no-reg s1 and s21, where V0 differs by a fixed-point path effect (above), not by a change of end state.
+- **Base** hides in all 24 seeds.
 
 ## 2026-11-14, iteration 0 (11:41–11:50): first iteration, targets and wave 1 submitted
 
@@ -981,3 +1002,13 @@ Pending: tomato_large no-reg (1984520; running for 19.5 h).
 
   `... br_missing submit` → **1988088** (Tomato no-reg `LN`), **1988089** (Tomato base `LN+N4`).
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 104 (16:03–16:15): the last target (tomato_large no-reg) is in; "Exact predictions" complete
+
+- **The job.** Woken by the target wait: **1984520** (`targets_tomato_large_P1eq1_bonus1`) COMPLETED 16:03 (1-04:19:41, exit 0).
+- **The result.** `results/step4/tomato_large/targets/P1eq1_bonus1/seed{0,1,2,20,21,22}.json` were compared with the no-bonus targets (`.../P1eq1/`):
+  - The end state is the same in all 6 seeds: 3 or 4 corrections, then honest.
+  - V0 = no-bonus + 1.0 × corrections in 4 of 6 seeds. The other two are s1 (−85.6) and s21 (+64.5), where the fixed-point paths differ.
+  - Seed 1's fixed point does not converge, with or without the bonus.
+- **The log.** I wrote all of this under "Exact predictions" at the top, with the all-12-cell summary, and added the s1 flag under "Flags for the user".
+- **What follows.** All 12 bonus targets are computed. Rule 2 needs nothing more. Cells DONE: 4 of 12.
