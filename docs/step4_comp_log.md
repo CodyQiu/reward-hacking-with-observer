@@ -199,3 +199,15 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 - **Boat Race verdicts.** They are still waiting for the Boat Race comp target.
 - **Tomato comp target.** The job (1989674) has written 5 of its 6 seed files; I will tabulate it once the job finishes.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 10 (00:26–00:30): grid `C1_comp_LE` 3/3 by the verdict (true −100 after the correction) → `confirm` (1989878 )
+
+- **The check.** **1989867** (grid `C1_comp_LE`, 1536) COMPLETED 00:21.
+  - s0 **0.011**, s1 **0.011**, s2 **0.011**, all CONVERGED.
+  - As with `C1_comp_L`, every policy is corrected in round 0 and then has true −100 in every round (it never reaches the goal), while the best response and the target are honest (22). This is the flag at the top.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid C1_comp_LE` printed `submit.sh 48 --env grid --run-id C1_comp_LE_confirm --seeds 20 21 22 --results-dir results/step4/grid/comp --set g.fine_only=True g.offset=True g.offset_margin=0.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03`. That matches `run_sets.py`.
+  - Submitted: `... submit` → **1989878 **.
+  - It runs alongside `C1_comp_L_confirm` (1989835).
+- **Boat Race.** Check **1989868** (Boat Race `C1_comp_LN`, s0 and s1) is done; its verdicts wait for the target.
+- **Budget.** This campaign has 24 jobs. Cells DONE: 0 of 6.
