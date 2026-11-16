@@ -694,3 +694,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - **`LE+N4_confirm` is at the 12,288 cap with s22 unconverged, so the confirmation has failed.** Seed 22's gap went 0.033 (6144) → 0.045 (12,288). Its behaviour matches the best response's (corrected once, then true −100), but it falls short in value. This is the same pattern as every earlier Boat Race confirmation (flag at the top).
   - **`LE+ES10+N4_confirm`:** s22 is at 6096/6144, and its check follows when it finishes.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 69 (06:54–06:57): Boat Race `LE+ES10+N4_confirm` finished at 6144 → check 1990230  (s22)
+
+- **Training wait.** **1989942** (`N1_P1eq1_LE+ES10+N4_confirm`, extended to 6144) COMPLETED 06:54 (3:18:20, exit 0). s20 (0.014) and s21 (0.011) are CONVERGED.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm` (s22).
+  - Submitted: `... br_missing submit` → **1990230 **.
+  - If s22 converges, the Boat Race cell is DONE (the tuning run `LE+ES10+N4` was 3/3).
+- Cells DONE: 0 of 2.
