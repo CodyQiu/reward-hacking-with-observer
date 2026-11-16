@@ -2156,3 +2156,5 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+RS`.
   - Submitted: `... br_missing submit` → ****, for the record.
 - Cells DONE: 7 of 12.
+- **Its check.** **1990269** COMPLETED (3:31); verdicts are in the line below (information only).
+  - Verdicts at 12,288: seed0 CONVERGED  +0.000;seed1 PLATEAU    +0.050;seed2 IMPROVING  +0.056.
