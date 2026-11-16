@@ -353,3 +353,8 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted with `... submit` → **1988346**.
   - It runs in parallel with `LE+N4_confirm` (1987728). The Boat Race cell is DONE when either is 3/3; both may be extended.
 - Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 38 (16:48–16:52): partial check on Boat Race `LE+ENT3` (s1 at 1536) → 1988397
+
+- Scheduled wakeup. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ENT3`; s1 finished at 1536, s0 at 1368, s2 at 1464) → `... br_missing submit` → **1988397**. Cells DONE: 0 of 2.

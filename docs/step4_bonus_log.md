@@ -1034,3 +1034,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
   - Submitted with `... submit` → **1988345**.
 - **Queue.** 29 jobs in this campaign (limit 60), 36 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 106 (16:48–16:52): partial checks on AS `+NET_confirm` (s21) and Tomato swap `LN+ES10+N4_confirm` (s20, s22) → 1988395 1988396
+
+- **Wake-up.** Scheduled wakeup. `git pull --no-rebase --no-edit --ff`: already up to date. No training job has ended since 16:15. `... resume` (dry-run): nothing.
+- **Rule 3.** Dry-run of `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed:
+  - AS `B1_P1eq1_LN+RS+NET_confirm`: s21 finished at 6144; s20 at 6096, s22 at 6120.
+  - Tomato `B1_P2swap_LN+ES10+N4_confirm`: s20 and s22 finished at 1536; s21 at 1296.
+- **Submitted.** `... br_missing submit` → **1988395** (AS `+NET_confirm`), **1988396** (Tomato swap confirmation). The Tomato swap cell is DONE if that confirmation is 3/3 once s21 has finished too.
+- Cells DONE: 4 of 12.
