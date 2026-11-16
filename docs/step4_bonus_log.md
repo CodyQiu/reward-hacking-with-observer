@@ -1400,3 +1400,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s1, which finished after the check had started) → `... br_missing submit` → **1989200 1989201 **.
 - **Next.** The rule 6b extension applies once s1 is checked, because extending now would overwrite s1's 3072 model before it is checked.
 - Cells DONE: 5 of 12.
+- **Same submit:** **1989201** (tomato_large `B1_base_L`, s2). s2 finished its 1536 episodes in about 32 h; `ls` shows `metrics.json`. s0 is at 696 and s1 at 1320. This is the first tomato_large seed to reach a check. Its training curve is corrected once, then honest (window 0.25, 1 correction per episode); the tomato_large base target hides.
