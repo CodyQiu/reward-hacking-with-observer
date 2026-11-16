@@ -1429,3 +1429,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s2 **0.054** (s.e. 0.008), IMPROVING (0.052 at 1536). PPO is corrected once, then honest at true 22. Its best response takes a true-20 route that pays more under the refitted corrections, the same pattern as `+GL` (iteration 126).
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `+AN` (s1) and Tomato `B1_base_LE` (s0 finished at 6144; s1 and s2 at 6000). `... br_missing submit` → **1989562** (`+AN` s1), **1989563** (Tomato base `LE` s0).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 133 (20:29–20:33): grid no-reg `+LR+ENT3` 3/3 CONVERGED at 3072 → `confirm` (1989566 )
+
+- **Check result.** **1989552** (`br_grid_B1_P1eq1_LN+LR+ENT3`, 3072) COMPLETED 20:27. BR gap at 1536 → 3072:
+
+  | Seed | 1536 | 3072 | Verdict |
+  |---|---|---|---|
+  | s0 | 0.003 | **0.000** | CONVERGED |
+  | s1 | 0.006 | **0.000** | CONVERGED |
+  | s2 | 0.032 | **0.001** | CONVERGED |
+
+  Every policy and best response is corrected once, then honest (true 22 ×4).
+- **Rule 4 (rule 6b exploration run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_P1eq1_LN+LR+ENT3` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 ppo.ent_coef=0.03 protocol.update_bonus=1.0 episodes=3072`. This is the run's overrides at its final length, matching `run_sets.py`.
+  - Submitted: `... submit` → **1989566 **.
+- **Status.** It runs alongside `+LR+ES10_confirm` (1988633). The grid no-reg cell is DONE when either confirmation is 3/3. Cells DONE: 5 of 12.
