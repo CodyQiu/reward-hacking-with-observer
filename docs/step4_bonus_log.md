@@ -1043,3 +1043,17 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Tomato `B1_P2swap_LN+ES10+N4_confirm`: s20 and s22 finished at 1536; s21 at 1296.
 - **Submitted.** `... br_missing submit` → **1988395** (AS `+NET_confirm`), **1988396** (Tomato swap confirmation). The Tomato swap cell is DONE if that confirmation is 3/3 once s21 has finished too.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 107 (16:57–17:05): checks 1988558 (grid no-reg `LN+LR+GL`, s0/s1) and 1988559 (AS `+EP_confirm`, s21); one spurious check cancelled
+
+- **Wake-up.** The training wait fired. The job that ended belonged to noreg_fail (1987352). The bonus job **1987486** (AS `+NET_confirm`) had ended at 16:50 (4:30:08, COMPLETED). Its check **1988395** was still PENDING, so when it starts it will see all three seeds finished. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `B1_P1eq1_LN+LR+GL` (wave 2): s0 and s1 finished at 1536; s2 at 1248.
+  - AS `B1_P1eq1_LN+RS+EP_confirm`: s21 finished at 12,288; s20 at 12,264, s22 at 12,192.
+
+  `... br_missing submit` → **1988558** (grid `+GL`), **1988559** (AS `+EP_confirm`). The submit also listed Tomato `B1_base_LN+N4` → **1988560**.
+- **1988560 cancelled (`scancel 1988560`; my own job).**
+  - **Cause.** Its extension 1988345 had started a minute earlier. `config.json` already said 3072 episodes, but the seeds' `metrics.json` had not yet been renamed to `metrics_ep1536.json`. So `step4_br.py --missing` took a finished seed with no check at "3072".
+  - **Why cancelling loses nothing.** With `metrics.json` gone, `--finished-only` skips every seed. The 1536 checks exist, and the script never overwrites a check. The job would have done nothing.
+  - **Status.** Not a bug in any result; it is the known resume race (summary of the earlier session). Not flagged.
+- **Still queued.** Checks 1988395 (AS `+NET_confirm`) and 1988396 (Tomato swap confirmation) are PENDING. Cells DONE: 4 of 12.

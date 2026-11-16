@@ -358,3 +358,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
 - Scheduled wakeup. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ENT3`; s1 finished at 1536, s0 at 1368, s2 at 1464) → `... br_missing submit` → **1988397**. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 39 (16:57–17:05): Boat Race `LE+ENT3` finished; `LE+ES10` s2 at 1536 → check 1988562
+
+- **Wake-up.** The training wait fired: **1987352** (Boat Race `N1_P1eq1_LE+ENT3`, rule 6b stage 1) COMPLETED 16:57 (6:24:09, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Pending check.** Check **1988397** (`LE+ENT3`) is still PENDING; when it starts it will cover all three seeds.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10`; s2 finished at 1536, s0 at 1272, s1 at 1248) → `... br_missing submit` → **1988562**.
+- Cells DONE: 0 of 2.
