@@ -187,3 +187,15 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 - **The other seeds.** s1 **0.107**, PLATEAU, hides. s0 is still training (960/3072); its curve takes about 1.5 corrections per episode, with true about 315–405 per round.
 - **Rule 4** waits for s0.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 9 (00:16–00:19): grid `C1_comp_LE` finished → check 1989867; Boat Race `C1_comp_LN` s0/s1 → check 1989868
+
+- **Training finished.** **1989683** (grid `C1_comp_LE`) COMPLETED 00:15 (2:06:26, exit 0).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `C1_comp_LE`: all three seeds at 1536.
+  - Boat Race `C1_comp_LN`: s0 and s1 at 1536; s2 at 528.
+
+  `... br_missing submit` → **1989867** (grid `LE`), **1989868** (Boat Race `LN`).
+- **Boat Race verdicts.** They are still waiting for the Boat Race comp target.
+- **Tomato comp target.** The job (1989674) has written 5 of its 6 seed files; I will tabulate it once the job finishes.
+- Cells DONE: 0 of 6.
