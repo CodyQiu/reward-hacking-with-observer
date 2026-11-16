@@ -1499,3 +1499,29 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: AS `+ES10`; s0 and s1 finished, s2 just finishing) → `... br_missing submit` → **1989610**. It covers all three seeds when it starts.
 - **At the cap** the run is finished, whatever the verdict. s2 was 0.075 at 12,288; s0 and s1 were 0.000.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 139 (21:05–21:08): AS no-reg `+ES10` 2/3 at the 24,576 cap → finished
+
+- **The check.** **1989610** (`br_absent_supervisor_B1_P1eq1_LN+RS+ES10`, 24,576) COMPLETED 21:05.
+
+  | Seed | BR gap (s.e.) | Verdict | Behaviour |
+  |---|---|---|---|
+  | s0 | **0.000** | CONVERGED | corrected once, then honest |
+  | s1 | **0.000** | CONVERGED | corrected once, then honest |
+  | s2 | **0.047** (0.029) | not converged | corrected once, then honest (true 449.9); its best response takes 2 corrections |
+
+  s2's BR gap over the run: 0.061 / 0.074 / 0.075 / 0.047 at 3072 / 6144 / 12,288 / 24,576.
+- **Decision.** Rule 4 and the 6b extension rule both stop at the cap, so the run is finished at 2/3.
+- **AS no-reg rule 6b stage 1:**
+  - `+ENT3`: 3/3; its confirmation is extending to 24,576 (1987629).
+  - `+N4`: 3/3; its confirmation failed (iteration 96).
+  - `+ES10+N4`: 3/3; its confirmation is extending to 12,288 (1987881).
+  - `+ES10`: finished at the cap, 2/3.
+
+  Stage 2 starts only once every stage-1 run is finished without the cell being DONE; not yet.
+- **Other AS no-reg runs still able to make the cell DONE:**
+  - `+GL_confirm` (1988882), from `+GL`, which was 3/3 at the cap;
+  - `+EP_confirm` → 24,576 (1988581);
+  - `+NET_confirm` → 12,288 (1988582);
+  - `+LR_confirm` (s22 still training).
+- Cells DONE: 5 of 12.
