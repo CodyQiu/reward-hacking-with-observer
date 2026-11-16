@@ -2059,3 +2059,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ES10` (s0 finished at 3072; s1 and s2 are still training in 1989902).
   - Submitted: `... br_missing submit` → **1990199**. The run is not extended until all three seeds are checked.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 177 (06:00–06:02): Tomato base `LN+ES10` s0 0.159 PLATEAU at 3072 (reactive)
+
+- **The check.** **1990199** (Tomato `B1_base_LN+ES10` s0 at 3072) COMPLETED (6:42).
+  - s0: BR gap 0.159, PLATEAU (at 1536 it was 0.159). PPO is corrected in round 0, then honest (true 432 against 434). The best response hides (59.8 ×4, then 46).
+  - s1 and s2 are at 3048/3072 and look the same.
+- **Next.** This is an exploration (6b) run, so it is extended 2× (to 6144) whatever the verdict, once s1 and s2 are checked. Cells DONE: 6 of 12.
