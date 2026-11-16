@@ -127,3 +127,7 @@
   [boat_race s0] 24,192,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     82.9  rounds 3397  (3354s)
   [boat_race s0] 24,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     82.9  rounds 3421  (3405s)
   [boat_race s0] 24,576,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     82.9  rounds 3445  (3456s)
+  [boat_race s0] resumed at episode 3072 -> 6144
+  [boat_race s0] 24,768,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3     80.3  rounds 3472  (65s)
+  [boat_race s0] 24,960,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     80.8  rounds 3496  (119s)
+  [boat_race s0] 25,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     80.9  rounds 3521  (175s)

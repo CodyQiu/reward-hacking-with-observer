@@ -2320,3 +2320,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s2 0.013 CONVERGED.
   - The run is at the cap and the cell is DONE, so nothing follows.
 - **Queued.** Tomato base `LN+ES10+N4` s2 (1990510) and `LN+N4` s0 (1990511). Cells DONE: 7 of 12.
+- **13:52.** **1989933** (Tomato `B1_base_LN+N4`, rule 6b, extended to 6144) COMPLETED 13:51 (10:29:07, exit 0). s1 and s2 have finished. Check **1990511** is still PENDING and reads the finished seeds when it starts, so it covers all three.
