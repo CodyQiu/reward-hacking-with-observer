@@ -2198,3 +2198,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s2 (4776/6144) is still training and still reactive (corrected once, then true about 430). It was 0.158 PLATEAU at 3072.
 - **Next.** Once s2 finishes and is checked: 3/3 → `confirm`. Otherwise, as an exploration run, it is extended 2× (to 12,288, the cap) whatever the verdict.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 189 (10:21–10:24): AS no-reg `LN+RS+N4+ES30` (information only) has finished seeds → check 1990351 
+
+- **Tick.** No job failed. Nothing to resume.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+N4+ES30`, a stage-2 run in a cell that is already DONE.
+  - Submitted: `... br_missing submit` → **1990351 **, for the record (AS checks take minutes).
+- Cells DONE: 7 of 12.
