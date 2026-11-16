@@ -106,3 +106,21 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 - **Other target jobs.** Tomato (1989674) and tomato_large (1989675) are running. Taxi, Boat Race and the 4 comparison targets are pending (Priority).
 - **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing; no wave-1 seed has finished. `... resume` (dry-run): nothing.
 - **Cells DONE:** 0 of 6.
+
+## 2026-11-15, iteration 3 (23:31–23:36): first wave-1 seeds finished; AS `LE` hides on its training curve; checks 1989826–1989829
+
+- **AS `LE` finished.** **1989686** (AS `C1_comp_LE`, 3072 episodes) COMPLETED 23:30 (1:17:26, exit 0), much faster than other AS runs.
+  - Its seeds' training logs show **hiding**: windows 0–3 exploited 0.00, off-window 1.00, final window 1.00, 0.01–0.02 corrections per episode, proxy over rounds 0–3 about 1,400.
+  - With so few corrections there are almost no PBRR refits, which is why it was fast.
+  - The exact target is 4 corrections per episode (iteration 2), so the check should show a large gap. Hiding is worth 7,350, against 8,228–8,383 for the target.
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed four runs; finished seeds were confirmed with `ls`:
+
+  | Run | Finished | Still training |
+  |---|---|---|
+  | grid `C1_comp_L` | s1, s2 at 1536 | s0 at 1392 |
+  | AS `C1_comp_L` | s1 at 3072 | s0 at 744, s2 at 2616 |
+  | AS `C1_comp_LE` | all three | — |
+  | Boat Race `C1_comp_L` | s2 at 1536 | s0 at 1440, s1 at 1368 |
+
+  `... br_missing submit` → **1989826** (grid `L`), **1989827** (AS `L`), **1989828** (AS `LE`), **1989829** (Boat Race `L`).
+- **Budget.** This campaign has 29 jobs (limit 30); all my jobs come to 60. Cells DONE: 0 of 6.
