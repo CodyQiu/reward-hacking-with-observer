@@ -1410,3 +1410,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ENT3 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
   - Submitted with `... submit` → **1989207 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 131 (20:20–20:24): grid `+LR+ENT3` at 3072, grid `+AN` s0/s2 at 3072 → checks 1989551 1989552
+
+- **Training wait.** **1988634** (grid `B1_P1eq1_LN+LR+ENT3`, extension to 3072) COMPLETED 20:19 (2:41:08, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `+AN`: s0 and s2 finished at 3072, s1 at 3024.
+  - grid `+LR+ENT3`: all three seeds finished at 3072.
+
+  `... br_missing submit` → **1989551** (`+AN`), **1989552** (`+LR+ENT3`).
+- Cells DONE: 5 of 12.

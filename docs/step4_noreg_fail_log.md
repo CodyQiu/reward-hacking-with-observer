@@ -428,3 +428,8 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10 6144` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`.
   - Submitted with `... submit` → **1988855 **.
 - **Cells DONE:** 0 of 2. Boat Race's best chances are the two running confirmations, `LE+N4_confirm` (1987728) and `LE+ES10+N4_confirm` (1988346).
+
+## 2026-11-15, iteration 46 (20:20–20:24): Boat Race `LE+ENT3` s2 at 3072 → check 1989553
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_boat_race_N1_P1eq1_LE+ENT3`. s2 has finished at 3072; s0 is at 2424 and s1 at 2616. `... br_missing submit` → **1989553**.
+- Cells DONE: 0 of 2.
