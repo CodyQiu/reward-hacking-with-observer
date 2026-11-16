@@ -2105,7 +2105,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Rule 4: a `_confirm` run with all seeds CONVERGED → the cell is DONE.**
   - The tuning run `B1_P1eq1_LN+LR+ENT3` was 3/3 at 3072 (0.000 / 0.000 / 0.001; iteration 133).
-  - The confirmation was extended once, 3072 → 6144 (iteration 171, where s22 was IMPROVING). Extended confirmations count (the user's ruling, docs/step4_optimal.md).
+  - The confirmation was extended once, 3072 → 6144 (iteration 168: 1/3 at 3072, with an IMPROVING seed). Extended confirmations count (the user's ruling, docs/step4_optimal.md).
   - PPO is corrected once, then honest (true 22) in all six seeds, which is the target's end state.
 - **The cell's other runs are now information only:** `+LR+EP` (→ 12,288, 1990173), `+LR+ES10+N4_confirm` (1989995), `+LR+N4` (1989885), `+LR+RS` (1989863). They keep running; I cancel nothing. Status updated at the top.
 - **Cells DONE: 7 of 12.** Open: Tomato no-reg, Tomato base, tomato_large swap, no-reg and base.
