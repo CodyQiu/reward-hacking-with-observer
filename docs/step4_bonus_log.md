@@ -1984,3 +1984,16 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `br_missing` (dry-run: s2) → `... br_missing submit` → **1990162 **.
   - s0 and s1 hide at 0.000. If s2 now hides too, the run goes to `confirm`.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 171 (04:11–04:14): tomato_large base `L` 0/3 at 1536, all PLATEAU → finished
+
+- **The check.** **1989944** (tomato_large `B1_base_L`, s0) COMPLETED 04:10 (1:07:26).
+  - s0 is **0.227**, PLATEAU.
+  - The run is now complete: s0 0.227, s1 0.227, s2 0.226, all PLATEAU.
+  - Every policy is reactive (corrected in round 0, then honest, true about 516). Every best response hides, as the target does.
+- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished.
+- **tomato_large base.**
+  - `L` and `LN` are finished at 0/3.
+  - `LE` is still training (wave 1). It reaches the 48 h limit at about 11:43; rule 1 resumes it.
+  - Rule 6b exploration starts once `LE` has a check and is not 3/3. Rule 5 (wave 2) then applies too.
+- Cells DONE: 6 of 12.
