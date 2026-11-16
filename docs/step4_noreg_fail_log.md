@@ -748,3 +748,20 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10_confirm`.
   - Submitted: `... br_missing submit` → **1990368**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 74 (10:58–11:05): Boat Race `LE+ES10_confirm` 2/3 at 6144 (s22 0.044 IMPROVING) → extend to the cap, 12,288 (1990372 )
+
+- **The check.** **1990368** (Boat Race `N1_P1eq1_LE+ES10_confirm` at 6144) COMPLETED (7:38).
+
+  | Seed | BR gap (s.e.) | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s20 | **0.019** (0.022) | CONVERGED | −94, −90 ×4 | corrected once, then −100 |
+  | s21 | **0.011** (0.019) | CONVERGED | −94, −100 ×4 | the same |
+  | s22 | **0.044** (0.022) | IMPROVING | −94, −100 ×4 | the same |
+
+  - Seed 22 is the near-miss seed again. It behaves like its best response (corrected once, then the new exploit) but falls short in value. That is the pattern in every Boat Race confirmation (flag at the top).
+- **Rule 4 (confirmation, one seed IMPROVING, below the cap): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10_confirm 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990372 **.
+- **Boat Race confirmations still open,** both at the cap: `LE+ES10+N4_confirm` (→ 12,288, 1990231; s22 0.032) and this one. Exploration: `LE+ENT3` (→ 12,288, 1990270).
+- Cells DONE: 0 of 2.

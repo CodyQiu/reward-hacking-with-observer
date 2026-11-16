@@ -2217,3 +2217,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1990366** (grid), **1990367** (AS).
   - Both cells are DONE, so these checks are for the record and their runs are not extended.
 - Cells DONE: 7 of 12.
+- **10:58, the two checks (information only).**
+  - **1990366**, grid `LN+LR+N4` at 6144: s0 0.054 IMPROVING; s1 0.038 PLATEAU; s2 0.021 CONVERGED.
+  - **1990367**, AS `LN+RS+N4+ES30` s1: 0.003 CONVERGED (s0 0.000).
+  - Both cells are DONE, so neither run is extended.
