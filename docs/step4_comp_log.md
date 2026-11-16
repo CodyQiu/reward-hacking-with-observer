@@ -5,6 +5,10 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
 ## Flags for the user
 
 - **barley-04.** Every submit carries `EXCLUDE=barley-04`, your standing instruction from the optimal campaign, kept in the bonus and noreg_fail campaigns too. On 2026-11-14 `sinfo` showed barley-04 `allocated` with no reason set. Say if I should drop the exclusion.
+- **AS: the comp target farms the level; the doc expected one correction, then honest (iteration 2, 2026-11-15).**
+  - **End state.** All 6 AS comp targets are corrected in every round 0–3. In rounds 1–3 the optimum uses the original bug inside the audit window (true 400 against honest 450), and each correction's level rises (11.8 → 13.5 per step).
+  - **Why.** The level formula carries the previous level inside V_before. So each correction adds (R_caught − V_ref,after) / T_sub, and in AS the reference's return under the new correction (about 372) is below the agent's own nearly honest caught play (420–442).
+  - **What I am doing.** This is the exact answer for this mechanism. I am not changing anything; wave 1 runs as planned, and PPO's target is this end state. A different level rule would be a mechanism change, which is your call (for example, basing V_ref,after on the agent's own honest play, or not compounding the level).
 - **Taxi runs will hit the 48 h limit** (docs/step4_comp.md, wave 1). Rule 1 resumes them from their checkpoints; that is not an incident.
 
 ## Exact predictions
@@ -31,7 +35,37 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - **Swap** (optimal campaign targets): corrected once, then honest (true 22) in all 6 seeds. On the grid, comp matches the swap.
   - **Standard PBRR** (`base_bonus1`): **hides** in all 6 seeds, with true −100 every round. The bonus adds value only to corrections, so without it standard PBRR hides too.
 
-Pending: AS, Tomato, tomato_large, Taxi and Boat Race comp targets (1989673–1989677), and the comparison targets (1989678–1989681).
+**Absent Supervisor, compensated correction** (job 1989673, 2:39; all 6 fixed points converged; 32 of the 36 draws have the same end state, and 2 seeds each have one draw with 3 corrections):
+
+| Seed | End state | True by round (k = 0..4) | V0 | V_hide | Level per step at corrections 1–4 (all actual) |
+|---|---|---|---|---|---|
+| 0 | **4 corrections per episode** (rounds 0–3) | −100, 400, 400, 400, 450 | 8,371 | 7,350 | 11.76, 12.46, 13.05, 13.54 |
+| 1 | the same | the same | 8,228 | 7,350 | 11.71, 12.22, 12.65, 13.04 |
+| 2 | the same | the same | 8,292 | 7,350 | 11.74, 12.35, 12.82, 13.26 |
+| 20 | the same | the same | 8,343 | 7,350 | 11.76, 12.44, 12.97, 13.42 |
+| 21 | the same | the same | 8,383 | 7,350 | 11.79, 12.46, 13.05, 13.62 |
+| 22 | the same | the same | 8,275 | 7,350 | 11.68, 12.29, 12.75, 13.17 |
+
+- **Not the expected end state.** docs/step4_comp.md expected "corrected in round 0, then never again" here. Instead the optimum is **corrected in every round 0–3**:
+  - Round 0: the open exploit (true −100).
+  - Rounds 1–3: it uses **the original bug inside the audit window** (proxy 550 against true 400, window 1.0) to trigger another correction.
+  - Round 4: honest (450).
+- **It is not under-correction.** Within one round after a correction, honest play pays more than the exploit. In s0, the best round after one correction is honest at 1,626, and the exploit round is 1,530.
+- **It is farming the level.** Each correction's level rises: 11.8 → 12.5 → 13.0 → 13.5 per step. The level is c_k = [V_before − V_ref,after]⁺ / T_sub, and V_before includes the level in force, so c_k − c_{k−1} = (R_caught − V_ref,after) / T_sub, where R_caught is the caught play's own return excluding the level. In s0:
+
+  | Correction | R_caught | V_ref,after |
+  |---|---|---|
+  | 2 | about 442 | about 372 |
+  | 3 | about 431 | about 372 |
+  | 4 | about 420 | about 372 |
+
+  So each correction adds +0.5 to +0.7 per step for the rest of the episode. The reason is that the reference policy earns about 372 under the new correction, less than the agent's nearly honest caught play. On the grid, by contrast, the counterfactual later corrections lower the level (86.8 → 80 → 74 → 68), because the caught play there pays heavy fines.
+- **The same seeds under the other mechanisms.**
+  - **Swap:** corrected once, then **the new exploit** at true −50 (s2: −100).
+  - **Standard PBRR** (`base_bonus1`): **hides** (true −50 ×4, then −100).
+- **What this means for the hypothesis.** Comp gets AS corrected at once and it does not hide; its true return after round 0 (400 ×3, 450) is far above the swap's −50. But it is not "corrected once, then behaves": it keeps triggering corrections with the original bug for the level they pay. Flagged at the top.
+
+Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–1989677), and the comparison targets (1989678–1989681).
 
 ## 2026-11-15, iteration 0 (21:58–22:10): first iteration; targets, comparison targets and wave 1 submitted
 
@@ -61,3 +95,14 @@ Pending: AS, Tomato, tomato_large, Taxi and Boat Race comp targets (1989673–19
   - **Comparison.** On the grid this matches the swap's targets. Standard PBRR hides.
 - **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing; no wave-1 seed has finished.
 - **Queue.** The other target jobs and the wave-1 runs are queued or running behind fair-share priority. Cells DONE: 0 of 6.
+
+## 2026-11-15, iteration 2 (22:51–23:10): AS target: 4 corrections per episode, farming the level (flagged)
+
+- **AS target.** **1989673** (`targets_absent_supervisor_comp`) COMPLETED 22:27 (2:39). It finished between my ticks, and I noticed it now.
+  - In all 6 seeds the optimum is corrected in rounds 0–3: the open exploit in round 0, then the original bug inside the window in rounds 1–3 (true 400), then honest in round 4.
+  - The level rises with each correction (11.7 → 13.6 per step).
+  - V0 is 8,228–8,383, against V_hide 7,350.
+  - Rule 2 table and explanation under "Exact predictions"; flagged at the top. It contradicts the doc's expected end state for AS. Per the prompt, I report it and do not adjust the mechanism.
+- **Other target jobs.** Tomato (1989674) and tomato_large (1989675) are running. Taxi, Boat Race and the 4 comparison targets are pending (Priority).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing; no wave-1 seed has finished. `... resume` (dry-run): nothing.
+- **Cells DONE:** 0 of 6.
