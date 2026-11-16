@@ -1348,3 +1348,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... submit` → **1988883**.
 - **Rule 3.** `br_missing` (dry-run: grid `+GL` at 3072) → `... br_missing submit` → **1988884**. Tomato base `LN+ENT3` (1988871) is still pending.
 - Queue: 28 jobs in this campaign (limit 60), 35 in all. Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 125 (19:44–19:46): grid `+LR+N4` finished at 1536 → check 1988901  (s2)
+
+- **Training wait.** **1987909** (grid `B1_P1eq1_LN+LR+N4`, rule 6b stage 1) COMPLETED 19:43 (4:18:17, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+N4`, s2) → `... br_missing submit` → **1988901 **.
+- **Next.** When this check returns, the rule 6b extension rule applies to the run: s0 and s1 are unconverged (iteration 124).
+- Cells DONE: 5 of 12.
