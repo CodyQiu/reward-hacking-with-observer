@@ -1744,5 +1744,5 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 ## 2026-11-16, iteration 152 (00:00–00:03): grid no-reg `+GL` reached 6144 → check 1989849 1989850 
 
 - **Training finished.** **1988904** (grid `B1_P1eq1_LN+LR+GL`, extension to 6144) COMPLETED 23:58 (4:05:30, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
-- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+GL`) → `... br_missing submit` → **1989849 1989850 **.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+GL`) → `... br_missing submit` → **1989849** (grid `+GL`) and **1989850** (grid `+RS`, whose seed finished at 6144 between the two commands).
 - Cells DONE: 5 of 12.

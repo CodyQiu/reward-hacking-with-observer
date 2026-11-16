@@ -126,3 +126,5 @@
   [absent_supervisor s2] 24,192,000  win0-3 0.00  off 1.01  corr/ep 0.01  winF 1.00  proxy0-3   1400.0  rounds 3085  (4602s)
   [absent_supervisor s2] 24,384,000  win0-3 0.00  off 1.01  corr/ep 0.00  winF 1.00  proxy0-3   1399.5  rounds 3086  (4615s)
   [absent_supervisor s2] 24,576,000  win0-3 0.00  off 1.01  corr/ep 0.01  winF 1.00  proxy0-3   1399.6  rounds 3088  (4629s)
+  [absent_supervisor s2] resumed at episode 3072 -> 6144
+  [absent_supervisor s2] 24,768,000  win0-3 0.00  off 0.95  corr/ep 0.01  winF 0.97  proxy0-3   1188.1  rounds 3090  (19s)
