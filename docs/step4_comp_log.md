@@ -354,3 +354,12 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   `... br_missing submit` → **1990155 1990156 **.
 - **Boat Race.** Its comp target (1989677) is still queued, so its checks cannot be judged yet.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 21 (03:45–03:48): grid `C1_comp_LN_confirm` finished (information only) → check 1990160 ; Boat Race `C1_comp_LN` finished
+
+- **Training finished** (all exit 0):
+  - **1989931**: grid `C1_comp_LN_confirm`, COMPLETED 03:45 (1:39:58). The grid cell is DONE, so this run is information only.
+  - **1989699**: Boat Race `C1_comp_LN`, COMPLETED 03:34 (5:03:49).
+- **Rule 3.** `br_missing` (dry-run: grid `C1_comp_LN_confirm`) → `... br_missing submit` → **1990160 **.
+- **Boat Race.** Every Boat Race wave-1 seed now has a check (`L`, `LE`, `LN`). Their verdicts wait for the Boat Race comp target (1989677, still queued).
+- Cells DONE: 1 of 6.
