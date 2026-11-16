@@ -479,7 +479,7 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
     - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor C1_comp_LE 24576` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/absent_supervisor/comp --resume --extend-to 24576`.
     - Submitted: `... submit` → **1990195**.
   - **AS `C1_comp_LN`:** s0 0.001 and s2 0.002 CONVERGED. s1 (episode 2832/3072) is still training. If it converges, `LN` is 3/3 and goes to `confirm`.
-  - **Tomato `C1_comp_LE`:** **1989689** COMPLETED 05:0x (6:51:08); s1 and s2 finished.
+  - **Tomato `C1_comp_LE`:** **1989689** COMPLETED 05:11 (6:51:08); s1 and s2 finished.
 - **Rule 3.**
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LE` (s1, s2). It also printed "tomato/C1_comp_LN: check still queued/running" (1990188).
   - Submitted: `... br_missing submit` → **1990194**.
