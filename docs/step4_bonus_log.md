@@ -2177,3 +2177,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The 3072 → 6144 leg took 12:09 h, so this one should take about 24 h.
 - **Tomato base so far.** Every run in this cell (`L`, `LE`, `LN`, `LN+ENT3`, `LN+N4`, `LN+ES10`, `LN+ES10+N4`) has seeds that are reactive, at a BR gap of about 0.16. Only `LN+ES10+N4` s0/s1 hide (0.000).
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 187 (09:31–09:36): checks for Tomato base `LN+ES10+N4` (s0, s1 at 6144) and tomato_large base `LE` (s0 at 1536)
+
+- **Tick.** No job failed. Nothing to resume yet: the tomato_large wave-1 runs reach 48 h at about 11:43.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - Tomato `B1_base_LN+ES10+N4`: s0 and s1 finished at 6144; s2 is still training in 1990170.
+    - tomato_large `B1_base_LE`, wave 1: s0 finished at 1536; s1 and s2 are still training.
+  - Submitted: `... br_missing submit` → **1990306** (Tomato), **1990307** (tomato_large).
+- **tomato_large base, rule 6b.** It starts once `LE` has a check and no wave-1 run is 3/3: `L` is extending, `LN` finished 0/3. This check is the first for `LE`.
+- Cells DONE: 7 of 12.

@@ -645,3 +645,13 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - With s2 (0.146, IMPROVING), two of three seeds are checked.
   - s1 (456/768) is still training. When it finishes and is checked, rule 4 extends the run to 1536 (Taxi cap 6144).
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 38 (09:31–09:36): checks for Tomato `C1_comp_L` (s0, s1 at 3072) and tomato_large `C1_comp_LN` (s1 at 1536)
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - Tomato `C1_comp_L`: s0 and s1 finished at 3072; s2 is still training in 1990167.
+    - tomato_large `C1_comp_LN`, wave 1: s1 finished at 1536; s0 and s2 are still training.
+  - Submitted: `... br_missing submit` → **1990308** (Tomato), **1990311** (tomato_large).
+- **The tomato_large comp target** (1989675) is still running, now about 11 h. The tomato_large verdicts need it (NO TARGET until then).
+- Cells DONE: 1 of 6.
