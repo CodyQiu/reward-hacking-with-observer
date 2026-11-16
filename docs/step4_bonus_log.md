@@ -2236,3 +2236,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **1990374**, grid `LN+LR+ES10+N4_confirm` at 3072: s20 0.003, s21 0.000 CONVERGED; s22 0.144 IMPROVING.
   - **1990375**, AS `LN+RS+N4+ES30` at 3072: s0 0.000, s1 0.003 CONVERGED; s2 0.048 PLATEAU.
   - Both cells are DONE, so neither run is extended. Nothing to resume yet: the tomato_large wave-1 runs (1984537, 1984540) and the Taxi noreg_fail runs (1984544–1984546) reach 48 h at about 11:44.
+
+## 2026-11-16, iteration 192 (11:46–11:52): rule 1: tomato_large swap `LE` and base `LE` hit the 48 h limit → resumed (1990405, 1990406)
+
+- **Training wait.** **1984537** (tomato_large `B1_P2swap_LE`) and **1984540** (tomato_large `B1_base_LE`), both wave 1, ended TIMEOUT at 2-00:00:29 (exit 0:0). That is the 48 h limit, not an incident.
+  - Progress at their last checkpoints: swap `LE` s0 672, s1 504, s2 504 of 1536; base `LE` s0 finished (1536), s1 360, s2 360.
+- **Rule 1.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` and `submit.sh 48 --env tomato_large --run-id B1_base_LE --seeds 1 2 --results-dir results/step4/tomato_large/bonus --resume`. The finished s0 is left alone.
+  - Submitted: `... resume submit` → **1990405** (swap `LE`), **1990406** (base `LE`).
+  - At this rate each needs about two more 48 h jobs.
+- Base `LE` s0's check (1990307) is still queued. Cells DONE: 7 of 12.

@@ -765,3 +765,20 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... submit` → **1990372 **.
 - **Boat Race confirmations still open,** both at the cap: `LE+ES10+N4_confirm` (→ 12,288, 1990231; s22 0.032) and this one. Exploration: `LE+ENT3` (→ 12,288, 1990270).
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 75 (11:46–11:52): rule 1: Taxi `N1_P1eq1_L/LE/LN` hit the 48 h limit → resumed (1990407–1990409)
+
+- **Training wait.** **1984544–1984546** (Taxi `N1_P1eq1_L`, `_LE`, `_LN`, wave 1) ended TIMEOUT at 2-00:00:29 (exit 0:0). That is the 48 h limit, not an incident.
+  - Progress at their last checkpoints (of 768):
+
+    | Run | s0 | s1 | s2 |
+    |---|---|---|---|
+    | `L` | 312 | 528 | 336 |
+    | `LE` | 312 | 216 | 312 |
+    | `LN` | 312 | 360 | 288 |
+
+  - At about 60 s per PBRR round, each run needs about two more 48 h jobs.
+- **Rule 1.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_<L|LE|LN> --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume` for each.
+  - Submitted: `... resume submit` → **1990407** (`L`), **1990408** (`LE`), **1990409** (`LN`).
+- Cells DONE: 0 of 2.
