@@ -768,3 +768,22 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Submitted: `... br_missing submit` → **1990496 **.
 - Cells DONE: 2 of 6.
 - **13:31.** Check **1990449** (AS `C1_comp_LE` s0, s1 at the 24,576 cap; information only, the AS cell is DONE) COMPLETED (1:08): seed0 0.048 IMPROVING;seed1 0.013 CONVERGED;seed2 0.143 IMPROVING.
+
+## 2026-11-16, iteration 46 (13:36–13:40): Boat Race `C1_comp_LE` 1/3 at 3072 (worse than at 1536) → extend 6144 (1990524 )
+
+- **The check.** **1990496** (Boat Race `C1_comp_LE` at 3072) COMPLETED (3:08). `step4_convergence.py`:
+
+  | Seed | BR gap at 1536 → 3072 | Verdict | PPO's true after round 0 | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.021 → **0.044** | IMPROVING | 43.8 | 4 corrections, honest by the true reward (50) |
+  | s1 | 0.025 → **0.022** | CONVERGED | 39.7 | the same |
+  | s2 | 0.037 → **0.082** | PLATEAU | 37.8 | the same |
+
+  - **The extension made s0 and s2 worse.**
+    - At 1536 all three were corrected once, then honest (true 50).
+    - At 3072 they take 4 corrections per episode, like the target, but with true 38–44: they no longer finish the lap cleanly.
+  - A plausible cause: `anneal.last=0.25` is taken over the new length, so the entropy and learning rate went back up for episodes 1536–2304. I have not verified this.
+- **Rule 4 (wave-1 run, s0 IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LE 6144` printed `submit.sh 48 --env boat_race --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/boat_race/comp --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1990524 **.
+- **Boat Race's cell** rests on `C1_comp_LN_confirm`: s21 and s22 are CONVERGED, and s20 is still training. Cells DONE: 2 of 6.
