@@ -2148,3 +2148,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ENT3`.
   - Submitted: `... br_missing submit` → **1990255 **.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 185 (09:02–09:08): grid no-reg `LN+LR+RS` finished at 12,288 (information only) → check 
+
+- **Training wait.** **1989863** (grid `B1_P1eq1_LN+LR+RS`, extended to the 12,288 cap) COMPLETED 09:02 (8:00:05, exit 0).
+- **The cell is DONE** (iteration 181), so this run is information only.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+RS`.
+  - Submitted: `... br_missing submit` → ****, for the record.
+- Cells DONE: 7 of 12.

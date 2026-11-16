@@ -724,3 +724,19 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3`, an exploration run extended to 6144 (1989627): s2 has finished, while s0 and s1 are still training.
   - Submitted: `... br_missing submit` → **1990261 **.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 72 (09:02–09:08): Boat Race `LE+ENT3` (6b) 1/3 at 6144 → extend to the cap, 12,288 (1990270 )
+
+- **The check.** **1990261** (Boat Race `N1_P1eq1_LE+ENT3` at 6144) started 08:55:27, after training ended (1989627, 08:54:35, 10:53:41), so it covers all three seeds. COMPLETED (6:12).
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.031 / 0.025 / **0.024** | CONVERGED | −94, −86, −83, −83, −83 | corrected in round 0, then −100 |
+  | s1 | 0.059 / 0.049 / **0.035** | IMPROVING | −94, −86, −84, −85, −84 | the same |
+  | s2 | 0.039 / 0.052 / **0.035** | IMPROVING | −94, −80, −78, −77, −77 | the same |
+
+  - PPO is corrected in round 0, then plays a new exploit at true −77 to −86; the best response's is at −100. Neither is honest (50).
+- **Rule 6b extension rule (exploration run, two seeds unconverged): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ENT3 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990270 **.
+- Cells DONE: 0 of 2.
