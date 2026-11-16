@@ -716,3 +716,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... submit` → **1990231**.
   - 12,288 is the Boat Race cap, so this is the confirmation's last extension.
 - **Still running in Boat Race:** `LE+ES10_confirm` (1989721, 6144) and the exploration run `LE+ENT3` (→ 6144, 1989627). Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 71 (08:41–08:44): Boat Race `LE+ENT3` (6b) has finished seeds at 6144 → check 1990261 
+
+- **Tick.** No job failed. Nothing to resume (the Taxi wave-1 runs reach 48 h at about 11:44).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3`, an exploration run extended to 6144 (1989627).
+  - Submitted: `... br_missing submit` → **1990261 **.
+- Cells DONE: 0 of 2.
