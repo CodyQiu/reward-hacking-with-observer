@@ -1372,3 +1372,20 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+GL 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+GL --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
   - Submitted: `... submit` → **1988904**.
 - **Status.** Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 127 (19:51–19:54): grid no-reg `+LR+N4` 0/3 at 1536 → extend 3072 (1988924 )
+
+- **Check result.** **1988901** (`br_grid_B1_P1eq1_LN+LR+N4`, s2) COMPLETED 19:50.
+
+  | Seed | Gap | s.e. | Verdict | Behaviour after the correction |
+  |---|---|---|---|---|
+  | s0 | 0.109 | 0.012 | IMPROVING | never reaches the goal (true −100) |
+  | s1 | 0.046 | 0.006 | IMPROVING | never reaches the goal (true −100) |
+  | s2 | 0.034 | 0.003 | IMPROVING | partly honest |
+
+  All three best responses are corrected once, then honest.
+- **Rule 6b extension rule.** This is an exploration run with seeds unconverged, so it is extended 2× (to 3072).
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+N4 3072` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+N4 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1988924 **.
+- **Tomato base `LN+ENT3`.** Check 1988871 (s0 at 3072) is running. s0's training curve is still reactive (true 46, then about 429).
+- Cells DONE: 5 of 12.
