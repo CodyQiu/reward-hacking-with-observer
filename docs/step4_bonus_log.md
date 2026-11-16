@@ -4,7 +4,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 4 of 12.** Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
+**Cells DONE: 5 of 12.** Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
 
@@ -1203,3 +1203,28 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
     - This is the first Tomato base run in which PPO does not settle into the reactive policy (corrected once, then honest). s2 (264/1536) is still reactive.
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+EP`, s1) → `... br_missing submit` → **1988646 **.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 116 (17:47–17:52): **Tomato swap DONE** (`B1_P2swap_LN+ES10+N4_confirm` 3/3 at 1536)
+
+- **Check result.** Woken by the check wait: **1988396** (`br_tomato_B1_P2swap_LN+ES10+N4_confirm`) COMPLETED. It ran from 16:50 and checked the seeds in turn: s20, then s21 (finished 17:09), then s22. `.venv/bin/python experiments/step4_convergence.py results/step4/tomato/bonus/B1_P2swap_LN+ES10+N4_confirm`:
+
+  | Seed | Gap (s.e.) | Verdict | PPO true | Best response true | Target true |
+  |---|---|---|---|---|---|
+  | s20 | **0.0015** (0.0002) | CONVERGED | 46, then about 421 | 46, then 421.0 ×4 | 46, then 416.5 ×4 |
+  | s21 | **0.0015** (0.0003) | CONVERGED | 46, then about 421 | 46, then 420.9 ×4 | 46, then 424.7 ×4 |
+  | s22 | **0.0015** (0.0004) | CONVERGED | 46, then about 420 | 46, then 421.4 ×4 | 46, then 420.4 ×4 |
+
+  PPO, its best response and the target are all corrected in round 0, then honest.
+- **Rule 4: the confirmation is 3/3, so the Tomato swap cell is DONE.**
+  - Config: `B1_P2swap_LN+ES10+N4`, i.e. `ppo.ent_coef=0.03`, 64 envs, batch 1600, entropy 10× falling to 1× by episode 768, the swap, the bonus, at 1536 episodes.
+  - Tuning seeds 0–2: 0.002 / 0.001 / 0.002. Confirmation seeds 20–22: 0.002 / 0.001 / 0.002. Neither run was extended.
+  - Without the bonus, the same config also passed (optimal campaign). The bonus changed neither the target (+1.0 in V0) nor PPO's end state.
+- **Rule 6b: nothing new for Tomato swap.** It has no other runs queued or running.
+- **Status updated at the top. Cells DONE: 5 of 12.**
+  - DONE: grid swap, AS swap, Tomato swap, grid base, AS base.
+  - Open:
+    - grid no-reg: `+LR+ES10_confirm` running (1988633);
+    - AS no-reg: several confirmations extending;
+    - Tomato no-reg: `LN_confirm` running (1988344);
+    - Tomato base: stage 1 exploration; `LN+ES10+N4` hides in s0 and s1;
+    - tomato_large: all three cells in wave 1.

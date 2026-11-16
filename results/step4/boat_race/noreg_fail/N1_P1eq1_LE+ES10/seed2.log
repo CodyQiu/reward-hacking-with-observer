@@ -64,3 +64,7 @@
   [boat_race s2] 12,288,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -27.0  rounds 4389  (22846s)
   [boat_race s2] resumed at episode 1536 -> 3072
   [boat_race s2] 12,480,000  win0-3 0.25  off 0.19  corr/ep 1.00  winF 0.01  proxy0-3    -30.8  rounds 4420  (182s)
+  [boat_race s2] 12,672,000  win0-3 0.25  off 0.14  corr/ep 1.01  winF 0.00  proxy0-3    -22.8  rounds 4451  (364s)
+  [boat_race s2] 12,864,000  win0-3 0.25  off 0.17  corr/ep 1.01  winF 0.00  proxy0-3     -5.3  rounds 4480  (507s)
+  [boat_race s2] 13,056,000  win0-3 0.25  off 0.19  corr/ep 1.00  winF 0.00  proxy0-3     -3.7  rounds 4504  (607s)
+  [boat_race s2] 13,248,000  win0-3 0.25  off 0.17  corr/ep 1.00  winF 0.00  proxy0-3     -8.9  rounds 4532  (722s)
