@@ -655,3 +655,4 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Submitted: `... br_missing submit` → **1990308** (Tomato), **1990311** (tomato_large).
 - **The tomato_large comp target** (1989675) is still running, now about 11 h. The tomato_large verdicts need it (NO TARGET until then).
 - Cells DONE: 1 of 6.
+- **09:36.** **1990167** (Tomato `C1_comp_L`, extended to 3072) COMPLETED 09:35 (4:26:43, exit 0). s2 has finished too. Check **1990308** was still PENDING then, and it reads the finished seeds when it starts, so it covers all three.
