@@ -451,3 +451,17 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
   `... br_missing submit` → **1989580** (`LE+ENT3`), **1989581** (`LE+N4_confirm`).
 - **Cells DONE:** 0 of 2.
+
+## 2026-11-15, iteration 49 (20:48–20:52): partial checks. `LE+ENT3` s1 0.049 and `LE+N4_confirm` s22 0.043 (both IMPROVING); s20 → check 1989597 
+
+- Scheduled wakeup. **1989580** (`LE+ENT3` s1) and **1989581** (`LE+N4_confirm` s22) COMPLETED. `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - `N1_P1eq1_LE+ENT3` (3072):
+    - s1 **0.049** (s.e. 0.010), IMPROVING.
+    - s2 **0.052**, IMPROVING (iteration 47).
+    - s0 is still training (2736). Its training curve takes about 0.8 extra corrections and reaches true about −56.
+  - `N1_P1eq1_LE+N4_confirm` (3072):
+    - s22 **0.043** (s.e. 0.021), IMPROVING. It is corrected once, then plays the new exploit, like its best response.
+    - s20 has finished: corrected once, true −100, matching its target.
+    - s21 is at 3048 of 3072.
+- **Rule 3:** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `LE+N4_confirm`, s20) → `... br_missing submit` → **1989597 **.
+- Rule 4 for each run waits until its remaining seeds are checked. Cells DONE: 0 of 2.
