@@ -4,7 +4,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 5 of 12.** Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
+**Cells DONE: 6 of 12.** AS no-reg (`B1_P1eq1_LN+RS+EP`, the cell's reference config plus `ppo.n_epochs=20` (wave 2): tuning 3/3 at 6144 (0.001 / 0.000 / 0.004), confirmation 3/3 at the 24,576 cap after two extensions (0.001 / 0.001 / 0.027); corrected once, then honest (true about 449); the targets take 1–3 corrections, and the extra corrections are worth less than 3%). Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
 
@@ -1944,3 +1944,27 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `br_missing` (dry-run: AS `+EP_confirm`) → `... br_missing submit` → **1990150**.
   - At the cap the run is finished, whatever the verdict.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 169 (03:37–03:45): **AS no-reg DONE** (`B1_P1eq1_LN+RS+EP_confirm` 3/3 at the 24,576 cap)
+
+- **Check result.** **1990150** (`br_absent_supervisor_B1_P1eq1_LN+RS+EP_confirm`, 24,576) COMPLETED 03:37. BR gap at 6144 / 12,288 / 24,576:
+
+  | Seed | 6144 | 12,288 | 24,576 | Verdict |
+  |---|---|---|---|---|
+  | s20 | 0.032 | 0.059 | **0.001** | CONVERGED |
+  | s21 | 0.000 | 0.013 | **0.001** | CONVERGED |
+  | s22 | 0.057 | 0.060 | **0.027** | CONVERGED |
+
+  - Every policy is corrected once, then honest (true 448.8–449.8).
+  - The best responses of s20 and s22 take 2 corrections (round 1 at true 400), worth less than 3% more.
+- **Rule 4: the confirmation is 3/3, so the AS no-reg cell is DONE.**
+  - Config: `B1_P1eq1_LN+RS+EP`, i.e. `ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.n_epochs=20 g.use_regularization=False g.epochs=1000 n_envs=64 reward_scale=0.01625`, anneal over the last 25%, the bonus.
+  - Tuning seeds 0–2 at 6144: 0.001 / 0.000 / 0.004.
+  - Confirmation seeds 20–22 at 24,576 (two extensions): 0.001 / 0.001 / 0.027.
+  - Extended confirmations count (the user, 2026-11-10).
+- **Rule 6b: nothing new for AS no-reg.** Its running runs finish as information only, with no extensions or confirmations:
+  - `+GL_confirm` (1988882), `+NET_confirm` → 12,288 (1988582), stage 2 `+N4+ENT10` (1989843) and `+N4+ES30` (1989844).
+  - `br_missing` still checks them.
+- **Status updated at the top. Cells DONE: 6 of 12.**
+  - DONE: grid swap, AS swap, Tomato swap, grid base, AS base, AS no-reg.
+  - Open: grid no-reg, Tomato no-reg, Tomato base, and the three tomato_large cells.
