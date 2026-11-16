@@ -626,3 +626,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LE+ES10+N4_confirm`: s20 has finished at 3072; s21 is at 3048 and s22 at 2832. `... br_missing submit` → **1989921**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 64 (01:28–01:31): Boat Race `LE+ES10+N4_confirm` reached 3072 → check 1989937  (s22)
+
+- **Training finished.** **1989795** (`LE+ES10+N4_confirm`, extended to 3072) COMPLETED 01:28 (1:43:57, exit 0).
+- **Earlier check.** Check **1989921** (01:21) covered s20 and s21: **0.015** and **0.013**, both CONVERGED.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s22) → `... br_missing submit` → **1989937 **.
+- **What depends on it.** The Boat Race cell is DONE if s22 is ≤ 0.03; s22 was 0.041 at 1536.
+- Cells DONE: 0 of 2.
