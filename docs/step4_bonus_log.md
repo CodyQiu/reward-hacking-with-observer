@@ -1296,3 +1296,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Run status.** s0 and s1 are both at the exact optimum. s2 is still training and reactive.
 - **Rule 4** waits for s2. If s2 converges, the run is confirmed (seeds 20–22). If not, the rule 6b extension rule applies.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 123 (19:34–19:38): AS `+GL` at the 24,576 cap, grid `+RS` at 3072; checks 1988867–1988871
+
+- **Woken by the training wait.** Two jobs COMPLETED, both exit 0: **1987396** (AS `B1_P1eq1_LN+RS+GL`, extension to the cap 24,576) at 19:32 (8:11:52), and **1988601** (grid `+RS`, extension to 3072) at 19:34. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** I dry-ran `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing`; finished seeds per run (now read from the listing):
+
+  | Run | Finished seeds | Still training |
+  |---|---|---|
+  | grid `B1_P1eq1_LN+LR+N4` | s0, s1 at 1536 | s2 at 1464 |
+  | grid `+RS` | s0–s2 at 3072 | — |
+  | AS `+GL` | s0–s2 at 24,576 | — |
+  | Tomato `B1_base_LN+ENT3` | s0 at 3072 | s1, s2 at about 2900 |
+
+  Submitted with `... br_missing submit` → **1988867** (grid `+N4`), **1988868** (grid `+RS`), **1988870** (AS `+GL`), **1988871** (Tomato base `LN+ENT3`).
+- **What the cap means.** AS `+GL` is at the cap, so it is finished whatever the verdict.
+- Cells DONE: 5 of 12.
