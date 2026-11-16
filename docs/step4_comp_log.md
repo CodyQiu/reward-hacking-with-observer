@@ -573,3 +573,12 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - Submitted: `... submit` → **1990232**.
   - The Tomato cell is DONE when either `C1_comp_LE_confirm` (1990201) or `C1_comp_LN_confirm` is 3/3.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 34 (07:52–07:56): Taxi `C1_comp_L` s2 finished at 768 (it hides) → check 1990245 
+
+- **Tick.** No job failed. Nothing to resume (the tomato_large and Taxi wave-1 runs reach 48 h at about 11:43). The Boat Race comp target and the 4 comparison targets are still queued.
+- **Taxi `C1_comp_L` s2** finished at 768 (`metrics.json` in its listing), after 30,965 s of training. Its last training block shows the agent hiding: windows 0–3 exploited 0.00, off-window 0.93, 0.01 corrections per episode, final window 0.98. s2's target is "corrected in round 0, then honest". s0 (600/768) and s1 (432/768) are still training.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_L`.
+  - Submitted: `... br_missing submit` → **1990245 **.
+- Cells DONE: 1 of 6.
