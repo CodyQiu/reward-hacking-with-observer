@@ -508,3 +508,9 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ENT3 6144` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`.
   - Submitted with `... submit` → **1989627**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 53 (21:36–21:39): Boat Race `LE+ES10+N4_confirm` seeds at 1536 → check 1989645 
+
+- **Wake-up.** Scheduled. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`; seeds at 1536 per `ls`) → `... br_missing submit` → **1989645 **.
+- **What depends on it.** **The Boat Race cell is DONE if this confirmation is 3/3.** Cells DONE: 0 of 2.
