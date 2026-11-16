@@ -1156,3 +1156,32 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Training wait.** **1987907** (grid `B1_P1eq1_LN+LR+ENT3`, rule 6b stage 1) COMPLETED 17:26 (2:06:55, exit 0). Its check 1988605 started 17:26:38, after the job ended, so it covers all three seeds. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3.** The dry-run of `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed AS `B1_P1eq1_LN+RS+LR_confirm` (s21 finished at 12,288; s20 was checked in iteration 110; s22 is still training). `... br_missing submit` → **1988614 **.
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 114 (17:37–17:45): grid no-reg `+LR+ES10` 3/3 CONVERGED at 1536 → `confirm` (1988633); `+LR+ENT3` 2/3 → extend 3072 (1988634); checks 1988636 1988637
+
+- **Wake-up.** Scheduled wakeup. **1988605**, **1988611** and **1988614** COMPLETED. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Check results** (`.venv/bin/python experiments/step4_convergence.py <run>`):
+  - **grid `B1_P1eq1_LN+LR+ES10`** (rule 6b stage 1, 1536): all three CONVERGED.
+    - s0 **0.002** (s.e. 0.000), s1 **0.002** (s.e. 0.002), s2 **0.016** (s.e. 0.035).
+    - Every seed is corrected once, then honest (true 22 ×4).
+    - The best responses of s0 and s1 are the same. s2's takes 2 corrections (true −100, −100, 22 ×3).
+    - In s2, the seed where `LN+LR` failed (0.067 at the cap, never reaching the goal), PPO now reaches the goal after its correction.
+  - **grid `B1_P1eq1_LN+LR+ENT3`** (1536):
+    - s0 **0.003** and s1 **0.006**, both CONVERGED.
+    - s2 **0.032** (s.e. 0.033), IMPROVING. Its best response takes 2 corrections.
+  - **AS `B1_P1eq1_LN+RS+LR_confirm`** (12,288):
+    - s21 **0.000**, CONVERGED.
+    - s20 **0.058**, PLATEAU (iteration 110).
+    - s22 still training (7824/12,288).
+- **Rule 4: grid `+LR+ES10` is all CONVERGED, so `confirm`.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_P1eq1_LN+LR+ES10` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ES10_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=64 ppo.batch_size=1600 ppo.learning_rate=0.0001 protocol.update_bonus=1.0 episodes=1536`. That matches `run_sets.py` on the run.
+  - Submitted: `... submit` → **1988633**.
+  - The grid no-reg cell is DONE when this confirmation is 3/3.
+- **Rule 6b extension rule: grid `+LR+ENT3` (exploration run, s2 unconverged) is extended 2×, to 3072.**
+  - Dry-run: `... extend grid B1_P1eq1_LN+LR+ENT3 3072` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ENT3 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1988634**.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `B1_P1eq1_LN+LR+EP` (wave 2): s0 and s2 finished at 1536; s1 at 1464.
+  - Tomato `B1_base_LN+ES10+N4` (rule 6b): s1 finished at 1536; s0 at 936 and s2 at 264.
+  - Finished state was confirmed with `ls`. Submitted: `... br_missing submit` → **1988636** (grid `+EP`) and **1988637** (Tomato base `LN+ES10+N4`).
+- Queue: 31 jobs in this campaign (limit 60), 38 in all. Cells DONE: 4 of 12.

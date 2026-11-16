@@ -390,3 +390,19 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10`; s0 and s1, since s2 was checked in iteration 40) → `... br_missing submit` → **1988606**.
 - **Stage 1 status.** `LE+N4` (confirmation running, 1987728), `LE+ES10+N4` (confirmation running, 1988346), `LE+ENT3` (extending to 3072, 1988602), `LE+ES10` (this check).
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 43 (17:37–17:45): Boat Race `LE+ES10` 2/3 at 1536 → extend 3072 (1988635)
+
+- **Check.** **1988606** (`br_boat_race_N1_P1eq1_LE+ES10`, s0 and s1) COMPLETED 17:29. Verdicts from `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE+ES10`:
+
+  | Seed | BR gap (s.e.) | Verdict |
+  |---|---|---|
+  | s0 | **0.014** (0.009) | CONVERGED |
+  | s1 | **0.040** (0.019) | IMPROVING |
+  | s2 | **0.028** (0.008) | CONVERGED (iteration 40) |
+
+  Every policy and every best response is corrected once in round 0, then plays the new exploit (true about −100).
+- **Rule 6b extension rule.** This is an exploration run with s1 unconverged, so it is extended 2× to 3072.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10 3072`. It printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1988635**.
+- Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
