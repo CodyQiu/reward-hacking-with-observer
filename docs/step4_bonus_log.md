@@ -1401,3 +1401,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Next.** The rule 6b extension applies once s1 is checked, because extending now would overwrite s1's 3072 model before it is checked.
 - Cells DONE: 5 of 12.
 - **Same submit:** **1989201** (tomato_large `B1_base_L`, s2). s2 finished its 1536 episodes in about 32 h; `ls` shows `metrics.json`. s0 is at 696 and s1 at 1320. This is the first tomato_large seed to reach a check. Its training curve is corrected once, then honest (window 0.25, 1 correction per episode); the tomato_large base target hides.
+
+## 2026-11-15, iteration 130 (20:18–20:21): Tomato base `LN+ENT3` 0/3 at 3072 → extend 6144 (1989207 )
+
+- **Check.** **1989200** (`br_tomato_B1_base_LN+ENT3`, s1) COMPLETED 20:18. s1 **0.161** (s.e. 0.000): reactive (true 46, then 431.6 ×4). Its best response hides.
+- **Run status.** All three seeds sit at 0.161 at 3072, unchanged from 1536.
+- **Rule 6b extension rule.** This is an exploration run with seeds unconverged, so it is extended 2× (to 6144), whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ENT3 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted with `... submit` → **1989207 **.
+- Cells DONE: 5 of 12.
