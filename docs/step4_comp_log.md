@@ -16,7 +16,7 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
 ## Flags for the user
 
 - **barley-04.** Every submit carries `EXCLUDE=barley-04`, your standing instruction from the optimal campaign, kept in the bonus and noreg_fail campaigns too. On 2026-11-14 `sinfo` showed barley-04 `allocated` with no reason set. Say if I should drop the exclusion.
-- **AS (6/6 seeds) and Tomato (5/6): the comp target farms the level; the doc expected one correction, then honest (iterations 2 and 12, 2026-11-15/16).** Tomato's farming seeds take 3–4 corrections, use the bug inside the window in rounds 1–3 (true about 423 against honest 434) and have rising levels; Tomato s0 is corrected once, then honest. Details for AS below.
+- **AS (6/6 seeds), Tomato (5/6) and Taxi (2/6): the comp target farms the level; the doc expected one correction, then honest (iterations 2, 12 and 24, 2026-11-15/16).** In Taxi's two farming seeds the first correction also under-corrects (iteration 24); the other 4 Taxi seeds are corrected once, then honest. Tomato's farming seeds take 3–4 corrections, use the bug inside the window in rounds 1–3 (true about 423 against honest 434) and have rising levels; Tomato s0 is corrected once, then honest. Details for AS below.
   - **End state.** All 6 AS comp targets are corrected in every round 0–3. In rounds 1–3 the optimum uses the original bug inside the audit window (true 400 against honest 450), and each correction's level rises (11.8 → 13.5 per step).
   - **Why.** The level formula carries the previous level inside V_before. So each correction adds (R_caught − V_ref,after) / T_sub, and in AS the reference's return under the new correction (about 372) is below the agent's own nearly honest caught play (420–442).
   - **What I am doing.** This is the exact answer for this mechanism. I am not changing anything; wave 1 runs as planned, and PPO's target is this end state. A different level rule would be a mechanism change, which is your call (for example, basing V_ref,after on the agent's own honest play, or not compounding the level).
@@ -25,7 +25,7 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
   - **Why the verdict passes it.** The level makes every round worth about 8,690 received, so missing the goal (−122 per round) is only 1.2% of V0 (about 43,500). That is inside the 3% tolerance.
   - **Scope.** The same holds wherever the level dwarfs the honest-vs-exploit difference.
   - **What I am doing.** I apply the criterion as written (never adjust criteria), so these seeds count as CONVERGED, and I report PPO's true return beside every verdict. A behavioural criterion for comp would be your call: for example, PPO's true return by round within x of the best response's, or the gap measured on the true reward.
-- **Taxi runs will hit the 48 h limit** (docs/step4_comp.md, wave 1). Rule 1 resumes them from their checkpoints; that is not an incident.
+- **Taxi runs will hit the 48 h limit** (docs/step4_comp.md, wave 1). Rule 1 resumes them from their checkpoints; that is not an incident. **Measured (iteration 24):** a Taxi PBRR round at 1000 epochs takes about 60 s, and once PPO is corrected in most episodes, 24 episodes take 3–6 h (`C1_comp_L` s1: 204 rounds in 12,000 s). The noreg_fail Taxi runs show the same. At that rate a 768-episode run needs about 3–4 jobs of 48 h. The seeds are computing (full CPU), not stuck.
 
 ## Exact predictions
 
@@ -100,7 +100,28 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - So comp's true return after the correction (rounds 1–3 about 423, round 4 433) is about the swap's level in rounds 1–3 and honest in round 4. Comp is corrected at once and does not hide.
 - **s2's fixed point did not converge** (3.91–4.00 across iterations). Per rule 2 the last iteration is the target.
 
-Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and the comparison targets (1989678–1989681).
+**Taxi, compensated correction** (job 1989676; all 6 fixed points converged; the mean-table optimum differs from most single draws: in s0, for example, 1 of 6 draws is "corrected once, then honest" and the others take 2–4 corrections):
+
+| Seed | End state | True by round (k = 0..4) | Windows k = 0..4 | V0 | V_hide | Level per step at corrections 1–4 |
+|---|---|---|---|---|---|---|
+| 0 | corrected in round 0, then never again | −88.2, 124.8 ×4 | 1, 0, 0, 0, 0 | 1,941 | 1,794 | **2.68** / counterfactual 2.69, 2.53, 2.34 |
+| 1 | the same | −88.2, 124.7 ×4 | 1, 0, 0, 0, 0 | 1,951 | 1,794 | **2.69** / counterfactual 2.71, 2.60, 2.45 |
+| 2 | the same | −88.2, 124.7 ×3, 124.6 | 1, 0, 0, 0, 0.2 | 1,871 | 1,794 | **2.48** / counterfactual 2.35, 2.09, 1.80 |
+| 20 | the same | −88.2, 124.7 ×4 | 1, 0, 0, 0, 0 | 1,925 | 1,794 | **2.63** / counterfactual 2.56, 2.39, 2.14 |
+| 21 | **2.86 corrections** (by round 1.0, 0.88, 0.70, 0.28) | −88.2, −1.3, 14.7, 50.3, 64.4 | 1, 0.9, 0.7, 0.3, 0.5 | 2,492 | 1,794 | 2.69, 3.81, 4.26 / counterfactual 3.90 |
+| 22 | **3.56 corrections** (by round 1.0, 1.0, 0.82, 0.75) | −88.2, −53.9, 1.4, 19.6, 22.7 | 1, 1.0, 0.8, 0.7, 0.7 | 2,788 | 1,794 | 2.62, 4.13, 4.87, 5.22 |
+
+- **4 of 6 seeds (s0, s1, s2, s20): corrected in round 0, then honest.** True 124.6–124.8 after the correction (honest 125). This is the behaviour the doc wants, with V0 beating hiding by 77–157.
+  - The best single round after one correction is honest in all four (true 124.6–124.8). The counterfactual second correction's level is about equal to the first (s0 2.69 vs 2.68, s1 2.71 vs 2.69) or lower, so a second caught round does not pay.
+- **2 of 6 seeds (s21, s22): the original bug, under-corrected, plus level farming.** After round 0 they keep using the bug inside the window (rounds 1–3) and are corrected 2.86 / 3.56 times per episode. Each correction's level is higher than the last (s22: 2.62 → 4.13 → 4.87 → 5.22).
+  - **Unlike AS and Tomato, the first correction under-corrects here.** The best single round after it is *not* honest: true 1.2 (s21) and −51.8 (s22), received 495 / 531 against honest's 352 / 310. The fines also spill onto honest play (honest after one correction earns 42 / 77 less than honest true + level). So part of the bug stays profitable, and the rising level adds to it.
+- **The same seeds under the other mechanisms.**
+  - **Swap** (seeds 0–2, the existing 1000-epoch targets; seeds 20–22 pending in 1989678): corrected once, then **a new exploit** at true −57 to −67.
+  - **Standard PBRR** (`base`): pending (1989679).
+  - **No regulariser** (noreg_fail's targets, for information): corrected once, then a new exploit at true −70 to −81 in 5 seeds; s22 takes 2 corrections, true −86 to −90.
+  - So in Taxi comp is the only one of the three mechanisms whose optimum is honest after the correction, in 4 of 6 seeds.
+
+Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the comparison targets (1989678–1989681).
 
 ## 2026-11-15, iteration 0 (21:58–22:10): first iteration; targets, comparison targets and wave 1 submitted
 
@@ -394,3 +415,19 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato C1_comp_L 3072` printed `submit.sh 48 --env tomato --run-id C1_comp_L --seeds 0 1 2 --results-dir results/step4/tomato/comp --resume --extend-to 3072`.
   - Submitted: `... submit` → **1990167 **.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 24 (04:17–04:30): Taxi target (4 of 6 seeds corrected once, then honest; 2 farm); AS `C1_comp_LN` s0 → check 1990172
+
+- **Taxi target.** **1989676** (`targets_taxi_comp`) COMPLETED 04:16 (3:09:15). All 6 fixed points converged.
+  - **s0, s1, s2, s20:** corrected in round 0, then honest (true 124.6–124.8 against 125). V0 1,871–1,951 against V_hide 1,794. The level is 2.48–2.69 per step, and a counterfactual second correction would pay about the same or less.
+  - **s21, s22:** 2.86 / 3.56 corrections per episode. They use the original bug inside the window in rounds 1–3, and the levels rise (s22: 2.62 → 5.22). Here the first correction also under-corrects: the best single round after it has true 1.2 / −51.8.
+  - **Comparison.** Swap (seeds 0–2): corrected once, then a new exploit at true −57 to −67. Standard PBRR: pending (1989679).
+  - Rule 2 table under "Exact predictions"; the flag at the top now lists Taxi (2/6).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_C1_comp_LN` (s0 finished at 3072; s1 at 2400 and s2 at 2688 are still training).
+  - Submitted: `... br_missing submit` → **1990172**.
+- **Taxi comp runs are slow, not stuck.** `C1_comp_LE` s1/s2 and `C1_comp_LN` s2 have written no checkpoint since about 22:35 and stay at episode 24. Their jobs use full CPU (sstat AveCPU about 34.6 CPU-h in 5.9 h over 6 CPUs).
+  - `C1_comp_L` s1's last block took 12,000 s for 204 PBRR rounds, about 60 s per round at 1000 epochs.
+  - The noreg_fail Taxi runs have 24-episode blocks of 9,000–37,000 s.
+  - So this is the cost of PBRR rounds, not a bug. The rate is recorded under the Taxi flag at the top. Rule 1 resumes the runs at the 48 h limit (about 22:30 on 2026-11-17).
+- **Pending targets.** tomato_large (1989675, running), Boat Race (1989677) and the 4 comparison targets (1989678–1989681), all queued. Cells DONE: 1 of 6 (grid, by the verdict only).

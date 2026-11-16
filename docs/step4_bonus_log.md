@@ -2015,3 +2015,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
   - Submitted: `... submit` → **1990170 **.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 173 (04:20–04:30): grid no-reg `LN+LR+EP` finished at 6144 → check 1990171
+
+- **The run.** **1989727** (grid `B1_P1eq1_LN+LR+EP`, extended to 6144) COMPLETED 04:23 (4:45:26). s0 and s2 had finished earlier; s1 finished last.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+EP` (`--finished-only --draws 12`). It also printed "tomato_large/B1_P1eq1_LN+ES10: check still queued/running" (1990119).
+  - Submitted: `... br_missing submit` → **1990171**. It reads the finished seeds when it starts, so it covers all three (s1's `metrics.json` is in its directory listing).
+- Cells DONE: 6 of 12.
