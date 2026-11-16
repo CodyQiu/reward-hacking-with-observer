@@ -2333,3 +2333,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... submit` → **1990613 **.
   - Extending re-trains s0 and s1 as well, from their checkpoints. Their converged checks at 6144 stay on record (`step4_br/seed*_ep6144.json`).
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 199 (14:50–14:54): Tomato base `LN+N4` (6b) 0/3 at 6144 (all reactive, PLATEAU) → extend to the cap, 12,288 (1990670 )
+
+- **The check.** **1990511** (Tomato `B1_base_LN+N4` at 6144; it started after training ended, so it covers all three seeds) COMPLETED (20:13).
+  - All three seeds: BR gap **0.158**, PLATEAU. The history is 0.158–0.159 at 1536 / 3072 / 6144.
+  - PPO is corrected in round 0, then honest (true about 433). The best response hides.
+- **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990670 **. The last leg took 10:29 h, so this one should take about 21 h.
+- **Tomato base runs now at or headed to the 12,288 cap:** `L`, `LE`, `LN+ENT3`, `LN+ES10+N4` and `LN+N4`. Only `LN+ES10+N4` s0/s1 hide; every other seed is reactive at about 0.16.
+- Cells DONE: 7 of 12.
