@@ -2000,3 +2000,18 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LE` is still training (wave 1). It reaches the 48 h limit at about 11:43; rule 1 resumes it.
   - Rule 6b exploration starts once `LE` has a check and no wave-1 run is 3/3.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 172 (04:17–04:20): Tomato base `LN+ES10+N4` 2/3 at 3072 (s2 still reactive) → extend 6144 (1990170 )
+
+- **The check.** **1990162** (Tomato `B1_base_LN+ES10+N4`, s2 at 3072) COMPLETED.
+
+  | Seed | Gap at 1536 → 3072 | Verdict | Behaviour |
+  |---|---|---|---|
+  | s0 | 0.000 → **0.000** | CONVERGED | hides |
+  | s1 | 0.000 → **0.000** | CONVERGED | hides |
+  | s2 | 0.158 → **0.158** | PLATEAU | reactive |
+
+- **Rule 6b extension rule.** This is an exploration run with s2 unconverged, so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1990170 **.
+- Cells DONE: 6 of 12.
