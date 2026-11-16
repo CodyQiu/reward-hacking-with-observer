@@ -131,7 +131,7 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
 - **2 of 6 seeds (s21, s22): the original bug, under-corrected, plus level farming.** After round 0 they keep using the bug inside the window (rounds 1–3) and are corrected 2.86 / 3.56 times per episode. Each correction's level is higher than the last (s22: 2.62 → 4.13 → 4.87 → 5.22).
   - **Unlike AS and Tomato, the first correction under-corrects here.** The best single round after it is *not* honest: true 1.2 (s21) and −51.8 (s22), received 495 / 531 against honest's 352 / 310. The fines also spill onto honest play (honest after one correction earns 42 / 77 less than honest true + level). So part of the bug stays profitable, and the rising level adds to it.
 - **The same seeds under the other mechanisms.**
-  - **Swap** (seeds 0–2, the existing 1000-epoch targets; seeds 20–22 pending in 1989678): corrected once, then **a new exploit** at true −57 to −67.
+  - **Swap** (seeds 0–2, the existing 1000-epoch targets; seeds 20–22 from 1989678, all fixed points converged): corrected once, then **a new exploit** in all 6 seeds, at true −66.5 / −65.7 / −56.9 / −48.1 / −65.7 / −50.3 (s0, s1, s2, s20, s21, s22). V0 3,677–5,985 against V_hide 1,794.
   - **Standard PBRR** (`base`): pending (1989679).
   - **No regulariser** (noreg_fail's targets, for information): corrected once, then a new exploit at true −70 to −81 in 5 seeds; s22 takes 2 corrections, true −86 to −90.
   - So in Taxi comp is the only one of the three mechanisms whose optimum is honest after the correction, in 4 of 6 seeds.
@@ -160,7 +160,7 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - So in Boat Race comp's optimum is honest by the true reward in 5 of 6 seeds; no regulariser is not honest in any.
 - **PPO so far (iteration 31):** in 8 of 9 tuning seeds PPO is corrected once and then honest (true 50), and the best responses match the 4-correction farming. So PPO's true return equals the target's; only its number of corrections differs.
 
-Pending: tomato_large comp target (1989675), and the comparison targets (1989678–1989681).
+Pending: tomato_large comp target (1989675), and the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and base).
 
 ## 2026-11-15, iteration 0 (21:58–22:10): first iteration; targets, comparison targets and wave 1 submitted
 
@@ -794,3 +794,10 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - s0 and s2 went from 384 / 264 episodes at 12:16 to 768. Once PPO stopped being corrected, episodes became fast. s0's last blocks: windows 0–3 0.00, off-window 0.96, corrections 0.00–0.01 per episode, so it hides.
 - **Rule 3.** Check **1990425** started at 13:38, before s0 and s2 finished, so it covers only s1. `br_missing` will list s0 and s2 once 1990425 ends; I'll submit them then.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 48 (14:27–14:30): Taxi swap comparison target (seeds 20–22) → under "Exact predictions"
+
+- **The target.** **1989678** (`targets_taxi_P2swap`) COMPLETED (1:21:12). Seeds 0–2 already existed and were skipped, not overwritten.
+  - Seeds 20–22: corrected in round 0, then a new exploit (true −48.1 / −65.7 / −50.3), as in seeds 0–2 (−56.9 to −66.5). All fixed points converged.
+  - Added to the Taxi entry under "Exact predictions". In Taxi the swap never ends honest after its correction. Comp ends honest in 4 of 6 seeds (s0, s1, s2, s20) and farms in s21 and s22.
+- Still queued: Taxi base (1989679) and Boat Race swap and base (1989680, 1989681). Cells DONE: 2 of 6.
