@@ -2088,7 +2088,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **The check.** **1990210** (Tomato `B1_base_LN+ES10`, s1 and s2 at 3072) COMPLETED (13:14).
   - All three seeds: BR gap **0.159**, PLATEAU, unchanged since 1536 (0.160 / 0.160 / 0.159).
   - In every seed PPO is corrected in round 0, then honest (true about 432 against 434). The best response hides (59.8 ×4, then 46).
-- **Rule 6b extension rule.** This is an exploration run (iteration 152), so it is extended 2× whatever the verdict.
+- **Rule 6b extension rule.** This is an exploration run (extended under 6b before, in iteration 159), so it is extended 2× whatever the verdict.
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
   - Submitted: `... submit` → **1990224 **.
 - Cells DONE: 6 of 12.
