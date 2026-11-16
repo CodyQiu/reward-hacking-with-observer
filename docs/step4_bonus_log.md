@@ -2265,3 +2265,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **Not submitted**: the loop prompt says a job killed by a cluster incident is flagged and not resubmitted without the user. Flagged at the top.
 - **wheat-06 is added to the exclusions** (`EXCLUDE=barley-04,wheat-06`) for every submit while it is down. No other job of mine was on it.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 194 (12:48–12:55): AS no-reg `LN+RS+N4+ENT10` (information only) → check 1990447; Tomato no-reg `LN_confirm` still waits for the user
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+N4+ENT10`, a stage-2 run in a cell that is DONE.
+  - Submitted: `... br_missing submit` → **1990447**, for the record.
+- **Rule 1.** `... resume` (dry-run) lists Tomato `B1_P1eq1_LN_confirm`. It is **not submitted**: it was killed by NODE_FAIL, and the user has not answered the flag at the top yet.
+- **wheat-06** now shows `mixed-` in `sinfo` (back in service). The exclusion stays until the user says otherwise.
+- Cells DONE: 7 of 12.
