@@ -2305,6 +2305,6 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Tomato base `LN+ES10+N4`.** s2 finished at 6144; s0 and s1 already hide at 0.000.
 - **Rule 3.**
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
-  - Submitted: `... br_missing submit` → **1990509 1990510 1990511 **.
+  - Submitted: `... br_missing submit` → **1990509** (grid `LN+LR+EP`), **1990510** (Tomato `LN+ES10+N4`), and **1990511** (Tomato `B1_base_LN+N4`, a rule 6b run extended to 6144, which finished between the dry-run and the submit).
   - If Tomato s2 converges, `LN+ES10+N4` is 3/3 and goes to `confirm`. Otherwise it is extended to 12,288 (rule 6b).
 - Cells DONE: 7 of 12.
