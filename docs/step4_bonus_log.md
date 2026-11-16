@@ -1420,3 +1420,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   `... br_missing submit` → **1989551** (`+AN`), **1989552** (`+LR+ENT3`).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 132 (20:25–20:29): grid `+AN` at 3072 (s0 0.000, s2 0.054); Tomato base `LE` s0 at 6144 → checks 1989562 1989563
+
+- **Training finished.** **1988599** (grid `+AN`, extension to 3072) COMPLETED 20:23 (3:05:51, exit 0).
+- **Grid `+AN` check.** **1989551** COMPLETED.
+  - s0 **0.000**, CONVERGED (corrected once, then honest).
+  - s2 **0.054** (s.e. 0.008), IMPROVING (0.052 at 1536). PPO is corrected once, then honest at true 22. Its best response takes a true-20 route that pays more under the refitted corrections, the same pattern as `+GL` (iteration 126).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `+AN` (s1) and Tomato `B1_base_LE` (s0 finished at 6144; s1 and s2 at 6000). `... br_missing submit` → **1989562** (`+AN` s1), **1989563** (Tomato base `LE` s0).
+- Cells DONE: 5 of 12.

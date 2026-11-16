@@ -433,3 +433,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_boat_race_N1_P1eq1_LE+ENT3`. s2 has finished at 3072; s0 is at 2424 and s1 at 2616. `... br_missing submit` → **1989553**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 47 (20:25–20:29): Boat Race `LE+ENT3` s2 0.052 at 3072 (partial)
+
+- **Check.** **1989553** (`br_boat_race_N1_P1eq1_LE+ENT3`, s2) COMPLETED 20:24.
+  - s2: **0.052** (s.e. 0.020), IMPROVING; it was 0.039 at 1536.
+  - Its best response is corrected once, then plays the new exploit (true −100).
+- **The other two seeds.** s0 (2448) and s1 (2688) are still training. Their training curves have moved: the window is exploited in 0.75 / 0.95 of later rounds and they take 0.6 / 1.9 extra corrections. True reward is about −55 to −62 per round. That resembles the targets with 2–3 corrections and true −58 / −76.
+- **Rule 6b extension rule.** It applies once s0 and s1 are checked.
+- Cells DONE: 0 of 2.
