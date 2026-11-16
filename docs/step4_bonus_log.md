@@ -2157,4 +2157,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → ****, for the record.
 - Cells DONE: 7 of 12.
 - **Its check.** **1990269** COMPLETED (3:31); verdicts are in the line below (information only).
-  - Verdicts at 12,288: seed0 CONVERGED  +0.000;seed1 PLATEAU    +0.050;seed2 IMPROVING  +0.056.
+  - Verdicts at 12,288 (the cap): s0 0.000 CONVERGED; s1 0.050 PLATEAU; s2 0.056 IMPROVING. The run ends here: it is at the cap, and the cell is already DONE.
