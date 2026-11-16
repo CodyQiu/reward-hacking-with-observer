@@ -1256,3 +1256,22 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **18:26 (scheduled wakeup):** no job had ended since 17:45, and `br_missing` / `resume` (dry-run) showed nothing in either campaign.
 - **18:35 (training wait):** **1987903** (grid `B1_P1eq1_LN+LR+NET`, wave 2) COMPLETED 18:33 (3:20:29, exit 0).
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+NET`) → `... br_missing submit` → **1988827 **. Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 120 (18:40–18:42): grid no-reg `+NET` 2/3 at 1536, s2 PLATEAU → finished
+
+- **Check 1988827** (`br_grid_B1_P1eq1_LN+LR+NET`) COMPLETED. Verdicts:
+  - s0 **0.019** and s1 **0.018** are CONVERGED. Both are corrected once, then honest (true about 22).
+  - s2 **0.066** (s.e. 0.038) is PLATEAU. It is corrected once, then never reaches the goal (true −100). Its best response takes 2 corrections, then is honest.
+- **Rule 4: the only unconverged seed is PLATEAU, so the config is finished and not extended.**
+- **Grid no-reg status:**
+
+  | Run | Status |
+  |---|---|
+  | `LN+LR` | finished, 2/3 at the cap |
+  | `+NET` | finished, 2/3 |
+  | `+GL`, `+RS`, `+AN`, `+EP` | extending to 3072 |
+  | `+LR+ES10` | 3/3; confirmation `+LR+ES10_confirm` running (1988633) |
+  | `+LR+ENT3` | extending to 3072 |
+  | `+LR+N4`, `+LR+ES10+N4` | training |
+
+- Cells DONE: 5 of 12.
