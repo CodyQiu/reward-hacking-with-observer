@@ -656,3 +656,20 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
 - **The tomato_large comp target** (1989675) is still running, now about 11 h. The tomato_large verdicts need it (NO TARGET until then).
 - Cells DONE: 1 of 6.
 - **09:36.** **1990167** (Tomato `C1_comp_L`, extended to 3072) COMPLETED 09:35 (4:26:43, exit 0). s2 has finished too. Check **1990308** was still PENDING then, and it reads the finished seeds when it starts, so it covers all three.
+
+## 2026-11-16, iteration 39 (10:32–10:38): Tomato `C1_comp_L` 3/3 at 3072 → `confirm` (1990357 )
+
+- **The check.** **1990308** (Tomato `C1_comp_L` at 3072; it started after training ended, so it covers all three seeds) COMPLETED (24:59). `step4_convergence.py`:
+
+  | Seed | BR gap at 1536 → 3072 | Verdict | PPO's true by round | Best response | Target |
+  |---|---|---|---|---|---|
+  | s0 | 0.005 → **0.004** | CONVERGED | 46, 429–431 | corrected once, then honest | corrected once, then honest |
+  | s1 | 0.286 → **0.004** | CONVERGED | 46, about 430 | corrected once, then honest | 3 corrections (farms) |
+  | s2 | 0.009 → **0.007** | CONVERGED | 46, 430–431 | 2.77 corrections | 3.96 corrections (farms) |
+
+  - s1 was honest from round 0 and never corrected at 1536. At 3072 it is corrected once, then nearly honest, like s0 and s2.
+- **Rule 4: a tuning run with all seeds CONVERGED → `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato C1_comp_L` printed `submit.sh 48 --env tomato --run-id C1_comp_L_confirm --seeds 20 21 22 --results-dir results/step4/tomato/comp --set ppo.ent_coef=0.03 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 ...`. That is `C1_comp_L/overrides.json` at the run's final length, 3072.
+  - Submitted: `... submit` → **1990357 **.
+  - Tomato now has three confirmations running: `LE_confirm` (1990201), `LN_confirm` (1990232) and `L_confirm`. The cell is DONE when any one of them is 3/3.
+- Cells DONE: 1 of 6.
