@@ -634,3 +634,28 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s22) → `... br_missing submit` → **1989937 **.
 - **What depends on it.** The Boat Race cell is DONE if s22 is ≤ 0.03; s22 was 0.041 at 1536.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 65 (01:32–01:35): Boat Race `LE+ES10+N4_confirm` 2/3 at 3072 (s22 0.033) → extend 6144 (1989942 )
+
+- **The check.** **1989937** (s22 at 3072) COMPLETED 01:32. BR gap at 1536 → 3072:
+
+  | Seed | 1536 | 3072 (s.e.) | Verdict |
+  |---|---|---|---|
+  | s20 | 0.018 | **0.015** | CONVERGED |
+  | s21 | 0.012 | **0.013** | CONVERGED |
+  | s22 | 0.041 | **0.033** (0.012) | IMPROVING |
+
+  - s22 is again just above 0.03.
+  - Its policy and its best response are the same end state: corrected once, then the new exploit (true −100).
+- **Rule 4.** This is a confirmation, s22 is IMPROVING, and 3072 is below the cap, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10+N4_confirm 6144` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989942 **.
+- **Seed 22 across the Boat Race confirmations** (it is short in all of them):
+
+  | Confirmation | Episodes | Gap |
+  |---|---|---|
+  | `LE+N4_confirm` | 6144 | 0.033 (now → 12,288) |
+  | `LE+ES10+N4_confirm` | 3072 | 0.033 |
+  | `LE+ES10_confirm` | — | still training |
+
+- Cells DONE: 0 of 2.
