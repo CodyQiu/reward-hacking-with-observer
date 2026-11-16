@@ -4,6 +4,8 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 
 ## Flags for the user
 
+- **NEW (2026-11-16): node wheat-06 is down** (`sinfo`: `down*`, "Not responding"). It killed the bonus campaign's Tomato no-reg `LN_confirm` (NODE_FAIL; flagged in docs/step4_bonus_log.md). None of this campaign's jobs were on it. Every submit now carries `EXCLUDE=barley-04,wheat-06` while it is down.
+
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04` (your standing instruction from the optimal campaign). On 2026-11-14 at 11:42, `sinfo` shows barley-04 `allocated` with no reason set; say if I should drop the exclusion.
 - **Taxi runs will hit the 48 h limit** (the doc: an exploiting seed took 47 h for 768 episodes in Step 3). Rule 1 resumes them from their checkpoints; that is not an incident.
 

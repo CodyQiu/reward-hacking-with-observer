@@ -8,6 +8,14 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Flags for the user
 
+- **NEW (2026-11-16, iteration 193): Tomato no-reg `B1_P1eq1_LN_confirm` (job 1988344) was killed by a node failure. I have not resubmitted it, and am waiting for you.**
+  - **What happened.** Slurm state `NODE_FAIL` at 11:56:42, after 18:59:31 of its 48 h, exit 1:0.
+  - **The node.** `wheat-06`; `sinfo` shows it `down*` with reason "Not responding". None of my other jobs were on it.
+  - **The run's state.** Its last checkpoints are intact (11:34–11:36): s20 4176, s21 3960 and s22 3720 of 6144 episodes.
+  - **What I'm doing.** `resume` (dry-run) lists it, but your rule says a job killed by a cluster incident is not resubmitted without you, so it waits. To continue it: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume submit`, which also resumes any run that later hits the 48 h limit.
+  - **The cell.** This is Tomato no-reg's only confirmation, so the cell can't become DONE until it continues.
+  - **wheat-06 is excluded** from every new submit (`EXCLUDE=barley-04,wheat-06`) while it is down.
+
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04`, following your standing instruction from the optimal campaign. On 2026-11-14 at 11:42, `sinfo -n barley-04` shows it `allocated` with no reason set, so it may be healthy again. Excluding it costs nothing; say if I should drop it.
 
 - **AS no-reg seed 21: target fixed point does not converge (with and without the bonus).** `results/step4/absent_supervisor/targets/P1eq1_bonus1/seed21.json` has `fixed_point_converged: false`: the iteration alternates between "3 corrections per episode" (V0 8,040.4) and "corrected in round 0, then never again" (V0 7,927.0). The no-bonus target `P1eq1/seed21.json` has the same two-cycle (8,037.4 / 7,926.0). Not a bug: the corrections fitted on each behaviour make the other one optimal. Per rule 2 the last iteration (3 corrections) is used. PPO's verdict comes from the best-response check, which this does not affect.
@@ -2246,3 +2254,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... resume submit` → **1990405** (swap `LE`), **1990406** (base `LE`).
   - At this rate each needs about two more 48 h jobs.
 - Base `LE` s0's check (1990307) is still queued. Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 193 (11:58–12:05): **Tomato no-reg `LN_confirm` killed by NODE_FAIL (wheat-06); not resubmitted, flagged for the user**
+
+- **Training wait.** **1988344** (Tomato `B1_P1eq1_LN_confirm`, 6144 episodes) ended `NODE_FAIL` at 11:56:42 after 18:59:31 (exit 1:0; batch step CANCELLED), on node wheat-06.
+  - `sinfo -N -n wheat-06`: `down*`, "Not responding". That is a cluster incident, not the 48 h limit.
+  - The seeds' last checkpoints are from 11:34–11:36: s20 4176, s21 3960, s22 3720 of 6144.
+- **Rule 1.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env tomato --run-id B1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/tomato/bonus --resume`.
+  - **Not submitted**: the loop prompt says a job killed by a cluster incident is flagged and not resubmitted without the user. Flagged at the top.
+- **wheat-06 is added to the exclusions** (`EXCLUDE=barley-04,wheat-06`) for every submit while it is down. No other job of mine was on it.
+- Cells DONE: 7 of 12.

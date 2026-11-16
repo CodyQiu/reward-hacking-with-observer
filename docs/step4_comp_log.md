@@ -15,6 +15,8 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
 
 ## Flags for the user
 
+- **NEW (2026-11-16): node wheat-06 is down** (`sinfo`: `down*`, "Not responding"). It killed the bonus campaign's Tomato no-reg `LN_confirm` (NODE_FAIL; flagged in docs/step4_bonus_log.md). None of this campaign's jobs were on it. Every submit now carries `EXCLUDE=barley-04,wheat-06` while it is down.
+
 - **barley-04.** Every submit carries `EXCLUDE=barley-04`, your standing instruction from the optimal campaign, kept in the bonus and noreg_fail campaigns too. On 2026-11-14 `sinfo` showed barley-04 `allocated` with no reason set. Say if I should drop the exclusion.
 - **AS (6/6 seeds), Tomato (5/6), Taxi (2/6) and Boat Race (6/6): the comp target farms the level; the doc expected one correction, then honest (iterations 2, 12, 24 and 35, 2026-11-15/16).** In Boat Race, 5 of 6 seeds farm while honest by the true reward. In Taxi's two farming seeds the first correction also under-corrects (iteration 24); the other 4 Taxi seeds are corrected once, then honest. Tomato's farming seeds take 3–4 corrections, use the bug inside the window in rounds 1–3 (true about 423 against honest 434) and have rising levels; Tomato s0 is corrected once, then honest. Details for AS below.
   - **End state.** All 6 AS comp targets are corrected in every round 0–3. In rounds 1–3 the optimum uses the original bug inside the audit window (true 400 against honest 450), and each correction's level rises (11.8 → 13.5 per step).
@@ -672,4 +674,14 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm tomato C1_comp_L` printed `submit.sh 48 --env tomato --run-id C1_comp_L_confirm --seeds 20 21 22 --results-dir results/step4/tomato/comp --set ppo.ent_coef=0.03 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 ...`. That is `C1_comp_L/overrides.json` at the run's final length, 3072.
   - Submitted: `... submit` → **1990357 **.
   - Tomato now has three confirmations running: `LE_confirm` (1990201), `LN_confirm` (1990232) and `L_confirm`. The cell is DONE when any one of them is 3/3.
+- Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 40 (11:58–12:05): checks for AS `C1_comp_LN_confirm` (s20, s21) and Boat Race `C1_comp_LN_confirm` (s21, s22)
+
+- **Tick.** Nothing to resume in this campaign. Node wheat-06 went down (NODE_FAIL of a bonus job), so it is now excluded on every submit (flag at the top).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - AS `C1_comp_LN_confirm`: s20 and s21 finished at 3072; s22 is still training.
+    - Boat Race `C1_comp_LN_confirm`: s21 and s22 finished at 1536; s20 is still training.
+  - Submitted: `... br_missing submit` → **1990417** (AS), **1990418** (Boat Race). Their `ExcNodeList` is `barley-04,wheat-06`.
 - Cells DONE: 1 of 6.
