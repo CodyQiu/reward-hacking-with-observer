@@ -1633,3 +1633,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
   - Submitted: `... submit` → **1989727 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 147 (22:29–22:34): grid `+LR+ES10_confirm` at 3072 → check 1989735; tomato_large base `L` s2 0.226 (reactive); checks 1989736 1989737
+
+- **The tomato_large check.** **1989201** (tomato_large `B1_base_L`, s2 at 1536) COMPLETED 22:29 (2:18:31). This is the first tomato_large check: s2 **0.226** (s.e. 0.000), reactive (corrected once, then honest, true about 516.5). The best response hides (true 84.2 ×4, then 65.0), as the target does.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `+LR+ES10_confirm`: all three seeds at 3072 (the extension finished).
+  - Tomato `B1_base_L`: s2 finished at 6144.
+  - tomato_large `B1_base_L`: s1 finished at 1536; s0 is at 960.
+
+  `... br_missing submit` → **1989735** (grid confirmation), **1989736** (Tomato base `L`), **1989737** (tomato_large base `L`).
+- **Grid no-reg.** The cell is DONE if 1989735 is 3/3.
+- Cells DONE: 5 of 12.

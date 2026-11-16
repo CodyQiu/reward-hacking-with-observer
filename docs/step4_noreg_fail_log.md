@@ -570,3 +570,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Confirmations now running.** `LE+N4_confirm` → 6144 (1989602), `LE+ES10+N4_confirm` (s21 training), and this one. The Boat Race cell is DONE when any of them is 3/3.
 - **Seed 22.** Seed 22 has been short in every Boat Race confirmation (flag at the top). This config takes the longest training before confirming (6144 episodes); that may or may not help it.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 59 (22:29–22:34): Boat Race `LE+ES10+N4_confirm` finished at 1536 → check 1989738 (s21)
+
+- **Training finished.** **1988346** (`N1_P1eq1_LE+ES10+N4_confirm`) COMPLETED 22:29 (5:25:08, exit 0). s20 (0.018) and s22 (0.041) are already checked.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s21) → `... br_missing submit` → **1989738**.
+- **Next.** Rule 4 is applied once s21 has a result. s22 is at 0.041, so the run cannot be 3/3 at 1536.
+- Cells DONE: 0 of 2.
