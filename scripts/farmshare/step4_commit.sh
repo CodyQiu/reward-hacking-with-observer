@@ -7,6 +7,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 MSG=${1:?commit message}
+# finished = metrics.json in the seed's directory listing (the glob reads it). Not [[ -f ]]: a resumed seed renames
+# metrics.json to metrics_ep<N>.json, and on the NFS home the login node can keep the old name's cached dentry for
+# many minutes, so -f stays true while the seed trains and its checkpoints were committed (2026-11-15,
+# docs/step4_bonus_log.md iteration 108). The listing is current.
+finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && return 0; done; return 1; }
 # one path at a time: a missing path (tomato_large before its Phase A) fails the whole git add
 for p in docs/step4_optimal_log.md docs/step4_bonus_log.md docs/step4_noreg_fail_log.md results/step3/tomato_large; do
   [[ -e $p ]] && git add -A "$p"; done
@@ -23,7 +28,7 @@ for env in grid absent_supervisor tomato tomato_large taxi boat_race; do
     for l in "$r"seed*.log; do [[ -f $l ]] && git add "$l"; done
     for s in "$r"seed*/; do
       [[ -d $s ]] || continue
-      if [[ -f ${s}metrics.json ]]; then git add -A "$s"
+      if finished "$s"; then git add -A "$s"
       else for f in config.json progress.json; do [[ -f $s$f ]] && git add "$s$f"; done
            [[ -d ${s}code_snapshot ]] && git add -A "${s}code_snapshot"
       fi

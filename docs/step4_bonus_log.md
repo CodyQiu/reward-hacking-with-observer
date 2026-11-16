@@ -18,6 +18,13 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 - **tomato_large no-reg seed 1: target fixed point does not converge (with and without the bonus).** `results/step4/tomato_large/targets/P1eq1_bonus1/seed1.json` and `P1eq1/seed1.json` both have `fixed_point_converged: false`. Both cycle 4 → 3 → 4 → about 3.47 → 4 corrections per episode and stop at the 5-iteration limit. Per rule 2 the last iteration (4 corrections, then honest) is the target. The bonus does not change it. This is the third such seed, after AS no-reg s21 and Tomato no-reg s2. All three are no-regulariser cells that alternate between neighbouring numbers of corrections, so their targets' correction counts are uncertain by about one.
 
+- **A running seed's checkpoint was committed once; the cause is fixed (iteration 109, 2026-11-15).**
+  - **The cause.** A resumed seed renames `metrics.json` to `metrics_ep<N>.json`. On the NFS home, the login node kept the old name's cached dentry for at least 17 minutes: `stat`/`open` found it, `ls` did not. `step4_commit.sh` tests `[[ -f metrics.json ]]`, so it treated Tomato `B1_base_LN+N4` (extension 1988345 running) as finished.
+  - **What was committed.** Commit 1a9758ce contains that run's mid-run checkpoint: seeds 0–2 at episode 1560 of 3072, with `logs.npz`, `model.zip`, the round CSVs and `progress.json`. The snapshot is consistent (checkpoints are written atomically). The run's finished files will be committed over it later. I did not rewrite history.
+  - **Scope.** A scan of every commit since 2026-11-14 11:00 finds no other `logs.npz` committed with `progress.json` short of its target.
+  - **The fix.** `step4_commit.sh`, the `step4_optimal.sh` resume test, `step4_br.py` (`finished()`, used by `--missing` / `br_missing` and `--finished-only`) and `step4_convergence.py` now read the directory listing. The new test is `test_finished_seed_is_read_from_the_directory_listing`; all 21 tests in `tests/test_step4.py` pass.
+  - **Optimal campaign.** It uses the same scripts. It is paused, and its runs are not affected.
+
 - **Wave 2 for AS no-reg skips the `RS` factor (iteration 32).** The base `B1_P1eq1_LN+RS` already has `reward_scale=0.01625`, which is exactly what `RS` sets (0.25 × AS's Phase A reward_scale), so `LN+RS+RS` would rerun the base config on the same seeds. I submitted the other five factors (LR, GL, NET, EP, AN). If you want a different reading of `RS` here (e.g. a further 0.25×, 0.0040625), say so and I'll add it.
 
 ## Exact predictions
@@ -1085,3 +1092,21 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **Effect on commits.** `step4_commit.sh` uses the same `-f metrics.json` test, so commit ad2de674 `git add`ed those seeds' directories. Only small files had changed: `config.json` and the new `metrics_ep1536.json`. The checkpoint files were still the finished 1536 state, already committed. No mid-run checkpoint was committed.
   - **Handling.** Before submitting a listed check, or after committing, I now check `ls` for `metrics.json` on resumed runs. I am not changing `step4_commit.sh` or `step4_br.py`: their test is correct where the cache is fresh, as on the compute nodes.
 - Queue: 28 jobs in this campaign (limit 60), 35 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 109 (17:15–17:45): fixed the stale-NFS "finished" test in four places (one commit of running checkpoints); checks 1988591–1988594
+
+- **The problem.** Commit 1a9758ce (iteration 108) contained Tomato `B1_base_LN+N4`'s mid-run checkpoint: seeds 0–2 at episode 1560 of 3072, with `logs.npz`, `model.zip`, the round CSVs and `progress.json`.
+  - **Cause.** The login node's stale NFS dentry for `seed<s>/metrics.json`, which was renamed to `metrics_ep1536.json` when extension 1988345 started. 17 minutes later, `[ -f metrics.json ]` was still true while `ls` showed no such file.
+  - **Why it mattered.** `step4_commit.sh` stages a seed's whole directory if `[[ -f metrics.json ]]`. It would have re-added the run's checkpoints, about 45 MB, on every commit until the cache cleared.
+  - **Earlier commits.** A scan of every commit since 2026-11-14 11:00 (each `logs.npz` against that commit's `progress.json`) finds no other case.
+- **The fix.** This is clearly a bug under rule 5, so I fixed it with a test.
+  - **What changed.** "Finished" now means `metrics.json` is in the seed's directory listing, which was current throughout. Changed:
+    - `scripts/farmshare/step4_commit.sh`: a pure-bash `finished()` whose glob reads the listing, with no pipeline under `pipefail`;
+    - `scripts/farmshare/step4_optimal.sh`: the same function in the `resume` test. A stale positive there would have skipped resuming a timed-out extension;
+    - `experiments/step4_br.py`: `finished()` in `missing()`, `--finished-only` and the `finished` field;
+    - `experiments/step4_convergence.py`: the RUNNING label.
+  - **The test.** New `test_finished_seed_is_read_from_the_directory_listing` in `tests/test_step4.py`. It simulates the stale dentry with an `os.path.exists` that always finds `metrics.json`, and runs both scripts' `finished()` on real directories. `.venv/bin/python tests/test_step4.py`: 21 tests, 0 failed.
+  - **Live check.** With `stat` still stale on Tomato `B1_base_LN+N4`, `step4_br.py --missing` and `br_missing` no longer list it.
+  - **Left as is.** The checkpoint files already in 1a9758ce stay in history (no history rewrite). The run's final files will be committed over them when it finishes.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `B1_P1eq1_LN+LR+AN`, `+GL` and `+RS` (wave 2; every seed finished at 1536, checked with `ls`). `... br_missing submit` → **1988591** (`+AN`), **1988592** (`+GL`, s2 now finished too), **1988593** (`+RS`), and **1988594** (AS `+LR_confirm`, whose seed finished between the two commands).
+- Cells DONE: 4 of 12.

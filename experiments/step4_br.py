@@ -168,8 +168,19 @@ def check_seed(seed_dir, n_draws=6, eps=0.05, log=print):
     res = best_response(cfg, policy_probs_fn(model, proto, task.n_actions),
                         ppo_probs_at(model, proto, task.tables.phi_obs, proto.n_sub, task.n_actions),
                         n_draws=n_draws, eps=eps, log=log)
-    res.update({"episodes": n_ep, "finished": os.path.exists(os.path.join(seed_dir, "metrics.json"))})
+    res.update({"episodes": n_ep, "finished": finished(seed_dir)})
     return n_ep, res
+
+
+def finished(seed_dir):
+    """A seed is finished iff ``metrics.json`` is in its directory listing. Not ``os.path.exists``: a resumed
+    seed renames metrics.json to metrics_ep<N>.json, and on the NFS home the login node can keep the old name's
+    cached dentry for many minutes, so exists() stays True while the run trains (2026-11-15,
+    docs/step4_bonus_log.md iteration 108). The listing is current."""
+    try:
+        return "metrics.json" in os.listdir(seed_dir)
+    except FileNotFoundError:
+        return False
 
 
 def seeds_of(run):
@@ -182,7 +193,7 @@ def missing(run):
     out = []
     for s in seeds_of(run):
         sd = os.path.join(run, s)
-        if not os.path.exists(os.path.join(sd, "metrics.json")):
+        if not finished(sd):
             continue
         with open(os.path.join(sd, "config.json")) as fh:
             n_ep = json.load(fh)["episodes"]
@@ -212,7 +223,7 @@ def main():
                 continue
             if not os.path.exists(os.path.join(sd, "model.zip")):
                 continue
-            done = os.path.exists(os.path.join(sd, "metrics.json"))
+            done = finished(sd)
             if args.finished_only and not done:
                 continue
             if done:                                                   # a finished seed's episode count is known

@@ -511,3 +511,7 @@
   [absent_supervisor s20] 391,680,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    723.9  rounds 13534  (17967s)
   [absent_supervisor s20] 392,448,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    723.1  rounds 13562  (18039s)
   [absent_supervisor s20] 393,216,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    724.4  rounds 13587  (18110s)
+  [absent_supervisor s20] resumed at episode 12288 -> 24576
+  [absent_supervisor s20] 393,984,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    655.3  rounds 13614  (68s)
+  [absent_supervisor s20] 394,752,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    634.1  rounds 13640  (140s)
+  [absent_supervisor s20] 395,520,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    622.2  rounds 13665  (212s)

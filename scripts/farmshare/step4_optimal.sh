@@ -49,6 +49,9 @@ ent3() { case $1 in grid) echo 0.03 ;; absent_supervisor) echo 0.3 ;; taxi|boat_
 # 4x (2x for AS) Step 3's; Taxi 1x its frozen 768 (an exploiting seed took 47 h for 768 episodes: PBRR fits dominate)
 episodes() { case $1 in absent_supervisor) echo 3072 ;; taxi) echo 768 ;; *) echo 1536 ;; esac; }
 ANNEAL="anneal.last=0.25 anneal.floor=0.1"
+# a seed is finished iff metrics.json is in its directory listing; not [[ -e ]], which a stale NFS dentry keeps true
+# after a resume renamed it (see step4_commit.sh)
+finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && return 0; done; return 1; }
 BR_DRAWS=12                                                       # overseer draws of the best-response check
 br_hours() { case $1 in tomato_large) echo 12 ;; tomato|taxi) echo 6 ;; *) echo 2 ;; esac; }
 TUNE_SEEDS=(0 1 2)
@@ -143,7 +146,7 @@ case $CMD in
         id=$(basename "$r"); todo=()
         for s in "$r"seed*/; do
           [[ -d $s && $(basename "$s") != *_nockpt_* ]] || continue
-          [[ -e $s/metrics.json ]] || todo+=("$(basename "$s" | sed 's/^seed//')")
+          finished "$s" || todo+=("$(basename "$s" | sed 's/^seed//')")
         done
         (( ${#todo[@]} )) || continue
         if running "step4_$env:$id"; then echo "# $env/$id: job still queued/running"; continue; fi

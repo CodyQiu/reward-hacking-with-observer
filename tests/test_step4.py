@@ -430,5 +430,44 @@ def test_step4_commit_sh_commits_the_log_before_tomato_large_exists():
             assert fh.read() == "a\nb\nc\n"
 
 
+def test_finished_seed_is_read_from_the_directory_listing():
+    """A resumed seed renames metrics.json to metrics_ep<N>.json. On the NFS home the login node kept the old
+    name's cached dentry for many minutes, so os.path.exists / [[ -f ]] called a training seed finished:
+    br_missing listed it and step4_commit.sh committed its running checkpoints (2026-11-15, bonus log
+    iteration 108). step4_br.finished and the scripts' finished() read the directory listing instead. The stale
+    dentry is simulated by an exists() that always finds metrics.json; the shell functions run on real dirs."""
+    import json, re, subprocess, tempfile
+    from unittest import mock
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, os.path.join(repo, "experiments"))
+    from step4_br import finished, missing
+    with tempfile.TemporaryDirectory() as tmp:
+        run = os.path.join(tmp, "run")
+        sd = os.path.join(run, "seed0")
+        os.makedirs(sd)
+        for f in ("model.zip", "metrics_ep1536.json"):
+            open(os.path.join(sd, f), "w").close()
+        with open(os.path.join(sd, "config.json"), "w") as fh:
+            json.dump({"episodes": 3072}, fh)
+        real_exists = os.path.exists
+        stale = lambda p: os.path.basename(p) == "metrics.json" or real_exists(p)
+        with mock.patch("os.path.exists", stale):
+            assert not finished(sd) and missing(run) == []
+        shell = {}
+        for script in ("step4_commit.sh", "step4_optimal.sh"):
+            with open(os.path.join(repo, "scripts", "farmshare", script)) as fh:
+                src = fh.read()
+            assert not re.search(r"\[\[ -[ef] [^]]*metrics\.json", src), script     # no stat-based test left
+            shell[script] = next(l for l in src.splitlines() if l.startswith("finished()"))
+        is_done = lambda fn, d: subprocess.run(["bash", "-c", fn + '\nfinished "$1"', "x", d]).returncode == 0
+        for fn in shell.values():
+            assert not is_done(fn, sd + "/") and not is_done(fn, sd)
+        open(os.path.join(sd, "metrics.json"), "w").close()
+        assert finished(sd) and missing(run) == ["seed0"]
+        for fn in shell.values():
+            assert is_done(fn, sd + "/") and is_done(fn, sd)
+        assert not finished(os.path.join(run, "seed9"))                            # a missing dir is not finished
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

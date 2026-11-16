@@ -98,7 +98,7 @@ def seed_report(seed_dir):
     g = gaps(last, tg, span)
     ok = {k: g[k] <= TOL[k] for k in TOL}
     ok["value"] = -TOL["value"] <= g["value"] <= TOL["value"]
-    finished = os.path.exists(os.path.join(seed_dir, "metrics.json"))
+    finished = "metrics.json" in os.listdir(seed_dir)   # the listing, not exists(): stale NFS dentries (step4_br.finished)
     improving = True                                  # too short to tell
     if len(curve) >= 8:
         now = curve[-3:]
