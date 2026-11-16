@@ -2308,3 +2308,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1990509** (grid `LN+LR+EP`), **1990510** (Tomato `LN+ES10+N4`), and **1990511** (Tomato `B1_base_LN+N4`, a rule 6b run extended to 6144: its s0 finished between the dry-run and the submit; s1 and s2 are at 5976 in 1989933).
   - If Tomato s2 converges, `LN+ES10+N4` is 3/3 and goes to `confirm`. Otherwise it is extended to 12,288 (rule 6b).
 - Cells DONE: 7 of 12.
+- **13:31.** Check **1990447** (AS `LN+RS+N4+ENT10`, information only) COMPLETED (1:18): seed0 0.062 IMPROVING;seed1 0.065 IMPROVING;seed2 0.106 IMPROVING. The cell is DONE, so the run is not extended.
