@@ -163,3 +163,10 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 - **Boat Race.** **1989697** (Boat Race `C1_comp_L`) COMPLETED 23:38. Check **1989832** (s0, s1) is done, but its verdicts wait for the Boat Race comp target (1989677, queued).
 - **Rule 3.** `br_missing` (dry-run: Boat Race `C1_comp_LE`, s0 at 1536) → `... br_missing submit` → **1989834**.
 - Cells DONE: 0 of 6.
+
+## 2026-11-15, iteration 6 (23:49–23:53): Boat Race `C1_comp_LE` finished → check 1989841
+
+- **Boat Race `LE` finished.** **1989698** (Boat Race `C1_comp_LE`) COMPLETED 23:48 (1:18:12, exit 0). Its s0 check **1989834** is done.
+- **Rule 3.** `br_missing` (dry-run: Boat Race `C1_comp_LE`, s1 and s2) → `... br_missing submit` → **1989841**.
+- **Boat Race verdicts are on hold.** They need the Boat Race comp target, 1989677, which is still queued.
+- Cells DONE: 0 of 6.

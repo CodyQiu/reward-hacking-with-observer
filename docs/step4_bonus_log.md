@@ -1697,3 +1697,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
     - `LN+ES10` has s1 still training.
     - `LN+ES10+N4` is 2/3 and extending.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 150 (23:49–23:53): AS no-reg `+ENT3_confirm` s20/s22 at the 24,576 cap → check 1989840
+
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `+ENT3_confirm`.
+  - s20 and s22 have finished at 24,576; s21 is at 23,952.
+  - At 12,288 the gaps were s20 0.0301 (IMPROVING), s21 0.000 and s22 0.023.
+
+  `... br_missing submit` → **1989840**.
+- **What this run decides.** It is at the cap, so it is finished after this check. If s20 is now ≤ 0.03 and s21 holds, the AS no-reg cell is DONE.
+- Cells DONE: 5 of 12.
