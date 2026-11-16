@@ -1992,7 +1992,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The run is now complete: s0 0.227 (IMPROVING), s1 0.227 (PLATEAU), s2 0.226 (PLATEAU).
   - Every policy is reactive (corrected in round 0, then honest, true about 516). Every best response hides, as the target does.
 - **Rule 4.** s0 is IMPROVING and 1536 is below the cap of 12,288, so extend 2×.
-  - Correction: my first draft of this entry read all three seeds as PLATEAU; the script labels s0 IMPROVING. I fixed the entry before committing the extension.
+  - Correction: my first version of this entry (commit fbd09cea8) read all three seeds as PLATEAU and called the run finished. The script labels s0 IMPROVING, so I corrected the entry and submitted the extension.
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_L 3072` printed `submit.sh 48 --env tomato_large --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
   - Submitted with `... submit` → **1990168 **.
 - **tomato_large base.**
