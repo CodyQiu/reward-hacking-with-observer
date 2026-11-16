@@ -528,3 +528,13 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Remaining seeds.** s20 (1152/1536) and s21 (552/1536) are still training. Rule 4 for this run waits for them.
 - **A failed wait.** My wait script for this check exited with an error because the check finished (1:26) before the script looked the job id up. It was a scripting slip on my side, not a job failure.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 55 (21:58–22:15): checks 1989702 (`LE+ES10+N4_confirm` s20) and 1989703 (`LE+ES10` s2 at 6144)
+
+- **Campaign context.** A third campaign (comp) started alongside this one; see `docs/step4_comp_log.md`. Nothing in this campaign changes, and the merged code passes 28/28 tests.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - `LE+ES10+N4_confirm`: s20 finished at 1536; s21 is at 1008; s22 was checked in iteration 54.
+  - `LE+ES10`: s2 finished at 6144; s0 and s1 are at about 6060.
+
+  `... br_missing submit` → **1989702** and **1989703**.
+- Cells DONE: 0 of 2.

@@ -1555,3 +1555,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   Submitted: `... br_missing submit` → **1989628** (`base_L`) and **1989629** (`base_LN+ES10`).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 142 (21:58–22:15): the third campaign (comp) started; grid `+LR+ES10+N4` finished → check 1989701; Tomato base `L` s1 0.160 PLATEAU
+
+- **Repo and prompt changes.**
+  - The user's commit b145f873e (pulled 21:57) added the compensated-correction campaign. The user then sent the three-campaign loop prompt. Comp's iteration 0 (28 jobs) is in `docs/step4_comp_log.md`.
+  - Nothing in this campaign changes. The new code paths are off by default, and `tests/test_step4.py` passes 28/28 on the merged code.
+  - Budgets: bonus ≤ 60, noreg_fail ≤ 20, comp ≤ 30, all ≤ 110. With comp, all my jobs come to about 61.
+- **Finished runs.** **1987910** (grid `B1_P1eq1_LN+LR+ES10+N4`, rule 6b stage 1) COMPLETED 21:57 (6:27:38, exit 0).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+ES10+N4`) → `... br_missing submit` → **1989701**.
+- **Check result.** **1989628** (Tomato `B1_base_L`, s1 at 6144): **0.160**, PLATEAU, reactive. The best response hides. s0 is at 0.160 PLATEAU; s2 is at 5760/6144, so Rule 4 waits for s2.
+- Cells DONE: 5 of 12.
