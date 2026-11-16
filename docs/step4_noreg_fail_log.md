@@ -552,3 +552,21 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **The other seeds.** s22 is at **0.041** (iteration 54). s21 is still training at 1320/1536; its training curve is at true −75 to −83 in later rounds.
 - **Next.** Rule 4 waits for s21.
 - **Status.** Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 58 (22:21–22:26): Boat Race `LE+ES10` 3/3 CONVERGED at 6144 → `confirm` (1989721 )
+
+- **Check.** **1989703** (`br_boat_race_N1_P1eq1_LE+ES10`, 6144) COMPLETED 22:20 (4:39). BR gap at 1536 / 3072 / 6144:
+
+  | Seed | 1536 | 3072 | 6144 | Verdict |
+  |---|---|---|---|---|
+  | s0 | 0.014 | 0.019 | **0.013** | CONVERGED |
+  | s1 | 0.040 | 0.033 | **0.002** | CONVERGED |
+  | s2 | 0.028 | 0.014 | **0.008** | CONVERGED |
+
+  PPO and every best response are corrected once in round 0, then play the new exploit (true −100, against 50 honest).
+- **Rule 4 (rule 6b exploration run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE+ES10` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.09 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 episodes=6144`. That is the run's overrides at its final length, and it matches `run_sets.py`.
+  - Submitted with `... submit` → **1989721 **.
+- **Confirmations now running.** `LE+N4_confirm` → 6144 (1989602), `LE+ES10+N4_confirm` (s21 training), and this one. The Boat Race cell is DONE when any of them is 3/3.
+- **Seed 22.** Seed 22 has been short in every Boat Race confirmation (flag at the top). This config takes the longest training before confirming (6144 episodes); that may or may not help it.
+- Cells DONE: 0 of 2.

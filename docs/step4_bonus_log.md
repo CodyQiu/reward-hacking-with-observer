@@ -1599,3 +1599,21 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+ES10+N4 3072` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ES10+N4 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
   - Submitted with `... submit` → **1989713 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 145 (22:21–22:26): AS no-reg `+ES10+N4_confirm` 1/3 at 12,288, unconverged seeds PLATEAU → finished; this confirmation failed
+
+- **Check result.** **1989711** (`br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4_confirm`, 12,288) COMPLETED 22:20. BR gap at 3072 / 6144 / 12,288:
+
+  | Seed | 3072 | 6144 | 12,288 | Verdict at 12,288 |
+  |---|---|---|---|---|
+  | s20 | 0.070 | 0.031 | **0.053** | PLATEAU |
+  | s21 | 0.000 | 0.012 | **0.018** | CONVERGED |
+  | s22 | 0.041 | 0.049 | **0.031** | PLATEAU |
+
+  Every policy is corrected once, then honest. Every best response takes 2 corrections.
+- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished; this confirmation failed (1/3).
+- **AS no-reg confirmations so far.**
+  - Failed: `+AN`, `+N4`, `+LR`, `+ES10+N4`.
+  - Still running: `+GL_confirm` (from the 3/3 `+GL`), `+ENT3_confirm` → 24,576, `+EP_confirm` → 24,576, `+NET_confirm` → 12,288.
+  - The stage-1 exploration runs are all finished or failed: `ES10` (2/3 at the cap), `N4` (confirmation failed) and `ES10+N4` (confirmation failed). The exception is `ENT3`, whose confirmation is still running, so stage 2 is not yet due.
+- Cells DONE: 5 of 12.
