@@ -621,3 +621,8 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted with `... submit` → **1989839**.
   - At the cap the run is finished, whatever the verdict.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 63 (01:16–01:20): Boat Race `LE+ES10+N4_confirm` s20 at 3072 → check 1989921
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LE+ES10+N4_confirm`: s20 has finished at 3072; s21 is at 3048 and s22 at 2832. `... br_missing submit` → **1989921**.
+- Cells DONE: 0 of 2.

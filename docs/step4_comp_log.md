@@ -248,3 +248,14 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   - Entered under "Exact predictions"; the farming flag at the top now covers Tomato too.
 - **Grid check.** **1989884** (grid `C1_comp_LN`) COMPLETED. s2 **0.011** CONVERGED; it is corrected once, then true −100, like `L` and `LE`. s0 (1128) and s1 (1056) are still training, so rule 4 waits.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 13 (01:16–01:20): AS `C1_comp_LE` reached 6144; checks 1989922–1989924
+
+- **Training finished.** **1989830** (AS `C1_comp_LE`, extension to 6144) COMPLETED 01:14 (1:09:42, exit 0).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `C1_comp_LN`: s0 finished at 1536; s1 is at 1488.
+  - AS `C1_comp_LE`: all three seeds at 6144.
+  - Tomato `C1_comp_L`: s1 finished at 1536; s0 is at 648 and s2 at 672.
+
+  `... br_missing submit` → **1989922** (grid `LN`), **1989923** (AS `LE`), **1989924** (Tomato `L`). The Tomato check is the first Tomato comp check.
+- **Budget.** This campaign has 25 jobs. Cells DONE: 0 of 6.
