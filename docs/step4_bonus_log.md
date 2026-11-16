@@ -2023,3 +2023,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+EP` (`--finished-only --draws 12`). It also printed "tomato_large/B1_P1eq1_LN+ES10: check still queued/running" (1990119).
   - Submitted: `... br_missing submit` → **1990171**. It reads the finished seeds when it starts, so it covers all three (s1's `metrics.json` is in its directory listing).
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 174 (04:28–04:33): grid no-reg `LN+LR+EP` 2/3 at 6144 (s1 IMPROVING by the script) → extend to the cap, 12,288 (1990173)
+
+- **The check.** **1990171** (grid `B1_P1eq1_LN+LR+EP`, all three seeds at 6144) COMPLETED (2:06). `step4_convergence.py`:
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.001 / 0.001 / **0.001** | CONVERGED | −100, 21.6, 20.9, 21.5, 21.6 | corrected in round 0, then honest |
+  | s1 | 0.044 / 0.040 / **0.042** (s.e. 0.008) | IMPROVING | −100 every round (corrected in every round) | corrected in round 0, then honest |
+  | s2 | 0.002 / 0.023 / **0.010** (s.e. 0.034) | CONVERGED | −100, 21.7, 21.8, 21.7, 21.7 | 2 corrections, then honest |
+
+  - s1 is still the open exploiter, corrected every round. Its BR gap is flat (0.040–0.044). The IMPROVING verdict comes from the script's 24-episode curve, which I apply as written.
+- **Rule 4 (wave-2 run, one seed IMPROVING): extend 2×**, which is the grid cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 12288` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990173**.
+- Cells DONE: 6 of 12.
