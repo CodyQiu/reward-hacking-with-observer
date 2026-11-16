@@ -1389,3 +1389,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted with `... submit` → **1988924 **.
 - **Tomato base `LN+ENT3`.** Check 1988871 (s0 at 3072) is running. s0's training curve is still reactive (true 46, then about 429).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 128 (20:06–20:09): Tomato base `LN+ENT3` finished at 3072; s0 and s2 still reactive (0.161); s1 check 1989200 1989201 
+
+- **What finished.** **1988871** (`br_tomato_B1_base_LN+ENT3`) COMPLETED 20:06; **1987845** (Tomato `B1_base_LN+ENT3`, extension to 3072) COMPLETED 20:06 (5:30:56, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date.
+- **Gaps** (1536 → 3072):
+  - s0: 0.163 → **0.161** (s.e. 0.000)
+  - s2: 0.162 → **0.161** (s.e. 0.000)
+  - Both are reactive (corrected once, then honest at true about 431). Both best responses hide.
+- **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s1, which finished after the check had started) → `... br_missing submit` → **1989200 1989201 **.
+- **Next.** The rule 6b extension applies once s1 is checked, because extending now would overwrite s1's 3072 model before it is checked.
+- Cells DONE: 5 of 12.
