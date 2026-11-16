@@ -256,3 +256,6 @@
   [boat_race s21] 195,072,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -25.0  rounds 11645  (10277s)
   [boat_race s21] 195,840,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -25.1  rounds 11669  (10354s)
   [boat_race s21] 196,608,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -25.0  rounds 11693  (10431s)
+  [boat_race s21] resumed at episode 6144 -> 12288
+  [boat_race s21] 197,376,000  win0-3 0.25  off 0.22  corr/ep 1.00  winF 0.00  proxy0-3    -32.9  rounds 11717  (71s)
+  [boat_race s21] 198,144,000  win0-3 0.25  off 0.17  corr/ep 1.00  winF 0.00  proxy0-3    -15.7  rounds 11744  (150s)

@@ -256,3 +256,6 @@
   [boat_race s22] 195,072,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -25.4  rounds 11122  (11692s)
   [boat_race s22] 195,840,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -25.2  rounds 11146  (11769s)
   [boat_race s22] 196,608,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    -25.1  rounds 11170  (11845s)
+  [boat_race s22] resumed at episode 6144 -> 12288
+  [boat_race s22] 197,376,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3    -26.3  rounds 11196  (75s)
+  [boat_race s22] 198,144,000  win0-3 0.25  off 0.18  corr/ep 1.00  winF 0.00  proxy0-3    -11.9  rounds 11221  (150s)
