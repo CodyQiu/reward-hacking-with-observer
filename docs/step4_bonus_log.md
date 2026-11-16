@@ -1740,3 +1740,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `ES30+N4` is not submitted: the base already has N4 (`n_envs=256 ppo.batch_size=6400`), so it would be `ES30` again.
   - Submitted: `... stage2 submit` → **1989843 1989844 **.
   - The extension rule applies to both.
+
+## 2026-11-16, iteration 152 (00:00–00:03): grid no-reg `+GL` reached 6144 → check 1989849 1989850 
+
+- **Training finished.** **1988904** (grid `B1_P1eq1_LN+LR+GL`, extension to 6144) COMPLETED 23:58 (4:05:30, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+GL`) → `... br_missing submit` → **1989849 1989850 **.
+- Cells DONE: 5 of 12.

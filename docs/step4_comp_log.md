@@ -170,3 +170,9 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 - **Rule 3.** `br_missing` (dry-run: Boat Race `C1_comp_LE`, s1 and s2) → `... br_missing submit` → **1989841**.
 - **Boat Race verdicts are on hold.** They need the Boat Race comp target, 1989677, which is still queued.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 7 (00:00–00:03): AS `C1_comp_L` s2 finished → check 1989851 
+
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `C1_comp_L`. s2 has finished at 3072; s0 is still training. Submitted with `... br_missing submit` → **1989851 **.
+- **Boat Race `C1_comp_LE`.** Check **1989841** (s1, s2) is done. Its verdicts wait for the Boat Race comp target (1989677, still queued).
+- Cells DONE: 0 of 6.
