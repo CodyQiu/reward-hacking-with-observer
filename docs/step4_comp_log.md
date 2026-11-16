@@ -839,3 +839,12 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN_confirm 3072` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/comp --resume --extend-to 3072`.
   - Submitted: `... submit` → **1990749 **.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 52 (15:53–15:57): Boat Race `C1_comp_LE` reached 6144; Taxi `C1_comp_LE` s1 finished → checks 1990811, 1990810
+
+- **Training wait.** **1990524** (Boat Race `C1_comp_LE`, extended to 6144) COMPLETED 15:53 (2:00:36, exit 0).
+- **Taxi `C1_comp_LE`.** s1 finished at 768; s2 is at 672 and s0 at 120 of 768. The seeds' speeds differ a lot, because a seed that is corrected often runs many slow PBRR rounds.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1990810** (Taxi `LE`, s1), **1990811** (Boat Race `LE`, 6144).
+- Cells DONE: 2 of 6.
