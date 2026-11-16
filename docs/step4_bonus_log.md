@@ -1150,3 +1150,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - Woken by the training wait: **1987908** (grid `B1_P1eq1_LN+LR+ES10`, rule 6b stage 1) COMPLETED 17:22 (1:59:37, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3:** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+ES10`) → `... br_missing submit` → **1988611 **. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 113 (17:27–17:30): grid `+LR+ENT3` finished; AS `+LR_confirm` s21 at 12,288 → check 1988614 
+
+- **Training wait.** **1987907** (grid `B1_P1eq1_LN+LR+ENT3`, rule 6b stage 1) COMPLETED 17:26 (2:06:55, exit 0). Its check 1988605 started 17:26:38, after the job ended, so it covers all three seeds. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** The dry-run of `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed AS `B1_P1eq1_LN+RS+LR_confirm` (s21 finished at 12,288; s20 was checked in iteration 110; s22 is still training). `... br_missing submit` → **1988614 **.
+- Cells DONE: 4 of 12.
