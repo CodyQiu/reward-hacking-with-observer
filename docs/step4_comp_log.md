@@ -363,3 +363,18 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
 - **Rule 3.** `br_missing` (dry-run: grid `C1_comp_LN_confirm`) → `... br_missing submit` → **1990160 **.
 - **Boat Race.** Every Boat Race wave-1 seed now has a check (`L`, `LE`, `LN`). Their verdicts wait for the Boat Race comp target (1989677, still queued).
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 22 (04:00–04:03): grid `C1_comp_LN_confirm` (information only): 2 of 3 seeds honest after the correction; Tomato `C1_comp_L` s0 0.005
+
+- **Grid `C1_comp_LN_confirm`.** Check **1990160** (seeds 20–22, 1536) COMPLETED 04:00. Every seed is CONVERGED:
+
+  | Seed | Gap | After the correction |
+  |---|---|---|
+  | s20 | **0.000** | **honest** (true 21.8–22.0) |
+  | s21 | **0.011** | true −100 |
+  | s22 | **0.000** | **honest** (true 21.9–22.0) |
+
+  - Across the 15 grid comp seeds so far, 3 are honest after the correction. All three come from the two confirmation runs `LE_confirm` and `LN_confirm`.
+  - The cell is already DONE by the verdict (iteration 17), so this is information only.
+- **Tomato `C1_comp_L`.** Check 1990155 is still running. It has reported s0: **0.005**, CONVERGED. s0 is corrected once, then nearly honest (true about 430 against 434), and its best response is corrected once, then honest. s2's result is pending.
+- Cells DONE: 1 of 6.
