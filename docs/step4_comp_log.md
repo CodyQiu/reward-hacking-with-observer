@@ -343,3 +343,14 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
 
   So the honest end state the target predicts is reachable by PPO under comp on the grid. It appears in 1 of the 12 grid comp seeds so far (9 tuning, 3 confirmation).
 - **Status.** The grid cell is already DONE (iteration 17); this run is information only. Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 20 (03:34–03:37): Tomato `C1_comp_L` finished; checks 1990155 1990156 
+
+- **Training finished.** **1989688** (Tomato `C1_comp_L`) COMPLETED 03:34 (5:13:49, exit 0).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - Tomato `C1_comp_L`: s0 and s2.
+  - Boat Race `C1_comp_LN`: s2.
+
+  `... br_missing submit` → **1990155 1990156 **.
+- **Boat Race.** Its comp target (1989677) is still queued, so its checks cannot be judged yet.
+- Cells DONE: 1 of 6.
