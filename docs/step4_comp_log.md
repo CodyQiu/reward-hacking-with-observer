@@ -259,3 +259,26 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
 
   `... br_missing submit` → **1989922** (grid `LN`), **1989923** (AS `LE`), **1989924** (Tomato `L`). The Tomato check is the first Tomato comp check.
 - **Budget.** This campaign has 25 jobs. Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 14 (01:25–01:32): grid `C1_comp_LN` 3/3 by the verdict (true −100 after the correction) → `confirm` (1989931 ); AS `C1_comp_LE` 1/3 at 6144 → extend 12,288 (1989932 )
+
+- **Checks returned.** **1989922** (grid `C1_comp_LN`) and **1989923** (AS `C1_comp_LE`, 6144) COMPLETED. **1989684** (grid `C1_comp_LN` training) COMPLETED 01:20.
+- **Grid `C1_comp_LN`** (1536): s0, s1, s2 are each **0.011**, all CONVERGED.
+  - Every seed is corrected in round 0, then has true −100 (flag at the top).
+  - All three grid comp configs (`L`, `LE`, `LN`) now pass the verdict this way.
+- **AS `C1_comp_LE`**, BR gap at 3072 → 6144:
+
+  | Seed | 3072 | 6144 | Verdict | Behaviour |
+  |---|---|---|---|---|
+  | s0 | 0.146 | **0.139** | IMPROVING | hides |
+  | s1 | 0.015 | **0.013** | CONVERGED | corrected once, then honest |
+  | s2 | 0.143 | **0.143** | IMPROVING | hides |
+
+  The best responses of s0 and s2 take 4 corrections (the farming end state); s1's best response takes 3.
+- **Rule 4, grid `C1_comp_LN`: all CONVERGED, so `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid C1_comp_LN` printed `submit.sh 48 --env grid --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/grid/comp --set g.fine_only=True g.offset=True g.offset_margin=0.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`. That matches `run_sets.py`.
+  - Submitted: `... submit` → **1989931 **.
+- **Rule 4, AS `C1_comp_LE`: seeds IMPROVING, below the cap, so extend 2×.**
+  - Dry-run: `... extend absent_supervisor C1_comp_LE 12288` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/absent_supervisor/comp --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1989932 **.
+- Cells DONE: 0 of 6.

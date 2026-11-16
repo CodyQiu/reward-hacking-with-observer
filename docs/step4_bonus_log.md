@@ -1859,3 +1859,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Still running: `+EP` → 6144 (1989727) and `+RS` → 12,288 (1989863).
   - In exploration, `+LR+ES10_confirm` failed. `+LR+ENT3_confirm` (1989566) is running, and `+LR+N4` → 6144 and `+LR+ES10+N4` → 3072 are still extending.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 161 (01:25–01:32): Tomato base `LN+N4` 0/3 at 3072 → extend 6144 (1989933 )
+
+- **The check.** **1989883** (Tomato `B1_base_LN+N4`, s1 and s2) COMPLETED. All three seeds are at **0.158**, PLATEAU, at 3072. They are reactive (true about 433 after the correction), and every best response hides.
+- **Rule 6b extension rule.** This is an exploration run with all seeds unconverged, so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989933 **.
+- Cells DONE: 5 of 12.
