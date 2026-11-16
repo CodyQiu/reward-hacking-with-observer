@@ -1826,3 +1826,17 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 3.** `br_missing` (dry-run: AS `+ENT3_confirm` s21; Tomato `LN+N4` s1 and s2) → `... br_missing submit` → **1989882**, **1989883**.
   - `+ENT3_confirm` already failed (iteration 151); s21's check is for the record.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 159 (00:55–01:00): Tomato base `LN+ES10` 0/3 at 1536 → extend 3072 (1989902 ); grid `+AN` at 6144 → check
+
+- **The check.** **1989877** (Tomato `B1_base_LN+ES10`, s1) COMPLETED. All three seeds are reactive at 1536 (s0 **0.160**, s1 **0.160**, s2 **0.159**, all PLATEAU); every best response hides.
+- **Rule 6b extension rule.** This is an exploration run with all seeds unconverged, so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1989902 **.
+- **Rule 3.**
+  - **1989569** (grid `+AN`, extended to 6144) COMPLETED 00:40.
+  - `br_missing` (dry-run: grid `+AN` at 6144) → `... br_missing submit` → **1989903 **.
+- **Other checks returned.**
+  - **1989882**: AS `+ENT3_confirm` s21 (already failed; for the record).
+  - **1989883**: Tomato base `LN+N4` s1 and s2, still queued.
+- Cells DONE: 5 of 12.
