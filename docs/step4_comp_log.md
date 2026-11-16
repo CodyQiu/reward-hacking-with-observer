@@ -767,3 +767,4 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_C1_comp_LE`.
   - Submitted: `... br_missing submit` → **1990496 **.
 - Cells DONE: 2 of 6.
+- **13:31.** Check **1990449** (AS `C1_comp_LE` s0, s1 at the 24,576 cap; information only, the AS cell is DONE) COMPLETED (1:08): seed0 0.048 IMPROVING;seed1 0.013 CONVERGED;seed2 0.143 IMPROVING.
