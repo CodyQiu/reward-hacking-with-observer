@@ -1746,3 +1746,31 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Training finished.** **1988904** (grid `B1_P1eq1_LN+LR+GL`, extension to 6144) COMPLETED 23:58 (4:05:30, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+GL`) → `... br_missing submit` → **1989849** (grid `+GL`) and **1989850** (grid `+RS`, whose seed finished at 6144 between the two commands).
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 153 (00:06–00:10): grid no-reg `+GL` 2/3 at 6144, s2 PLATEAU → finished; `+RS` 1/3 → extend to the cap 12,288 (1989863 )
+
+- **Checks back.** **1989849** (grid `+GL`) and **1989850** (grid `+RS`) COMPLETED. Verdicts at 6144:
+
+  | Run | Seed | BR gap | Verdict | Policy after its correction |
+  |---|---|---|---|---|
+  | `+GL` | s0 | **0.000** | CONVERGED | honest |
+  | | s1 | **0.001** | CONVERGED | honest |
+  | | s2 | **0.051** | PLATEAU | honest at true 22; its best response takes a true-20 route that pays more under the refitted correction (iteration 126) |
+  | `+RS` | s0 | **0.000** | CONVERGED | honest |
+  | | s1 | **0.043** | PLATEAU | never reaches the goal |
+  | | s2 | **0.059** | IMPROVING | never reaches the goal; its best response takes 2 corrections |
+
+- **Rule 4, `+GL`.** The only unconverged seed is PLATEAU, so the config is finished and not extended.
+- **Rule 4, `+RS`.** s2 is IMPROVING, so the run is extended 2× to the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+RS 12288` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+RS --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1989863 **.
+- **Grid no-reg runs still open:**
+  - `+LR+ENT3_confirm` (1989566);
+  - `+AN` → 6144;
+  - `+EP` → 6144;
+  - `+RS` → 12,288;
+  - `+LR+N4` → 3072;
+  - `+LR+ES10+N4` → 3072.
+
+  Finished without DONE: `LN+LR`, `+NET` and `+GL`; `+LR+ES10`'s confirmation failed.
+- Cells DONE: 5 of 12.

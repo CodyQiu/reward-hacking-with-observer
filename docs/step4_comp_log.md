@@ -176,3 +176,14 @@ Pending: Tomato, tomato_large, Taxi and Boat Race comp targets (1989674–198967
 - **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `C1_comp_L`. s2 has finished at 3072; s0 is still training. Submitted with `... br_missing submit` → **1989851 **.
 - **Boat Race `C1_comp_LE`.** Check **1989841** (s1, s2) is done. Its verdicts wait for the Boat Race comp target (1989677, still queued).
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 8 (00:06–00:10): AS `C1_comp_L` s2 0.001 CONVERGED (corrected once, then honest)
+
+- **Check 1989851** (AS `C1_comp_L`, s2 at 3072) COMPLETED.
+  - Gap **0.001**, CONVERGED.
+  - PPO is corrected in round 0, then **honest** (true 443–448 per round).
+  - Its best response takes 2 corrections (round 1 at true 400).
+  - That is still the farming direction the target takes (4 corrections), but at this point a second correction is worth little.
+- **The other seeds.** s1 **0.107**, PLATEAU, hides. s0 is still training (960/3072); its curve takes about 1.5 corrections per episode, with true about 315–405 per round.
+- **Rule 4** waits for s0.
+- Cells DONE: 0 of 6.
