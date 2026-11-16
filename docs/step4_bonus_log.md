@@ -1057,3 +1057,31 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **Why cancelling loses nothing.** With `metrics.json` gone, `--finished-only` skips every seed. The 1536 checks exist, and the script never overwrites a check. The job would have done nothing.
   - **Status.** Not a bug in any result; it is the known resume race (summary of the earlier session). Not flagged.
 - **Still queued.** Checks 1988395 (AS `+NET_confirm`) and 1988396 (Tomato swap confirmation) are PENDING. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 108 (17:03–17:15): AS no-reg `+EP_confirm` 1/3 at 12,288 → extend to the cap 24,576 (); `+NET_confirm` 1/3 at 6144 → extend 12,288 (); grid `+GL` partial; stale NFS cache noted
+
+- **Wake-up.** The training wait fired. **1987446** (AS `+EP_confirm`, extension to 12,288) COMPLETED 17:02 (5:05:21). **1987904** (grid `B1_P1eq1_LN+LR+RS`) COMPLETED 17:02 (1:48:51). The check waits brought **1988395** (AS `+NET_confirm`), **1988558** (grid `+GL`) and **1988559** (AS `+EP_confirm`), all COMPLETED. 1988559 started at 17:02:39, after 1987446 ended, so it covers all three seeds. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Verdicts** (`.venv/bin/python experiments/step4_convergence.py <run>`; BR gap history from `step4_br/`):
+
+  | Run | Seed | BR gap (earlier) | BR gap now (s.e.) | Verdict |
+  |---|---|---|---|---|
+  | AS `B1_P1eq1_LN+RS+EP_confirm` (6144 → 12,288) | s20 | 0.032 | **0.059** (0.028) | IMPROVING |
+  | | s21 | 0.000 | **0.013** (0.033) | CONVERGED |
+  | | s22 | 0.057 | **0.060** (0.042) | IMPROVING |
+  | AS `B1_P1eq1_LN+RS+NET_confirm` (3072 → 6144) | s20 | 0.062 | **0.046** (0.026) | IMPROVING |
+  | | s21 | 0.031 | **0.000** | CONVERGED |
+  | | s22 | 0.066 | **0.031** (0.040) | IMPROVING |
+  | grid `B1_P1eq1_LN+LR+GL` (1536, wave 2) | s0 | — | **0.043** (0.004) | not converged |
+  | | s1 | — | **0.014** (0.001) | CONVERGED |
+
+  - Every AS policy is corrected once, then honest (true about 449). The best responses take 2–3 corrections.
+  - The grid `+GL` policies are corrected once, then honest (true 22). So is their best response; s0's gap is the value cost of a small residual. s2 is still training (1248/1536 at 16:57).
+- **Rule 4 (confirmations, seeds IMPROVING, below the AS cap): extend 2×.**
+  - `+EP_confirm`, to the cap: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor B1_P1eq1_LN+RS+EP_confirm 24576` (dry-run: `submit.sh 48 --env absent_supervisor --run-id B1_P1eq1_LN+RS+EP_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/bonus --resume --extend-to 24576`) → `... submit` → ****.
+  - `+NET_confirm`: `... extend absent_supervisor B1_P1eq1_LN+RS+NET_confirm 12288` (dry-run: `... --run-id B1_P1eq1_LN+RS+NET_confirm ... --resume --extend-to 12288`) → `... submit` → ****.
+- **Stale NFS directory cache on the login node.**
+  - **What I saw.** After an extension starts, the job on its compute node renames each seed's `metrics.json` to `metrics_ep<N>.json`. On the login node, `stat` / `open` of `seed<s>/metrics.json` kept succeeding for at least 8 minutes, although `ls` no longer lists it. This was Tomato `B1_base_LN+N4`, extension 1988345, and is consistent with a cached NFS dentry.
+  - **Effect on checks.** `step4_br.py --missing` (via `br_missing`) then lists the run as finished without a check at the new length. That is why 1988560 was submitted (iteration 107). `br_missing` still lists it now; I have not resubmitted.
+  - **Effect on commits.** `step4_commit.sh` uses the same `-f metrics.json` test, so commit ad2de674 `git add`ed those seeds' directories. Only small files had changed: `config.json` and the new `metrics_ep1536.json`. The checkpoint files were still the finished 1536 state, already committed. No mid-run checkpoint was committed.
+  - **Handling.** Before submitting a listed check, or after committing, I now check `ls` for `metrics.json` on resumed runs. I am not changing `step4_commit.sh` or `step4_br.py`: their test is correct where the cache is fresh, as on the compute nodes.
+- Queue: 28 jobs in this campaign (limit 60), 35 in all. Cells DONE: 4 of 12.

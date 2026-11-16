@@ -365,3 +365,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Pending check.** Check **1988397** (`LE+ENT3`) is still PENDING; when it starts it will cover all three seeds.
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: `br_boat_race_N1_P1eq1_LE+ES10`; s2 finished at 1536, s0 at 1272, s1 at 1248) → `... br_missing submit` → **1988562**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 40 (17:05–17:15): Boat Race `LE+ES10` s2 0.028 CONVERGED (partial)
+
+- Woken by the check wait. **1988562** (`br_boat_race_N1_P1eq1_LE+ES10`, s2 at 1536) COMPLETED 17:04.
+  - s2's gap is **0.028** (s.e. 0.008), CONVERGED.
+  - s2 is corrected once in round 0, then plays the new exploit (true about −100). Its best response does the same.
+- s0 and s1 are still training (about 1270 of 1536 at 16:57). The `LE+ENT3` check 1988397 is running. Cells DONE: 0 of 2.
