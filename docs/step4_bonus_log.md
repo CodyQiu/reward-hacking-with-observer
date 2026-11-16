@@ -1454,3 +1454,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+AN 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+AN --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
   - Submitted with `... submit` → **1989569 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 135 (20:42–20:46): grid no-reg `+LR+ES10_confirm` finished at 1536 → check 1989578; Tomato base `L` s0 at 6144 → check 1989579
+
+- **Trigger.** The training wait reported **1988633** (grid `B1_P1eq1_LN+LR+ES10_confirm`, seeds 20–22, 1536) COMPLETED 20:41 (3:03:12, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `+LR+ES10_confirm`, all three seeds;
+  - Tomato `B1_base_L`, s0 finished at 6144 (s1 is at 5856, s2 at 4944).
+
+  `... br_missing submit` → **1989578** (grid confirmation) and **1989579** (Tomato base `L` s0).
+- **What the grid check decides.** **The grid no-reg cell is DONE if 1989578 is 3/3.**
+- Cells DONE: 5 of 12.

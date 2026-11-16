@@ -442,3 +442,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **The other two seeds.** s0 (2448) and s1 (2688) are still training. Their training curves have moved: the window is exploited in 0.75 / 0.95 of later rounds and they take 0.6 / 1.9 extra corrections. True reward is about −55 to −62 per round. That resembles the targets with 2–3 corrections and true −58 / −76.
 - **Rule 6b extension rule.** It applies once s0 and s1 are checked.
 - Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 48 (20:42–20:46): Boat Race `LE+ENT3` s1 at 3072 and `LE+N4_confirm` s22 at 3072 → checks 1989580 1989581
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed two runs:
+  - `LE+ENT3`: s1 finished at 3072. s2 was checked in iteration 47; s0 is at 2640.
+  - `LE+N4_confirm`: s22 finished at 3072; s20 is at 3000 and s21 at 2952.
+
+  `... br_missing submit` → **1989580** (`LE+ENT3`), **1989581** (`LE+N4_confirm`).
+- **Cells DONE:** 0 of 2.
