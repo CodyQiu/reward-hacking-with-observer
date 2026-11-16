@@ -2309,3 +2309,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - If Tomato s2 converges, `LN+ES10+N4` is 3/3 and goes to `confirm`. Otherwise it is extended to 12,288 (rule 6b).
 - Cells DONE: 7 of 12.
 - **13:31.** Check **1990447** (AS `LN+RS+N4+ENT10`, information only) COMPLETED (1:18): seed0 0.062 IMPROVING;seed1 0.065 IMPROVING;seed2 0.106 IMPROVING. The cell is DONE, so the run is not extended.
+
+## 2026-11-16, iteration 197 (13:39–13:42): quiet tick; grid `LN+LR+EP` at its 12,288 cap (information only)
+
+- **Tick.** No job failed. `br_missing` is empty in all three campaigns.
+- **Rule 1.** `resume` (dry-run) lists only Tomato `B1_P1eq1_LN_confirm`. It is still held for the user (NODE_FAIL, flag at the top).
+- **The check.** **1990509** (grid `B1_P1eq1_LN+LR+EP` at 12,288) COMPLETED (2:07):
+  - s0 0.001 CONVERGED;
+  - s1 0.059 IMPROVING;
+  - s2 0.013 CONVERGED.
+  - The run is at the cap and the cell is DONE, so nothing follows.
+- **Queued.** Tomato base `LN+ES10+N4` s2 (1990510) and `LN+N4` s0 (1990511). Cells DONE: 7 of 12.
