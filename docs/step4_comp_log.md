@@ -484,3 +484,10 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LE` (s1, s2). It also printed "tomato/C1_comp_LN: check still queued/running" (1990188).
   - Submitted: `... br_missing submit` → **1990194**.
 - **Budget.** All my jobs: 45 (limit 110). Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 28 (05:25–05:27): Tomato `C1_comp_LN` s0 0.002 CONVERGED (corrected once, then honest)
+
+- **The check.** **1990188** (Tomato `C1_comp_LN` s0 at 1536) COMPLETED (10:51).
+  - s0: BR gap **0.002**, CONVERGED. PPO is corrected in round 0, then honest (true 46, then 431.7–431.9 against 434.1), which matches the target's end state for s0.
+  - s1 and s2 (episode 1248/1536) are still training. Both are corrected once and then nearly honest (true about 429), while their targets farm.
+- **No action.** `br_missing` has nothing new; Tomato `LE` s1/s2's check (1990194) is queued. Cells DONE: 1 of 6.
