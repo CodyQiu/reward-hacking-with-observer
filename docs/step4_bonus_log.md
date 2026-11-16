@@ -1799,3 +1799,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   `... br_missing submit` → **1989876** (grid `+LR+N4`), **1989877** (Tomato `LN+ES10`).
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 157 (00:32–00:35): grid `+LR+N4` finished at 3072 → check 1989881  (s0, s2)
+
+- **Training finished.** **1988924** (grid `B1_P1eq1_LN+LR+N4`, extended to 3072) COMPLETED 00:30 (4:37:44, exit 0). Check **1989876** (s1) is done.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+N4`, s0 and s2) → `... br_missing submit` → **1989881 **.
+- **Pending checks.** The Tomato base `LN+N4` / `LN+ES10` and tomato_large base `LN` checks are still running.
+- Cells DONE: 5 of 12.
