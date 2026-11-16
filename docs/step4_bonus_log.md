@@ -1110,3 +1110,26 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **Left as is.** The checkpoint files already in 1a9758ce stay in history (no history rewrite). The run's final files will be committed over them when it finishes.
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `B1_P1eq1_LN+LR+AN`, `+GL` and `+RS` (wave 2; every seed finished at 1536, checked with `ls`). `... br_missing submit` → **1988591** (`+AN`), **1988592** (`+GL`, s2 now finished too), **1988593** (`+RS`), and **1988594** (AS `+LR_confirm`, whose seed finished between the two commands).
 - Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 110 (17:45–17:55): grid no-reg wave 2 `+AN`, `+GL`, `+RS` at 1536 → extend 3072 (1988599–1988601); AS `+LR_confirm` s20 0.058
+
+- Woken by the check wait. **1988591**–**1988594** COMPLETED. `.venv/bin/python experiments/step4_convergence.py <run>`:
+
+  | Run (episodes) | s0 | s1 | s2 |
+  |---|---|---|---|
+  | grid `B1_P1eq1_LN+LR+AN` (1536) | **0.002** CONVERGED | **0.027** CONVERGED | **0.052** IMPROVING |
+  | grid `B1_P1eq1_LN+LR+GL` (1536) | **0.043** IMPROVING | **0.014** CONVERGED | **0.080** IMPROVING |
+  | grid `B1_P1eq1_LN+LR+RS` (1536) | **0.044** IMPROVING | **0.047** PLATEAU | **0.065** PLATEAU |
+
+  - Every best response is corrected once, then honest (true 20–22); `+RS` s2's takes 2 corrections.
+  - The unconverged policies are corrected once and then fall short of honest in some rounds:
+    - `+AN` s2 never reaches the goal (true −100).
+    - `+GL` s2 is at true about −2.
+    - `+RS` s0 reaches the goal only in round 1.
+    - `+RS` s1 and s2 are at true −100.
+  - AS `B1_P1eq1_LN+RS+LR_confirm` (12,288): s20 **0.058** (s.e. 0.021), PLATEAU; it is corrected once, and its best response takes 2 corrections. s21 (12,000) and s22 (7392) are still training. Rule 4 waits.
+- **Rule 4 (wave-2 runs, a seed IMPROVING, 1536 < grid cap 12,288): extend 2× to 3072.**
+  - Dry-run for each: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+<tag> 3072`, which printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+<tag> --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
+  - `... submit` → **1988599** (`+AN`), **1988600** (`+GL`), **1988601** (`+RS`).
+  - `+NET` and `+EP` (wave 2) and the four exploration runs are still training.
+- Queue: 29 jobs in this campaign (limit 60), 36 in all. Cells DONE: 4 of 12.

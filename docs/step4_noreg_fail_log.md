@@ -372,3 +372,14 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - s2's gap is **0.028** (s.e. 0.008), CONVERGED.
   - s2 is corrected once in round 0, then plays the new exploit (true about −100). Its best response does the same.
 - s0 and s1 are still training (about 1270 of 1536 at 16:57). The `LE+ENT3` check 1988397 is running. Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 41 (17:45–17:55): Boat Race `LE+ENT3` 0/3 at 1536 → extend 3072 (1988602)
+
+- **Check result.** **1988397** (`br_boat_race_N1_P1eq1_LE+ENT3`) is COMPLETED. It covers all three seeds, because the training job 1987352 had ended before the check started. Verdicts from `.venv/bin/python experiments/step4_convergence.py results/step4/boat_race/noreg_fail/N1_P1eq1_LE+ENT3`:
+  - s0 **0.031** (s.e. 0.012), s1 **0.059** (s.e. 0.017), s2 **0.039** (s.e. 0.015). All are labelled IMPROVING.
+  - Every policy is corrected once in round 0, then plays close to the new exploit (true −90 to −96, against −100 for its best response). Every best response is corrected once, then plays the new exploit at true −100.
+  - Entropy 3× (0.27) leaves the policy short of the exploit's full value.
+- **Rule 6b extension rule.** This is an exploration run and seeds are unconverged, so it is extended 2× (to 3072), whatever the verdict.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ENT3 3072` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1988602**.
+- Queue (this campaign): 7 jobs. Cells DONE: 0 of 2.
