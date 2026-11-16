@@ -624,5 +624,5 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
 - **Rule 4 for `C1_comp_LE` (wave 1, s2 IMPROVING): extend 2×.**
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LE 3072` printed `submit.sh 48 --env boat_race --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/boat_race/comp --resume --extend-to 3072`.
   - Submitted: `... submit` → **1990246 **.
-- **Also returned:** check **1990245** (Taxi `C1_comp_L` s2); read next tick if it has finished.
+- **Still running:** check **1990245** (Taxi `C1_comp_L` s2).
 - Cells DONE: 1 of 6.
