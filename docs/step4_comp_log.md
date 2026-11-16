@@ -378,3 +378,19 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   - The cell is already DONE by the verdict (iteration 17), so this is information only.
 - **Tomato `C1_comp_L`.** Check 1990155 is still running. It has reported s0: **0.005**, CONVERGED. s0 is corrected once, then nearly honest (true about 430 against 434), and its best response is corrected once, then honest. s2's result is pending.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 23 (04:06–04:10): Tomato `C1_comp_L` 2/3 at 1536 → extend 3072 (1990167 )
+
+- **Check result.** **1990155** (Tomato `C1_comp_L`, s0 and s2) COMPLETED 04:05. Verdicts at 1536:
+
+  | Seed | Gap | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | s0 | **0.005** | CONVERGED | corrected once, then nearly honest (true about 429 against 434) | corrected once, then honest |
+  | s1 | **0.286** | IMPROVING | honest from round 0, never corrected (iteration 15) | — |
+  | s2 | **0.009** | CONVERGED | **farms like its target**: about 2.96 corrections, rounds 1–3 at true about 425 | 2.86 corrections |
+
+  So, within one config, PPO reaches each of the three behaviours: corrected once then honest (s0), the level-farming the target predicts (s2), and never corrected (s1).
+- **Rule 4 (s1 IMPROVING, 1536 < cap 12,288): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato C1_comp_L 3072` printed `submit.sh 48 --env tomato --run-id C1_comp_L --seeds 0 1 2 --results-dir results/step4/tomato/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1990167 **.
+- Cells DONE: 1 of 6.
