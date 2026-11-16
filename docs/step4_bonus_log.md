@@ -1185,3 +1185,21 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Tomato `B1_base_LN+ES10+N4` (rule 6b): s1 finished at 1536; s0 at 936 and s2 at 264.
   - Finished state was confirmed with `ls`. Submitted: `... br_missing submit` → **1988636** (grid `+EP`) and **1988637** (Tomato base `LN+ES10+N4`).
 - Queue: 31 jobs in this campaign (limit 60), 38 in all. Cells DONE: 4 of 12.
+
+## 2026-11-15, iteration 115 (17:42–17:47): grid `+EP` s0/s2 CONVERGED, s1 finished → check 1988646 ; partial results for Tomato swap confirmation and Tomato base `LN+ES10+N4`
+
+- **Training wait.** **1987905** (grid `B1_P1eq1_LN+LR+EP`, wave 2) COMPLETED 17:42 (2:28:38, exit 0). Its check **1988636** (s0, s2) had COMPLETED at 17:40.
+- **Results so far** (`.venv/bin/python experiments/step4_convergence.py <run>`):
+  - **grid `B1_P1eq1_LN+LR+EP`** (1536):
+    - s0 **0.001** (s.e. 0.001) and s2 **0.002** (s.e. 0.001), both CONVERGED. Both are corrected once, then honest (true about 22).
+    - s1 has finished but is not yet checked. Its training curve shows true −100 in every round after its correction, so it never reaches the goal.
+  - **Tomato `B1_P2swap_LN+ES10+N4_confirm`** (1536): s20 **0.002** and s21 **0.001**, both CONVERGED.
+    - Both are corrected once, then honest (true about 420), like their best responses.
+    - The check job 1988396 (started 16:50) is still running on s22. It picked up s21 because that seed had finished by the time the job reached it.
+    - **The Tomato swap cell is DONE if s22 converges.**
+  - **Tomato `B1_base_LN+ES10+N4`** (rule 6b stage 1):
+    - s1 has finished at 1536. Its check 1988637 is running.
+    - **The training curves of s1 and s0 (960/1536) match the target exactly: they hide.** That is true 59.8 ×4, then 46.0, with every target gap 0.000.
+    - This is the first Tomato base run in which PPO does not settle into the reactive policy (corrected once, then honest). s2 (264/1536) is still reactive.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+EP`, s1) → `... br_missing submit` → **1988646 **.
+- Cells DONE: 4 of 12.
