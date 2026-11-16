@@ -1617,3 +1617,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Still running: `+GL_confirm` (from the 3/3 `+GL`), `+ENT3_confirm` → 24,576, `+EP_confirm` → 24,576, `+NET_confirm` → 12,288.
   - The stage-1 exploration runs are all finished or failed: `ES10` (2/3 at the cap), `N4` (confirmation failed) and `ES10+N4` (confirmation failed). The exception is `ENT3`, whose confirmation is still running, so stage 2 is not yet due.
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 146 (22:26–22:30): grid no-reg `+EP` 2/3 at 3072 → extend 6144 (1989727 )
+
+- **Check.** **1989710** (grid `B1_P1eq1_LN+LR+EP`, 3072) COMPLETED.
+
+  | Seed | Gap | Verdict | After the correction |
+  |---|---|---|---|
+  | s0 | **0.001** | CONVERGED | corrected once, then honest |
+  | s1 | **0.040** (s.e. 0.007) | IMPROVING (0.044 at 1536) | never reaches the goal (true −100) |
+  | s2 | **0.023** | CONVERGED | corrected once, then honest |
+
+  s1's best response is corrected once, then honest.
+- **Rule 4 (wave-2 run, s1 IMPROVING, below the cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989727 **.
+- Cells DONE: 5 of 12.
