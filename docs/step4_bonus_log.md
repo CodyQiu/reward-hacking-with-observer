@@ -1840,3 +1840,22 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **1989882**: AS `+ENT3_confirm` s21 (already failed; for the record).
   - **1989883**: Tomato base `LN+N4` s1 and s2, still queued.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 160 (00:49–00:52): grid no-reg `+AN` 2/3 at 6144, s2 PLATEAU → finished
+
+- **The check.** **1989903** (grid `B1_P1eq1_LN+LR+AN`, 6144) COMPLETED 00:49. BR gaps at 1536 / 3072 / 6144:
+
+  | Seed | 1536 | 3072 | 6144 | Verdict |
+  |---|---|---|---|---|
+  | s0 | 0.002 | 0.000 | **0.002** | CONVERGED |
+  | s1 | 0.027 | 0.003 | **0.000** | CONVERGED |
+  | s2 | 0.052 | 0.054 | **0.049** | PLATEAU |
+
+  - s2's policy is corrected once, then honest (true 22).
+  - Its best response takes a true-20 route that pays more under the refitted corrections. This is the same pattern as `+GL` s2.
+- **Rule 4: the only unconverged seed is PLATEAU, so the config is finished.**
+- **Grid no-reg wave 2 so far.**
+  - Finished without 3/3: `+NET`, `+GL`, `+AN`.
+  - Still running: `+EP` → 6144 (1989727) and `+RS` → 12,288 (1989863).
+  - In exploration, `+LR+ES10_confirm` failed. `+LR+ENT3_confirm` (1989566) is running, and `+LR+N4` → 6144 and `+LR+ES10+N4` → 3072 are still extending.
+- Cells DONE: 5 of 12.

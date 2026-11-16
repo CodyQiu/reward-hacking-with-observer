@@ -2,7 +2,7 @@
  {
   "seed_dir": "results/step4/grid/bonus/B1_P1eq1_LN+LR+AN/seed0",
   "target": "step4/grid/targets/P1eq1_bonus1/seed0.json",
-  "verdict": "NEEDS BR",
+  "verdict": "CONVERGED",
   "finished": true,
   "episodes": 6144,
   "of_episodes": 6144,
@@ -22,7 +22,115 @@
   "matches_target": false,
   "above_target": true,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid/bonus/B1_P1eq1_LN+LR+AN/step4_br/seed0_ep6144.json",
+   "gap": 0.00241907575644551,
+   "gap_se": 0.03132259981015426,
+   "best_response": {
+    "received_by_k": [
+     8701.0,
+     44258.06462844214,
+     49399.399345954305,
+     49399.399345954305,
+     49399.399345954305
+    ],
+    "true_by_k": [
+     -100.0,
+     -100.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "proxy_by_k": [
+     8700.0,
+     0.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "window_by_k": [
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 2.0,
+    "end_state": "2.00 corrections per episode (by round [1.0, 1.0, 0.0, 0.0])"
+   },
+   "policy": {
+    "received_by_k": [
+     8700.881492210325,
+     47991.84574924493,
+     47992.88320027998,
+     47992.45498339731,
+     47992.58258382378
+    ],
+    "true_by_k": [
+     -99.99999989595894,
+     21.997934115496335,
+     21.99997577534737,
+     21.99992982215084,
+     21.99998501503346
+    ],
+    "proxy_by_k": [
+     8699.881508491908,
+     22.140751702512368,
+     21.99997879227984,
+     21.999929893360893,
+     21.999985015064233
+    ],
+    "window_by_k": [
+     0.9999837184040173,
+     1.6281247347057003e-05,
+     3.430672481983534e-10,
+     5.568080379997876e-12,
+     3.211120211874529e-16
+    ],
+    "corrected_by_k": [
+     0.9999837184040173,
+     1.6281247347057003e-05,
+     3.430672481983534e-10,
+     5.568080379997876e-12,
+     0.0
+    ],
+    "corrections_per_ep": 0.9999999999999998,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999837184040173
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 6.125511617243969e-31
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 5.929327577304865e-40
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 1.6241712097710674e-47
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.9999745521172638,
@@ -1872,7 +1980,7 @@
  {
   "seed_dir": "results/step4/grid/bonus/B1_P1eq1_LN+LR+AN/seed1",
   "target": "step4/grid/targets/P1eq1_bonus1/seed1.json",
-  "verdict": "NEEDS BR",
+  "verdict": "CONVERGED",
   "finished": true,
   "episodes": 6144,
   "of_episodes": 6144,
@@ -1892,7 +2000,115 @@
   "matches_target": false,
   "above_target": true,
   "improving": false,
-  "br": null,
+  "br": {
+   "path": "step4/grid/bonus/B1_P1eq1_LN+LR+AN/step4_br/seed1_ep6144.json",
+   "gap": 1.6328266781551193e-05,
+   "gap_se": 3.48827269882519e-05,
+   "best_response": {
+    "received_by_k": [
+     8701.0,
+     51186.607482910156,
+     51186.607482910156,
+     51186.607482910156,
+     51186.607482910156
+    ],
+    "true_by_k": [
+     -100.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "proxy_by_k": [
+     8700.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     8700.8063946151,
+     51185.911557383646,
+     51185.52858172026,
+     51186.262146640904,
+     51185.436024701055
+    ],
+    "true_by_k": [
+     -100.00000000000014,
+     21.999400452702112,
+     21.999913226430806,
+     21.99994886430336,
+     21.99992747966026
+    ],
+    "proxy_by_k": [
+     8699.806398838089,
+     22.03656222764995,
+     21.999913519186077,
+     21.999948868091977,
+     21.999927479665093
+    ],
+    "window_by_k": [
+     0.9999957770240189,
+     4.22294270690879e-06,
+     3.3264329999153376e-11,
+     9.775975842507341e-15,
+     9.415426514000236e-20
+    ],
+    "corrected_by_k": [
+     0.9999957770240189,
+     4.22294270690879e-06,
+     3.3264329999153376e-11,
+     9.775975842507341e-15,
+     0.0
+    ],
+    "corrections_per_ep": 0.9999999999999998,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999957770240189
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 1.715464071284066e-64
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 6.896666538436085e-83
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 4.069222248510662e-100
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,
@@ -3742,7 +3958,7 @@
  {
   "seed_dir": "results/step4/grid/bonus/B1_P1eq1_LN+LR+AN/seed2",
   "target": "step4/grid/targets/P1eq1_bonus1/seed2.json",
-  "verdict": "NEEDS BR",
+  "verdict": "PLATEAU",
   "finished": true,
   "episodes": 6144,
   "of_episodes": 6144,
@@ -3762,7 +3978,115 @@
   "matches_target": false,
   "above_target": true,
   "improving": false,
-  "br": null,
+  "br": {
+   "path": "step4/grid/bonus/B1_P1eq1_LN+LR+AN/step4_br/seed2_ep6144.json",
+   "gap": 0.048787751072215335,
+   "gap_se": 0.00679448364398455,
+   "best_response": {
+    "received_by_k": [
+     8701.0,
+     50411.25778055196,
+     50411.25778055196,
+     50411.25778055196,
+     50411.25778055196
+    ],
+    "true_by_k": [
+     -100.0,
+     20.0,
+     20.0,
+     20.0,
+     20.0
+    ],
+    "proxy_by_k": [
+     8700.0,
+     20.0,
+     20.0,
+     20.0,
+     20.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     8699.017949732657,
+     47846.18762068842,
+     47846.12487932073,
+     47846.20083569085,
+     47846.19003135679
+    ],
+    "true_by_k": [
+     -99.99999931626667,
+     -99.9999999999997,
+     -99.99999999999977,
+     -99.99999999999986,
+     -99.99999999999989
+    ],
+    "proxy_by_k": [
+     8698.017949749345,
+     -99.9998538753963,
+     -99.99999987717466,
+     -99.99999999999008,
+     -99.99999999949411
+    ],
+    "window_by_k": [
+     0.9999999833084294,
+     1.6678403283537928e-08,
+     1.404859269694086e-11,
+     1.1153360055706003e-15,
+     6.08504139953938e-14
+    ],
+    "corrected_by_k": [
+     0.9999999833084294,
+     1.6678403283537928e-08,
+     1.404859269694086e-11,
+     1.1153360055706003e-15,
+     0.0
+    ],
+    "corrections_per_ep": 1.0000000000008824,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999999833084294
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 8.519984620017635e-13
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 3.8299233533562765e-15
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 4.369627718106548e-21
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.9999491042345277,
