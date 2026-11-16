@@ -460,3 +460,27 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - Submitted: `... br_missing submit` → **1990186** (AS `LE`), **1990187** (AS `LN`), **1990188** (Tomato `LN`).
 - **Rules 5 and 6b for AS.** Not yet. `LE` (12,288) and `LN` (s1, s2) still lack checks at their final episode counts, and `LN` can still be 3/3.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 27 (05:12–05:20): AS `C1_comp_LE` 2/3 at 12,288 (s2 IMPROVING) → extend to the cap, 24,576 (1990195); AS `LN` s2 and Tomato `LE` s0 CONVERGED; Tomato `LE` finished → check 1990194
+
+- **Checks.** **1990186** (AS `LE` at 12,288), **1990187** (AS `LN` s2) and **1990177** (Tomato `LE` s0) COMPLETED. `step4_convergence.py`:
+
+  | Run, seed | BR gap (history) | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | AS `LE` s0 | 0.146 / 0.139 / **0.028** at 3072 / 6144 / 12,288 | CONVERGED | −78, 104, 107, 107, 73 | 3 corrections, then honest |
+  | AS `LE` s1 | 0.015 / 0.013 / **0.013** | CONVERGED | −100, 253, 255, 255, 250 | 2 corrections, then honest |
+  | AS `LE` s2 | 0.143 / 0.143 / **0.042** | IMPROVING | −66, −107, 368, 375, 367 | 3 corrections, then honest |
+  | AS `LN` s2 | **0.002** at 3072 | CONVERGED | −100, 400, 400, 409, 450 | 4 corrections (farms, as the target does) |
+  | Tomato `LE` s0 | **0.009** at 1536 | CONVERGED | 46, 424, 424, 425, 425 | corrected once, then honest (434) |
+
+  - **AS `LE` s0 and s1 pass the verdict, but PPO's behaviour is not the best response's.** PPO is corrected less than once per episode (target corrections gap 3.65 / 3.36) and has true 104–255 per round, against the best response's 400–450. This is the case flagged at the top: the level makes the true-return shortfall a small fraction of V. Reported, not acted on.
+- **Rule 4.**
+  - **AS `C1_comp_LE` (wave 1; s2 IMPROVING): extend 2×**, which is the AS cap.
+    - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend absent_supervisor C1_comp_LE 24576` printed `submit.sh 48 --env absent_supervisor --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/absent_supervisor/comp --resume --extend-to 24576`.
+    - Submitted: `... submit` → **1990195**.
+  - **AS `C1_comp_LN`:** s0 0.001 and s2 0.002 CONVERGED. s1 (episode 2832/3072) is still training. If it converges, `LN` is 3/3 and goes to `confirm`.
+  - **Tomato `C1_comp_LE`:** **1989689** COMPLETED 05:0x (6:51:08); s1 and s2 finished.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LE` (s1, s2). It also printed "tomato/C1_comp_LN: check still queued/running" (1990188).
+  - Submitted: `... br_missing submit` → **1990194**.
+- **Budget.** All my jobs: 45 (limit 110). Cells DONE: 1 of 6.
