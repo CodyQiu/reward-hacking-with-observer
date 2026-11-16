@@ -702,3 +702,16 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Boat Race s20 is the seed whose target exploits the original bug in every round. It trains more slowly, with 4 PBRR rounds per episode.
 - **Next.** AS is DONE if s22 converges; Boat Race is DONE if s20 converges.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 42 (12:16–12:20): AS `LN_confirm` finished; Tomato `LE_confirm` finished; checks 1990422–1990425
+
+- **Training wait.** **1990202** (AS `C1_comp_LN_confirm`, 3072) COMPLETED 12:16 (5:21:14, exit 0). s20 and s21 were already CONVERGED.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed four runs (finished seeds checked with `ls`):
+    - AS `C1_comp_LE` (→ 24,576): s2 finished; s0 at 24,288 and s1 at 23,784;
+    - AS `C1_comp_LN_confirm`: s22;
+    - Tomato `C1_comp_LE_confirm`: all three seeds at 1536;
+    - Taxi `C1_comp_LN`: s1 at 768; s0 at 384 and s2 at 264.
+  - Submitted: `... br_missing submit` → **1990422** (AS `LE`), **1990423** (AS `LN_confirm`), **1990424** (Tomato `LE_confirm`), **1990425** (Taxi `LN`).
+  - If 1990423 converges, **AS is DONE**. If 1990424 is 3/3, **Tomato is DONE**.
+- Cells DONE: 1 of 6.
