@@ -294,3 +294,10 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
   - s2's curve already looks like its farming target: window 0.998, about 3 corrections, true about 422 in rounds 1–3.
 - **Next.** Rule 4 waits for s0 and s2.
 - Cells DONE: 0 of 6.
+
+## 2026-11-16, iteration 16 (02:20–02:22): grid `C1_comp_L_confirm` finished at 1536 → check 1990058 
+
+- **Training finished.** **1989835** (grid `C1_comp_L_confirm`, seeds 20–22) COMPLETED 02:18 (1:42:23, exit 0).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `C1_comp_L_confirm`) → `... br_missing submit` → **1990058 **.
+- **What the check decides.** If it is 3/3, the grid comp cell is DONE by the rules as written. Those rules count a policy that is not honest after its correction (true −100) as converged; see the flag at the top.
+- Cells DONE: 0 of 6.
