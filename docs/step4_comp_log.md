@@ -818,3 +818,12 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Submitted: `... submit` → **1990638 **.
 - **Taxi rule 6b** starts once every wave-1 run has a check and none is 3/3. `C1_comp_L` s1 and `C1_comp_LE` are still training.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 50 (14:46–14:48): Boat Race `C1_comp_LN_confirm` finished → check 1990660  (s20)
+
+- **Training wait.** **1990212** (Boat Race `C1_comp_LN_confirm`, 1536) COMPLETED 14:46 (5:46:09, exit 0). s21 (0.015) and s22 (0.023) are CONVERGED.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_C1_comp_LN_confirm` (s20).
+  - Submitted: `... br_missing submit` → **1990660 **.
+  - If s20 converges, **Boat Race is DONE**. s20 is the seed whose target uses the original bug in every round.
+- Cells DONE: 2 of 6.
