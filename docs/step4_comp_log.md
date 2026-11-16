@@ -685,3 +685,20 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
     - Boat Race `C1_comp_LN_confirm`: s21 and s22 finished at 1536; s20 is still training.
   - Submitted: `... br_missing submit` → **1990417** (AS), **1990418** (Boat Race). Their `ExcNodeList` is `barley-04,wheat-06`.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 41 (12:04–12:07): first confirmation verdicts. AS `LN_confirm` s20, s21 and Boat Race `LN_confirm` s21, s22 CONVERGED
+
+- **Checks.** **1990417** (AS `C1_comp_LN_confirm`) and **1990418** (Boat Race `C1_comp_LN_confirm`) COMPLETED.
+
+  | Run, seed | BR gap | Verdict | PPO | Target (same seed) |
+  |---|---|---|---|---|
+  | AS s20 | **0.001** | CONVERGED | 4 corrections, true −100, 400 ×3, 449 (farms) | the same |
+  | AS s21 | **0.003** | CONVERGED | the same | the same |
+  | AS s22 | — | training (2952/3072) | farms, about 4 corrections | the same |
+  | Boat Race s21 | **0.015** | CONVERGED | corrected once, then honest (true −94, 50 ×4) | 4 corrections, honest by the true reward |
+  | Boat Race s22 | **0.023** | CONVERGED | the same | the same |
+  | Boat Race s20 | — | training (552/1536) | the original bug every round, 4 corrections (true −94) | the same (under-corrected seed) |
+
+  - Boat Race s20 is the seed whose target exploits the original bug in every round. It trains more slowly, with 4 PBRR rounds per episode.
+- **Next.** AS is DONE if s22 converges; Boat Race is DONE if s20 converges.
+- Cells DONE: 1 of 6.
