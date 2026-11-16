@@ -330,3 +330,16 @@ Pending: tomato_large, Taxi and Boat Race comp targets (1989675–1989677), and 
 - **Information only.** The grid comp cell is DONE (iteration 17), so this run is information only.
 - **Rule 3.** `br_missing` still checks it for the record: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `C1_comp_LE_confirm`) → `... br_missing submit` → **1990076 **.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 19 (02:32–02:35): grid `C1_comp_LE_confirm` (information only): s22 is nearly honest after its correction
+
+- **Check result.** **1990076** (grid `C1_comp_LE_confirm`, seeds 20–22, 1536) COMPLETED 02:32.
+
+  | Seed | Gap | Verdict | PPO after round 0 |
+  |---|---|---|---|
+  | s20 | **0.011** | CONVERGED | true −100 |
+  | s21 | **0.011** | CONVERGED | true −100 |
+  | s22 | **0.000** | CONVERGED | **corrected once, then nearly honest** (true 19.6, 20.7, 20.0, 19.0 against 22) |
+
+  So the honest end state the target predicts is reachable by PPO under comp on the grid. It appears in 1 of the 12 grid comp seeds so far (9 tuning, 3 confirmation).
+- **Status.** The grid cell is already DONE (iteration 17); this run is information only. Cells DONE: 1 of 6.

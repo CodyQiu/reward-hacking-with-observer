@@ -1899,3 +1899,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... submit` → **1989995 **.
 - **Grid no-reg confirmations now running:** `+LR+ENT3_confirm` (1989566) and this one. The cell is DONE when either is 3/3.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 165 (02:32–02:35): Tomato base `LN+ES10+N4` s0/s1 still hide at 3072 (0.000); s2 still training
+
+- **Check result.** **1989991** (Tomato `B1_base_LN+ES10+N4`, s0 and s1 at 3072) COMPLETED. s0 **0.000** and s1 **0.000**, CONVERGED; both hide, matching the target.
+- **s2.** Still training at 2496 of 3072. Its training curve is still reactive (corrected in round 0, then honest).
+- **Next.** Rule 4 waits for s2.
+- Cells DONE: 5 of 12.
