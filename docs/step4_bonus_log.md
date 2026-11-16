@@ -1914,3 +1914,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The tomato_large no-reg check is that cell's first. Its target is 3–4 corrections, then honest.
   - The grid no-reg cell is DONE if `+LR+ENT3_confirm` is 3/3.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 167 (03:04–03:08): grid no-reg `+LR+ENT3_confirm` finished at 3072; s21 0.121, s22 0.041 (not converged) → check 1990132 (s20)
+
+- **What finished.** **1989566** (grid `+LR+ENT3_confirm`, 3072) COMPLETED 03:04 (6:35:32, exit 0). Check **1990118** COMPLETED 03:01 and covered s21 and s22.
+- **Results.**
+
+  | Seed | Gap (s.e.) | True by round | Received per round (rounds 1–4) | Best response's received |
+  |---|---|---|---|---|
+  | s21 | **0.121** (0.004) | −100, then 22 ×4 (honest) | about 42,967 | 49,160 |
+  | s22 | **0.041** (0.023) | corrected once, then honest | — | 42,922, then 51,258 (it takes 2 corrections) |
+
+  - **s21.** Its true return is honest, but under the refitted no-reg correction, which raises honest transitions by large amounts, the best response's honest route collects more of the raise.
+  - **s22.** The best response takes a second correction, worth about 4% of V.
+- **Rule 3.** `br_missing` (dry-run: s20) → `... br_missing submit` → **1990132**.
+- **What this means.** With s21 and s22 unconverged, the confirmation cannot be 3/3 at 3072. Rule 4 is applied once s20 is in.
+- Cells DONE: 5 of 12.
