@@ -2207,3 +2207,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1990351 **, for the record (AS checks take minutes).
 - Cells DONE: 7 of 12.
 - **10:33.** Check **1990351** COMPLETED (1:01). s0: 0.000, CONVERGED (corrected once, then honest). s1 (2976/3072) and s2 (2712/3072) are still training. Information only.
+
+## 2026-11-16, iteration 190 (10:49–10:52): information-only checks: grid no-reg `LN+LR+N4` (6144), AS no-reg `LN+RS+N4+ES30` (s1)
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - grid `B1_P1eq1_LN+LR+N4`: all three seeds finished at 6144 (1989885);
+    - AS `B1_P1eq1_LN+RS+N4+ES30`: s1 finished; s2 is still training.
+  - Submitted: `... br_missing submit` → **1990366** (grid), **1990367** (AS).
+  - Both cells are DONE, so these checks are for the record and their runs are not extended.
+- Cells DONE: 7 of 12.
