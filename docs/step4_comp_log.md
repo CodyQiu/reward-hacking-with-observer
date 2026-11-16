@@ -431,3 +431,11 @@ Pending: tomato_large and Boat Race comp targets (1989675, 1989677), and the com
   - The noreg_fail Taxi runs have 24-episode blocks of 9,000–37,000 s.
   - So this is the cost of PBRR rounds, not a bug. The rate is recorded under the Taxi flag at the top. Rule 1 resumes the runs at the 48 h limit (about 22:30 on 2026-11-17).
 - **Pending targets.** tomato_large (1989675, running), Boat Race (1989677) and the 4 comparison targets (1989678–1989681), all queued. Cells DONE: 1 of 6 (grid, by the verdict only).
+
+## 2026-11-16, iteration 25 (04:32–04:36): AS `C1_comp_L` finished (s0) → check 1990175; Tomato `C1_comp_LE` s0 → check 1990177
+
+- **Training wait.** **1989685** (AS `C1_comp_L`, 3072) COMPLETED 04:32 (6:20:42, exit 0). s1 and s2 were already checked at 3072 (s1 0.107 PLATEAU, hides; s2 0.001 CONVERGED, corrected once, then honest).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_C1_comp_L` (s0) and `br_tomato_C1_comp_LE` (s0 finished at 1536; s1 and s2 are still training).
+  - Submitted: `... br_missing submit` → **1990175** (AS), **1990177** (Tomato).
+- Also queued: check **1990172** (AS `C1_comp_LN` s0). Cells DONE: 1 of 6.
