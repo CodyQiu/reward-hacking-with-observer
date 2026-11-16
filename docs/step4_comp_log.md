@@ -637,3 +637,11 @@ Pending: tomato_large comp target (1989675), and the comparison targets (1989678
   - Submitted: `... br_missing submit` → **1990251 **.
   - The run is extended only after s1 finishes and is checked: extending overwrites a seed's model.
 - Cells DONE: 1 of 6.
+
+## 2026-11-16, iteration 37 (09:00–09:03): Taxi `C1_comp_L` s0 0.189 IMPROVING (hides)
+
+- **The check.** **1990251** (Taxi `C1_comp_L` s0 at 768) COMPLETED (23:25).
+  - s0: BR gap **0.189** (s.e. 0.002), IMPROVING. PPO hides: never corrected, with true about −80 per round. The best response is "corrected in round 0, then honest" (124.8).
+  - With s2 (0.146, IMPROVING), two of three seeds are checked.
+  - s1 (456/768) is still training. When it finishes and is checked, rule 4 extends the run to 1536 (Taxi cap 6144).
+- Cells DONE: 1 of 6.
