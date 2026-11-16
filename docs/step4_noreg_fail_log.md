@@ -677,3 +677,20 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
   - Submitted: `... br_missing submit` → **1990222** (`LE+ES10+N4_confirm`), **1990223** (`LE+N4_confirm`).
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 68 (06:50–07:00): Boat Race `LE+N4_confirm` failed at the 12,288 cap (s22 0.045); `LE+ES10+N4_confirm` s21 0.011 CONVERGED
+
+- **Checks.** **1990223** (`N1_P1eq1_LE+N4_confirm` at 12,288) and **1990222** (`N1_P1eq1_LE+ES10+N4_confirm` s21 at 6144) COMPLETED. `step4_convergence.py`:
+
+  | Run, seed | BR gap (s.e.) | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | `LE+N4_confirm` s20 | **0.014** (0.017) | CONVERGED | corrected in round 0, then the new exploit (true −94, −100 ×4) | the same |
+  | `LE+N4_confirm` s21 | **0.017** (0.015) | CONVERGED | the same | the same |
+  | `LE+N4_confirm` s22 | **0.045** (0.023) | IMPROVING | the same | the same |
+  | `LE+ES10+N4_confirm` s20 | **0.014** (0.019) | CONVERGED | the same | the same |
+  | `LE+ES10+N4_confirm` s21 | **0.011** (0.014) | CONVERGED | the same | the same |
+
+- **Rule 4.**
+  - **`LE+N4_confirm` is at the 12,288 cap with s22 unconverged, so the confirmation has failed.** Seed 22's gap went 0.033 (6144) → 0.045 (12,288). Its behaviour matches the best response's (corrected once, then true −100), but it falls short in value. This is the same pattern as every earlier Boat Race confirmation (flag at the top).
+  - **`LE+ES10+N4_confirm`:** s22 is at 6096/6144, and its check follows when it finishes.
+- Cells DONE: 0 of 2.

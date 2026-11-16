@@ -4,7 +4,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 6 of 12.** AS no-reg (`B1_P1eq1_LN+RS+EP`, the cell's reference config plus `ppo.n_epochs=20` (wave 2): tuning 3/3 at 6144 (0.001 / 0.000 / 0.004), confirmation 3/3 at the 24,576 cap after two extensions (0.001 / 0.001 / 0.027); corrected once, then honest (true about 449); the targets take 1–3 corrections, and the extra corrections are worth less than 3%). Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
+**Cells DONE: 7 of 12.** Grid no-reg (`B1_P1eq1_LN+LR+ENT3`, the cell's reference config plus `ppo.learning_rate=1e-4` (wave 2) and entropy 3× (rule 6b): tuning 3/3 at 3072 (0.000 / 0.000 / 0.001), confirmation 3/3 at 6144 after one extension (0.000 / 0.002 / 0.025); corrected once, then honest (true 22), like its target; iteration 181). AS no-reg (`B1_P1eq1_LN+RS+EP`, the cell's reference config plus `ppo.n_epochs=20` (wave 2): tuning 3/3 at 6144 (0.001 / 0.000 / 0.004), confirmation 3/3 at the 24,576 cap after two extensions (0.001 / 0.001 / 0.027); corrected once, then honest (true about 449); the targets take 1–3 corrections, and the extra corrections are worth less than 3%). Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
 
@@ -2092,3 +2092,20 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
   - Submitted: `... submit` → **1990224 **.
 - Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 181 (06:50–07:00): **grid no-reg DONE** (`LN+LR+ENT3_confirm` 3/3 at 6144)
+
+- **The check.** **1990221** (grid `B1_P1eq1_LN+LR+ENT3_confirm` at 6144) COMPLETED (2:43). `step4_convergence.py`:
+
+  | Seed | BR gap at 3072 → 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s20 | 0.020 → **0.000** | CONVERGED | −100, 22 ×4 | corrected once, then honest |
+  | s21 | 0.121 → **0.002** | CONVERGED | −100, 22 ×4 | corrected once, then honest |
+  | s22 | 0.041 → **0.025** (s.e. 0.023) | CONVERGED | −100, 21.9, 22, 22, 22 | 2 corrections, then honest |
+
+- **Rule 4: a `_confirm` run with all seeds CONVERGED → the cell is DONE.**
+  - The tuning run `B1_P1eq1_LN+LR+ENT3` was 3/3 at 3072 (0.000 / 0.000 / 0.001; iteration 133).
+  - The confirmation was extended once, 3072 → 6144 (iteration 171, where s22 was IMPROVING). Extended confirmations count (the user's ruling, docs/step4_optimal.md).
+  - PPO is corrected once, then honest (true 22) in all six seeds, which is the target's end state.
+- **The cell's other runs are now information only:** `+LR+EP` (→ 12,288, 1990173), `+LR+ES10+N4_confirm` (1989995), `+LR+N4` (1989885), `+LR+RS` (1989863). They keep running; I cancel nothing. Status updated at the top.
+- **Cells DONE: 7 of 12.** Open: Tomato no-reg, Tomato base, tomato_large swap, no-reg and base.
