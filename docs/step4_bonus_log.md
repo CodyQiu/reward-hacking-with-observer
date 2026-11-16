@@ -1867,3 +1867,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
   - Submitted: `... submit` → **1989933 **.
 - Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 162 (01:33–01:36): tomato_large base `L` finished at 1536 (37:50 h) → check 1989944  (s0)
+
+- **Training finished.** **1984539** (tomato_large `B1_base_L`, wave 1) COMPLETED 01:33 (1-13:49:37, exit 0), inside the 48 h limit.
+- **Earlier checks.** s1 (**0.227**) and s2 (**0.226**) were checked in iterations 154 and 147; both are reactive.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s0) → `... br_missing submit` → **1989944 **.
+- **Next.** Rule 4 is applied once s0 has a result.
+- Cells DONE: 5 of 12.
