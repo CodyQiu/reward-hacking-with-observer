@@ -1000,3 +1000,11 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN_confirm 6144` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/comp --resume --extend-to 6144`.
   - Submitted: `... submit` → **1991432 **.
 - Cells DONE: 3 of 6.
+
+## 2026-11-16, iteration 64 (21:35–21:38): tomato_large `C1_comp_LN` s2 finished at 1536 → check 1991542 
+
+- **tomato_large `C1_comp_LN`:** s2 finished at 1536 (s1 was checked at 0.343); s0 is at 1440.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_large_C1_comp_LN`.
+  - Submitted: `... br_missing submit` → **1991542 **.
+- The tomato_large comp target (1989675) is still running. Cells DONE: 3 of 6.

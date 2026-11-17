@@ -811,3 +811,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - `LE+ES10_confirm` (→ 12,288, 1990372; s22 0.044 at 6144);
   - exploration `LE+ENT3` (→ 12,288, 1990270; s0 0.024, s1 and s2 0.035 at 6144).
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 78 (21:35–21:38): Taxi `N1_P1eq1_L` s1 finished at 768 → check 1991541 
+
+- **Taxi `N1_P1eq1_L`** (resumed after the 48 h limit, 1990407): s1 finished at 768; s0 and s2 are at 480.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_L`.
+  - Submitted: `... br_missing submit` → **1991541 **. This is the first Taxi noreg_fail check.
+- Cells DONE: 0 of 2.
