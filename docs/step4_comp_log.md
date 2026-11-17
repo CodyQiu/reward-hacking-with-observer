@@ -988,3 +988,15 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Submitted: `... br_missing submit` → **1991417 **.
   - If s20 converges, **Boat Race is DONE**.
 - Cells DONE: 3 of 6.
+
+## 2026-11-16, iteration 63 (20:59–21:03): Boat Race `C1_comp_LN_confirm` s20 still 0.074 at 3072 (IMPROVING by the curve) → extend 6144 (1991432 )
+
+- **The check.** **1991417** (s20 at 3072) COMPLETED (2:56).
+  - s20: BR gap **0.074** (s.e. 0.004), the same as at 1536. The verdict is IMPROVING by the 24-episode curve.
+  - PPO still plays the target's end state: the original bug every round, 4 corrections, true −94. Its in-window exploit rate is now 0.93 (target gap 0.074).
+  - The best response under PPO's own corrections is "corrected once, then honest".
+  - s21 (0.015) and s22 (0.024) stay CONVERGED.
+- **Rule 4 (confirmation, s20 IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN_confirm 6144` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/comp --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1991432 **.
+- Cells DONE: 3 of 6.
