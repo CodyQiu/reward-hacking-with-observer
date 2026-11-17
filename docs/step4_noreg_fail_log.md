@@ -950,3 +950,20 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
   - Submitted: `... br_missing submit` → **1992429** (Taxi `LE`), **1992430** (Boat Race `LE+ENT3`).
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 91 (04:47–04:52): **Boat Race `LE+ENT3` 3/3 at the 12,288 cap → `confirm` (1992438 )**
+
+- **The check.** **1992430** (Boat Race `N1_P1eq1_LE+ENT3` s0 at 12,288) COMPLETED (1:59).
+
+  | Seed | BR gap at 1536 / 3072 / 6144 / 12,288 (s.e. at the cap) | Verdict |
+  |---|---|---|
+  | s0 | 0.031 / 0.025 / 0.024 / **0.018** (0.016) | CONVERGED |
+  | s1 | 0.059 / 0.049 / 0.035 / **0.023** (0.024) | CONVERGED |
+  | s2 | 0.039 / 0.052 / 0.035 / **0.020** (0.007) | CONVERGED |
+
+  - In every seed the best response is corrected in round 0, then the new exploit at true −100. That is the noreg_fail result.
+- **Rule 4: a tuning run with all seeds CONVERGED → `confirm`.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE+ENT3` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.27 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 episodes=12288 ...`. That is the run's overrides at its final length.
+  - Submitted: `... submit` → **1992438 **.
+  - The confirmation trains straight to the cap, so it cannot be extended. If a seed is still above 0.03 at 12,288, it fails, like the six before (flag at the top). It may need a rule-1 resume after 48 h.
+- Cells DONE: 0 of 2.
