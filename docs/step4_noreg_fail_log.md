@@ -927,3 +927,15 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... br_missing submit` → **1992281 **.
   - Rule 4 for `L` follows once s0 is checked: an extension to 1536 if any seed is IMPROVING.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 89 (04:03–04:07): Taxi `N1_P1eq1_L` 0/3 at 768 (all IMPROVING) → extend 1536 (1992348 )
+
+- **The check.** **1992281** (Taxi `N1_P1eq1_L` s0 at 768) COMPLETED (30:31).
+  - s0: **0.061**, IMPROVING.
+  - With s1 (0.042) and s2 (0.049), all three are IMPROVING.
+  - All are corrected once, then play a new exploit less efficiently than the best response (true −93 to −125 against −71 to −74).
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the Taxi cap of 6144): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi N1_P1eq1_L 1536` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_L --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1992348 **.
+- **Taxi's cell rests on `N1_P1eq1_LN_confirm`** (1992258), since `LN` was 3/3. `LE` is still training after its resume.
+- Cells DONE: 0 of 2.
