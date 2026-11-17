@@ -994,3 +994,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - PPO has the best response's end state (one correction, then a new exploit, as the target), but its post-correction route earns less than the best one.
 - **Rule 4.** No decision yet: s1 is at 576 of 768 (1990408). Once it is checked, the run is extended if any seed is IMPROVING.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 94 (09:50–09:54): Taxi `N1_P1eq1_LE` s1 finished at 768 → check 1992924
+
+- **Event.** **1990408** (Taxi `N1_P1eq1_LE`, wave 1, resumed after the 48 h limit) COMPLETED (20:34:39). s1 has finished at 768; s0 (0.048) and s2 (0.047) were checked, both IMPROVING.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_N1_P1eq1_LE … step4_br.py results/step4/taxi/noreg_fail/N1_P1eq1_LE --finished-only --draws 12`.
+  - Submitted: `... br_missing submit` → **1992924** (s1 only).
+- **Next (rule 4):** once s1 is checked, the run is extended to 1536 if any seed is IMPROVING.
+- Cells DONE: 0 of 2.
