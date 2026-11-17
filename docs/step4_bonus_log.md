@@ -2356,3 +2356,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - Cells DONE: 7 of 12.
 - **18:41.** Check **1991132** (AS `LN+RS+GL_confirm`; information only) COMPLETED (0:44): seed20  RUNNING (ep 24264);seed21  RUNNING (ep 24336);seed22 0.039 IMPROVING (ep 24576).
 - **18:49.** **1990224** (Tomato `B1_base_LN+ES10`, 6b, → 6144) COMPLETED (9:13:16, exit 0). Check **1991133** started at 18:42, before s1 and s2 finished. If it misses them, `br_missing` lists them once it ends, and I submit them then.
+- **19:00.** **1988882** (AS `B1_P1eq1_LN+RS+GL_confirm`, 24,576; information only) COMPLETED (23:14:14). Its s20/s21 check, for the record: `... br_missing submit` → **1991194 **.
