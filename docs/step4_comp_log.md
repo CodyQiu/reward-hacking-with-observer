@@ -884,3 +884,11 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
 - **Rule 4** waits for s0's check: extending now would overwrite the checked seeds' models before s0 is done.
 - **Taxi so far.** 8 of 8 checked seeds across `L`, `LN` and `LE` hide; the target is "corrected once, then honest" in 4 of 6 seeds.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 56 (16:59–17:02): Tomato `C1_comp_LN_confirm` has finished seeds → check 1990981 
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LN_confirm`.
+  - Submitted: `... br_missing submit` → **1990981 **.
+  - If the confirmation is 3/3, **Tomato is DONE**.
+- Cells DONE: 2 of 6.

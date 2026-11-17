@@ -793,3 +793,4 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`.
   - Submitted: `... br_missing submit` → **1990968**. If s22 has not finished when the check reaches it, s22 gets its own check next tick.
 - Cells DONE: 0 of 2.
+- **16:59.** **1990231** (`LE+ES10+N4_confirm`, 12,288) COMPLETED (5:55:23, exit 0); s22 has finished too. Check **1990968** is still PENDING, so it will cover all three seeds.
