@@ -10,7 +10,7 @@ This log is append-only below the three summary sections. Every driver command r
 
 ## Status
 
-**Targets submitted 2026-11-17 01:55: 11 jobs per campaign (iteration 0). None has finished yet.**
+**Targets submitted 2026-11-17 01:41: 11 jobs per campaign (iteration 0). None has finished yet.**
 - grid, AS, Tomato, Taxi and Boat Race: one job each, seeds 0–2 and 20–22.
 - tomato_large: one job per seed.
 
@@ -34,7 +34,7 @@ The criteria are A1 (no hiding), A2 (honest after the last correction) and A3 (a
 
 Verdicts: none yet. Targets go to `results/step4/<env>/targets/indiff/` and `results/step4/<env>/targets/indiff_pool/`.
 
-## 2026-11-17, iteration 0 (01:45–01:58): both campaigns' targets submitted
+## 2026-11-17, iteration 0 (01:35–01:42): both campaigns' targets submitted
 
 - **Starting point.**
   - `git pull --no-rebase --no-edit --ff`: already up to date. The campaign's code and doc arrived in 40c7f94c2 ("Step 4 indiff, third review"), merged in d44cbe30d.
