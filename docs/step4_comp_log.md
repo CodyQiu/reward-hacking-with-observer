@@ -1008,3 +1008,18 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_large_C1_comp_LN`.
   - Submitted: `... br_missing submit` → **1991542 **.
 - The tomato_large comp target (1989675) is still running. Cells DONE: 3 of 6.
+
+## 2026-11-16, iteration 65 (21:47–21:50): Taxi `C1_comp_LN` finished at 1536, 0/3 (all hide, PLATEAU)
+
+- **The check.** **1991301** (Taxi `C1_comp_LN` at 1536) COMPLETED (1:39:51):
+
+  | Seed | BR gap at 768 → 1536 | Verdict | PPO |
+  |---|---|---|---|
+  | s0 | 0.180 → **0.135** | PLATEAU | hides (true about −83) |
+  | s1 | 0.121 → **0.120** | PLATEAU | hides (true about −78) |
+  | s2 | 0.099 → **0.098** | PLATEAU | hides (true about −85) |
+
+  - The best response in every seed is "corrected in round 0, then honest" (124.7–124.8).
+- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished (0/3) and not extended.
+- **Rule 5 (wave 2)** waits until every Taxi wave-1 run is finished: `L` (s1 training; s0, s2 IMPROVING) and `LE` (→ 1536) are not. Rule 6b runs from `LN` (iteration 60).
+- Cells DONE: 3 of 6.
