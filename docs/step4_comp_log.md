@@ -1089,3 +1089,4 @@ Pending: the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and
 - Cells DONE: 3 of 6.
 - **02:09.** Tomato `C1_comp_L_confirm` (information only; Tomato is DONE): s21 finished at 3072 → `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1992157 **, for the record.
 - **02:19.** Check **1992105** (Taxi `C1_comp_LE` s0 at 1536) COMPLETED (29:18): 0.196 → **0.189**, IMPROVING, still hiding. s1 (960) and s2 (1272) are still training toward 1536.
+- **02:30.** Check **1992157** (Tomato `C1_comp_L_confirm` s21 at 3072; information only) COMPLETED (11:28): seed20  RUNNING;seed21 0.027 CONVERGED;seed22  RUNNING.
