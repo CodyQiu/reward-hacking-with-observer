@@ -4,7 +4,18 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
 
 ## Status
 
-**Cells DONE: 2 of 6.**
+**Cells DONE: 3 of 6.**
+
+**Tomato: DONE (iteration 59). PPO is corrected once, then nearly honest; the target farms the level.**
+- **The config.** `C1_comp_LN` (the frozen Step 3 config with the comp settings, `n_envs=64 ppo.batch_size=1600`), at 1536 episodes.
+  - Tuning seeds 0–2: 0.002 / 0.002 / 0.006.
+  - Confirmation seeds 20–22: 0.025 / 0.025 / 0.005.
+  - Neither run was extended.
+- **Behaviour.** In all six seeds PPO is corrected in round 0, then plays nearly honest: true about 432 against honest 434.1.
+  - The targets of 5 of these 6 seeds farm the level instead: 3–4 corrections, true about 423 in rounds 1–3.
+  - The best responses under PPO's own corrections farm in s20 and s21 (3.98 corrections, true about 426), but not much: PPO is within 2.5% of them.
+  - So PPO's true return after its correction (about 432) is higher than the target's (about 423), and PPO does not farm.
+- **Other Tomato runs.** `C1_comp_L` 3/3 (its confirmation 1990357 is information only now). `C1_comp_LE` 3/3; its confirmation's check at 3072 (1991014) is information only.
 
 **Absent Supervisor: DONE (iteration 43). PPO matches the target's end state: it farms the level.**
 - **The config.** `C1_comp_LN` (the frozen Step 3 config with the comp settings, `n_envs=64 ppo.batch_size=1600`), at 3072 episodes.
@@ -911,3 +922,22 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Submitted: `... br_missing submit` → **1991028 **.
   - When it is in, all three Taxi wave-1 runs have checks except `C1_comp_L` s1, which is still training. Rule 4 then decides `LE`.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 59 (18:17–18:22): **Tomato DONE** (`C1_comp_LN_confirm` 3/3)
+
+- **The check.** **1990981** (Tomato `C1_comp_LN_confirm` at 1536, all three seeds) COMPLETED (51:49). `step4_convergence.py`:
+
+  | Seed | BR gap (s.e.) | Verdict | PPO's true by round | Best response | Target |
+  |---|---|---|---|---|---|
+  | s20 | **0.025** (0.001) | CONVERGED | 46, about 432 ×4 (corrected once) | 3.98 corrections, true about 426 | 3.99 corrections, about 423 |
+  | s21 | **0.025** (0.001) | CONVERGED | 47, about 432 ×4 | 3.98 corrections | 3.99 corrections |
+  | s22 | **0.005** (0.000) | CONVERGED | 46, about 432 ×4 | 2.57 corrections | 3.97 corrections |
+
+- **Rule 4: a `_confirm` run with all seeds CONVERGED → the cell is DONE.**
+  - Tuning `C1_comp_LN` was 3/3 at 1536 (0.002 / 0.002 / 0.006; iteration 33). Neither run was extended.
+  - Status updated at the top.
+- **Tomato's other runs are now information only:** `C1_comp_LE_confirm` (check 1991014 running) and `C1_comp_L_confirm` (1990357).
+- **Cells DONE: 3 of 6** (grid by the verdict only, AS, Tomato). Open:
+  - tomato_large: its target is still running;
+  - Taxi: every checked seed hides;
+  - Boat Race: `LN_confirm` s20 is extending to 3072.
