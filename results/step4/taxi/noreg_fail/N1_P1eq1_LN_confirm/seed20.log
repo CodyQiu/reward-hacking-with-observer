@@ -2,3 +2,4 @@
   [taxi s20]  1,536,000  win0-3 0.24  off 0.17  corr/ep 0.98  winF 0.09  proxy0-3     22.3  rounds 276  (19121s)
   [taxi s20]  2,304,000  win0-3 0.25  off 0.12  corr/ep 1.02  winF 0.00  proxy0-3      5.1  rounds 380  (25953s)
   [taxi s20]  3,072,000  win0-3 0.25  off 0.12  corr/ep 1.02  winF 0.01  proxy0-3     13.1  rounds 479  (32384s)
+  [taxi s20]  3,840,000  win0-3 0.26  off 0.13  corr/ep 1.02  winF 0.00  proxy0-3     10.7  rounds 582  (39069s)

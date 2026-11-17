@@ -4,7 +4,10 @@ Procedure: `docs/step4_indiff.md`. Two campaigns, one log:
 - `CAMPAIGN=indiff`: the exact rule, `g.fine_only=True g.offset=True g.offset_rule=exact`;
 - `CAMPAIGN=indiff_pool`: M estimated from a pool of plays, `g.offset_rule=pool`.
 
-**Targets only.** No PPO for either campaign until the user says so (the user, 2026-11-17).
+**PPO.**
+- **`indiff_pool`: PPO started 2026-11-17 14:36, on the user's instruction ("Start PPO for the indifference pool campaign now"). It runs under the same loop rules as the comp campaign (`docs/step4_optimal.md`): best-response checks, extensions, confirmations, resumes after the 48 h limit, rule 6b. Each seed's PPO behaviour (corrections per episode, true return by round) is reported next to its exact target.**
+- **`indiff` (the exact rule): still no PPO.** The user is pushing a pricing fix first (2026-11-17).
+- Cell caps as in comp: grid, Tomato, tomato_large and Boat Race 12,288 episodes; AS 24,576; Taxi 6144.
 
 This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff` or `CAMPAIGN=indiff_pool`, and the jobs count toward the 110 total.
 
@@ -15,6 +18,8 @@ This log is append-only below the three summary sections. Every driver command r
 - tomato_large: one job per seed.
 
 The verdict per seed (A1–A3, level errors) comes from `experiments/step4_indiff_check.py`. It goes under "Exact predictions" as targets finish.
+
+**indiff_pool PPO (wave 1, submitted 14:36): 18 runs, `I2_indiff_pool_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_pool/`.** Cells DONE: 0 of 6.
 
 ## Flags for the user
 
@@ -374,3 +379,31 @@ V_hide is 928.0 in every seed.
 
 - **indiff_pool:** grid 6/6, AS 4/6, Tomato 6/6, Taxi 3/6, Boat Race 3/6, tomato_large 0/2 so far (s1, s2, s20, s21 running).
 - No PPO.
+
+## 2026-11-17, iteration 15 (14:30–14:40): indiff_pool PPO wave 1 submitted (18 runs)
+
+- **The user:** "Start PPO for the indifference pool campaign now (this overrides "no PPO" for indiff_pool) … From now on, run indiff_pool through the same loop rules as the comp campaign … The exact-rule campaign (indiff) still waits: I'm pushing a pricing fix first."
+- `git pull --no-rebase --no-edit --ff`: already up to date.
+- **Dry-run:** `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh wave1` printed 18 `submit.sh 48` lines, `--run-id I2_indiff_pool_{L,LE,LN} --seeds 0 1 2 --results-dir results/step4/<env>/indiff_pool`. Each has `g.fine_only=True g.offset=True g.offset_rule=pool` on top of the env's comp wave-1 config, the same as comp's runs apart from the level rule:
+  - lengths: grid, Tomato, tomato_large and Boat Race 1536; AS 3072; Taxi 768;
+  - `g.epochs=1000` outside the grid; `task.obs=onehot` for Taxi;
+  - `LE` = the env's entropy ×3 (AS 0.3, Tomato and tomato_large 0.1, Taxi and Boat Race 0.09, grid 0.03);
+  - `LN` = `n_envs=64 ppo.batch_size=1600`.
+- **Submitted:** `... wave1 submit`:
+
+  | Env | L | LE | LN |
+  |---|---|---|---|
+  | grid | 1993577 | 1993578 | 1993579 |
+  | AS | 1993580 | 1993581 | 1993582 |
+  | Tomato | 1993583 | 1993584 | 1993585 |
+  | tomato_large | 1993586 | 1993587 | 1993588 |
+  | Taxi | 1993589 | 1993590 | 1993591 |
+  | Boat Race | 1993592 | 1993593 | 1993594 |
+
+- **Budget:** 47 jobs in all after this (limit 110).
+- **The targets PPO is judged against** (verdict: the paired best-response check; targets for the answer):
+  - grid 6/6 PASS; Tomato 6/6 PASS;
+  - AS 4/6 (s20, s22 farm one extra correction);
+  - Boat Race 3/6;
+  - Taxi 3/6;
+  - tomato_large: s0 and s22 avoid an underpaid second correction; s1, s2, s20 and s21 still computing.
