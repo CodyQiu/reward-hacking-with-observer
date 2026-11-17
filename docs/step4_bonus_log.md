@@ -2520,3 +2520,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LN+N4` (1990670) and `LN+ES10` (1991210) are still training.
   - Stage 2 starts from the smallest-mean-gap run once those two have finished.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 213 (08:34–08:40): tomato_large swap `LE` s0 0.017 (CONVERGED); no-reg `LN+ES10` at 3072 → check 1992811
+
+- **The check.** **1992215** (tomato_large `B1_P2swap_LE` s0 at 1536) COMPLETED (1:54:01). This is the first check in the tomato_large swap cell.
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | **0.017** (s.e. 0.0005) | CONVERGED | 65.0, then 458.5–461.1 (corrected in round 0, then never again) | 65.0, then 487.6 ×4 (the same end state) |
+
+  - Both are corrected once, then take a new exploit below honest (about 523). That is the swap target's end state in this env ("corrected once, then a new exploit at true 483–501").
+  - s1 (1488) and s2 (816, after the 48 h resume) are still training in 1990405. Rule 4 waits for them.
+- **Event.** **1990237** (tomato_large `B1_P1eq1_LN+ES10`, extension to 3072) COMPLETED (20:56:59). All three seeds are at 3072; at 1536 they were 0.073 / 0.055 / 0.037 (iteration 182).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_B1_P1eq1_LN+ES10 … step4_br.py results/step4/tomato_large/bonus/B1_P1eq1_LN+ES10 --finished-only --draws 12`.
+  - Submitted: `... br_missing submit` → **1992811**.
+- Cells DONE: 7 of 12.
