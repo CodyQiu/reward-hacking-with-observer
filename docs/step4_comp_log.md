@@ -978,3 +978,4 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
   - Submitted: `... br_missing submit` → **1991301** (Taxi `LN`), **1991302** (Boat Race `LN_confirm` s21, s22).
 - Cells DONE: 3 of 6.
+- **20:06.** Check **1991302** COMPLETED (4:29): Boat Race `LN_confirm` s21 **0.015** and s22 **0.024** at 3072, both CONVERGED, both honest after the correction. s20 is at 2544/3072, still exploiting (true −94 every round); its window rate dropped from 1.0 to about 0.53 over the last block.
