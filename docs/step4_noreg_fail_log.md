@@ -861,3 +861,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_LN`, resumed after the 48 h limit (1990409): s1 finished at 768; s0 is at 648 and s2 at 672.
   - Submitted: `... br_missing submit` → **1992023 **.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 83 (01:23–01:26): Boat Race `LE+ENT3` s2 reached the 12,288 cap → check 1992052
+
+- **Boat Race `N1_P1eq1_LE+ENT3`** (6b, → 12,288, 1990270): s2 finished; s0 is at 9360 and s1 at 10,608.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3`.
+  - Submitted: `... br_missing submit` → **1992052**.
+- Cells DONE: 0 of 2.

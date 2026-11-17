@@ -2402,3 +2402,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - Cells DONE: 7 of 12.
 - **23:34.** Check **1991849** (Tomato `B1_base_LN+ES10+N4` s0, s1 at the 12,288 cap) COMPLETED (12:24): s0 **0.000** and s1 **0.000**, both CONVERGED and both still hiding, exactly as the target does. s2 is at 9000/12,288 and still reactive (true about 430 after round 0). It is the deciding seed: if it converges at the cap, the run is 3/3 and goes to `confirm`.
 - **23:55.** Check **1991848** (Tomato `B1_base_L` s0 at the 12,288 cap) COMPLETED (15:05): **0.160**, PLATEAU, reactive. s1 and s2 are about 500 episodes short of the cap.
+
+## 2026-11-17, iteration 205 (01:23–01:26): Tomato base `L` finished at the 12,288 cap → check 1992051 (s1, s2)
+
+- **Training wait.** **1989821** (Tomato `B1_base_L`, wave 1, extended to the cap) COMPLETED 01:23 (1-01:25:06, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_L`.
+  - Submitted: `... br_missing submit` → **1992051**.
+  - s0 was 0.160 at the cap, so `L` ends unconverged.
+- Cells DONE: 7 of 12.
