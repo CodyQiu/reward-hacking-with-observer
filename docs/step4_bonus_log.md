@@ -2354,3 +2354,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
     - Tomato `B1_base_LN+ES10` (6b, → 6144): s0 finished; s1 and s2 are at 6024.
   - Submitted: `... br_missing submit` → **1991132** (AS), **1991133** (Tomato).
 - Cells DONE: 7 of 12.
+- **18:41.** Check **1991132** (AS `LN+RS+GL_confirm`; information only) COMPLETED (0:44): seed20  RUNNING (ep 24264);seed21  RUNNING (ep 24336);seed22 0.039 IMPROVING (ep 24576).
