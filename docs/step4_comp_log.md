@@ -1327,3 +1327,20 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Both gaps are falling, but both seeds still hide.
 - **Rule 4.** No decision yet: s1 is still at 768 in 1992751.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 86 (11:47–11:51): Taxi `C1_comp_LE` 0/3 at 3072 (all hide, IMPROVING) → extend 6144, the cap (1993102)
+
+- **The check.** **1992988** (Taxi `C1_comp_LE` at 3072) COMPLETED (1:10:29).
+
+  | Seed | BR gap 1536 → 3072 | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.189 → **0.181** | IMPROVING | hides (true about −90 every round) | corrected in round 0, then honest (124.8 ×4) |
+  | s1 | 0.175 → **0.163** | IMPROVING | hides (−84.4 to −90.1) | the same (124.7 ×4) |
+  | s2 | 0.152 → **0.153** | IMPROVING | hides (about −90) | the same (124.7 ×4) |
+
+  - The gaps barely move between 1536 and 3072, and all three seeds still hide. The IMPROVING calls come from the 24-episode curve, which I apply as written.
+- **Rule 4 (wave-1 run, all IMPROVING, below Taxi's 6144 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LE 6144` printed `submit.sh 48 --env taxi --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1993102**. At the cap, rule 4 ends the run.
+- **Taxi comp so far:** every checked seed of `L`, `LN` and `LE` (9 of 9) hides. The 6b exploration runs (1991185–1991188, from `LN`) are training; `LN+ENT3` s1 and s2 are being checked (1993060).
+- Cells DONE: 3 of 6.
