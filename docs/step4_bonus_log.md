@@ -2413,3 +2413,25 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - Cells DONE: 7 of 12.
 - **01:45.** Check **1992051** (Tomato `B1_base_L` at the 12,288 cap) COMPLETED (19:49): s0, s1 and s2 all **0.160**, PLATEAU, all reactive; the best response hides. At the cap, `L` is finished (0/3).
 - **Tomato base summary.** `L` and `LE` both finished 0/3 at the cap, and `LN` finished 0/3 (PLATEAU). The exploration runs `LN+ENT3`, `LN+N4`, `LN+ES10` and `LN+ES10+N4` are all heading to the cap. Only `LN+ES10+N4` s0/s1 hide (0.000).
+
+## 2026-11-17, iteration 206 (02:10–02:16): tomato_large base `L` 0/3 at 3072 (all reactive, IMPROVING by the curve) → extend 6144 (1992158 )
+
+- **The check.** **1991405** (tomato_large `B1_base_L` at 3072) COMPLETED (5:11:29).
+
+  | Seed | BR gap at 1536 → 3072 | Verdict | PPO's true after round 0 |
+  |---|---|---|---|
+  | s0 | 0.227 → **0.226** | IMPROVING | about 516 (reactive: corrected once, then honest) |
+  | s1 | 0.227 → **0.225** | IMPROVING | about 517 |
+  | s2 | 0.226 → **0.225** | IMPROVING | about 515 |
+
+  - The best response hides (84.2 ×4, then 65), as the target does.
+  - The BR gap is flat. The IMPROVING calls come from the script's 24-episode curve, which I apply as written.
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_L 6144` printed `submit.sh 48 --env tomato_large --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1992158 **.
+  - The 1536 → 3072 leg took 15:25 h, so this one should take about 31 h.
+- **tomato_large base.**
+  - `LN` finished 0/3 (0.223).
+  - `LE`: s0 is 0.231; s1 and s2 are still in wave 1 after a resume.
+  - Rule 6b runs from `LN` (iteration 195).
+- Cells DONE: 7 of 12.
