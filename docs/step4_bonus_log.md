@@ -2344,3 +2344,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... submit` → **1990670 **. The last leg took 10:29 h, so this one should take about 21 h.
 - **Tomato base runs now at or headed to the 12,288 cap:** `L`, `LE`, `LN+ENT3`, `LN+ES10+N4` and `LN+N4`. Only `LN+ES10+N4` s0/s1 hide; every other seed is reactive at about 0.16.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 200 (18:31–18:34): checks: Tomato base `LN+ES10` s0 at 6144; AS no-reg `LN+RS+GL_confirm` s22 (information only)
+
+- **Tick.** No job failed. `resume` (dry-run) still lists only Tomato no-reg `B1_P1eq1_LN_confirm`, held for the user (NODE_FAIL, flag at the top).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - AS `B1_P1eq1_LN+RS+GL_confirm`: s22 finished at 24,576. The cell is DONE, so this is information only.
+    - Tomato `B1_base_LN+ES10` (6b, → 6144): s0 finished; s1 and s2 are at 6024.
+  - Submitted: `... br_missing submit` → **1991132** (AS), **1991133** (Tomato).
+- Cells DONE: 7 of 12.
