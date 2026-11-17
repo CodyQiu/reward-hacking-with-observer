@@ -1303,3 +1303,14 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
     - `run_cmd.sh 6 4 br_taxi_C1_comp_LE … step4_br.py results/step4/taxi/comp/C1_comp_LE --finished-only --draws 12`.
   - Submitted: `... br_missing submit` → **1992987** (`L`, s0 at 1536) and **1992988** (`LE`, all three at 3072).
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 84 (11:22–11:28): Taxi `C1_comp_LN+ENT3` s1, s2 finished at 768 → check 1993060; s0 slow (48 of 768)
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_C1_comp_LN+ENT3 … step4_br.py results/step4/taxi/comp/C1_comp_LN+ENT3 --finished-only --draws 12`.
+  - Submitted: `... br_missing submit` → **1993060** (s1 and s2, both at 768).
+- **s0 of the same run (1991185) is at 48 of 768.**
+  - It is not stuck. Its log reads `768,000 … corr/ep 1.20 … rounds 132 (11402s)`, then `1,536,000 … win0-3 0.88 … corr/ep 3.52 … rounds 394 (27785s)`.
+  - It exploits through most audit windows, so it triggers about 3.5 PBRR rounds per episode (about 60 s each in Taxi), against near zero in the hiding seeds. Its last 24 episodes took 4.5 h.
+  - At this rate the job reaches its 48 h limit with s0 at roughly 250–300 episodes. Rule 1 (resume) then applies.
+- Cells DONE: 3 of 6.

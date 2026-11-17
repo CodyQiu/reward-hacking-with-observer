@@ -3,7 +3,7 @@
   "seed_dir": "results/step4/taxi/noreg_fail/N1_P1eq1_LE/seed0",
   "target": "step4/taxi/targets/P1eq1/seed0.json",
   "verdict": "IMPROVING",
-  "finished": true,
+  "finished": false,
   "episodes": 768,
   "of_episodes": 768,
   "last_episodes": 77,
@@ -413,7 +413,7 @@
   "seed_dir": "results/step4/taxi/noreg_fail/N1_P1eq1_LE/seed1",
   "target": "step4/taxi/targets/P1eq1/seed1.json",
   "verdict": "IMPROVING",
-  "finished": true,
+  "finished": false,
   "episodes": 768,
   "of_episodes": 768,
   "last_episodes": 77,
@@ -822,16 +822,16 @@
  {
   "seed_dir": "results/step4/taxi/noreg_fail/N1_P1eq1_LE/seed2",
   "target": "step4/taxi/targets/P1eq1/seed2.json",
-  "verdict": "IMPROVING",
-  "finished": true,
-  "episodes": 768,
-  "of_episodes": 768,
-  "last_episodes": 77,
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 792,
+  "of_episodes": 1536,
+  "last_episodes": 79,
   "gaps": {
-   "value": 0.14982295036315918,
-   "window": 0.01461038961038963,
-   "true": 0.13673396212998337,
-   "corr": 0.0
+   "value": 0.2030470371246338,
+   "window": 0.01661392405063289,
+   "true": 0.1710842374247766,
+   "corr": 0.0015822784810126667
   },
   "pass": {
    "value": false,
@@ -842,138 +842,30 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": {
-   "path": "step4/taxi/noreg_fail/N1_P1eq1_LE/step4_br/seed2_ep768.json",
-   "gap": 0.04694352161299842,
-   "gap_se": 0.00241576707983501,
-   "best_response": {
-    "received_by_k": [
-     379.6866666666664,
-     2990.4216193448333,
-     2990.4216193448356,
-     2990.421619344832,
-     2990.421619344832
-    ],
-    "true_by_k": [
-     -88.17999999999999,
-     -76.33666666666667,
-     -76.33666666666669,
-     -76.33666666666667,
-     -76.33666666666667
-    ],
-    "proxy_by_k": [
-     379.6866666666664,
-     -76.33666666666667,
-     -76.33666666666669,
-     -76.33666666666667,
-     -76.33666666666667
-    ],
-    "window_by_k": [
-     1.0,
-     0.0,
-     0.0,
-     0.0,
-     0.0
-    ],
-    "corrected_by_k": [
-     1.0,
-     0.0,
-     0.0,
-     0.0,
-     0.0
-    ],
-    "corrections_per_ep": 1.0,
-    "end_state": "corrected in round 0, then never again"
-   },
-   "policy": {
-    "received_by_k": [
-     310.55474020065543,
-     2779.292996336807,
-     2863.6877273639684,
-     2900.5205150275865,
-     2907.9696481953833
-    ],
-    "true_by_k": [
-     -100.62673708438503,
-     -103.85301753736266,
-     -94.54187210577302,
-     -91.018525312544,
-     -90.38697870965034
-    ],
-    "proxy_by_k": [
-     310.55474020065554,
-     -100.51504386375467,
-     -92.82445327345003,
-     -90.81348423561252,
-     -90.37077589140887
-    ],
-    "window_by_k": [
-     0.9720750599857435,
-     0.020524070113551895,
-     0.006948613379452035,
-     0.0004621524056168174,
-     1.8725462514820813e-05
-    ],
-    "corrected_by_k": [
-     0.9720750599857435,
-     0.020524070113551895,
-     0.006948613379452035,
-     0.0004621524056168174,
-     0.0
-    ],
-    "corrections_per_ep": 1.0000098958843642,
-    "end_state": "corrected in round 0, then never again"
-   },
-   "behaviour": [
-    {
-     "correction": 1,
-     "from": "policy",
-     "round": 0,
-     "p_caught": 0.9720750599857435
-    },
-    {
-     "correction": 2,
-     "from": "best caught policy (counterfactual)",
-     "round": 1,
-     "p_caught_policy": 1.5966908854103006e-05
-    },
-    {
-     "correction": 3,
-     "from": "best caught policy (counterfactual)",
-     "round": 2,
-     "p_caught_policy": 1.7906200568088764e-08
-    },
-    {
-     "correction": 4,
-     "from": "best caught policy (counterfactual)",
-     "round": 3,
-     "p_caught_policy": 4.904816956975263e-11
-    }
-   ]
-  },
+  "br": null,
   "ppo": {
    "window_by_k": [
-    0.9853896103896104,
-    0.010551948051948052,
-    0.004058441558441558,
-    0.0,
-    0.0
+    0.9833860759493671,
+    0.007911392405063292,
+    0.007120253164556962,
+    0.0031645569620253164,
+    0.0007911392405063291
    ],
    "true_by_k": [
-    -108.81818389892578,
-    -106.68424987792969,
-    -96.217529296875,
-    -91.28165435791016,
-    -91.17045593261719
+    -111.41139221191406,
+    -114.0,
+    -100.5917739868164,
+    -92.79825592041016,
+    -91.5292739868164
    ],
    "received_by_k": [
-    274.30682373046875,
-    2583.804443359375,
-    2629.062255859375,
-    2658.183837890625,
-    2663.9189453125
+    267.0379638671875,
+    2406.14013671875,
+    2453.635009765625,
+    2496.110595703125,
+    2509.653564453125
    ],
-   "corrections_per_ep": 1.0
+   "corrections_per_ep": 1.0015822784810127
   },
   "target_summary": {
    "V0": 12714.147479023935,
@@ -1226,6 +1118,13 @@
     "window": 0.02083333333333337,
     "true": 0.10829565690759221,
     "corr": 0.0
+   },
+   {
+    "episode": 792,
+    "value": 0.3444644808769226,
+    "window": 0.0234375,
+    "true": 0.2598808221115209,
+    "corr": 0.005208333333333259
    }
   ]
  }
