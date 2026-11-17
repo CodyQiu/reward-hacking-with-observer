@@ -2366,6 +2366,6 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
   - Submitted: `... submit` → **1991210 **. The last leg took 9:13 h, so this one should take about 18 h.
-- **The record-only check.** **1991194** (AS `LN+RS+GL_confirm` at 24,576) COMPLETED (2:31): . It is at the cap, and the cell is DONE.
+- **The record-only check.** **1991194** (AS `LN+RS+GL_confirm` at 24,576) COMPLETED (2:31): s20 0.022 CONVERGED; s21 0.000 CONVERGED; s22 0.039 IMPROVING. It is at the cap, and the cell is DONE.
 - **Tomato base.** All six Tomato base runs are now at or headed to the 12,288 cap.
 - Cells DONE: 7 of 12.
