@@ -4,9 +4,17 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Status
 
-**Cells DONE: 5 of 12.** Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
+**Cells DONE: 7 of 12.** Grid no-reg (`B1_P1eq1_LN+LR+ENT3`, the cell's reference config plus `ppo.learning_rate=1e-4` (wave 2) and entropy 3× (rule 6b): tuning 3/3 at 3072 (0.000 / 0.000 / 0.001), confirmation 3/3 at 6144 after one extension (0.000 / 0.002 / 0.025); corrected once, then honest (true 22), like its target; iteration 181). AS no-reg (`B1_P1eq1_LN+RS+EP`, the cell's reference config plus `ppo.n_epochs=20` (wave 2): tuning 3/3 at 6144 (0.001 / 0.000 / 0.004), confirmation 3/3 at the 24,576 cap after two extensions (0.001 / 0.001 / 0.027); corrected once, then honest (true about 449); the targets take 1–3 corrections, and the extra corrections are worth less than 3%). Tomato swap (`B1_P2swap_LN+ES10+N4`, the cell's reference config with the bonus: tuning 3/3 at 1536 (0.002 / 0.001 / 0.002), confirmation 3/3 at 1536 (0.002 / 0.001 / 0.002), no extension; corrected once, then honest (true about 420), like its target). Grid swap (`B1_P2swap_LE+NET+ENT3`: tuning 3/3 at 1536, confirmation 3/3 at 3072 after one extension; corrected once, then honest, like its target). AS swap (`B1_P2swap_LN`: tuning 3/3, confirmation 3/3; corrected once, then never again, like its target; after the correction the route is a near-tie between honest and −50, see flag). Grid base (`B1_base_LE`: tuning 3/3, confirmation 3/3; hides, like its target). AS base (`B1_base_L`: tuning 3/3, confirmation 3/3; hides, like its target; 4 of its 6 seeds pass at 0.027–0.028, just under 0.03, see iteration 19).
 
 ## Flags for the user
+
+- **NEW (2026-11-16, iteration 193): Tomato no-reg `B1_P1eq1_LN_confirm` (job 1988344) was killed by a node failure. I have not resubmitted it, and am waiting for you.**
+  - **What happened.** Slurm state `NODE_FAIL` at 11:56:42, after 18:59:31 of its 48 h, exit 1:0.
+  - **The node.** `wheat-06`; `sinfo` shows it `down*` with reason "Not responding". None of my other jobs were on it.
+  - **The run's state.** Its last checkpoints are intact (11:34–11:36): s20 4176, s21 3960 and s22 3720 of 6144 episodes.
+  - **What I'm doing.** `resume` (dry-run) lists it, but your rule says a job killed by a cluster incident is not resubmitted without you, so it waits. To continue it: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume submit`, which also resumes any run that later hits the 48 h limit.
+  - **The cell.** This is Tomato no-reg's only confirmation, so the cell can't become DONE until it continues.
+  - **wheat-06 is excluded** from every new submit (`EXCLUDE=barley-04,wheat-06`) while it is down.
 
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04`, following your standing instruction from the optimal campaign. On 2026-11-14 at 11:42, `sinfo -n barley-04` shows it `allocated` with no reason set, so it may be healthy again. Excluding it costs nothing; say if I should drop it.
 
@@ -24,6 +32,8 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
   - **Scope.** A scan of every commit since 2026-11-14 11:00 finds no other `logs.npz` committed with `progress.json` short of its target.
   - **The fix.** `step4_commit.sh`, the `step4_optimal.sh` resume test, `step4_br.py` (`finished()`, used by `--missing` / `br_missing` and `--finished-only`) and `step4_convergence.py` now read the directory listing. The new test is `test_finished_seed_is_read_from_the_directory_listing`; all 21 tests in `tests/test_step4.py` pass.
   - **Optimal campaign.** It uses the same scripts. It is paused, and its runs are not affected.
+
+- **Rule 6b for tomato_large no-reg submits 2 of the 4 stage-1 runs (iteration 183).** The base `B1_P1eq1_LN+ES10` already has the ES10 schedule (`anneal.ent_start=10 anneal.ent_episodes=768`). So `+ES10` would rerun the base config on the same seeds, and `+ES10+N4` would duplicate `+N4`. As with `RS` above, I submitted only the distinct ones, `+ENT3` (1990239) and `+N4` (1990240). Say if you want the duplicates run anyway, or a different ES factor here (for example a longer or stronger schedule).
 
 - **Wave 2 for AS no-reg skips the `RS` factor (iteration 32).** The base `B1_P1eq1_LN+RS` already has `reward_scale=0.01625`, which is exactly what `RS` sets (0.25 × AS's Phase A reward_scale), so `LN+RS+RS` would rerun the base config on the same seeds. I submitted the other five factors (LR, GL, NET, EP, AN). If you want a different reading of `RS` here (e.g. a further 0.25×, 0.0040625), say so and I'll add it.
 
@@ -1555,3 +1565,840 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   Submitted: `... br_missing submit` → **1989628** (`base_L`) and **1989629** (`base_LN+ES10`).
 - Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 142 (21:58–22:15): the third campaign (comp) started; grid `+LR+ES10+N4` finished → check 1989701; Tomato base `L` s1 0.160 PLATEAU
+
+- **Repo and prompt changes.**
+  - The user's commit b145f873e (pulled 21:57) added the compensated-correction campaign. The user then sent the three-campaign loop prompt. Comp's iteration 0 (28 jobs) is in `docs/step4_comp_log.md`.
+  - Nothing in this campaign changes. The new code paths are off by default, and `tests/test_step4.py` passes 28/28 on the merged code.
+  - Budgets: bonus ≤ 60, noreg_fail ≤ 20, comp ≤ 30, all ≤ 110. With comp, all my jobs come to about 61.
+- **Finished runs.** **1987910** (grid `B1_P1eq1_LN+LR+ES10+N4`, rule 6b stage 1) COMPLETED 21:57 (6:27:38, exit 0).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+ES10+N4`) → `... br_missing submit` → **1989701**.
+- **Check result.** **1989628** (Tomato `B1_base_L`, s1 at 6144): **0.160**, PLATEAU, reactive. The best response hides. s0 is at 0.160 PLATEAU; s2 is at 5760/6144, so Rule 4 waits for s2.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 143 (22:13–22:16): AS `+ES10+N4_confirm` finished at 12,288; checks 1989710–1989712
+
+- **Trigger.** The training wait reported **1987881** (AS `B1_P1eq1_LN+RS+ES10+N4_confirm`, extended to 12,288) COMPLETED 22:13 (7:11:38, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing, in all three campaigns.
+- **Rule 3.** The dry-run of `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed:
+  - grid `+EP`: s2 finished at 3072; s0 and s1 are at 3048.
+  - AS `+ES10+N4_confirm`: all three seeds finished at 12,288.
+  - tomato_large `B1_base_LN`: s0 finished at 1536; s1 and s2 are at 1488.
+
+  Submitted with `... br_missing submit` → **1989710** (grid `+EP`), **1989711** (AS `+ES10+N4_confirm`), **1989712** (tomato_large `base_LN`).
+- **Queue.** Checks are queueing behind fair-share priority.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 144 (22:18–22:22): grid no-reg `+LR+ES10+N4` 2/3 at 1536 → extend 3072 (1989713 ); Tomato base `LN+ES10` s0/s2 0.159 (partial)
+
+- **Checks back.** **1989701** (grid `+LR+ES10+N4`) and **1989629** (Tomato `B1_base_LN+ES10`, s0 and s2) COMPLETED.
+- **Grid `B1_P1eq1_LN+LR+ES10+N4` (1536).**
+
+  | Seed | Gap (s.e.) | Verdict |
+  |---|---|---|
+  | s0 | **0.001** | CONVERGED |
+  | s1 | **0.016** | CONVERGED |
+  | s2 | **0.035** (0.032) | IMPROVING |
+
+  s2 is corrected once, then honest. Its best response takes 2 corrections.
+- **Tomato `B1_base_LN+ES10` (1536).**
+  - s0 **0.160** and s2 **0.159**, both reactive (true 432 after the correction). Their best responses hide.
+  - s1 is still training. It was at 504 when the check was submitted.
+  - So ES10 alone has not repeated what ES10+N4 did, where 2 of 3 seeds hid.
+- **Rule 6b extension rule.** The grid exploration run has s2 unconverged, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+ES10+N4 3072` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ES10+N4 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1989713 **.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 145 (22:21–22:26): AS no-reg `+ES10+N4_confirm` 1/3 at 12,288, unconverged seeds PLATEAU → finished; this confirmation failed
+
+- **Check result.** **1989711** (`br_absent_supervisor_B1_P1eq1_LN+RS+ES10+N4_confirm`, 12,288) COMPLETED 22:20. BR gap at 3072 / 6144 / 12,288:
+
+  | Seed | 3072 | 6144 | 12,288 | Verdict at 12,288 |
+  |---|---|---|---|---|
+  | s20 | 0.070 | 0.031 | **0.053** | PLATEAU |
+  | s21 | 0.000 | 0.012 | **0.018** | CONVERGED |
+  | s22 | 0.041 | 0.049 | **0.031** | PLATEAU |
+
+  Every policy is corrected once, then honest. Every best response takes 2 corrections.
+- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished; this confirmation failed (1/3).
+- **AS no-reg confirmations so far.**
+  - Failed: `+AN`, `+N4`, `+LR`, `+ES10+N4`.
+  - Still running: `+GL_confirm` (from the 3/3 `+GL`), `+ENT3_confirm` → 24,576, `+EP_confirm` → 24,576, `+NET_confirm` → 12,288.
+  - The stage-1 exploration runs are all finished or failed: `ES10` (2/3 at the cap), `N4` (confirmation failed) and `ES10+N4` (confirmation failed). The exception is `ENT3`, whose confirmation is still running, so stage 2 is not yet due.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 146 (22:26–22:30): grid no-reg `+EP` 2/3 at 3072 → extend 6144 (1989727 )
+
+- **Check.** **1989710** (grid `B1_P1eq1_LN+LR+EP`, 3072) COMPLETED.
+
+  | Seed | Gap | Verdict | After the correction |
+  |---|---|---|---|
+  | s0 | **0.001** | CONVERGED | corrected once, then honest |
+  | s1 | **0.040** (s.e. 0.007) | IMPROVING (0.044 at 1536) | never reaches the goal (true −100) |
+  | s2 | **0.023** | CONVERGED | corrected once, then honest |
+
+  s1's best response is corrected once, then honest.
+- **Rule 4 (wave-2 run, s1 IMPROVING, below the cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989727 **.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 147 (22:29–22:34): grid `+LR+ES10_confirm` at 3072 → check 1989735; tomato_large base `L` s2 0.226 (reactive); checks 1989736 1989737
+
+- **The tomato_large check.** **1989201** (tomato_large `B1_base_L`, s2 at 1536) COMPLETED 22:29 (2:18:31). This is the first tomato_large check: s2 **0.226** (s.e. 0.000), reactive (corrected once, then honest, true about 516.5). The best response hides (true 84.2 ×4, then 65.0), as the target does.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `+LR+ES10_confirm`: all three seeds at 3072 (the extension finished).
+  - Tomato `B1_base_L`: s2 finished at 6144.
+  - tomato_large `B1_base_L`: s1 finished at 1536; s0 is at 960.
+
+  `... br_missing submit` → **1989735** (grid confirmation), **1989736** (Tomato base `L`), **1989737** (tomato_large base `L`).
+- **Grid no-reg.** The cell is DONE if 1989735 is 3/3.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 148 (22:51–23:12): grid no-reg `+LR+ES10_confirm` 2/3 at 3072, s21 PLATEAU → failed; Tomato base `LN+ES10+N4` finished → check 1989796
+
+- **Wake-up.** Scheduled. `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Finished training jobs** (all exit 0):
+  - **1989595**, grid `+LR+ES10_confirm` → 3072, 22:30;
+  - **1987620**, Tomato `B1_base_L` → 6144, 22:30;
+  - **1984541**, tomato_large `B1_base_LN` → 1536, 22:33, after 34:50 h;
+  - **1987176**, Tomato `B1_base_LN+ES10+N4`, 22:50.
+- **Check 1989735: grid `B1_P1eq1_LN+LR+ES10_confirm` at 3072.**
+
+  | Seed | BR gap, 1536 → 3072 | Verdict |
+  |---|---|---|
+  | s20 | 0.003 → **0.000** | CONVERGED |
+  | s21 | 0.129 → **0.119** (s.e. 0.003) | PLATEAU |
+  | s22 | 0.034 → **0.025** | CONVERGED |
+
+  - s21's policy is corrected once, then needs an extra dishonest round (iteration 136); its best response is corrected once, then honest.
+- **Rule 4: the only unconverged seed is PLATEAU, so the run is finished; this confirmation failed (2/3).** Grid no-reg's other confirmation, `+LR+ENT3_confirm` (1989566), is still running.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: Tomato `B1_base_LN+ES10+N4`, s2) → `... br_missing submit` → **1989796**.
+  - s0 and s1 hide at 0.000. If s2 converges, the run goes to confirmation.
+  - The checks of Tomato base `L` s2 (1989736) and tomato_large base `LN` / `L` (1989712, 1989737) are running or queued.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 149 (23:22–23:28): Tomato base `LN+ES10+N4` 2/3 (s0, s1 hide) → extend 3072 (1989820); `L` 0/3 at 6144 → extend to the cap 12,288 (1989821)
+
+- **Checks returned.** **1989796** (Tomato `B1_base_LN+ES10+N4`, s2) and **1989736** (Tomato `B1_base_L`, s2) COMPLETED. `.venv/bin/python experiments/step4_convergence.py <run>`:
+  - **`B1_base_LN+ES10+N4`** (rule 6b stage 1, 1536):
+    - s0 **0.000** CONVERGED, hides.
+    - s1 **0.000** CONVERGED, hides.
+    - s2 **0.158** PLATEAU, reactive (true 433 after the correction). Its best response hides.
+  - **`B1_base_L`** (6144):
+    - s0 **0.160** PLATEAU.
+    - s1 **0.160** PLATEAU.
+    - s2 **0.161**, labelled IMPROVING.
+    - All three are reactive; every best response hides.
+- **Rule 6b extension rule, `LN+ES10+N4`.** This is an exploration run and s2 is unconverged, so it is extended 2× to 3072.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
+  - `... submit` → **1989820**.
+- **Rule 4, `B1_base_L`.** s2 is labelled IMPROVING and 6144 is below the cap, so it is extended 2× to the cap.
+  - Dry-run: `... extend tomato B1_base_L 12288` printed `submit.sh 48 --env tomato --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - `... submit` → **1989821**.
+  - At the cap the run is finished, whatever the verdict.
+- **Tomato base status.**
+  - `LN` is finished at 0/3.
+  - `L` and `LE` are extending to the cap.
+  - Stage 1:
+    - `LN+ENT3` is extending to 6144.
+    - `LN+N4` is extending to 3072.
+    - `LN+ES10` has s1 still training.
+    - `LN+ES10+N4` is 2/3 and extending.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 150 (23:49–23:53): AS no-reg `+ENT3_confirm` s20/s22 at the 24,576 cap → check 1989840
+
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed AS `+ENT3_confirm`.
+  - s20 and s22 have finished at 24,576; s21 is at 23,952.
+  - At 12,288 the gaps were s20 0.0301 (IMPROVING), s21 0.000 and s22 0.023.
+
+  `... br_missing submit` → **1989840**.
+- **What this run decides.** It is at the cap, so it is finished after this check. If s20 is now ≤ 0.03 and s21 holds, the AS no-reg cell is DONE.
+- Cells DONE: 5 of 12.
+
+## 2026-11-15, iteration 151 (23:53–23:57): AS no-reg `+ENT3_confirm` not 3/3 at the 24,576 cap → finished; this confirmation failed
+
+- **Check result.** **1989840** (`br_absent_supervisor_B1_P1eq1_LN+RS+ENT3_confirm`, s20 and s22 at 24,576) COMPLETED 23:53. BR gap over the extensions:
+
+  | Seed | 3072 | 6144 | 12,288 | 24,576 |
+  |---|---|---|---|---|
+  | s20 | 0.049 | 0.034 | 0.030 | **0.037** (s.e. 0.035) |
+  | s21 | 0.000 | 0.002 | 0.000 | still training (24,000) |
+  | s22 | 0.052 | 0.039 | 0.023 | **0.078** (s.e. 0.041) |
+
+  - Both checked policies are corrected once, then honest (true about 449.8).
+  - Both best responses take 2 corrections (round 1 at true 400). s22's best response now pays more for the second correction than at 12,288.
+- **Rule 4: at the cap the run is finished, and s20 and s22 are unconverged, so this confirmation failed.** s21 cannot change that.
+- **AS no-reg confirmations:**
+  - failed: `+AN`, `+N4`, `+LR`, `+ES10+N4`, `+ENT3`;
+  - still running: `+GL_confirm` (1988882, 24,576 episodes), `+EP_confirm` → 24,576 (1988581), `+NET_confirm` → 12,288 (1988582).
+- **Rule 6b stage 1 for AS no-reg is now complete without the cell DONE:**
+  - `ENT3` and `ES10+N4`: confirmations failed;
+  - `N4`: confirmation failed;
+  - `ES10`: 2/3 at the cap.
+
+  So stage 2 is due: take the stage-1 run with the smallest mean BR gap and run `explore ... stage2`.
+  - Mean BR gap at each run's last tuning check (seeds 0–2): `+N4` 0.000 / 0.000 / 0.000 → **0.0000**; `+ENT3` 0.0002; `+ES10+N4` 0.005; `+ES10` 0.016 (at 24,576).
+  - Base: **`B1_P1eq1_LN+RS+N4`**, the smallest. I corrected this line before submitting; my first draft named `+ENT3` from memory, and the computed means put `+N4` first.
+- Cells DONE: 5 of 12.
+- **Rule 6b stage 2 for AS no-reg.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore absent_supervisor P1eq1 B1_P1eq1_LN+RS+N4 stage2`. Both runs are the base's overrides at 3072 episodes:
+    - `+ENT10`: `ppo.ent_coef=1`, i.e. 10× the base's 0.1.
+    - `+ES30`: `anneal.ent_start=30 anneal.ent_episodes=1536`.
+  - `ES30+N4` is not submitted: the base already has N4 (`n_envs=256 ppo.batch_size=6400`), so it would be `ES30` again.
+  - Submitted: `... stage2 submit` → **1989843 1989844 **.
+  - The extension rule applies to both.
+
+## 2026-11-16, iteration 152 (00:00–00:03): grid no-reg `+GL` reached 6144 → check 1989849 1989850 
+
+- **Training finished.** **1988904** (grid `B1_P1eq1_LN+LR+GL`, extension to 6144) COMPLETED 23:58 (4:05:30, exit 0). `git pull --no-rebase --no-edit --ff`: already up to date. `... resume` (dry-run): nothing.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+GL`) → `... br_missing submit` → **1989849** (grid `+GL`) and **1989850** (grid `+RS`, whose seed finished at 6144 between the two commands).
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 153 (00:06–00:10): grid no-reg `+GL` 2/3 at 6144, s2 PLATEAU → finished; `+RS` 1/3 → extend to the cap 12,288 (1989863 )
+
+- **Checks back.** **1989849** (grid `+GL`) and **1989850** (grid `+RS`) COMPLETED. Verdicts at 6144:
+
+  | Run | Seed | BR gap | Verdict | Policy after its correction |
+  |---|---|---|---|---|
+  | `+GL` | s0 | **0.000** | CONVERGED | honest |
+  | | s1 | **0.001** | CONVERGED | honest |
+  | | s2 | **0.051** | PLATEAU | honest at true 22; its best response takes a true-20 route that pays more under the refitted correction (iteration 126) |
+  | `+RS` | s0 | **0.000** | CONVERGED | honest |
+  | | s1 | **0.043** | PLATEAU | never reaches the goal |
+  | | s2 | **0.059** | IMPROVING | never reaches the goal; its best response takes 2 corrections |
+
+- **Rule 4, `+GL`.** The only unconverged seed is PLATEAU, so the config is finished and not extended.
+- **Rule 4, `+RS`.** s2 is IMPROVING, so the run is extended 2× to the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+RS 12288` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+RS --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1989863 **.
+- **Grid no-reg runs still open:**
+  - `+LR+ENT3_confirm` (1989566);
+  - `+AN` → 6144;
+  - `+EP` → 6144;
+  - `+RS` → 12,288;
+  - `+LR+N4` → 3072;
+  - `+LR+ES10+N4` → 3072.
+
+  Finished without DONE: `LN+LR`, `+NET` and `+GL`; `+LR+ES10`'s confirmation failed.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 154 (00:13–00:15): tomato_large base `L` s1 0.227 (reactive; partial)
+
+- **Check result.** **1989737** (tomato_large `B1_base_L`, s1 at 1536) COMPLETED 00:12 (1:19:36): s1 **0.227** (s.e. 0.000).
+  - The policy is reactive: corrected once, then honest, at true about 516.
+  - The best response hides (true 84.2 ×4, then 65.0), as the target does.
+- **Run status.** s2 was 0.226 (iteration 147); s0 is still training. Rule 4 waits for s0.
+- **Next check.** The tomato_large base `LN` check (1989712, s0) is still running.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 155 (00:16–00:19): Tomato base `LN+N4` s0 at 3072 → check 1989866
+
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed Tomato `B1_base_LN+N4` (rule 6b stage 1). s0 has finished at 3072; s1 and s2 are at 2976. `... br_missing submit` → **1989866**.
+- **Also finished:** **1988883** (grid `+RS`, its earlier extension to 6144) COMPLETED 00:02. Its 12,288 extension is 1989863.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 156 (00:26–00:30): Tomato base `LN+ES10` finished; grid `+LR+N4` s1 at 3072 → checks 1989876 1989877
+
+- **Training finished.** **1987174** (Tomato `B1_base_LN+ES10`) COMPLETED 00:25 (19:39:23, exit 0).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - grid `+LR+N4`: s1 finished at 3072; s0 is at 3024 and s2 at 3048.
+  - Tomato `B1_base_LN+ES10`: s1 finished at 1536. s0 and s2 were checked in iteration 144.
+
+  `... br_missing submit` → **1989876** (grid `+LR+N4`), **1989877** (Tomato `LN+ES10`).
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 157 (00:32–00:35): grid `+LR+N4` finished at 3072 → check 1989881  (s0, s2)
+
+- **Training finished.** **1988924** (grid `B1_P1eq1_LN+LR+N4`, extended to 3072) COMPLETED 00:30 (4:37:44, exit 0). Check **1989876** (s1) is done.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: grid `+LR+N4`, s0 and s2) → `... br_missing submit` → **1989881 **.
+- **Pending checks.** The Tomato base `LN+N4` / `LN+ES10` and tomato_large base `LN` checks are still running.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 158 (00:37–00:42): grid `+LR+N4` 1/3 at 3072 → extend 6144 (1989885 ); checks 1989882 (AS `+ENT3_confirm` s21) and 1989883 (Tomato base `LN+N4` s1/s2)
+
+- **What finished.**
+  - **1989881** (grid `+LR+N4`, s0 and s2 at 3072) COMPLETED.
+  - **1989866** (Tomato `B1_base_LN+N4`, s0) COMPLETED.
+  - Training jobs **1987629** (AS `+ENT3_confirm`, 24,576) and **1988345** (Tomato `B1_base_LN+N4`, 3072) COMPLETED 00:37 and 00:35.
+- **Check results.**
+  - **grid `B1_P1eq1_LN+LR+N4`** (3072):
+    - s0 **0.062** IMPROVING (0.109 at 1536);
+    - s1 **0.052** IMPROVING;
+    - s2 **0.004** CONVERGED.
+    - s0 and s1 are corrected once, then never reach the goal. Their best responses are honest.
+  - **Tomato `B1_base_LN+N4`** s0 **0.158** (3072), PLATEAU, reactive. s1 and s2 have finished but are not checked yet.
+- **Rule 6b extension rule.** The grid exploration run has seeds unconverged, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+N4 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+N4 --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989885 **.
+- **Rule 3.** `br_missing` (dry-run: AS `+ENT3_confirm` s21; Tomato `LN+N4` s1 and s2) → `... br_missing submit` → **1989882**, **1989883**.
+  - `+ENT3_confirm` already failed (iteration 151); s21's check is for the record.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 159 (00:55–01:00): Tomato base `LN+ES10` 0/3 at 1536 → extend 3072 (1989902 ); grid `+AN` at 6144 → check
+
+- **The check.** **1989877** (Tomato `B1_base_LN+ES10`, s1) COMPLETED. All three seeds are reactive at 1536 (s0 **0.160**, s1 **0.160**, s2 **0.159**, all PLATEAU); every best response hides.
+- **Rule 6b extension rule.** This is an exploration run with all seeds unconverged, so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 3072` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1989902 **.
+- **Rule 3.**
+  - **1989569** (grid `+AN`, extended to 6144) COMPLETED 00:40.
+  - `br_missing` (dry-run: grid `+AN` at 6144) → `... br_missing submit` → **1989903 **.
+- **Other checks returned.**
+  - **1989882**: AS `+ENT3_confirm` s21 (already failed; for the record).
+  - **1989883**: Tomato base `LN+N4` s1 and s2, still queued.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 160 (00:49–00:52): grid no-reg `+AN` 2/3 at 6144, s2 PLATEAU → finished
+
+- **The check.** **1989903** (grid `B1_P1eq1_LN+LR+AN`, 6144) COMPLETED 00:49. BR gaps at 1536 / 3072 / 6144:
+
+  | Seed | 1536 | 3072 | 6144 | Verdict |
+  |---|---|---|---|---|
+  | s0 | 0.002 | 0.000 | **0.002** | CONVERGED |
+  | s1 | 0.027 | 0.003 | **0.000** | CONVERGED |
+  | s2 | 0.052 | 0.054 | **0.049** | PLATEAU |
+
+  - s2's policy is corrected once, then honest (true 22).
+  - Its best response takes a true-20 route that pays more under the refitted corrections. This is the same pattern as `+GL` s2.
+- **Rule 4: the only unconverged seed is PLATEAU, so the config is finished.**
+- **Grid no-reg wave 2 so far.**
+  - Finished without 3/3: `+NET`, `+GL`, `+AN`.
+  - Still running: `+EP` → 6144 (1989727) and `+RS` → 12,288 (1989863).
+  - In exploration, `+LR+ES10_confirm` failed. `+LR+ENT3_confirm` (1989566) is running, and `+LR+N4` → 6144 and `+LR+ES10+N4` → 3072 are still extending.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 161 (01:25–01:32): Tomato base `LN+N4` 0/3 at 3072 → extend 6144 (1989933 )
+
+- **The check.** **1989883** (Tomato `B1_base_LN+N4`, s1 and s2) COMPLETED. All three seeds are at **0.158**, PLATEAU, at 3072. They are reactive (true about 433 after the correction), and every best response hides.
+- **Rule 6b extension rule.** This is an exploration run with all seeds unconverged, so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989933 **.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 162 (01:33–01:36): tomato_large base `L` finished at 1536 (37:50 h) → check 1989944  (s0)
+
+- **Training finished.** **1984539** (tomato_large `B1_base_L`, wave 1) COMPLETED 01:33 (1-13:49:37, exit 0), inside the 48 h limit.
+- **Earlier checks.** s1 (**0.227**) and s2 (**0.226**) were checked in iterations 154 and 147; both are reactive.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s0) → `... br_missing submit` → **1989944 **.
+- **Next.** Rule 4 is applied once s0 has a result.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 163 (02:05–02:08): grid `+LR+ES10+N4` finished at 3072; Tomato base `LN+ES10+N4` seed(s) at 3072 → checks 1989990 1989991 
+
+- **Training finished.** **1989713** (grid `B1_P1eq1_LN+LR+ES10+N4`, extended to 3072) COMPLETED 02:04 (3:32:21, exit 0).
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `+LR+ES10+N4` (all seeds) and Tomato `B1_base_LN+ES10+N4` (finished seeds at 3072, per `ls`). `... br_missing submit` → **1989990 1989991 **.
+- **What the Tomato check decides.** At 1536 the Tomato run had s0 and s1 hiding at 0.000 and s2 reactive at 0.158. Whether s2 has changed at 3072 decides between `confirm` and a further extension.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 164 (02:10–02:14): grid no-reg `+LR+ES10+N4` 3/3 CONVERGED at 3072 → `confirm` (1989995 )
+
+- **Check result.** **1989990** (grid `B1_P1eq1_LN+LR+ES10+N4`, 3072) COMPLETED 02:10. BR gap at 1536 → 3072:
+
+  | Seed | 1536 | 3072 | Verdict |
+  |---|---|---|---|
+  | s0 | 0.001 | **0.000** | CONVERGED |
+  | s1 | 0.016 | **0.002** | CONVERGED |
+  | s2 | 0.035 | **0.017** | CONVERGED |
+
+  All three policies are corrected once, then honest (true about 22).
+- **Rule 4 (rule 6b exploration run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm grid B1_P1eq1_LN+LR+ES10+N4` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 ppo.batch_size=6400 ppo.learning_rate=0.0001 protocol.update_bonus=1.0 episodes=3072`. That is the run's overrides at its final length, and it matches `run_sets.py`.
+  - Submitted: `... submit` → **1989995 **.
+- **Grid no-reg confirmations now running:** `+LR+ENT3_confirm` (1989566) and this one. The cell is DONE when either is 3/3.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 165 (02:32–02:35): Tomato base `LN+ES10+N4` s0/s1 still hide at 3072 (0.000); s2 still training
+
+- **Check result.** **1989991** (Tomato `B1_base_LN+ES10+N4`, s0 and s1 at 3072) COMPLETED. s0 **0.000** and s1 **0.000**, CONVERGED; both hide, matching the target.
+- **s2.** Still training at 2496 of 3072. Its training curve is still reactive (corrected in round 0, then honest).
+- **Next.** Rule 4 waits for s2.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 166 (02:57–03:00): tomato_large no-reg `LN+ES10` finished at 1536 (39 h); grid `+LR+ENT3_confirm` seeds finished → checks 1990118 1990119 
+
+- **Training finished.** **1984538** (tomato_large `B1_P1eq1_LN+ES10`, wave 1) COMPLETED 02:56 (1-15:12:25, exit 0), inside the 48 h limit.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `+LR+ENT3_confirm` (its finished seeds, per `ls`) and tomato_large `B1_P1eq1_LN+ES10`. `... br_missing submit` → **1990118 1990119 **.
+  - The tomato_large no-reg check is that cell's first. Its target is 3–4 corrections, then honest.
+  - The grid no-reg cell is DONE if `+LR+ENT3_confirm` is 3/3.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 167 (03:04–03:08): grid no-reg `+LR+ENT3_confirm` finished at 3072; s21 0.121, s22 0.041 (not converged) → check 1990132 (s20)
+
+- **What finished.** **1989566** (grid `+LR+ENT3_confirm`, 3072) COMPLETED 03:04 (6:35:32, exit 0). Check **1990118** COMPLETED 03:01 and covered s21 and s22.
+- **Results.**
+
+  | Seed | Gap (s.e.) | True by round | Received per round (rounds 1–4) | Best response's received |
+  |---|---|---|---|---|
+  | s21 | **0.121** (0.004) | −100, then 22 ×4 (honest) | about 42,967 | 49,160 |
+  | s22 | **0.041** (0.023) | corrected once, then honest | — | 42,922, then 51,258 (it takes 2 corrections) |
+
+  - **s21.** Its true return is honest, but under the refitted no-reg correction, which raises honest transitions by large amounts, the best response's honest route collects more of the raise.
+  - **s22.** The best response takes a second correction, worth about 4% of V.
+- **Rule 3.** `br_missing` (dry-run: s20) → `... br_missing submit` → **1990132**.
+- **What this means.** With s21 and s22 unconverged, the confirmation cannot be 3/3 at 3072. Rule 4 is applied once s20 is in.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 168 (03:24–03:28): grid no-reg `+LR+ENT3_confirm` 1/3 at 3072 → extend 6144 (1990151 ); AS `+EP_confirm` at the cap → check 1990150
+
+- **Grid check result.** **1990132** (grid `+LR+ENT3_confirm`, s20) COMPLETED 03:23. At 3072:
+  - s20 **0.020** CONVERGED (honest; its best response takes a true-20 route).
+  - s21 **0.121** PLATEAU (iteration 167).
+  - s22 **0.041** IMPROVING.
+- **Rule 4.** This is a confirmation, s22 is IMPROVING and 3072 is below the cap, so extend 2×. The s21 PLATEAU does not stop the extension, because rule 4 extends when any seed is IMPROVING.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+ENT3_confirm 6144` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/grid/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1990151 **.
+- **AS confirmation reached the cap.** **1988581** (AS `+EP_confirm`, extended to the cap of 24,576) COMPLETED 03:22 (10:13:45, exit 0).
+  - `br_missing` (dry-run: AS `+EP_confirm`) → `... br_missing submit` → **1990150**.
+  - At the cap the run is finished, whatever the verdict.
+- Cells DONE: 5 of 12.
+
+## 2026-11-16, iteration 169 (03:37–03:45): **AS no-reg DONE** (`B1_P1eq1_LN+RS+EP_confirm` 3/3 at the 24,576 cap)
+
+- **Check result.** **1990150** (`br_absent_supervisor_B1_P1eq1_LN+RS+EP_confirm`, 24,576) COMPLETED 03:37. BR gap at 6144 / 12,288 / 24,576:
+
+  | Seed | 6144 | 12,288 | 24,576 | Verdict |
+  |---|---|---|---|---|
+  | s20 | 0.032 | 0.059 | **0.001** | CONVERGED |
+  | s21 | 0.000 | 0.013 | **0.001** | CONVERGED |
+  | s22 | 0.057 | 0.060 | **0.027** | CONVERGED |
+
+  - Every policy is corrected once, then honest (true 448.8–449.8).
+  - The best responses of s20 and s22 take 2 corrections (round 1 at true 400), worth less than 3% more.
+- **Rule 4: the confirmation is 3/3, so the AS no-reg cell is DONE.**
+  - Config: `B1_P1eq1_LN+RS+EP`, i.e. `ppo.ent_coef=0.1 ppo.batch_size=1600 ppo.n_epochs=20 g.use_regularization=False g.epochs=1000 n_envs=64 reward_scale=0.01625`, anneal over the last 25%, the bonus.
+  - Tuning seeds 0–2 at 6144: 0.001 / 0.000 / 0.004.
+  - Confirmation seeds 20–22 at 24,576 (two extensions): 0.001 / 0.001 / 0.027.
+  - Extended confirmations count (the user, 2026-11-10).
+- **Rule 6b: nothing new for AS no-reg.** Its running runs finish as information only, with no extensions or confirmations:
+  - `+GL_confirm` (1988882), `+NET_confirm` → 12,288 (1988582), stage 2 `+N4+ENT10` (1989843) and `+N4+ES30` (1989844).
+  - `br_missing` still checks them.
+- **Status updated at the top. Cells DONE: 6 of 12.**
+  - DONE: grid swap, AS swap, Tomato swap, grid base, AS base, AS no-reg.
+  - Open: grid no-reg, Tomato no-reg, Tomato base, and the three tomato_large cells.
+
+## 2026-11-16, iteration 170 (03:50–03:55): tomato_large base `LN` 0/3 at 1536, all PLATEAU → finished; Tomato base `LN+ES10+N4` s2 at 3072 → check 1990162 
+
+- **Check 1989712** (tomato_large `B1_base_LN`, all three seeds at 1536) COMPLETED 03:50 (5:01:16).
+  - s0 **0.223**, s1 **0.223**, s2 **0.223**, all PLATEAU.
+  - The policies are reactive: corrected in round 0, then honest at true about 519.5.
+  - The best responses hide (true 84.2 ×4, then 65.0), as the target does.
+- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished.
+- **tomato_large base status.**
+  - `L`: s1 0.227 and s2 0.226, both PLATEAU; s0's check (1989944) is running.
+  - `LE`: still training. It reaches the 48 h limit at about 11:43, and rule 1 resumes it.
+  - Rule 6b exploration for this cell starts once every wave-1 run has a check and none is 3/3.
+- **Training finished.** **1989820** (Tomato `B1_base_LN+ES10+N4`, extension to 3072) COMPLETED 03:48.
+  - `br_missing` (dry-run: s2) → `... br_missing submit` → **1990162 **.
+  - s0 and s1 hide at 0.000. If s2 now hides too, the run goes to `confirm`.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 171 (04:11–04:16): tomato_large base `L` 0/3 at 1536 → extend 3072 (1990168 ) (corrected: s0 is IMPROVING)
+
+- **The check.** **1989944** (tomato_large `B1_base_L`, s0) COMPLETED 04:10 (1:07:26).
+  - s0 is **0.227**, labelled **IMPROVING**.
+  - The run is now complete: s0 0.227 (IMPROVING), s1 0.227 (PLATEAU), s2 0.226 (PLATEAU).
+  - Every policy is reactive (corrected in round 0, then honest, true about 516). Every best response hides, as the target does.
+- **Rule 4.** s0 is IMPROVING and 1536 is below the cap of 12,288, so extend 2×.
+  - Correction: my first version of this entry (commit fbd09cea8) read all three seeds as PLATEAU and called the run finished. The script labels s0 IMPROVING, so I corrected the entry and submitted the extension.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_L 3072` printed `submit.sh 48 --env tomato_large --run-id B1_base_L --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1990168 **.
+- **tomato_large base.**
+  - `LN` is finished at 0/3. `L` is extending to 3072.
+  - `LE` is still training (wave 1). It reaches the 48 h limit at about 11:43; rule 1 resumes it.
+  - Rule 6b exploration starts once `LE` has a check and no wave-1 run is 3/3.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 172 (04:17–04:20): Tomato base `LN+ES10+N4` 2/3 at 3072 (s2 still reactive) → extend 6144 (1990170 )
+
+- **The check.** **1990162** (Tomato `B1_base_LN+ES10+N4`, s2 at 3072) COMPLETED.
+
+  | Seed | Gap at 1536 → 3072 | Verdict | Behaviour |
+  |---|---|---|---|
+  | s0 | 0.000 → **0.000** | CONVERGED | hides |
+  | s1 | 0.000 → **0.000** | CONVERGED | hides |
+  | s2 | 0.158 → **0.158** | PLATEAU | reactive |
+
+- **Rule 6b extension rule.** This is an exploration run with s2 unconverged, so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1990170 **.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 173 (04:20–04:30): grid no-reg `LN+LR+EP` finished at 6144 → check 1990171
+
+- **The run.** **1989727** (grid `B1_P1eq1_LN+LR+EP`, extended to 6144) COMPLETED 04:23 (4:45:26). s0 and s2 had finished earlier; s1 finished last.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+EP` (`--finished-only --draws 12`). It also printed "tomato_large/B1_P1eq1_LN+ES10: check still queued/running" (1990119).
+  - Submitted: `... br_missing submit` → **1990171**. It reads the finished seeds when it starts, so it covers all three (s1's `metrics.json` is in its directory listing).
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 174 (04:28–04:33): grid no-reg `LN+LR+EP` 2/3 at 6144 (s1 IMPROVING by the script) → extend to the cap, 12,288 (1990173)
+
+- **The check.** **1990171** (grid `B1_P1eq1_LN+LR+EP`, all three seeds at 6144) COMPLETED (2:06). `step4_convergence.py`:
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.001 / 0.001 / **0.001** | CONVERGED | −100, 21.6, 20.9, 21.5, 21.6 | corrected in round 0, then honest |
+  | s1 | 0.044 / 0.040 / **0.042** (s.e. 0.008) | IMPROVING | −100 every round (corrected in every round) | corrected in round 0, then honest |
+  | s2 | 0.002 / 0.023 / **0.010** (s.e. 0.034) | CONVERGED | −100, 21.7, 21.8, 21.7, 21.7 | 2 corrections, then honest |
+
+  - s1 is still the open exploiter, corrected every round. Its BR gap is flat (0.040–0.044). The IMPROVING verdict comes from the script's 24-episode curve, which I apply as written.
+- **Rule 4 (wave-2 run, one seed IMPROVING): extend 2×**, which is the grid cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend grid B1_P1eq1_LN+LR+EP 12288` printed `submit.sh 48 --env grid --run-id B1_P1eq1_LN+LR+EP --seeds 0 1 2 --results-dir results/step4/grid/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990173**.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 175 (05:28–05:30): AS no-reg `LN+RS+NET_confirm` finished (information only; the cell is DONE) → check 1990197 
+
+- **The run.** **1988582** (AS `B1_P1eq1_LN+RS+NET_confirm`) COMPLETED 05:28 (12:18:55, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+NET_confirm`.
+  - Submitted: `... br_missing submit` → **1990197 **. AS checks take about a minute. The cell is DONE (`LN+RS+EP`), so this is for the record only.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 176 (05:43–05:47): AS no-reg `LN+RS+NET_confirm` 1/3 at 12,288 (information only); Tomato base `LN+ES10` s0 at 3072 → check 1990199
+
+- **The check.** **1990197** (AS `B1_P1eq1_LN+RS+NET_confirm`, 12,288) COMPLETED (2:11). Verdicts:
+  - s20: 0.044 (s.e. 0.029), IMPROVING;
+  - s21: 0.000, CONVERGED (corrected once, then honest);
+  - s22: 0.078 (s.e. 0.035), IMPROVING.
+  - The cell is DONE (`LN+RS+EP`), so this run is information only and is not extended.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ES10` (s0 finished at 3072; s1 and s2 are still training in 1989902).
+  - Submitted: `... br_missing submit` → **1990199**. The run is not extended until all three seeds are checked.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 177 (06:00–06:02): Tomato base `LN+ES10` s0 0.159 PLATEAU at 3072 (reactive)
+
+- **The check.** **1990199** (Tomato `B1_base_LN+ES10` s0 at 3072) COMPLETED (6:42).
+  - s0: BR gap 0.159, PLATEAU (at 1536 it was 0.159). PPO is corrected in round 0, then honest (true 432 against 434). The best response hides (59.8 ×4, then 46).
+  - s1 and s2 are at 3048/3072 and look the same.
+- **Next.** This is an exploration (6b) run, so it is extended 2× (to 6144) whatever the verdict, once s1 and s2 are checked. Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 178 (06:03–06:05): Tomato base `LN+ES10` finished at 3072 → check 1990210  (s1, s2)
+
+- **Training wait.** **1989902** (Tomato `B1_base_LN+ES10`, extended to 3072) COMPLETED 06:03 (4:32:26, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ES10`.
+  - Submitted: `... br_missing submit` → **1990210 ** (s1, s2).
+- The 6b extension to 6144 follows once this check is in. Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 179 (06:40–06:45): grid no-reg `LN+LR+ENT3_confirm` finished at 6144 → check 1990221
+
+- **Training wait.** **1990151** (grid `B1_P1eq1_LN+LR+ENT3_confirm`, extended to 6144) COMPLETED 06:39 (2:51:18, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+ENT3_confirm`.
+  - Submitted: `... br_missing submit` → **1990221**.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 180 (06:41–06:50): Tomato base `LN+ES10` 0/3 at 3072 (all reactive, PLATEAU) → 6b extension to 6144 (1990224 )
+
+- **The check.** **1990210** (Tomato `B1_base_LN+ES10`, s1 and s2 at 3072) COMPLETED (13:14).
+  - All three seeds: BR gap **0.159**, PLATEAU, unchanged since 1536 (0.160 / 0.160 / 0.159).
+  - In every seed PPO is corrected in round 0, then honest (true about 432 against 434). The best response hides (59.8 ×4, then 46).
+- **Rule 6b extension rule.** This is an exploration run (extended under 6b before, in iteration 159), so it is extended 2× whatever the verdict.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 6144` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1990224 **.
+- Cells DONE: 6 of 12.
+
+## 2026-11-16, iteration 181 (06:50–07:00): **grid no-reg DONE** (`LN+LR+ENT3_confirm` 3/3 at 6144)
+
+- **The check.** **1990221** (grid `B1_P1eq1_LN+LR+ENT3_confirm` at 6144) COMPLETED (2:43). `step4_convergence.py`:
+
+  | Seed | BR gap at 3072 → 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s20 | 0.020 → **0.000** | CONVERGED | −100, 22 ×4 | corrected once, then honest |
+  | s21 | 0.121 → **0.002** | CONVERGED | −100, 22 ×4 | corrected once, then honest |
+  | s22 | 0.041 → **0.025** (s.e. 0.023) | CONVERGED | −100, 21.9, 22, 22, 22 | 2 corrections, then honest |
+
+- **Rule 4: a `_confirm` run with all seeds CONVERGED → the cell is DONE.**
+  - The tuning run `B1_P1eq1_LN+LR+ENT3` was 3/3 at 3072 (0.000 / 0.000 / 0.001; iteration 133).
+  - The confirmation was extended once, 3072 → 6144 (iteration 168: 1/3 at 3072, with an IMPROVING seed). Extended confirmations count (the user's ruling, docs/step4_optimal.md).
+  - PPO is corrected once, then honest (true 22) in all six seeds, which is the target's end state.
+- **The cell's other runs are now information only:** `+LR+EP` (→ 12,288, 1990173), `+LR+ES10+N4_confirm` (1989995), `+LR+N4` (1989885), `+LR+RS` (1989863). They keep running; I cancel nothing. Status updated at the top.
+- **Cells DONE: 7 of 12.** Open: Tomato no-reg, Tomato base, tomato_large swap, no-reg and base.
+
+## 2026-11-16, iteration 182 (07:00–07:08): tomato_large no-reg `LN+ES10` 0/3 at 1536 (s1, s2 IMPROVING) → extend 3072 (1990237 )
+
+- **The check.** **1990119** (tomato_large `B1_P1eq1_LN+ES10`, wave 1, all three seeds at 1536) COMPLETED (3:55:12). `step4_convergence.py`:
+
+  | Seed | BR gap (s.e.) | Verdict | PPO | Best response | Target |
+  |---|---|---|---|---|---|
+  | s0 | **0.073** (0.016) | PLATEAU | 3 corrections; true 65, then about 518 | 4 corrections | 3 corrections |
+  | s1 | **0.055** (0.009) | IMPROVING | 4 corrections; true 65, then about 518 | 4 corrections | 4 corrections |
+  | s2 | **0.037** (0.012) | IMPROVING | 3 corrections; true 65, then about 518 | 3 corrections | 3 corrections |
+
+  - PPO's end states match the targets' (3–4 corrections per episode; true about 518 in rounds 1–4 against honest about 523). The shortfall is in value.
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_P1eq1_LN+ES10 3072` printed `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1990237 **.
+  - The wave-1 run took 39:12 h for 1536 episodes, so the extension may reach the 48 h limit; rule 1 then resumes it.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 183 (07:08–07:15): rule 6b starts in tomato_large no-reg: `+ENT3` (1990239), `+N4` (1990240)
+
+- **When to start (docs/step4_bonus.md, rule 6b).** The cell's one wave-1 run, `B1_P1eq1_LN+ES10`, now has a check, and it is 0/3 (iteration 182). So exploration starts now, in parallel with its extension (1990237).
+- **The base** is that run, the only one in the cell.
+- **Dry-run.** `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh explore tomato_large P1eq1 B1_P1eq1_LN+ES10` printed 4 submits on seeds 0–2, at 1536 episodes, all with the base's `ppo.batch_size=1600 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 protocol.update_bonus=1.0`:
+  - `B1_P1eq1_LN+ES10+ENT3`: `ppo.ent_coef=0.09`, ES10 schedule, `n_envs=64`;
+  - `B1_P1eq1_LN+ES10+ES10`: `ppo.ent_coef=0.03`, ES10 schedule, `n_envs=64`. **This is identical to the base**;
+  - `B1_P1eq1_LN+ES10+N4`: `ppo.ent_coef=0.03`, ES10, `n_envs=256 ppo.batch_size=6400`;
+  - `B1_P1eq1_LN+ES10+ES10+N4`: **identical to `+N4`**.
+- **Submitted the two distinct runs.** I ran their printed `submit.sh` lines exactly as the driver prints them: **1990239** (`+ENT3`) and **1990240** (`+N4`). The two duplicates are skipped and flagged at the top.
+- **Budget.** Bonus jobs 20 (limit 60); all my jobs 44 (limit 110). Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 184 (08:32–08:35): Tomato base `LN+ENT3` finished at 6144 → check 1990255 
+
+- **Training wait.** **1989207** (Tomato `B1_base_LN+ENT3`, 6b, extended to 6144) COMPLETED 08:32 (12:09:30, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LN+ENT3`.
+  - Submitted: `... br_missing submit` → **1990255 **.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 185 (09:02–09:08): grid no-reg `LN+LR+RS` finished at 12,288 (information only) → check 
+
+- **Training wait.** **1989863** (grid `B1_P1eq1_LN+LR+RS`, extended to the 12,288 cap) COMPLETED 09:02 (8:00:05, exit 0).
+- **The cell is DONE** (iteration 181), so this run is information only.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_B1_P1eq1_LN+LR+RS`.
+  - Submitted: `... br_missing submit` → ****, for the record.
+- Cells DONE: 7 of 12.
+- **Its check.** **1990269** COMPLETED (3:31); verdicts are in the line below (information only).
+  - Verdicts at 12,288 (the cap): s0 0.000 CONVERGED; s1 0.050 PLATEAU; s2 0.056 IMPROVING. The run ends here: it is at the cap, and the cell is already DONE.
+
+## 2026-11-16, iteration 186 (09:24–09:30): Tomato base `LN+ENT3` (6b) 0/3 at 6144 (all reactive) → extend to the cap, 12,288 (1990294 )
+
+- **The check.** **1990255** (Tomato `B1_base_LN+ENT3` at 6144) COMPLETED (24:22).
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.163 / 0.161 / **0.160** | IMPROVING | 46, then about 430 | hides (59.8 ×4, then 46) |
+  | s1 | 0.162 / 0.161 / **0.161** | IMPROVING | the same | the same |
+  | s2 | 0.162 / 0.161 / **0.160** | IMPROVING | the same | the same |
+
+  - All three are reactive: corrected in round 0, then honest. The best response hides.
+  - The BR gap is flat at 0.160; the IMPROVING call comes from the script's 24-episode curve.
+- **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ENT3 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990294 **.
+  - The 3072 → 6144 leg took 12:09 h, so this one should take about 24 h.
+- **Tomato base so far.** Every run in this cell (`L`, `LE`, `LN`, `LN+ENT3`, `LN+N4`, `LN+ES10`, `LN+ES10+N4`) has seeds that are reactive, at a BR gap of about 0.16. Only `LN+ES10+N4` s0/s1 hide (0.000).
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 187 (09:31–09:36): checks for Tomato base `LN+ES10+N4` (s0, s1 at 6144) and tomato_large base `LE` (s0 at 1536)
+
+- **Tick.** No job failed. Nothing to resume yet: the tomato_large wave-1 runs reach 48 h at about 11:43.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - Tomato `B1_base_LN+ES10+N4`: s0 and s1 finished at 6144; s2 is still training in 1990170.
+    - tomato_large `B1_base_LE`, wave 1: s0 finished at 1536; s1 and s2 are still training.
+  - Submitted: `... br_missing submit` → **1990306** (Tomato), **1990307** (tomato_large).
+- **tomato_large base, rule 6b.** It starts once `LE` has a check and no wave-1 run is 3/3: `L` is extending, `LN` finished 0/3. This check is the first for `LE`.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 188 (10:13–10:16): Tomato base `LN+ES10+N4` s0, s1 still hide at 6144 (0.000); s2 still reactive
+
+- **The check.** **1990306** (Tomato `B1_base_LN+ES10+N4` s0, s1 at 6144) COMPLETED (11:50).
+  - s0: **0.000**, CONVERGED.
+  - s1: **0.000**, CONVERGED.
+  - Both hide, matching the target exactly (true 59.8 ×4, then 46).
+  - s2 (4776/6144) is still training and still reactive (corrected once, then true about 430). It was 0.158 PLATEAU at 3072.
+- **Next.** Once s2 finishes and is checked: 3/3 → `confirm`. Otherwise, as an exploration run, it is extended 2× (to 12,288, the cap) whatever the verdict.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 189 (10:21–10:24): AS no-reg `LN+RS+N4+ES30` (information only) has finished seeds → check 1990351 
+
+- **Tick.** No job failed. Nothing to resume.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+N4+ES30` (s0 finished; s1 and s2 still training), a stage-2 run in a cell that is already DONE.
+  - Submitted: `... br_missing submit` → **1990351 **, for the record (AS checks take minutes).
+- Cells DONE: 7 of 12.
+- **10:33.** Check **1990351** COMPLETED (1:01). s0: 0.000, CONVERGED (corrected once, then honest). s1 (2976/3072) and s2 (2712/3072) are still training. Information only.
+
+## 2026-11-16, iteration 190 (10:49–10:52): information-only checks: grid no-reg `LN+LR+N4` (6144), AS no-reg `LN+RS+N4+ES30` (s1)
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - grid `B1_P1eq1_LN+LR+N4`: all three seeds finished at 6144 (1989885);
+    - AS `B1_P1eq1_LN+RS+N4+ES30`: s1 finished; s2 is still training.
+  - Submitted: `... br_missing submit` → **1990366** (grid), **1990367** (AS).
+  - Both cells are DONE, so these checks are for the record and their runs are not extended.
+- Cells DONE: 7 of 12.
+- **10:58, the two checks (information only).**
+  - **1990366**, grid `LN+LR+N4` at 6144: s0 0.054 IMPROVING; s1 0.038 PLATEAU; s2 0.021 CONVERGED.
+  - **1990367**, AS `LN+RS+N4+ES30` s1: 0.003 CONVERGED (s0 0.000).
+  - Both cells are DONE, so neither run is extended.
+
+## 2026-11-16, iteration 191 (11:02–11:05): information-only runs finished: grid `LN+LR+ES10+N4_confirm`, AS `LN+RS+N4+ES30` → checks 1990374 1990375 
+
+- **Training wait.** Two runs COMPLETED, exit 0:
+  - **1989995**, grid `B1_P1eq1_LN+LR+ES10+N4_confirm` (7:16:02);
+  - **1989844**, AS `B1_P1eq1_LN+RS+N4+ES30` (10:08:38).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed both.
+  - Submitted: `... br_missing submit` → **1990374 1990375 **.
+  - Both cells are DONE, so these checks are for the record only.
+- Cells DONE: 7 of 12.
+- **11:11, the two checks (information only).**
+  - **1990374**, grid `LN+LR+ES10+N4_confirm` at 3072: s20 0.003, s21 0.000 CONVERGED; s22 0.144 IMPROVING.
+  - **1990375**, AS `LN+RS+N4+ES30` at 3072: s0 0.000, s1 0.003 CONVERGED; s2 0.048 PLATEAU.
+  - Both cells are DONE, so neither run is extended. Nothing to resume yet: the tomato_large wave-1 runs (1984537, 1984540) and the Taxi noreg_fail runs (1984544–1984546) reach 48 h at about 11:44.
+
+## 2026-11-16, iteration 192 (11:46–11:52): rule 1: tomato_large swap `LE` and base `LE` hit the 48 h limit → resumed (1990405, 1990406)
+
+- **Training wait.** **1984537** (tomato_large `B1_P2swap_LE`) and **1984540** (tomato_large `B1_base_LE`), both wave 1, ended TIMEOUT at 2-00:00:29 (exit 0:0). That is the 48 h limit, not an incident.
+  - Progress at their last checkpoints: swap `LE` s0 672, s1 504, s2 504 of 1536; base `LE` s0 finished (1536), s1 360, s2 360.
+- **Rule 1.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` and `submit.sh 48 --env tomato_large --run-id B1_base_LE --seeds 1 2 --results-dir results/step4/tomato_large/bonus --resume`. The finished s0 is left alone.
+  - Submitted: `... resume submit` → **1990405** (swap `LE`), **1990406** (base `LE`).
+  - At this rate each needs about two more 48 h jobs.
+- Base `LE` s0's check (1990307) is still queued. Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 193 (11:58–12:05): **Tomato no-reg `LN_confirm` killed by NODE_FAIL (wheat-06); not resubmitted, flagged for the user**
+
+- **Training wait.** **1988344** (Tomato `B1_P1eq1_LN_confirm`, 6144 episodes) ended `NODE_FAIL` at 11:56:42 after 18:59:31 (exit 1:0; batch step CANCELLED), on node wheat-06.
+  - `sinfo -N -n wheat-06`: `down*`, "Not responding". That is a cluster incident, not the 48 h limit.
+  - The seeds' last checkpoints are from 11:34–11:36: s20 4176, s21 3960, s22 3720 of 6144.
+- **Rule 1.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env tomato --run-id B1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/tomato/bonus --resume`.
+  - **Not submitted**: the loop prompt says a job killed by a cluster incident is flagged and not resubmitted without the user. Flagged at the top.
+- **wheat-06 is added to the exclusions** (`EXCLUDE=barley-04,wheat-06`) for every submit while it is down. No other job of mine was on it.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 194 (12:48–12:55): AS no-reg `LN+RS+N4+ENT10` (information only) → check 1990447; Tomato no-reg `LN_confirm` still waits for the user
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_B1_P1eq1_LN+RS+N4+ENT10`, a stage-2 run in a cell that is DONE.
+  - Submitted: `... br_missing submit` → **1990447**, for the record.
+- **Rule 1.** `... resume` (dry-run) lists Tomato `B1_P1eq1_LN_confirm`. It is **not submitted**: it was killed by NODE_FAIL, and the user has not answered the flag at the top yet.
+- **wheat-06** now shows `mixed-` in `sinfo` (back in service). The exclusion stays until the user says otherwise.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 195 (13:06–13:12): tomato_large base `LE` s0 0.231 (reactive); rule 6b starts in tomato_large base (1990468–1990471)
+
+- **The check.** **1990307** (tomato_large `B1_base_LE`, s0 at 1536) COMPLETED (1:26:46).
+  - s0: BR gap **0.231**, IMPROVING. PPO is reactive (true 65, then about 508). The best response hides (84.2 ×4, then 65).
+  - s1 and s2 are at 360/1536 after the resume (1990406).
+- **Rule 6b: when to start (docs/step4_bonus.md).** Every wave-1 run of tomato_large base now has a check, and none is CONVERGED 3/3:
+
+  | Run | Gaps at 1536 | Status |
+  |---|---|---|
+  | `L` | 0.227 / 0.227 / 0.226 | extending to 3072 |
+  | `LE` | s0 0.231 | s1, s2 training |
+  | `LN` | 0.223 / 0.223 / 0.223 | PLATEAU, finished |
+
+- **The base** is the run with the smallest mean BR gap: `B1_base_LN` (0.223).
+- **Dry-run.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large base B1_base_LN` printed 4 submits on seeds 0–2 at 1536 episodes, with the base's `g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1`:
+  - `B1_base_LN+ENT3`: `ppo.ent_coef=0.09`, `n_envs=64 ppo.batch_size=1600`;
+  - `B1_base_LN+ES10`: `ppo.ent_coef=0.03`, `anneal.ent_start=10 anneal.ent_episodes=768`, `n_envs=64`;
+  - `B1_base_LN+N4`: `n_envs=256 ppo.batch_size=6400`;
+  - `B1_base_LN+ES10+N4`: both.
+  - All four are distinct: the base has no ES schedule.
+- **Submitted:** `... submit` → **1990468** (`+ENT3`), **1990469** (`+ES10`), **1990470** (`+N4`), **1990471** (`+ES10+N4`).
+  - tomato_large's wave-1 runs needed more than 48 h for 1536 episodes, so these will need rule-1 resumes (N4 likely more than one).
+- **Budget.** Bonus jobs 19 (limit 60); all my jobs 44 (limit 110). Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 196 (13:22–13:25): Tomato base `LN+ES10+N4` s2 finished at 6144; grid `LN+LR+EP` at 12,288 (information only) → checks 1990509 1990510 1990511 
+
+- **Training wait.** **1990173** (grid `B1_P1eq1_LN+LR+EP`, the 12,288 cap) COMPLETED 13:22 (7:18:40). Grid no-reg is DONE, so this run is information only.
+- **Tomato base `LN+ES10+N4`.** s2 finished at 6144; s0 and s1 already hide at 0.000.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1990509** (grid `LN+LR+EP`), **1990510** (Tomato `LN+ES10+N4`), and **1990511** (Tomato `B1_base_LN+N4`, a rule 6b run extended to 6144: its s0 finished between the dry-run and the submit; s1 and s2 are at 5976 in 1989933).
+  - If Tomato s2 converges, `LN+ES10+N4` is 3/3 and goes to `confirm`. Otherwise it is extended to 12,288 (rule 6b).
+- Cells DONE: 7 of 12.
+- **13:31.** Check **1990447** (AS `LN+RS+N4+ENT10`, information only) COMPLETED (1:18): seed0 0.062 IMPROVING;seed1 0.065 IMPROVING;seed2 0.106 IMPROVING. The cell is DONE, so the run is not extended.
+
+## 2026-11-16, iteration 197 (13:39–13:42): quiet tick; grid `LN+LR+EP` at its 12,288 cap (information only)
+
+- **Tick.** No job failed. `br_missing` is empty in all three campaigns.
+- **Rule 1.** `resume` (dry-run) lists only Tomato `B1_P1eq1_LN_confirm`. It is still held for the user (NODE_FAIL, flag at the top).
+- **The check.** **1990509** (grid `B1_P1eq1_LN+LR+EP` at 12,288) COMPLETED (2:07):
+  - s0 0.001 CONVERGED;
+  - s1 0.059 IMPROVING;
+  - s2 0.013 CONVERGED.
+  - The run is at the cap and the cell is DONE, so nothing follows.
+- **Queued.** Tomato base `LN+ES10+N4` s2 (1990510) and `LN+N4` s0 (1990511). Cells DONE: 7 of 12.
+- **13:52.** **1989933** (Tomato `B1_base_LN+N4`, rule 6b, extended to 6144) COMPLETED 13:51 (10:29:07, exit 0). s1 and s2 have finished. Check **1990511** is still PENDING and reads the finished seeds when it starts, so it covers all three.
+
+## 2026-11-16, iteration 198 (14:33–14:38): Tomato base `LN+ES10+N4` 2/3 at 6144 (s2 reactive, PLATEAU) → 6b extension to the cap, 12,288 (1990613 )
+
+- **The check.** **1990510** (Tomato `B1_base_LN+ES10+N4` s2 at 6144) COMPLETED (15:13).
+  - s0: **0.000**, CONVERGED. Hides (true 59.8 ×4, then 46), exactly the target.
+  - s1: **0.000**, CONVERGED. The same.
+  - s2: **0.158**, PLATEAU, unchanged since 1536. Reactive: corrected once, then honest (true 433). Its best response hides.
+- **Rule 6b extension rule (exploration run, s2 unconverged): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10+N4 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990613 **.
+  - Extending re-trains s0 and s1 as well, from their checkpoints. Their converged checks at 6144 stay on record (`step4_br/seed*_ep6144.json`).
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 199 (14:50–14:54): Tomato base `LN+N4` (6b) 0/3 at 6144 (all reactive, PLATEAU) → extend to the cap, 12,288 (1990670 )
+
+- **The check.** **1990511** (Tomato `B1_base_LN+N4` at 6144; it started after training ended, so it covers all three seeds) COMPLETED (20:13).
+  - All three seeds: BR gap **0.158**, PLATEAU. The history is 0.158–0.159 at 1536 / 3072 / 6144.
+  - PPO is corrected in round 0, then honest (true about 433). The best response hides.
+- **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+N4 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990670 **. The last leg took 10:29 h, so this one should take about 21 h.
+- **Tomato base runs now at or headed to the 12,288 cap:** `L`, `LE`, `LN+ENT3`, `LN+ES10+N4` and `LN+N4`. Only `LN+ES10+N4` s0/s1 hide; every other seed is reactive at about 0.16.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 200 (18:31–18:34): checks: Tomato base `LN+ES10` s0 at 6144; AS no-reg `LN+RS+GL_confirm` s22 (information only)
+
+- **Tick.** No job failed. `resume` (dry-run) still lists only Tomato no-reg `B1_P1eq1_LN_confirm`, held for the user (NODE_FAIL, flag at the top).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - AS `B1_P1eq1_LN+RS+GL_confirm`: s22 finished at 24,576. The cell is DONE, so this is information only.
+    - Tomato `B1_base_LN+ES10` (6b, → 6144): s0 finished; s1 and s2 are at 6024.
+  - Submitted: `... br_missing submit` → **1991132** (AS), **1991133** (Tomato).
+- Cells DONE: 7 of 12.
+- **18:41.** Check **1991132** (AS `LN+RS+GL_confirm`; information only) COMPLETED (0:44): seed20  RUNNING (ep 24264);seed21  RUNNING (ep 24336);seed22 0.039 IMPROVING (ep 24576).
+- **18:49.** **1990224** (Tomato `B1_base_LN+ES10`, 6b, → 6144) COMPLETED (9:13:16, exit 0). Check **1991133** started at 18:42, before s1 and s2 finished. If it misses them, `br_missing` lists them once it ends, and I submit them then.
+- **19:00.** **1988882** (AS `B1_P1eq1_LN+RS+GL_confirm`, 24,576; information only) COMPLETED (23:14:14). Its s20/s21 check, for the record: `... br_missing submit` → **1991194 **.
+
+## 2026-11-16, iteration 201 (19:05–19:10): Tomato base `LN+ES10` (6b) 0/3 at 6144 → extend to the cap, 12,288 (1991210 ); AS `GL_confirm` (information only) 2/3 at its cap
+
+- **The check.** **1991133** (Tomato `B1_base_LN+ES10` at 6144; all three seeds were checked: `step4_br/seed{0,1,2}_ep6144.json`) COMPLETED (21:46).
+  - All three seeds: **0.159**, PLATEAU. The gap has been 0.159–0.160 since 1536.
+  - Reactive (true 46, then about 432); the best response hides.
+- **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1991210 **. The last leg took 9:13 h, so this one should take about 18 h.
+- **The record-only check.** **1991194** (AS `LN+RS+GL_confirm` at 24,576) COMPLETED (2:31): s20 0.022 CONVERGED; s21 0.000 CONVERGED; s22 0.039 IMPROVING. It is at the cap, and the cell is DONE.
+- **Tomato base.** All six Tomato base runs are now at or headed to the 12,288 cap.
+- Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 202 (20:45–20:48): tomato_large base `L` reached 3072 → check 1991405; Tomato base `LE` s0 at the 12,288 cap → check 1991404
+
+- **Training wait.** **1990168** (tomato_large `B1_base_L`, extended to 3072) COMPLETED 20:45 (15:24:57, exit 0).
+- **Tomato `B1_base_LE`** (→ the 12,288 cap, 1989626): s0 finished; s1 and s2 are at 11,976 and 12,000.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1991404** (Tomato `LE` s0), **1991405** (tomato_large `L`, all three seeds).
+  - tomato_large checks take a few hours.
+- Cells DONE: 7 of 12.
+- **21:04.** Check **1991404** (Tomato `B1_base_LE` s0 at the 12,288 cap) COMPLETED (10:23): **0.162**, reactive (true about 427 after round 0); the best response hides. s1 and s2 are at 12,096/12,288. At the cap the run ends regardless: it is not extended, and it failed unless every seed converges.
+
+## 2026-11-16, iteration 203 (21:35–21:38): Tomato base `LE` finished at the 12,288 cap → check 1991539  (s1, s2)
+
+- **Training wait.** **1989626** (Tomato `B1_base_LE`, wave 1, extended to the cap) COMPLETED 21:35 (1-00:06:49, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_B1_base_LE`.
+  - Submitted: `... br_missing submit` → **1991539 **.
+  - s0 was 0.162 at the cap, so `LE` ends unconverged whatever s1/s2 show.
+- Cells DONE: 7 of 12.
+- **21:54.** Check **1991539** (Tomato `B1_base_LE` at the 12,288 cap) COMPLETED (13:55): seed0 0.162 IMPROVING;seed1 0.162 IMPROVING;seed2 0.162 IMPROVING. All three seeds are reactive and the best response hides. At the cap with every seed unconverged, `LE` is finished (0/3).
+
+## 2026-11-16, iteration 204 (23:19–23:23): checks: Tomato base `L` s0 and `LN+ES10+N4` s0, s1 at the 12,288 cap
+
+- **Tick.** No job failed. `resume` (dry-run) still lists only Tomato no-reg `B1_P1eq1_LN_confirm`, held for the user.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - Tomato `B1_base_L` (wave 1, → the cap): s0 finished at 12,288; s1 and s2 are at about 11,600.
+    - Tomato `B1_base_LN+ES10+N4` (6b, → the cap): s0 and s1 finished at 12,288; s2 is at 8,880.
+  - Submitted: `... br_missing submit` → **1991848** (`L`), **1991849** (`LN+ES10+N4`).
+- Cells DONE: 7 of 12.
+- **23:34.** Check **1991849** (Tomato `B1_base_LN+ES10+N4` s0, s1 at the 12,288 cap) COMPLETED (12:24): s0 **0.000** and s1 **0.000**, both CONVERGED and both still hiding, exactly as the target does. s2 is at 9000/12,288 and still reactive (true about 430 after round 0). It is the deciding seed: if it converges at the cap, the run is 3/3 and goes to `confirm`.
+- **23:55.** Check **1991848** (Tomato `B1_base_L` s0 at the 12,288 cap) COMPLETED (15:05): **0.160**, PLATEAU, reactive. s1 and s2 are about 500 episodes short of the cap.

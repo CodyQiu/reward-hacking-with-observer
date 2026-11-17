@@ -4,13 +4,15 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 
 ## Flags for the user
 
+- **NEW (2026-11-16): node wheat-06 is down** (`sinfo`: `down*`, "Not responding"). It killed the bonus campaign's Tomato no-reg `LN_confirm` (NODE_FAIL; flagged in docs/step4_bonus_log.md). None of this campaign's jobs were on it. Every submit now carries `EXCLUDE=barley-04,wheat-06` while it is down.
+
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04` (your standing instruction from the optimal campaign). On 2026-11-14 at 11:42, `sinfo` shows barley-04 `allocated` with no reason set; say if I should drop the exclusion.
 - **Taxi runs will hit the 48 h limit** (the doc: an exploiting seed took 47 h for 768 episodes in Step 3). Rule 1 resumes them from their checkpoints; that is not an incident.
 
 - **Boat Race confirmations: one seed sits just above 0.03 with a flat best-response gap, but is labelled IMPROVING.** `N1_P1eq1_L_confirm` s22: gap 0.032 / 0.033 / 0.032 (s.e. 0.012) at 1536 / 3072 / 6144; its 12 per-draw gaps are nearly identical at all three checkpoints, so its exact policy has stopped changing (corrected once, then the new exploit at true −100, like its best response). The convergence script labels it IMPROVING because that label is defined on the training curve's target gaps, not on the best-response gap. Rule 4 therefore extends it to the 12,288 cap (iteration 23), where it is finished whatever the verdict. `LN_confirm` s22 (0.044 → 0.041) and `LE_confirm` s21/s22 (0.038 / 0.040) look similar. No action needed from you; reported because the cell's DONE now hinges on gaps of 0.03–0.04 that training does not seem to move.
 - **Boat Race: every confirmation failed at the cap, so I applied a default the rules don't spell out (iteration 31, 2026-11-15).** `L`, `LE` and `LN` were each CONVERGED 3/3 as tuning runs, but all three confirmations finished at 12,288 at 2/3. In each, s22 sat at 0.034 / 0.042 / 0.035 while its policy already matched its best response's end state (corrected in round 0, then the new exploit at true −100). The noreg_fail doc starts rule 6b when "none is CONVERGED 3/3". I applied the optimal campaign's default (its log, iterations 26/33): a tuning run whose confirmation failed at the cap counts as not CONVERGED. So I started rule 6b stage 1 from `N1_P1eq1_LE`, the run with the smallest mean BR gap (0.012, against `LN` 0.017 and `L` 0.020): runs 1987352–1987355. Tell me if you want otherwise.
 - **Boat Race confirmation seed 22 is short in every confirmation (iteration 54, 2026-11-15).**
-  - **Gaps by confirmation:** `L` 0.034, `LN` 0.035 and `LE` 0.042, all at 12,288; `LE+N4` 0.043 at 3072; `LE+ES10+N4` 0.041 at 1536.
+  - **Gaps by confirmation** (updated in iteration 77): at the 12,288 cap, `L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.045 and `LE+ES10+N4` 0.044, so five confirmations have failed on s22. `LE+ES10` was at 0.044 at 6144 and is extending to the cap.
   - **Behaviour:** in each, s22's policy already has its best response's end state: corrected once, then the new exploit at true about −100. Seeds 20 and 21 converge (0.008–0.016).
   - **Status:** the gap is in value, not in behaviour. The rules keep extending these confirmations (`LE+N4_confirm` → 6144, `LE+ES10+N4_confirm` training) and running exploration.
 
@@ -527,4 +529,303 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Confirmation seed 22 is now short of 0.03 in all five Boat Race confirmations: `L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.043, and 0.041 here.
 - **Remaining seeds.** s20 (1152/1536) and s21 (552/1536) are still training. Rule 4 for this run waits for them.
 - **A failed wait.** My wait script for this check exited with an error because the check finished (1:26) before the script looked the job id up. It was a scripting slip on my side, not a job failure.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 55 (21:58–22:15): checks 1989702 (`LE+ES10+N4_confirm` s20) and 1989703 (`LE+ES10` s2 at 6144)
+
+- **Campaign context.** A third campaign (comp) started alongside this one; see `docs/step4_comp_log.md`. Nothing in this campaign changes, and the merged code passes 28/28 tests.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - `LE+ES10+N4_confirm`: s20 finished at 1536; s21 is at 1008; s22 was checked in iteration 54.
+  - `LE+ES10`: s2 finished at 6144; s0 and s1 are at about 6060.
+
+  `... br_missing submit` → **1989702** and **1989703**.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 56 (22:07–22:10): Boat Race `LE+ES10` reached 6144; its check 1989703 is queued
+
+- **Finished run.** **1988855** (Boat Race `N1_P1eq1_LE+ES10`, extension to 6144) COMPLETED 22:07 (2:22:46, exit 0).
+- **Its check is still queued.** Check **1989703** has not started yet, so it will cover all three seeds when it does.
+- **Queue state.** 30 of my 63 jobs are PENDING with reason `Priority`; that is fair-share after comp added 28 jobs. Nothing is held for any other reason.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 57 (22:18–22:22): Boat Race `LE+ES10+N4_confirm` s20 0.018 CONVERGED (partial)
+
+- **Check 1989702** (`LE+ES10+N4_confirm`, s20) COMPLETED: **0.018** (s.e. 0.020), CONVERGED. The seed is corrected once, then plays the new exploit.
+- **The other seeds.** s22 is at **0.041** (iteration 54). s21 is still training at 1320/1536; its training curve is at true −75 to −83 in later rounds.
+- **Next.** Rule 4 waits for s21.
+- **Status.** Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 58 (22:21–22:26): Boat Race `LE+ES10` 3/3 CONVERGED at 6144 → `confirm` (1989721 )
+
+- **Check.** **1989703** (`br_boat_race_N1_P1eq1_LE+ES10`, 6144) COMPLETED 22:20 (4:39). BR gap at 1536 / 3072 / 6144:
+
+  | Seed | 1536 | 3072 | 6144 | Verdict |
+  |---|---|---|---|---|
+  | s0 | 0.014 | 0.019 | **0.013** | CONVERGED |
+  | s1 | 0.040 | 0.033 | **0.002** | CONVERGED |
+  | s2 | 0.028 | 0.014 | **0.008** | CONVERGED |
+
+  PPO and every best response are corrected once in round 0, then play the new exploit (true −100, against 50 honest).
+- **Rule 4 (rule 6b exploration run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh confirm boat_race N1_P1eq1_LE+ES10` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --set ppo.ent_coef=0.09 g.use_regularization=False g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 episodes=6144`. That is the run's overrides at its final length, and it matches `run_sets.py`.
+  - Submitted with `... submit` → **1989721 **.
+- **Confirmations now running.** `LE+N4_confirm` → 6144 (1989602), `LE+ES10+N4_confirm` (s21 training), and this one. The Boat Race cell is DONE when any of them is 3/3.
+- **Seed 22.** Seed 22 has been short in every Boat Race confirmation (flag at the top). This config takes the longest training before confirming (6144 episodes); that may or may not help it.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 59 (22:29–22:34): Boat Race `LE+ES10+N4_confirm` finished at 1536 → check 1989738 (s21)
+
+- **Training finished.** **1988346** (`N1_P1eq1_LE+ES10+N4_confirm`) COMPLETED 22:29 (5:25:08, exit 0). s20 (0.018) and s22 (0.041) are already checked.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s21) → `... br_missing submit` → **1989738**.
+- **Next.** Rule 4 is applied once s21 has a result. s22 is at 0.041, so the run cannot be 3/3 at 1536.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 60 (22:51–23:12): Boat Race `LE+ES10+N4_confirm` 2/3 at 1536 → extend 3072 (1989795)
+
+- **Check 1989738** (`LE+ES10+N4_confirm`, s21) COMPLETED 22:34. Verdicts at 1536:
+
+  | Seed | Gap (s.e.) | Verdict |
+  |---|---|---|
+  | s20 | **0.018** | CONVERGED |
+  | s21 | **0.012** (0.019) | CONVERGED |
+  | s22 | **0.041** (0.012) | IMPROVING |
+
+  Every policy is corrected once, then plays the new exploit.
+- **Rule 4 (confirmation, s22 IMPROVING, 1536 < cap 12,288): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10+N4_confirm 3072`. It printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 3072`.
+  - Submitted with `... submit` → **1989795**.
+- **Boat Race confirmations now running**, all with s20 and s21 converged and s22 short:
+  - `LE+N4_confirm` → 6144 (1989602);
+  - `LE+ES10+N4_confirm` → 3072 (1989795);
+  - `LE+ES10_confirm` (1989721).
+- **Comp targets.** The comp campaign's Boat Race targets (comp, swap and standard PBRR, 1000 epochs) are queued; see `docs/step4_comp_log.md`.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 61 (23:43–23:50): Boat Race `LE+N4_confirm` s20/s21 at 6144 → check 1989833
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LE+N4_confirm`: s20 and s21 have finished at 6144, and s22 is at 6144 but not yet finished. `... br_missing submit` → **1989833**.
+- Cells DONE: 0 of 2.
+
+## 2026-11-15, iteration 62 (23:49–23:53): Boat Race `LE+N4_confirm` 2/3 at 6144 → extend to the cap 12,288 (1989839)
+
+- **Check result.** Training **1989602** (`LE+N4_confirm`, 6144) COMPLETED 23:44. Check **1989833** COMPLETED 23:49 and covers all three seeds. BR gap at 3072 → 6144:
+
+  | Seed | 3072 | 6144 (s.e.) | Verdict |
+  |---|---|---|---|
+  | s20 | 0.014 | **0.014** | CONVERGED |
+  | s21 | 0.014 | **0.005** | CONVERGED |
+  | s22 | 0.043 | **0.033** (0.011) | IMPROVING |
+
+  - Every policy is corrected once, then plays the new exploit (true −100).
+  - s22 is closing in, but slowly.
+- **Rule 4 (confirmation, s22 IMPROVING, 6144 < cap): extend 2× to the cap.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+N4_confirm 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted with `... submit` → **1989839**.
+  - At the cap the run is finished, whatever the verdict.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 63 (01:16–01:20): Boat Race `LE+ES10+N4_confirm` s20 at 3072 → check 1989921
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `LE+ES10+N4_confirm`: s20 has finished at 3072; s21 is at 3048 and s22 at 2832. `... br_missing submit` → **1989921**.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 64 (01:28–01:31): Boat Race `LE+ES10+N4_confirm` reached 3072 → check 1989937  (s22)
+
+- **Training finished.** **1989795** (`LE+ES10+N4_confirm`, extended to 3072) COMPLETED 01:28 (1:43:57, exit 0).
+- **Earlier check.** Check **1989921** (01:21) covered s20 and s21: **0.015** and **0.013**, both CONVERGED.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: s22) → `... br_missing submit` → **1989937 **.
+- **What depends on it.** The Boat Race cell is DONE if s22 is ≤ 0.03; s22 was 0.041 at 1536.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 65 (01:32–01:35): Boat Race `LE+ES10+N4_confirm` 2/3 at 3072 (s22 0.033) → extend 6144 (1989942 )
+
+- **The check.** **1989937** (s22 at 3072) COMPLETED 01:32. BR gap at 1536 → 3072:
+
+  | Seed | 1536 | 3072 (s.e.) | Verdict |
+  |---|---|---|---|
+  | s20 | 0.018 | **0.015** | CONVERGED |
+  | s21 | 0.012 | **0.013** | CONVERGED |
+  | s22 | 0.041 | **0.033** (0.012) | IMPROVING |
+
+  - s22 is again just above 0.03.
+  - Its policy and its best response are the same end state: corrected once, then the new exploit (true −100).
+- **Rule 4.** This is a confirmation, s22 is IMPROVING, and 3072 is below the cap, so it is extended 2×.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10+N4_confirm 6144` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1989942 **.
+- **Seed 22 across the Boat Race confirmations** (it is short in all of them):
+
+  | Confirmation | Episodes | Gap |
+  |---|---|---|
+  | `LE+N4_confirm` | 6144 | 0.033 (now → 12,288) |
+  | `LE+ES10+N4_confirm` | 3072 | 0.033 |
+  | `LE+ES10_confirm` | — | still training |
+
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 66 (06:24–06:27): Boat Race `LE+ES10+N4_confirm` s20 reached 6144 → check 1990217
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`. s20 finished at 6144; s21 and s22 are still training in 1989942.
+  - Submitted: `... br_missing submit` → **1990217**.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 67 (06:40–06:45): Boat Race `LE+ES10+N4_confirm` s20 0.014 CONVERGED at 6144; checks 1990222 (s21), 1990223 (`LE+N4_confirm`)
+
+- **The check.** **1990217** (Boat Race `N1_P1eq1_LE+ES10+N4_confirm` s20 at 6144) COMPLETED (2:04).
+  - s20: BR gap **0.014** (s.e. 0.019), CONVERGED. PPO is corrected in round 0, then plays the new exploit (true −94, −100 ×4). That is the target's and the best response's end state.
+  - s21 finished at 6144 and needs a check. s22 is at 5928/6144.
+- **`LE+N4_confirm` (extended to the 12,288 cap):** s20 and s21 have finished.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1990222** (`LE+ES10+N4_confirm`), **1990223** (`LE+N4_confirm`).
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 68 (06:50–07:00): Boat Race `LE+N4_confirm` failed at the 12,288 cap (s22 0.045); `LE+ES10+N4_confirm` s21 0.011 CONVERGED
+
+- **Checks.** **1990223** (`N1_P1eq1_LE+N4_confirm` at 12,288) and **1990222** (`N1_P1eq1_LE+ES10+N4_confirm` s21 at 6144) COMPLETED. `step4_convergence.py`:
+
+  | Run, seed | BR gap (s.e.) | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | `LE+N4_confirm` s20 | **0.014** (0.017) | CONVERGED | corrected in round 0, then the new exploit (true −94, −100 ×4) | the same |
+  | `LE+N4_confirm` s21 | **0.017** (0.015) | CONVERGED | the same | the same |
+  | `LE+N4_confirm` s22 | **0.045** (0.023) | IMPROVING | the same | the same |
+  | `LE+ES10+N4_confirm` s20 | **0.014** (0.019) | CONVERGED | the same | the same |
+  | `LE+ES10+N4_confirm` s21 | **0.011** (0.014) | CONVERGED | the same | the same |
+
+- **Rule 4.**
+  - **`LE+N4_confirm` is at the 12,288 cap with s22 unconverged, so the confirmation has failed.** Seed 22's gap went 0.033 (6144) → 0.045 (12,288). Its behaviour matches the best response's (corrected once, then true −100), but it falls short in value. This is the same pattern as every earlier Boat Race confirmation (flag at the top).
+  - **`LE+ES10+N4_confirm`:** s22 is at 6096/6144, and its check follows when it finishes.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 69 (06:54–06:57): Boat Race `LE+ES10+N4_confirm` finished at 6144 → check 1990230  (s22)
+
+- **Training wait.** **1989942** (`N1_P1eq1_LE+ES10+N4_confirm`, extended to 6144) COMPLETED 06:54 (3:18:20, exit 0). s20 (0.014) and s21 (0.011) are CONVERGED.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm` (s22).
+  - Submitted: `... br_missing submit` → **1990230 **.
+  - If s22 converges, the Boat Race cell is DONE (the tuning run `LE+ES10+N4` was 3/3).
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 70 (06:57–07:05): Boat Race `LE+ES10+N4_confirm` 2/3 at 6144 (s22 0.032 IMPROVING) → extend to the cap, 12,288 (1990231)
+
+- **The check.** **1990230** (s22 at 6144) COMPLETED (1:32). `step4_convergence.py`:
+  - s20 **0.014**, CONVERGED;
+  - s21 **0.011**, CONVERGED;
+  - s22 **0.032** (s.e. 0.012), IMPROVING. Its gaps went 0.041 (1536) → 0.033 (3072) → 0.032 (6144).
+  - All three behave like the best response: corrected in round 0, then the new exploit at true −100 (s22: −99.6).
+- **Rule 4 (confirmation, one seed IMPROVING, below the cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10+N4_confirm 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990231**.
+  - 12,288 is the Boat Race cap, so this is the confirmation's last extension.
+- **Still running in Boat Race:** `LE+ES10_confirm` (1989721, 6144) and the exploration run `LE+ENT3` (→ 6144, 1989627). Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 71 (08:41–08:44): Boat Race `LE+ENT3` (6b) s2 finished at 6144 → check 1990261 
+
+- **Tick.** No job failed. Nothing to resume (the Taxi wave-1 runs reach 48 h at about 11:44).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3`, an exploration run extended to 6144 (1989627): s2 has finished, while s0 and s1 are still training.
+  - Submitted: `... br_missing submit` → **1990261 **.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 72 (09:02–09:08): Boat Race `LE+ENT3` (6b) 1/3 at 6144 → extend to the cap, 12,288 (1990270 )
+
+- **The check.** **1990261** (Boat Race `N1_P1eq1_LE+ENT3` at 6144) started 08:55:27, after training ended (1989627, 08:54:35, 10:53:41), so it covers all three seeds. COMPLETED (6:12).
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.031 / 0.025 / **0.024** | CONVERGED | −94, −86, −83, −83, −83 | corrected in round 0, then −100 |
+  | s1 | 0.059 / 0.049 / **0.035** | IMPROVING | −94, −86, −84, −85, −84 | the same |
+  | s2 | 0.039 / 0.052 / **0.035** | IMPROVING | −94, −80, −78, −77, −77 | the same |
+
+  - PPO is corrected in round 0, then plays a new exploit at true −77 to −86; the best response's is at −100. Neither is honest (50).
+- **Rule 6b extension rule (exploration run, two seeds unconverged): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ENT3 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990270 **.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 73 (10:49–10:52): Boat Race `LE+ES10_confirm` finished at 6144 → check 1990368
+
+- **Training wait.** **1989721** (Boat Race `N1_P1eq1_LE+ES10_confirm`, 6144) COMPLETED 10:49 (12:13:50, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10_confirm`.
+  - Submitted: `... br_missing submit` → **1990368**.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 74 (10:58–11:05): Boat Race `LE+ES10_confirm` 2/3 at 6144 (s22 0.044 IMPROVING) → extend to the cap, 12,288 (1990372 )
+
+- **The check.** **1990368** (Boat Race `N1_P1eq1_LE+ES10_confirm` at 6144) COMPLETED (7:38).
+
+  | Seed | BR gap (s.e.) | Verdict | PPO's true by round | Best response |
+  |---|---|---|---|---|
+  | s20 | **0.019** (0.022) | CONVERGED | −94, −90 ×4 | corrected once, then −100 |
+  | s21 | **0.011** (0.019) | CONVERGED | −94, −100 ×4 | the same |
+  | s22 | **0.044** (0.022) | IMPROVING | −94, −100 ×4 | the same |
+
+  - Seed 22 is the near-miss seed again. It behaves like its best response (corrected once, then the new exploit) but falls short in value. That is the pattern in every Boat Race confirmation (flag at the top).
+- **Rule 4 (confirmation, one seed IMPROVING, below the cap): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh extend boat_race N1_P1eq1_LE+ES10_confirm 12288` printed `submit.sh 48 --env boat_race --run-id N1_P1eq1_LE+ES10_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/noreg_fail --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1990372 **.
+- **Boat Race confirmations still open,** both at the cap: `LE+ES10+N4_confirm` (→ 12,288, 1990231; s22 0.032) and this one. Exploration: `LE+ENT3` (→ 12,288, 1990270).
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 75 (11:46–11:52): rule 1: Taxi `N1_P1eq1_L/LE/LN` hit the 48 h limit → resumed (1990407–1990409)
+
+- **Training wait.** **1984544–1984546** (Taxi `N1_P1eq1_L`, `_LE`, `_LN`, wave 1) ended TIMEOUT at 2-00:00:29 (exit 0:0). That is the 48 h limit, not an incident.
+  - Progress at their last checkpoints (of 768):
+
+    | Run | s0 | s1 | s2 |
+    |---|---|---|---|
+    | `L` | 312 | 528 | 336 |
+    | `LE` | 312 | 216 | 312 |
+    | `LN` | 312 | 360 | 288 |
+
+  - At about 60 s per PBRR round, each run needs about two more 48 h jobs.
+- **Rule 1.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_<L|LE|LN> --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume` for each.
+  - Submitted: `... resume submit` → **1990407** (`L`), **1990408** (`LE`), **1990409** (`LN`).
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 76 (16:52–16:55): Boat Race `LE+ES10+N4_confirm` s20, s21 at the 12,288 cap → check 1990968
+
+- **Tick.** No job failed. Nothing to resume.
+- **Boat Race `N1_P1eq1_LE+ES10+N4_confirm`** (extended to 12,288, 1990231): s20 and s21 finished at 12,288; s22, the deciding seed (0.032 at 6144), is at 12,168.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`.
+  - Submitted: `... br_missing submit` → **1990968**. If s22 has not finished when the check reaches it, s22 gets its own check next tick.
+- Cells DONE: 0 of 2.
+- **16:59.** **1990231** (`LE+ES10+N4_confirm`, 12,288) COMPLETED (5:55:23, exit 0); s22 has finished too. Check **1990968** is still PENDING, so it will cover all three seeds.
+
+## 2026-11-16, iteration 77 (17:25–17:30): Boat Race `LE+ES10+N4_confirm` failed at the 12,288 cap (s22 0.044)
+
+- **The check.** **1990968** (Boat Race `N1_P1eq1_LE+ES10+N4_confirm` at 12,288) COMPLETED (4:09):
+
+  | Seed | BR gap at 1536 / 3072 / 6144 / 12,288 (s.e. at the cap) | Verdict |
+  |---|---|---|
+  | s20 | 0.018 / 0.015 / 0.014 / **0.020** (0.022) | CONVERGED |
+  | s21 | 0.012 / 0.013 / 0.011 / **0.009** (0.014) | CONVERGED |
+  | s22 | 0.041 / 0.033 / 0.032 / **0.044** (0.022) | IMPROVING by the curve, but at the cap |
+
+  - All three play the best response's end state: corrected in round 0, then the new exploit at true −100.
+- **Rule 4: a confirmation at the cap with s22 unconverged has failed.** This is the fifth Boat Race confirmation to fail on s22 at the cap (flag at the top, updated).
+- **Boat Race still open:**
+  - `LE+ES10_confirm` (→ 12,288, 1990372; s22 0.044 at 6144);
+  - exploration `LE+ENT3` (→ 12,288, 1990270; s0 0.024, s1 and s2 0.035 at 6144).
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 78 (21:35–21:38): Taxi `N1_P1eq1_L` s1 finished at 768 → check 1991541 
+
+- **Taxi `N1_P1eq1_L`** (resumed after the 48 h limit, 1990407): s1 finished at 768; s0 and s2 are at 480.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_L`.
+  - Submitted: `... br_missing submit` → **1991541 **. This is the first Taxi noreg_fail check.
+- Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 79 (22:06–22:09): first Taxi verdict. `N1_P1eq1_L` s1 0.042, IMPROVING
+
+- **The check.** **1991541** (Taxi `N1_P1eq1_L` s1 at 768) COMPLETED (26:22).
+  - s1: BR gap **0.042** (s.e. 0.004), IMPROVING.
+  - PPO is corrected in round 0, then never again, and keeps exploiting with true −92 to −125 per round. The best response is the same end state, with a new exploit at true −71.9; the target is at −81.3.
+  - So PPO has the right end state but a less efficient exploit route.
+  - s0 (480/768) and s2 (504/768) are still training, after the 48 h resume.
+- **Rule 4** waits for s0 and s2.
 - Cells DONE: 0 of 2.
