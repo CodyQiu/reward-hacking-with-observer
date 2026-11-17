@@ -2474,3 +2474,22 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - **Held:** the `LN+ENT3` line. Only s0 has finished at 12,288. s1 (11,976) and s2 (12,000) finish in about an hour (6144 episodes took 16.8 h), and one check job then covers all three. It is submitted once they finish.
 - **The file over 100 MiB** (iteration 208) is this run's s2 `logs.npz`.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 210 (05:58–06:12): Tomato base `LN+ES10+N4` finished at the cap 2/3 (s2 reactive, 0.158)
+
+- **The check.** **1992583** (Tomato `B1_base_LN+ES10+N4` s2 at 12,288) COMPLETED (7:16).
+
+  | Seed | BR gap at 12,288 | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.000 (iteration 204) | CONVERGED | hides: true 59.8 ×4, then 46.0 | hides |
+  | s1 | 0.000 (iteration 204) | CONVERGED | hides | hides |
+  | s2 | **0.158** | not converged | **reactive**: corrected in round 0, then honest (true 46.0, then 433.6 ×4) | hides (true 59.8 ×4, then 46.0) |
+
+  - The target hides too (V0 = V_hide = 2,759.5), so s0 and s1 match it exactly. s2 earns 2,324.1 against 2,759.5.
+- **Rule 6b / rule 4.** The run is at the 12,288 cap with s2 unconverged, so it is finished, not CONVERGED 3/3: no confirmation, no further extension.
+- **Tomato base stage 1** (the four `LN+…` runs):
+  - `LN+ES10+N4`: finished 2/3 (mean gap 0.053).
+  - `LN+ENT3`: s0 finished at the cap; s1 (11,976) and s2 (12,000) are about to. Its check is submitted when both finish (iteration 209).
+  - `LN+N4` (1990670) and `LN+ES10` (1991210): still training.
+  - Stage 2 starts once all four have finished without the cell DONE, from the run with the smallest mean BR gap.
+- Cells DONE: 7 of 12.

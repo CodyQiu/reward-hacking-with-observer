@@ -166,9 +166,13 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - Its first correction leaves the exploit worth more than honest within a round: the exploit after one correction earns 328, honest 211.
   - Its levels rise steeply (1.61 → 5.27), as in Taxi's farming seeds.
 - **The same seeds under the other mechanisms.**
-  - **Swap:** pending (1989680). **Standard PBRR:** not computed; cancelled at the user's request (iteration 70).
+  - **Swap** (1989680, 7:01, 2026-11-17; `g.epochs=1000`; all 6 fixed points converged, all 36 draws "corrected in round 0, then never again"): corrected once in round 0 in every seed, then off the bug in every window (window 0 in rounds 1–4).
+    - **A new exploit in 5 of 6 seeds:** true −82 / −76 / −76 / −82 / −76 per round after the correction (s0, s2, s20, s21, s22; honest 50). The swap raises transitions that are not honest laps, and the best round after one correction farms them (received 359–462, against honest 295–365 under the same correction).
+    - **s1 is near honest:** true 44 per round after the correction (received 277 vs honest 266.5).
+    - V0 1,308–2,048 against V_hide 928.
+  - **Standard PBRR:** not computed; cancelled at the user's request (iteration 70).
   - **No regulariser** (noreg_fail's targets, for information): a new exploit after the correction, true −58 to −100 (1–3 corrections).
-  - So in Boat Race comp's optimum is honest by the true reward in 5 of 6 seeds; no regulariser is not honest in any.
+  - So in Boat Race comp's optimum is honest by the true reward in 5 of 6 seeds (it farms the level while doing so); the swap's is near honest in 1 of 6 (a new exploit in 5); no regulariser's is honest in none.
 - **PPO so far (iteration 31):** in 8 of 9 tuning seeds PPO is corrected once and then honest (true 50), and the best responses match the 4-correction farming. So PPO's true return equals the target's; only its number of corrections differs.
 
 **tomato_large, compensated correction** (job 1989675, 1-02:55:51; fixed points converged in s0, s20 and s22, **not in s1, s2 or s21**; honest true per round about 522.6):
@@ -192,7 +196,7 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - **No regulariser** (for information): 3–4 corrections, true about 516–522.
 - **So in tomato_large** comp's optimum is corrected once, then honest in 2 of 6 seeds, and farms the level in 4. The swap ends in a new exploit in all 6, and standard PBRR hides in all 6.
 
-Pending: the Boat Race swap comparison target (1989680). The standard-PBRR comparison targets were cancelled at the user's request on 2026-11-17 (iteration 70). Only Taxi base s0 finished: it hides (true −65.9 ×4, then −88.2; V0 = V_hide = 1,794).
+All comparison targets that were not cancelled are in (the Boat Race swap target finished 2026-11-17, iteration 76). The standard-PBRR comparison targets were cancelled at the user's request on 2026-11-17 (iteration 70). Only Taxi base s0 finished: it hides (true −65.9 ×4, then −88.2; V0 = V_hide = 1,794).
 
 ## 2026-11-15, iteration 0 (21:58–22:10): first iteration; targets, comparison targets and wave 1 submitted
 
@@ -1174,4 +1178,24 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
 
   - PPO: open exploit in round 0, then honest laps with 4 corrections per episode (the level farms, as in the tuning seeds).
 - **Rule 4.** No decision yet. s20, the deciding seed (0.074 at 3072), is at 4656 of 6144 in 1991432; at its last evaluation it exploits in every round (true −94 ×5). Its check is submitted when it finishes. If s20 converges at 6144 the confirmation is 3/3 and the cell is DONE; otherwise rule 4 applies to it (IMPROVING → 12,288, the cap).
+- Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 76 (05:58–06:10): Boat Race swap comparison target (a new exploit in 5 of 6 seeds)
+
+- **The target.** **1989680** (`targets_boat_race_P2swap`, the `compare` job) COMPLETED (7:01) after about 32 h queued at low priority. It wrote `results/step4/boat_race/targets/P2swap/seed{0,1,2,20,21,22}.json`. All fixed points converged, and every draw gives "corrected in round 0, then never again".
+- **Rule 2, under "Exact predictions" (Boat Race):**
+
+  | Seed | True by round (k = 0..4) | Received after the correction | Honest under the same correction | V0 |
+  |---|---|---|---|---|
+  | 0 | −94, then −82 ×4 | 359.2 | 295.3 | 1,636.6 |
+  | 1 | −94, then **44** ×4 | 277.0 | 266.5 | 1,308.1 |
+  | 2 | −94, then −76 ×4 | 461.3 | 364.7 | 2,045.2 |
+  | 20 | −94, then −76 ×4 | 383.7 | 316.3 | 1,734.8 |
+  | 21 | −94, then −82 ×4 | 462.0 | 354.3 | 2,048.0 |
+  | 22 | −94, then −76 ×4 | 363.2 | 318.0 | 1,652.6 |
+
+  - V_hide is 928.0 in every seed; windows are 1, 0, 0, 0, 0.
+  - After its one correction, the swap's optimum leaves the original bug alone (window 0) but takes **a new exploit** in 5 of 6 seeds: routes the swap raised above honest laps. s1 is near honest (44 vs 50).
+  - Against comp on the same seeds: comp is honest by the true reward after round 0 in 5 of 6 (s20 keeps the original bug), but farms the level with 4 corrections. The swap is corrected once and never farms, but is not honest.
+- No decision for PPO: the compare targets are for the comparison only.
 - Cells DONE: 3 of 6.
