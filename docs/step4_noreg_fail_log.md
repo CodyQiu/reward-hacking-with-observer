@@ -967,3 +967,4 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... submit` → **1992438 **.
   - The confirmation trains straight to the cap, so it cannot be extended. If a seed is still above 0.03 at 12,288, it fails, like the six before (flag at the top). It may need a rule-1 resume after 48 h.
 - Cells DONE: 0 of 2.
+- **05:17.** Check **1992429** (Taxi `N1_P1eq1_LE` s0 at 768) COMPLETED (31:24): **0.048**, IMPROVING. It is corrected once, then exploits (true −90 to −115 against the best response's −73.5). s1 (504) and s2 (648) are still training.
