@@ -869,3 +869,4 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3`.
   - Submitted: `... br_missing submit` → **1992052**.
 - Cells DONE: 0 of 2.
+- **01:30.** Check **1992052** (Boat Race `LE+ENT3` s2 at 12,288) COMPLETED (1:34): **0.020** (s.e. 0.007), CONVERGED. It is corrected once, then the new exploit at −100, like its best response. s0 (9384) and s1 (10,752) are still training. At 6144 they were 0.024 and 0.035.
