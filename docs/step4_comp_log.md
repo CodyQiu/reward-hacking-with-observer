@@ -902,3 +902,12 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Submitted: `... br_missing submit` → **1991014 **.
 - **Also running:** check **1990981** (Tomato `C1_comp_LN_confirm`, all three seeds). Either confirmation at 3/3 makes **Tomato DONE**.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 58 (17:49–17:52): Taxi `C1_comp_LE` finished (s0) → check 1991028 
+
+- **Training wait.** **1989695** (Taxi `C1_comp_LE`, 768) COMPLETED 17:49 (19:21:12, exit 0). s0 went from 264 to 768 episodes in about 1 h once its corrections stopped.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE` (s0).
+  - Submitted: `... br_missing submit` → **1991028 **.
+  - When it is in, all three Taxi wave-1 runs have checks except `C1_comp_L` s1, which is still training. Rule 4 then decides `LE`.
+- Cells DONE: 2 of 6.
