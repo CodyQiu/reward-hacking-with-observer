@@ -8,7 +8,7 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Flags for the user
 
-- **NEW (2026-11-17, iteration 208): one file is too large for GitHub and stays uncommitted on FarmShare.** `results/step4/tomato/bonus/B1_base_LN+ES10+N4/seed2/logs.npz` is 120,573,945 bytes (115 MiB) after the run reached 12,288 episodes, and GitHub rejects any file over 100 MiB. The repo keeps that seed's 6144-episode `logs.npz` (62 MB), next to its 12,288-episode `metrics.json`, round CSVs and model. The full file is only on FarmShare. `step4_commit.sh` now leaves out any file over 99 MiB and prints a warning (fix and test committed). Say if you want the file kept another way (for example Git LFS, or a copy off the cluster).
+- **NEW (2026-11-17, iterations 208 and 216): `logs.npz` files too large for GitHub stay uncommitted on FarmShare.** Iteration 216: Tomato base `B1_base_LN+N4` s0 finished at 12,288 with a 116,682,337-byte `logs.npz`, and its s1/s2 (112.4 / 112.7 MB at about 11,850 episodes) will cross the limit too. The repo keeps their 6144-episode `logs.npz`. Iteration 208, the first case: `results/step4/tomato/bonus/B1_base_LN+ES10+N4/seed2/logs.npz` is 120,573,945 bytes (115 MiB) after the run reached 12,288 episodes, and GitHub rejects any file over 100 MiB. The repo keeps that seed's 6144-episode `logs.npz` (62 MB), next to its 12,288-episode `metrics.json`, round CSVs and model. The full file is only on FarmShare. `step4_commit.sh` now leaves out any file over 99 MiB and prints a warning (fix and test committed). Say if you want the file kept another way (for example Git LFS, or a copy off the cluster).
 
 - **NEW (2026-11-16, iteration 193): Tomato no-reg `B1_P1eq1_LN_confirm` (job 1988344) was killed by a node failure. I have not resubmitted it, and am waiting for you.**
   - **What happened.** Slurm state `NODE_FAIL` at 11:56:42, after 18:59:31 of its 48 h, exit 1:0.
@@ -2556,4 +2556,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
   - As in s0, both are corrected once, then take a new exploit below honest (about 523).
 - **Rule 4.** No decision yet: s2 is at 888 of 1536 in 1990405 (after the 48 h resume). If s2 converges, the run goes to `confirm`.
+- Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 216 (14:40–14:46): a second run's `logs.npz` over 100 MiB (Tomato base `LN+N4`)
+
+- **Seen.** During the comp commit at 14:41, `step4_commit.sh` printed `not committed (over 99 MiB; GitHub rejects files over 100 MiB): results/step4/tomato/bonus/B1_base_LN+N4/seed0/logs.npz`.
+  - The file is 116,682,337 bytes: s0 has finished at 12,288 episodes (256 envs, N4).
+  - s1 (11,832) and s2 (11,856) are about to finish in 1990670. Their files are already 112.4 / 112.7 MB, so they will be left out too.
+  - The guard (iteration 208) worked as intended, and the push succeeded. The repo keeps these seeds' 6144-episode `logs.npz`; the full files stay on FarmShare. Added to the flag at the top.
+- **Rule 3.** `br_missing` does not list `LN+N4` yet: its training job is still running. All three seeds are checked at 12,288 once it finishes.
 - Cells DONE: 7 of 12.
