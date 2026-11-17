@@ -10,7 +10,7 @@ This log is append-only below the three summary sections. Every driver command r
 
 ## Status
 
-**Targets submitted 2026-11-17 01:41: 11 jobs per campaign (iteration 0). First started 06:39 after about 5 h queued (Priority). Finished: indiff AS (PASS 6/6); grid s0–s2 written (PASS).**
+**Targets submitted 2026-11-17 01:41: 11 jobs per campaign (iteration 0). First started 06:39 after about 5 h queued (Priority). Finished: indiff AS and grid (PASS 6/6 each).**
 - grid, AS, Tomato, Taxi and Boat Race: one job each, seeds 0–2 and 20–22.
 - tomato_large: one job per seed.
 
@@ -51,7 +51,10 @@ Targets go to `results/step4/<env>/targets/indiff/` and `results/step4/<env>/tar
 - A3: rounds 1–3 at level 1 have window 0.00 against the best round's 0.00.
 - V0 7,750 = 5 × M(proxy) under the exact rule, against V_hide 7,350: being corrected pays exactly as much as never being corrected would have, plus the window hiding gives up.
 
-**Grid** (job 1992072, still running): s0, s1, s2 **PASS** (corrected in round 0, then never again; true −100, then 22 ×4; V0 43,500.0 / 43,499.9 / 43,500.0, V_hide 39,500.0). Level 1 paid 8,678.0 vs faced 8,678.0 (err ≤ 0.02); counterfactual levels 2–4 err −0.88 to +0.13, against overpay margins δ of 639–739 per round. s20–s22 pending.
+**Grid** (job 1992072, 5:46; all 6 fixed points converged): **PASS in 6/6 (A1, A2, A3), as predicted.** Every seed is corrected in round 0, then never again: true −100, then 22 ×4 (honest 22). V0 43,499.9–43,500.0 = 5 × M(proxy) against V_hide 39,500.0.
+- Level 1 (round 0): paid 8,678.0 vs faced 8,678.0 in every seed (err −0.02 to 0.00), underpay margin w = 1,000.
+- Counterfactual levels 2–4: paid 0.1–1.3 per step, err −1.47 to +0.13, against overpay margins δ of 568–739 per round. All "ok".
+- A3: rounds 1–3 at level 1 have window 0.00 against the best round's 0.00.
 
 ### indiff_pool (M estimated)
 
@@ -87,3 +90,9 @@ None finished yet.
   - AS: **PASS in 6/6**, corrected in round 0, then honest (true 450 ×4), as predicted. Level errors within ±0.01.
   - grid s0–s2: **PASS**, corrected in round 0, then honest (true 22 ×4). Level errors at most 0.88 in size, against margins of 639+.
 - No PPO (the user's instruction).
+
+## 2026-11-17, iteration 2 (06:47–06:52): indiff grid 6/6 PASS
+
+- **Finished.** **1992072** (`targets_grid_indiff`) COMPLETED (5:46).
+- **Verdict:** grid s20, s21, s22 **PASS** too, so grid is **6/6 PASS**, corrected in round 0, then honest, as predicted. Recorded under "Exact predictions".
+- **Running:** indiff Tomato, tomato_large (6 jobs), Taxi, Boat Race; indiff_pool grid, AS, Tomato, tomato_large (6 jobs). Pending: indiff_pool Taxi, Boat Race.

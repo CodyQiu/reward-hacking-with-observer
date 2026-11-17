@@ -1208,3 +1208,17 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... br_missing submit` → **1992696** (s1 only; s0 and s2 have their files).
 - **Next (rule 4).** Once s1's check is in, all three Taxi wave-1 runs have checks. `L`'s verdict decides whether it is extended to 1536.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 78 (06:47–06:55): tomato_large `C1_comp_LN` s0 0.004 → `LN` finished 2/3 (s1 PLATEAU)
+
+- **The check.** **1991927** (tomato_large `C1_comp_LN` s0 at 1536) COMPLETED (4:45:17).
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | **0.004** | CONVERGED | 65.0, then 519.0–519.3 ×4 (corrected in round 0, then never again) | the same end state, 522.6 ×3, 522.2 |
+  | s1 | 0.343 (iteration 67) | PLATEAU | honest from round 0, never corrected (about 519 ×5) | 1.10 corrections |
+  | s2 | 0.003 (iteration 67) | CONVERGED | corrected in round 0, then near honest (about 518) | 1.39 corrections |
+
+- **Rule 4.** All three seeds have checks. The only unconverged seed (s1) is PLATEAU, so the config is finished at 1536 and is not extended. It is 2/3, not CONVERGED 3/3.
+- **tomato_large comp:** `LE` s1, s2 CONVERGED (s0 being checked, 1992582); `L` s1, s2 being checked (1991926), s0 next. Rule 6b starts if none of the three wave-1 runs is 3/3 once all have checks.
+- Cells DONE: 3 of 6.
