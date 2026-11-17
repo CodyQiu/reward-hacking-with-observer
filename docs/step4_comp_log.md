@@ -892,3 +892,4 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679â
   - Submitted: `... br_missing submit` â†’ **1990981 **.
   - Tomato is DONE once a confirmation is 3/3; s20 and s22 follow.
 - Cells DONE: 2 of 6.
+- **17:21.** **1990232** (Tomato `C1_comp_LN_confirm`, 1536) COMPLETED (6:17:54, exit 0). s20 and s22 have finished too. Check **1990981** is still PENDING, so it will cover all three seeds. If it is 3/3, Tomato is DONE.
