@@ -1374,3 +1374,11 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Like the other 9 Taxi comp seeds, they exploit off-window only, and never take the correction that the best response takes.
 - **Rule 6b.** Exploration runs are extended 2× whatever the verdict, but only once the run's job has finished. s0 is still at about 48 of 768 in 1991185 (iteration 84), so nothing is submitted now.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 89 (14:39–14:42): Taxi `C1_comp_LN+N4` s0, s2 finished at 768 → check 1993609
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_C1_comp_LN+N4 … step4_br.py results/step4/taxi/comp/C1_comp_LN+N4 --finished-only --draws 12`. s0 and s2 have finished at 768; s1 is at 720.
+  - Submitted: `... br_missing submit` → **1993609**.
+- **Queue:** 47 jobs in all (18 pending), including the 18 new indiff_pool PPO runs (`docs/step4_indiff_log.md`, iteration 15).
+- Cells DONE: 3 of 6.
