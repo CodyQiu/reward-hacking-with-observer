@@ -981,3 +981,16 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - `N1_P1eq1_LE` s1 (1990408);
   - Boat Race `N1_P1eq1_LE+ENT3_confirm` (1992438).
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 93 (07:40–07:44): Taxi `N1_P1eq1_LE` s2 0.047 (IMPROVING)
+
+- **The check.** **1992761** (Taxi `N1_P1eq1_LE` s2 at 768) COMPLETED (20:38).
+
+  | Seed | BR gap at 768 | Verdict | PPO true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.048 (iteration 90) | IMPROVING | −101.9, then −103 to −90 (corrected in round 0, then never again) | the same end state: −88.2, then −73.5 ×4 (a new exploit) |
+  | s2 | **0.047** (s.e. 0.002) | IMPROVING | −100.6, then −104 to −90 | the same end state: −88.2, then −76.3 ×4 (a new exploit) |
+
+  - PPO has the best response's end state (one correction, then a new exploit, as the target), but its post-correction route earns less than the best one.
+- **Rule 4.** No decision yet: s1 is at 576 of 768 (1990408). Once it is checked, the run is extended if any seed is IMPROVING.
+- Cells DONE: 0 of 2.
