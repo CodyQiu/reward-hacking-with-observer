@@ -2502,3 +2502,21 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1992658**. This is the check held back in iteration 209; it covers all three seeds.
 - Tomato base stage 1: `LN+ES10+N4` finished 2/3; `LN+ENT3` is being checked; `LN+N4` and `LN+ES10` are still training.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 212 (06:53–07:12): Tomato base `LN+ENT3` 0/3 at the cap (all reactive)
+
+- **The check.** **1992658** (Tomato `B1_base_LN+ENT3` at 12,288) COMPLETED (33:18).
+
+  | Seed | BR gap 6144 → 12,288 | PPO | Best response |
+  |---|---|---|---|
+  | s0 | → **0.160** | reactive: corrected in round 0, then honest (true 46.0, then about 432 ×4) | hides (59.8 ×4, then 46.0) |
+  | s1 | → **0.160** | the same | hides |
+  | s2 | → **0.159** | the same | hides |
+
+- **Rule 6b / rule 4.** At the 12,288 cap with no seed converged, the run is finished.
+- **Tomato base stage 1:**
+  - `LN+ES10+N4` finished 2/3 (mean gap 0.053);
+  - `LN+ENT3` finished 0/3 (0.160);
+  - `LN+N4` (1990670) and `LN+ES10` (1991210) are still training.
+  - Stage 2 starts from the smallest-mean-gap run once those two have finished.
+- Cells DONE: 7 of 12.
