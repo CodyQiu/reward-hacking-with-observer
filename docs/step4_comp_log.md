@@ -1079,3 +1079,11 @@ Pending: the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and
   - Every other finished tomato_large comp seed is NEEDS BR: checks 1991852 (`LE` s1), 1991926 (`L` s1, s2) and 1991927 (`LN` s0) are queued or running. `br_missing` will list the rest (`L` s0, `LE` s2) once those end.
 - **PPO behaviour so far.** At 1536 every finished tomato_large comp seed is corrected in round 0, then near honest: true 506–519 (`LE` s0 472) against honest 523. The farming targets' rounds 1–3 sit at about 503–520.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 69 (01:48–01:51): Taxi `C1_comp_LE` at 1536 → check 1992105 
+
+- **Tick.** No job failed. Nothing to resume in comp. The indiff and indiff_pool targets (22 jobs, `docs/step4_indiff_log.md`) are queued; all jobs together: 55 of 110.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE` (extended to 1536, 1991184).
+  - Submitted: `... br_missing submit` → **1992105 **.
+- Cells DONE: 3 of 6.
