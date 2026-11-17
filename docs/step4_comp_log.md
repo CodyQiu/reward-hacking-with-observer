@@ -1222,3 +1222,24 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Rule 4.** All three seeds have checks. The only unconverged seed (s1) is PLATEAU, so the config is finished at 1536 and is not extended. It is 2/3, not CONVERGED 3/3.
 - **tomato_large comp:** `LE` s1, s2 CONVERGED (s0 being checked, 1992582); `L` s1, s2 being checked (1991926), s0 next. Rule 6b starts if none of the three wave-1 runs is 3/3 once all have checks.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 79 (07:06–07:10): Taxi `C1_comp_L` 0/3 at 768 (all IMPROVING) → extend 1536 (1992751)
+
+- **The check.** **1992696** (Taxi `C1_comp_L` s1 at 768) COMPLETED (27:51).
+
+  | Seed | BR gap at 768 | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | s0 | 0.189 (iteration 37) | IMPROVING | hides (true about −80 every round) | corrected in round 0, then honest (124.8 ×4) |
+  | s1 | **0.895** (s.e. 0.009) | IMPROVING | exploits through each window with probability 0.49 every round, about 1.96 corrections per episode; true about −60 every round | 1.83 corrections (by round 1.0, 0, 0, 0.83): corrected in round 0, then −65.9 in rounds 1–2, caught again in round 3 |
+  | s2 | 0.146 (iteration 36) | IMPROVING | hides | corrected in round 0, then honest (124.7 ×4) |
+
+  - s1's gap is the largest of any comp seed so far. Its policy mixes evenly between exploiting through the window and avoiding it, and under its own corrections it receives about a tenth of the best response's value.
+- **Rule 4 (wave-1 run, all seeds IMPROVING, below Taxi's 6144 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_L 1536` printed `submit.sh 48 --env taxi --run-id C1_comp_L --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1992751**. The 0 → 768 leg took more than 48 h (one resume), so this leg will probably need a resume too.
+- **Taxi rule 6b.** All three wave-1 runs now have checks, and none is 3/3:
+  - `L` 0/3 (IMPROVING; now extending);
+  - `LN` 0/3 at 1536 (PLATEAU);
+  - `LE` 0/3 at 1536 (IMPROVING; extending to 3072, 1992394).
+  - The four 6b runs from `LN` are already running (1991185–1991188, started in iteration 60).
+- Cells DONE: 3 of 6.
