@@ -2544,3 +2544,16 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1992825** (s1 only).
 - Resume: only the NODE_FAIL run (Tomato no-reg `LN_confirm`) is listed. It is held for the user.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 215 (10:07–10:10): tomato_large swap `LE` s1 0.019 (CONVERGED)
+
+- **The check.** **1992825** (tomato_large `B1_P2swap_LE` s1 at 1536) COMPLETED (1:09:21).
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | 0.017 (iteration 213) | CONVERGED | 65.0, then about 459 | 65.0, then 487.6 ×4 |
+  | s1 | **0.019** (s.e. 0.0005) | CONVERGED | 65.0, then 443.8–449.5 (corrected in round 0, then never again) | 65.0, then 477.7 ×4 (the same end state) |
+
+  - As in s0, both are corrected once, then take a new exploit below honest (about 523).
+- **Rule 4.** No decision yet: s2 is at 888 of 1536 in 1990405 (after the 48 h resume). If s2 converges, the run goes to `confirm`.
+- Cells DONE: 7 of 12.
