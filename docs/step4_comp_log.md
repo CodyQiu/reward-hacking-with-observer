@@ -941,3 +941,4 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679â
   - tomato_large: its target is still running;
   - Taxi: every checked seed hides;
   - Boat Race: `LN_confirm` s20 is extending to 3072.
+- **18:22.** Check **1991014** (Tomato `C1_comp_LE_confirm` at 3072; information only, the cell is DONE) COMPLETED (33:17): seed20 0.028 CONVERGED;seed21 0.029 CONVERGED;seed22 0.010 CONVERGED. Not extended.
