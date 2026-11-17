@@ -1,0 +1,257 @@
+[
+ {
+  "seed_dir": "results/step4/taxi/comp/C1_comp_LN+ENT3/seed0",
+  "target": "step4/taxi/targets/comp/seed0.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 768,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 1.2076915502548218,
+   "window": 0.7337239583333333,
+   "true": 1.2704897326459865,
+   "corr": 0.20442708333333326
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.2662760416666667,
+    0.298828125,
+    0.3118489583333333,
+    0.3274739583333333,
+    0.3483072916666667
+   ],
+   "true_by_k": [
+    -124.18294525146484,
+    -124.40560150146484,
+    -122.990234375,
+    -126.07486724853516,
+    -145.8079376220703
+   ],
+   "received_by_k": [
+    -70.283203125,
+    -59.133453369140625,
+    -66.85670471191406,
+    -85.05331420898438,
+    -121.73600006103516
+   ],
+   "corrections_per_ep": 1.2044270833333333
+  },
+  "target_summary": {
+   "V0": 1940.678855476781,
+   "received_by_k": [
+    379.68666666666667,
+    390.2480472025282,
+    390.24804720252814,
+    390.24804720252797,
+    390.2480472025281
+   ],
+   "true_by_k": [
+    -88.18,
+    124.77462210788971,
+    124.7746221078897,
+    124.77462210788961,
+    124.77462210788961
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 1794.360000000002,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 1.2076915502548218,
+    "window": 0.7337239583333333,
+    "true": 1.2704897326459865,
+    "corr": 0.20442708333333326
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/taxi/comp/C1_comp_LN+ENT3/seed1",
+  "target": "step4/taxi/targets/comp/seed1.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 768,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 1.210453987121582,
+   "window": 0.7734375,
+   "true": 1.2457184447221543,
+   "corr": 0.0625
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": true
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.2265625,
+    0.27734375,
+    0.2786458333333333,
+    0.2799479166666667,
+    0.3138020833333333
+   ],
+   "true_by_k": [
+    -126.10091400146484,
+    -126.19205474853516,
+    -123.90885162353516,
+    -123.39453125,
+    -140.6197967529297
+   ],
+   "received_by_k": [
+    -73.15169525146484,
+    -61.72734451293945,
+    -72.11361694335938,
+    -102.00145721435547,
+    -101.64828491210938
+   ],
+   "corrections_per_ep": 1.0625
+  },
+  "target_summary": {
+   "V0": 1951.2211812205264,
+   "received_by_k": [
+    379.68666666666667,
+    392.8836286384659,
+    392.88362863846555,
+    392.88362863846544,
+    392.88362863846515
+   ],
+   "true_by_k": [
+    -88.18,
+    124.68709775754144,
+    124.68709775754135,
+    124.68709775754128,
+    124.68709775754124
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 1794.360000000002,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 1.210453987121582,
+    "window": 0.7734375,
+    "true": 1.2457184447221543,
+    "corr": 0.0625
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/taxi/comp/C1_comp_LN+ENT3/seed2",
+  "target": "step4/taxi/targets/comp/seed2.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 768,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 1.2148127555847168,
+   "window": 0.8138020833333334,
+   "true": 1.2149445602330546,
+   "corr": 0.14908854166666663
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.18619791666666666,
+    0.2109375,
+    0.22330729166666666,
+    0.23046875,
+    0.24348958333333334
+   ],
+   "true_by_k": [
+    -124.96744537353516,
+    -125.05794525146484,
+    -123.08333587646484,
+    -122.81771087646484,
+    -134.1061248779297
+   ],
+   "received_by_k": [
+    -80.30599212646484,
+    -77.00981903076172,
+    -77.5211181640625,
+    -80.80589294433594,
+    -86.28277587890625
+   ],
+   "corrections_per_ep": 0.8509114583333334
+  },
+  "target_summary": {
+   "V0": 1871.0504106489475,
+   "received_by_k": [
+    379.68666666666667,
+    372.78298340387886,
+    372.78298340387875,
+    372.78298340387875,
+    373.0147937706405
+   ],
+   "true_by_k": [
+    -88.18,
+    124.67423189903077,
+    124.6742318990307,
+    124.6742318990307,
+    124.6467013674221
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.18046106969917453
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 1794.360000000002,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 1.2148127555847168,
+    "window": 0.8138020833333334,
+    "true": 1.2149445602330546,
+    "corr": 0.14908854166666663
+   }
+  ]
+ }
+]

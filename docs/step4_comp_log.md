@@ -1146,3 +1146,19 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
   - Submitted: `... br_missing submit` → **1992538**.
 - Cells DONE: 3 of 6.
 - **Push note (05:32).** The first commit of this iteration (d8ba989cc) was never pushed: GitHub rejected a 115 MiB `logs.npz` from the bonus campaign. It was redone as a new commit after the commit-script fix (`docs/step4_bonus_log.md`, iteration 208). Nothing in this campaign changed.
+
+## 2026-11-17, iteration 74 (05:34–05:40): tomato_large `C1_comp_LE` s1 0.011, s2 0.010 (CONVERGED) → check 1992582 (s0)
+
+- **The check.** **1991852** (tomato_large `C1_comp_LE` s1, s2 at 1536) COMPLETED (4:38:41).
+
+  | Seed | BR gap | Verdict | Best response | PPO's true after round 0 |
+  |---|---|---|---|---|
+  | s1 | **0.011** | CONVERGED | corrected in round 0, then never again (true 522.6 ×3, 521.9) | about 508 |
+  | s2 | **0.010** | CONVERGED | 1.60 corrections per episode (by round [1.0, 0.34, 0.17, 0.09]) | about 506 |
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_C1_comp_LE … step4_br.py results/step4/tomato_large/comp/C1_comp_LE --finished-only --draws 12`. s0 finished at 02:49, after 1991852 started (00:55). `L` and `LN` were "check still queued/running" (1991926, 1991927).
+  - Submitted the listed line as printed (`EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/run_cmd.sh 12 4 br_tomato_large_C1_comp_LE …`) → **1992582**. It is the same command `br_missing submit` runs. I ran it directly because the bonus campaign's `br_missing` in the same tick also listed a run I am holding back (`docs/step4_bonus_log.md`, iteration 209).
+  - `step4_br.py` skips seeds that already have their check file, so this job checks s0 only.
+- **tomato_large comp so far** at 1536: `LE` s1 and s2 CONVERGED; `LN` s1 PLATEAU 0.343 (honest from round 0, never corrected), `LN` s2 0.003. `L` s1/s2 and `LN` s0 are being checked (1991926, 1991927). `L` s0 and `LE` s0 come next.
+- Cells DONE: 3 of 6.

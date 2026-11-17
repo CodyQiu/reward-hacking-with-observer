@@ -2461,3 +2461,16 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - No run was overwritten or deleted.
   - The file is flagged at the top.
 - **Other big files.** The largest committed files are 95.5 MiB (AS no-reg `LN+RS+ENT3_confirm` s21; pushed fine), and nothing else on disk is over 99 MiB. More N4 runs at 12,288 episodes may cross the limit; the script now leaves those out and warns.
+
+## 2026-11-17, iteration 209 (05:34–05:40): Tomato base `LN+ES10+N4` s2 finished at the cap → check 1992583; `LN+ENT3` check held for s1/s2
+
+- **Events.** **1990613** (Tomato `B1_base_LN+ES10+N4`, extension to 12,288) COMPLETED 05:21 (13:24:44). All three seeds are at the cap. s0 and s1 were already checked at 12,288 (0.000, both hiding); s2 is the deciding seed (iteration 205's note).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two lines:
+    - `run_cmd.sh 6 4 br_tomato_B1_base_LN+ENT3 … step4_br.py results/step4/tomato/bonus/B1_base_LN+ENT3 --finished-only --draws 12`;
+    - `run_cmd.sh 6 4 br_tomato_B1_base_LN+ES10+N4 … step4_br.py results/step4/tomato/bonus/B1_base_LN+ES10+N4 --finished-only --draws 12`.
+    - `tomato_large/B1_P2swap_LE` was "check still queued/running" (1992215).
+  - **Submitted** the `LN+ES10+N4` line as printed (`EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/run_cmd.sh 6 4 br_tomato_B1_base_LN+ES10+N4 …`) → **1992583**. It is the same command `br_missing submit` runs. `step4_br.py` skips seeds that already have their check file, so it checks s2 only.
+  - **Held:** the `LN+ENT3` line. Only s0 has finished at 12,288. s1 (11,976) and s2 (12,000) finish in about an hour (6144 episodes took 16.8 h), and one check job then covers all three. It is submitted once they finish.
+- **The file over 100 MiB** (iteration 208) is this run's s2 `logs.npz`.
+- Cells DONE: 7 of 12.
