@@ -1114,4 +1114,4 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE`.
   - Submitted: `... br_missing submit` → **1992264 **.
 - Cells DONE: 3 of 6.
-- **03:41.** Check **1992218** (Tomato `C1_comp_L_confirm` at 3072; information only) COMPLETED: seed20 0.025 CONVERGED;seed21 0.027 CONVERGED;seed22 0.008 CONVERGED. With `LN_confirm` (DONE) and `LE_confirm` (3/3 at 3072), Tomato comp now has 3/3 confirmations from two configs, and this third one is information only.
+- **03:41.** Check **1992218** (Tomato `C1_comp_L_confirm` at 3072; information only) COMPLETED: seed20 0.025 CONVERGED;seed21 0.027 CONVERGED;seed22 0.008 CONVERGED. This is 3/3 as well. Tomato comp has now been confirmed 3/3 by three configs: `LN_confirm` (the DONE config), `LE_confirm` (at 3072) and `L_confirm` (at 3072).
