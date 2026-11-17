@@ -12,7 +12,7 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 - **Boat Race confirmations: one seed sits just above 0.03 with a flat best-response gap, but is labelled IMPROVING.** `N1_P1eq1_L_confirm` s22: gap 0.032 / 0.033 / 0.032 (s.e. 0.012) at 1536 / 3072 / 6144; its 12 per-draw gaps are nearly identical at all three checkpoints, so its exact policy has stopped changing (corrected once, then the new exploit at true −100, like its best response). The convergence script labels it IMPROVING because that label is defined on the training curve's target gaps, not on the best-response gap. Rule 4 therefore extends it to the 12,288 cap (iteration 23), where it is finished whatever the verdict. `LN_confirm` s22 (0.044 → 0.041) and `LE_confirm` s21/s22 (0.038 / 0.040) look similar. No action needed from you; reported because the cell's DONE now hinges on gaps of 0.03–0.04 that training does not seem to move.
 - **Boat Race: every confirmation failed at the cap, so I applied a default the rules don't spell out (iteration 31, 2026-11-15).** `L`, `LE` and `LN` were each CONVERGED 3/3 as tuning runs, but all three confirmations finished at 12,288 at 2/3. In each, s22 sat at 0.034 / 0.042 / 0.035 while its policy already matched its best response's end state (corrected in round 0, then the new exploit at true −100). The noreg_fail doc starts rule 6b when "none is CONVERGED 3/3". I applied the optimal campaign's default (its log, iterations 26/33): a tuning run whose confirmation failed at the cap counts as not CONVERGED. So I started rule 6b stage 1 from `N1_P1eq1_LE`, the run with the smallest mean BR gap (0.012, against `LN` 0.017 and `L` 0.020): runs 1987352–1987355. Tell me if you want otherwise.
 - **Boat Race confirmation seed 22 is short in every confirmation (iteration 54, 2026-11-15).**
-  - **Gaps by confirmation** (updated in iteration 77): at the 12,288 cap, `L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.045 and `LE+ES10+N4` 0.044, so five confirmations have failed on s22. `LE+ES10` was at 0.044 at 6144 and is extending to the cap.
+  - **Gaps by confirmation** (updated in iteration 81): at the 12,288 cap, `L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.045, `LE+ES10+N4` 0.044 and `LE+ES10` 0.036 (s.e. 0.017). All six confirmations have failed on s22. Every tuning config that was 3/3 failed its confirmation the same way. The only Boat Race run still going is the exploration run `LE+ENT3` (→ 12,288).
   - **Behaviour:** in each, s22's policy already has its best response's end state: corrected once, then the new exploit at true about −100. Seeds 20 and 21 converge (0.008–0.016).
   - **Status:** the gap is in value, not in behaviour. The rules keep extending these confirmations (`LE+N4_confirm` → 6144, `LE+ES10+N4_confirm` training) and running exploration.
 
@@ -837,4 +837,19 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10_confirm`.
   - Submitted: `... br_missing submit` → **1991999 **.
   - At 6144 it was s20 0.019, s21 0.011, s22 0.044. If s22 is ≤ 0.03 now, the Boat Race cell is DONE (tuning `LE+ES10` was 3/3); otherwise this confirmation has failed at the cap.
+- Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 81 (00:45–00:50): Boat Race `LE+ES10_confirm` failed at the 12,288 cap (s22 0.036)
+
+- **The check.** **1991999** (Boat Race `N1_P1eq1_LE+ES10_confirm` at 12,288) COMPLETED (4:28):
+
+  | Seed | BR gap at 6144 → 12,288 (s.e.) | Verdict |
+  |---|---|---|
+  | s20 | 0.019 → **0.018** (0.021) | CONVERGED |
+  | s21 | 0.011 → **0.010** (0.014) | CONVERGED |
+  | s22 | 0.044 → **0.036** (0.017) | IMPROVING by the curve, but at the cap |
+
+  - All three play the best response's end state: corrected in round 0, then the new exploit at true −100.
+- **Rule 4: a confirmation at the cap with s22 unconverged has failed.** This is the sixth Boat Race confirmation to fail on s22 (0.034–0.045). The flag at the top is updated.
+- **Boat Race still open:** the exploration run `LE+ENT3` (→ 12,288, 1990270; at 6144, s0 0.024, s1 and s2 0.035). When it finishes, rule 6b continues: 3/3 → confirm; otherwise stage 2.
 - Cells DONE: 0 of 2.
