@@ -916,3 +916,14 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Taxi trains slowly while seeds are corrected: the tuning run needed one 48 h job plus about 13 h. Expect a rule-1 resume.
 - Cells DONE: 0 of 2.
 - **03:21.** **1990407** (Taxi `N1_P1eq1_L`, resumed) COMPLETED (14:29:19). s0 has finished too. Check **1992216** started before that, so s0 gets its own check once `br_missing` lists it.
+
+## 2026-11-17, iteration 88 (03:31–03:34): Taxi `N1_P1eq1_L` s2 0.049 IMPROVING; s0 → check 1992281 
+
+- **The check.** **1992216** (Taxi `N1_P1eq1_L` s2 at 768) COMPLETED (35:45).
+  - s2: BR gap **0.049** (s.e. 0.053), IMPROVING. PPO is corrected once, then exploits (true −93 to −117). The best response takes 2 corrections, then −73.
+  - s1 (iteration 79): 0.042, IMPROVING.
+- **Rule 3.**
+  - s0 finished after 1992216 started. Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_L`.
+  - Submitted: `... br_missing submit` → **1992281 **.
+  - Rule 4 for `L` follows once s0 is checked: an extension to 1536 if any seed is IMPROVING.
+- Cells DONE: 0 of 2.
