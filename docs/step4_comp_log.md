@@ -1361,3 +1361,16 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... submit` → **1993134**.
   - The cell now has two confirmations running, `LE_confirm` (1992827) and `L_confirm`, as Tomato had. The cell is DONE when either is 3/3; the other is then information only.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 88 (12:32–12:35): Taxi `C1_comp_LN+ENT3` s1 0.177, s2 0.139 at 768 (both hide, final window included)
+
+- **The check.** **1993060** (Taxi `C1_comp_LN+ENT3` s1, s2 at 768) COMPLETED (1:06:18).
+
+  | Seed | BR gap at 768 | PPO | Best response |
+  |---|---|---|---|
+  | s1 | **0.177** | "never exploits in view": clean in every window, the final one too; true about −69.4 every round | corrected in round 0, then honest (124.7 ×4) |
+  | s2 | **0.139** | the same; true about −77.7 every round | the same |
+
+  - Like the other 9 Taxi comp seeds, they exploit off-window only, and never take the correction that the best response takes.
+- **Rule 6b.** Exploration runs are extended 2× whatever the verdict, but only once the run's job has finished. s0 is still at about 48 of 768 in 1991185 (iteration 84), so nothing is submitted now.
+- Cells DONE: 3 of 6.
