@@ -942,3 +942,30 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Taxi: every checked seed hides;
   - Boat Race: `LN_confirm` s20 is extending to 3072.
 - **18:22.** Check **1991014** (Tomato `C1_comp_LE_confirm` at 3072; information only, the cell is DONE) COMPLETED (33:17): seed20 0.028 CONVERGED;seed21 0.029 CONVERGED;seed22 0.010 CONVERGED. Not extended.
+
+## 2026-11-16, iteration 60 (18:57–19:05): Taxi `C1_comp_LE` 0/3 at 768 (all hide) → extend 1536 (1991184); rule 6b starts in Taxi (1991185–1991188)
+
+- **The check.** **1991028** (Taxi `C1_comp_LE` s0 at 768) COMPLETED (41:14).
+  - s0: **0.196**, IMPROVING. It hides (true about −92 per round, never corrected).
+  - With s1 (0.182) and s2 (0.172) from iteration 55, all three are IMPROVING and all hide.
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the Taxi cap of 6144): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LE 1536` printed `submit.sh 48 --env taxi --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1991184**.
+- **Rule 6b: when to start (docs/step4_comp.md).** Every Taxi wave-1 run now has a check, and none is CONVERGED 3/3:
+
+  | Run | Gaps at 768 | Status |
+  |---|---|---|
+  | `L` | s0 0.189, s2 0.146 | s1 at 600/768, still training |
+  | `LN` | 0.180 / 0.121 / 0.099 | extending to 1536 |
+  | `LE` | 0.196 / 0.182 / 0.172 | extending to 1536 |
+
+  - All 8 checked seeds hide. The base is the run with the smallest mean gap: `C1_comp_LN` (0.133).
+- **Dry-run.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore taxi comp C1_comp_LN` printed 4 submits on seeds 0–2 at 768 episodes, with the base's `task.obs=onehot g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 anneal.last=0.25 anneal.floor=0.1`:
+  - `+ENT3`: `ppo.ent_coef=0.09`, `n_envs=64`;
+  - `+ES10`: `ppo.ent_coef=0.03`, ES10 schedule, `n_envs=64`;
+  - `+N4`: `n_envs=256 ppo.batch_size=6400`;
+  - `+ES10+N4`: both.
+  - All four are distinct: the base has no ES schedule.
+- **Submitted:** `... submit` → **1991185** (`+ENT3`), **1991186** (`+ES10`), **1991187** (`+N4`), **1991188** (`+ES10+N4`).
+  - Taxi trains slowly while seeds are corrected (about 60 s per PBRR round), so these will likely need rule-1 resumes.
+- **Budget.** Comp jobs about 16 (limit 30); all my jobs 38 (limit 110). Cells DONE: 3 of 6.
