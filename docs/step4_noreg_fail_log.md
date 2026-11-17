@@ -915,3 +915,4 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... submit` → **1992258 **.
   - Taxi trains slowly while seeds are corrected: the tuning run needed one 48 h job plus about 13 h. Expect a rule-1 resume.
 - Cells DONE: 0 of 2.
+- **03:21.** **1990407** (Taxi `N1_P1eq1_L`, resumed) COMPLETED (14:29:19). s0 has finished too. Check **1992216** started before that, so s0 gets its own check once `br_missing` lists it.

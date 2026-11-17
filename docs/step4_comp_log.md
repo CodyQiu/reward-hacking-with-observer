@@ -1106,3 +1106,11 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
 - **02:51.**
   - **1989692** (tomato_large `C1_comp_LE`, wave 1) COMPLETED (1-04:28:33). All three seeds have finished at 1536; s0 and s2 get checks once 1991852 (s1) ends.
   - **1990357** (Tomato `C1_comp_L_confirm`, information only) COMPLETED (14:01:51): `... br_missing submit` → **1992218**, for the record.
+
+## 2026-11-17, iteration 71 (03:21–03:24): Taxi `C1_comp_LE` finished at 1536 → check 1992264  (s1, s2)
+
+- **Training wait.** **1991184** (Taxi `C1_comp_LE`, extended to 1536) COMPLETED 03:21 (2:17:44, exit 0). s0 was 0.189 IMPROVING, still hiding.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE`.
+  - Submitted: `... br_missing submit` → **1992264 **.
+- Cells DONE: 3 of 6.
