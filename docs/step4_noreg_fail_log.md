@@ -968,3 +968,16 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - The confirmation trains straight to the cap, so it cannot be extended. If a seed is still above 0.03 at 12,288, it fails, like the six before (flag at the top). It may need a rule-1 resume after 48 h.
 - Cells DONE: 0 of 2.
 - **05:17.** Check **1992429** (Taxi `N1_P1eq1_LE` s0 at 768) COMPLETED (31:24): **0.048**, IMPROVING. It is corrected once, then exploits (true −90 to −115 against the best response's −73.5). s1 (504) and s2 (648) are still training.
+
+## 2026-11-17, iteration 92 (07:18–07:26): Taxi `N1_P1eq1_LE` s2 finished at 768 → check 1992761
+
+- **Tick.** No job failed; nothing to resume.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_N1_P1eq1_LE … step4_br.py results/step4/taxi/noreg_fail/N1_P1eq1_LE --finished-only --draws 12`. s2 has finished at 768; s0 was checked (0.048, IMPROVING); s1 is at 576.
+  - Submitted: `... br_missing submit` → **1992761** (s2 only).
+- **Still training or checking:**
+  - Taxi `N1_P1eq1_L` (→ 1536, 1992348);
+  - `N1_P1eq1_LN_confirm` (1992258);
+  - `N1_P1eq1_LE` s1 (1990408);
+  - Boat Race `N1_P1eq1_LE+ENT3_confirm` (1992438).
+- Cells DONE: 0 of 2.
