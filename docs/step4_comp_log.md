@@ -1080,10 +1080,10 @@ Pending: the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and
 - **PPO behaviour so far.** At 1536 every finished tomato_large comp seed is corrected in round 0, then near honest: true 506–519 (`LE` s0 472) against honest 523. The farming targets' rounds 1–3 sit at about 503–520.
 - Cells DONE: 3 of 6.
 
-## 2026-11-17, iteration 69 (01:48–01:51): Taxi `C1_comp_LE` at 1536 → check 1992105 
+## 2026-11-17, iteration 69 (01:48–01:51): Taxi `C1_comp_LE` s0 at 1536 → check 1992105 
 
 - **Tick.** No job failed. Nothing to resume in comp. The indiff and indiff_pool targets (22 jobs, `docs/step4_indiff_log.md`) are queued; all jobs together: 55 of 110.
 - **Rule 3.**
-  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE` (extended to 1536, 1991184).
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE` (extended to 1536, 1991184): s0 finished at 1536; s1 is at 864 and s2 at 1080.
   - Submitted: `... br_missing submit` → **1992105 **.
 - Cells DONE: 3 of 6.
