@@ -2493,3 +2493,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LN+N4` (1990670) and `LN+ES10` (1991210): still training.
   - Stage 2 starts once all four have finished without the cell DONE, from the run with the smallest mean BR gap.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 211 (06:19–06:22): Tomato base `LN+ENT3` finished at the cap → check 1992658
+
+- **Event.** **1990294** (Tomato `B1_base_LN+ENT3`, extension to 12,288) COMPLETED 06:19 (17:31:03). All three seeds are at the cap.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_tomato_B1_base_LN+ENT3 … step4_br.py results/step4/tomato/bonus/B1_base_LN+ENT3 --finished-only --draws 12`, and `tomato_large/B1_P2swap_LE` as "check still queued/running".
+  - Submitted: `... br_missing submit` → **1992658**. This is the check held back in iteration 209; it covers all three seeds.
+- Tomato base stage 1: `LN+ES10+N4` finished 2/3; `LN+ENT3` is being checked; `LN+N4` and `LN+ES10` are still training.
+- Cells DONE: 7 of 12.
