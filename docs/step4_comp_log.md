@@ -1023,3 +1023,4 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679â
 - **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished (0/3) and not extended.
 - **Rule 5 (wave 2)** waits until every Taxi wave-1 run is finished: `L` (s1 training; s0, s2 IMPROVING) and `LE` (â†’ 1536) are not. Rule 6b runs from `LN` (iteration 60).
 - Cells DONE: 3 of 6.
+- **22:13.** **1989693** (tomato_large `C1_comp_LN`, wave 1) COMPLETED (23:52:26, exit 0). s0 finished too. Check **1991542** started before that, so s0 gets its own check once `br_missing` lists it.
