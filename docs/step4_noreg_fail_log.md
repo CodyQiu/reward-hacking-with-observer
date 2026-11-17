@@ -819,3 +819,13 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_L`.
   - Submitted: `... br_missing submit` → **1991541 **. This is the first Taxi noreg_fail check.
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 79 (22:06–22:09): first Taxi verdict. `N1_P1eq1_L` s1 0.042, IMPROVING
+
+- **The check.** **1991541** (Taxi `N1_P1eq1_L` s1 at 768) COMPLETED (26:22).
+  - s1: BR gap **0.042** (s.e. 0.004), IMPROVING.
+  - PPO is corrected in round 0, then never again, and keeps exploiting with true −92 to −125 per round. The best response is the same end state, with a new exploit at true −71.9; the target is at −81.3.
+  - So PPO has the right end state but a less efficient exploit route.
+  - s0 (480/768) and s2 (504/768) are still training, after the 48 h resume.
+- **Rule 4** waits for s0 and s2.
+- Cells DONE: 0 of 2.
