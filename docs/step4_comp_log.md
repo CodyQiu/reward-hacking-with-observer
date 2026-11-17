@@ -143,7 +143,7 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - **Unlike AS and Tomato, the first correction under-corrects here.** The best single round after it is *not* honest: true 1.2 (s21) and −51.8 (s22), received 495 / 531 against honest's 352 / 310. The fines also spill onto honest play (honest after one correction earns 42 / 77 less than honest true + level). So part of the bug stays profitable, and the rising level adds to it.
 - **The same seeds under the other mechanisms.**
   - **Swap** (seeds 0–2, the existing 1000-epoch targets; seeds 20–22 from 1989678, all fixed points converged): corrected once, then **a new exploit** in all 6 seeds, at true −66.5 / −65.7 / −56.9 / −48.1 / −65.7 / −50.3 (s0, s1, s2, s20, s21, s22). V0 3,677–5,985 against V_hide 1,794.
-  - **Standard PBRR** (`base`): pending (1989679).
+  - **Standard PBRR** (`base`): s0 hides (true −65.9 ×4, then −88.2). The other seeds were not computed: the job was cancelled at the user's request (iteration 70).
   - **No regulariser** (noreg_fail's targets, for information): corrected once, then a new exploit at true −70 to −81 in 5 seeds; s22 takes 2 corrections, true −86 to −90.
   - So in Taxi comp is the only one of the three mechanisms whose optimum is honest after the correction, in 4 of 6 seeds.
 
@@ -166,7 +166,7 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - Its first correction leaves the exploit worth more than honest within a round: the exploit after one correction earns 328, honest 211.
   - Its levels rise steeply (1.61 → 5.27), as in Taxi's farming seeds.
 - **The same seeds under the other mechanisms.**
-  - **Swap and standard PBRR:** pending (1989680, 1989681).
+  - **Swap:** pending (1989680). **Standard PBRR:** not computed; cancelled at the user's request (iteration 70).
   - **No regulariser** (noreg_fail's targets, for information): a new exploit after the correction, true −58 to −100 (1–3 corrections).
   - So in Boat Race comp's optimum is honest by the true reward in 5 of 6 seeds; no regulariser is not honest in any.
 - **PPO so far (iteration 31):** in 8 of 9 tuning seeds PPO is corrected once and then honest (true 50), and the best responses match the 4-correction farming. So PPO's true return equals the target's; only its number of corrections differs.
@@ -192,7 +192,7 @@ Honest true return per round: grid 22, AS 450, Tomato about 434, tomato_large ab
   - **No regulariser** (for information): 3–4 corrections, true about 516–522.
 - **So in tomato_large** comp's optimum is corrected once, then honest in 2 of 6 seeds, and farms the level in 4. The swap ends in a new exploit in all 6, and standard PBRR hides in all 6.
 
-Pending: the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and base).
+Pending: the Boat Race swap comparison target (1989680). The standard-PBRR comparison targets were cancelled at the user's request on 2026-11-17 (iteration 70). Only Taxi base s0 finished: it hides (true −65.9 ×4, then −88.2; V0 = V_hide = 1,794).
 
 ## 2026-11-15, iteration 0 (21:58–22:10): first iteration; targets, comparison targets and wave 1 submitted
 
@@ -1090,3 +1090,16 @@ Pending: the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and
 - **02:09.** Tomato `C1_comp_L_confirm` (information only; Tomato is DONE): s21 finished at 3072 → `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1992157 **, for the record.
 - **02:19.** Check **1992105** (Taxi `C1_comp_LE` s0 at 1536) COMPLETED (29:18): 0.196 → **0.189**, IMPROVING, still hiding. s1 (960) and s2 (1272) are still training toward 1536.
 - **02:30.** Check **1992157** (Tomato `C1_comp_L_confirm` s21 at 3072; information only) COMPLETED (11:28): seed20  RUNNING;seed21 0.027 CONVERGED;seed22  RUNNING.
+
+## 2026-11-17, iteration 70 (02:35–02:42): the user cancelled the standard-PBRR comparison targets
+
+- **The user, 2026-11-17:** "for sure let's drop the PBRR ones … i meant cancel like...the standard PBRR (no bonus, no nothing)".
+- **Which jobs those are.** The only running or queued jobs with plain standard PBRR (no update bonus, no fines-only rule, no level) were comp's two comparison targets:
+  - **1989679**, `targets_taxi_base`: `step4_targets.py --env taxi --name base --seeds 0 1 2 20 21 22 --set task.obs=onehot g.epochs=1000`, running for 43 min;
+  - **1989681**, `targets_boat_race_base`: the same for Boat Race, `--set g.epochs=1000`, still queued.
+  - The bonus campaign's `B1_base_*` runs are standard PBRR *with* the update bonus, so they are not these and were left running.
+- **Done.** `scancel 1989679 1989681` → both CANCELLED.
+  - Taxi base s0 had already finished and is kept (`results/step4/taxi/targets/base/seed0.json`): it **hides** (true −65.9 ×4, then −88.2; V0 = V_hide = 1,794).
+  - Nothing was written for the other seeds or for Boat Race.
+- **Effect.** The comp log's "same seed's standard-PBRR target" comparison is now missing in Taxi (except s0) and Boat Race. The entries under "Exact predictions" say so. The Boat Race swap comparison (1989680) is still queued.
+- All my jobs: 54 (limit 110). Cells DONE: 3 of 6.
