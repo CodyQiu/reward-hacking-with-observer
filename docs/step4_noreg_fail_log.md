@@ -784,3 +784,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04 bash scripts/farmshare/step4_optimal.sh resume` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_<L|LE|LN> --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume` for each.
   - Submitted: `... resume submit` → **1990407** (`L`), **1990408** (`LE`), **1990409** (`LN`).
 - Cells DONE: 0 of 2.
+
+## 2026-11-16, iteration 76 (16:52–16:55): Boat Race `LE+ES10+N4_confirm` s20, s21 at the 12,288 cap → check 1990968
+
+- **Tick.** No job failed. Nothing to resume.
+- **Boat Race `N1_P1eq1_LE+ES10+N4_confirm`** (extended to 12,288, 1990231): s20 and s21 finished at 12,288; s22, the deciding seed (0.032 at 6144), is at 12,168.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10+N4_confirm`.
+  - Submitted: `... br_missing submit` → **1990968**. If s22 has not finished when the check reaches it, s22 gets its own check next tick.
+- Cells DONE: 0 of 2.
