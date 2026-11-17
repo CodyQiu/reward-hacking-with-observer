@@ -939,3 +939,14 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... submit` → **1992348 **.
 - **Taxi's cell rests on `N1_P1eq1_LN_confirm`** (1992258), since `LN` was 3/3. `LE` is still training after its resume.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 90 (04:43–04:46): Boat Race `LE+ENT3` finished at the 12,288 cap → check 1992430 (s0); Taxi `N1_P1eq1_LE` s0 → check 1992429
+
+- **Training wait.** **1990270** (Boat Race `N1_P1eq1_LE+ENT3`, 6b, extended to the cap) COMPLETED 04:43 (16:24:48, exit 0). s1 (0.023) and s2 (0.020) are CONVERGED.
+  - If s0 converges, `LE+ENT3` is 3/3 and goes to `confirm`.
+  - It would be the seventh Boat Race confirmation; the six before failed on s22 (flag at the top).
+- **Taxi `N1_P1eq1_LE`** (resumed after the 48 h limit): s0 finished at 768; s1 is at 480 and s2 at 624.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1992429** (Taxi `LE`), **1992430** (Boat Race `LE+ENT3`).
+- Cells DONE: 0 of 2.
