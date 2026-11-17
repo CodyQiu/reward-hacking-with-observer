@@ -2379,3 +2379,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1991404** (Tomato `LE` s0), **1991405** (tomato_large `L`, all three seeds).
   - tomato_large checks take a few hours.
 - Cells DONE: 7 of 12.
+- **21:04.** Check **1991404** (Tomato `B1_base_LE` s0 at the 12,288 cap) COMPLETED (10:23): **0.162**, reactive (true about 427 after round 0); the best response hides. s1 and s2 are at 12,096/12,288. At the cap the run ends regardless: it is not extended, and it failed unless every seed converges.
