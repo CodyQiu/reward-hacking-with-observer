@@ -1199,3 +1199,12 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Against comp on the same seeds: comp is honest by the true reward after round 0 in 5 of 6 (s20 keeps the original bug), but farms the level with 4 corrections. The swap is corrected once and never farms, but is not honest.
 - No decision for PPO: the compare targets are for the comparison only.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 77 (06:29–06:35): Taxi `C1_comp_L` finished (s1 at 768) → check 1992696
+
+- **Event.** **1989694** (Taxi `C1_comp_L`, wave 1, resumed after the 48 h limit) COMPLETED (1-07:26:47). s1 has finished at 768; s0 (0.189) and s2 (0.146) were checked at 768 in iterations 36–37, both IMPROVING and hiding.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_C1_comp_L … step4_br.py results/step4/taxi/comp/C1_comp_L --finished-only --draws 12`. tomato_large `L`, `LE` and `LN` were "check still queued/running".
+  - Submitted: `... br_missing submit` → **1992696** (s1 only; s0 and s2 have their files).
+- **Next (rule 4).** Once s1's check is in, all three Taxi wave-1 runs have checks. `L`'s verdict decides whether it is extended to 1536.
+- Cells DONE: 3 of 6.
