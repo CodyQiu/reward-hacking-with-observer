@@ -896,3 +896,22 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
     - Boat Race `N1_P1eq1_LE+ENT3`: s1 finished at 12,288 (s2 was 0.020); s0 is at 9792.
   - Submitted: `... br_missing submit` → **1992216** (Taxi), **1992217** (Boat Race).
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 87 (03:18–03:24): **Taxi `N1_P1eq1_LN` 3/3 at 768 → `confirm` (1992258 )**; Boat Race `LE+ENT3` s1 0.023
+
+- **Checks.** **1992156** (Taxi `N1_P1eq1_LN` s0, s2) and **1992217** (Boat Race `N1_P1eq1_LE+ENT3` s1 at 12,288) COMPLETED.
+
+  | Run, seed | BR gap (s.e.) | Verdict | PPO's true after round 0 | Best response | Target |
+  |---|---|---|---|---|---|
+  | Taxi `LN` s0 | **0.025** (0.005) | CONVERGED | −93 to −100 | corrected once, then −67.6 | corrected once, then −79.3 |
+  | Taxi `LN` s1 | **0.023** (0.003) | CONVERGED | −93 to −100 | corrected once, then −82.8 | corrected once, then −81.3 |
+  | Taxi `LN` s2 | **0.029** (0.004) | CONVERGED | −93 to −103 | corrected once, then −71.7 | corrected once, then −77.6 |
+  | Boat Race `LE+ENT3` s1 | **0.023** (0.024) | CONVERGED | −85 to −88 | corrected once, then −100 | — |
+
+  - All three Taxi seeds have the target's end state: corrected in round 0, then a new exploit. That is the noreg_fail result.
+  - Boat Race `LE+ENT3` has s1 and s2 CONVERGED; s0 is at 10,176/12,288.
+- **Rule 4: a tuning run with all seeds CONVERGED → `confirm`.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm taxi N1_P1eq1_LN` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_LN_confirm --seeds 20 21 22 --results-dir results/step4/taxi/noreg_fail --set ppo.ent_coef=0.03 ppo.batch_size=1600 task.obs=onehot g.use_regularization=False g.epochs=1000 episodes=768 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ...`. That equals `N1_P1eq1_LN/overrides.json`.
+  - Submitted: `... submit` → **1992258 **.
+  - Taxi trains slowly while seeds are corrected: the tuning run needed one 48 h job plus about 13 h. Expect a rule-1 resume.
+- Cells DONE: 0 of 2.
