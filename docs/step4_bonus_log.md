@@ -2566,3 +2566,12 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The guard (iteration 208) worked as intended, and the push succeeded. The repo keeps these seeds' 6144-episode `logs.npz`; the full files stay on FarmShare. Added to the flag at the top.
 - **Rule 3.** `br_missing` does not list `LN+N4` yet: its training job is still running. All three seeds are checked at 12,288 once it finishes.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 217 (15:28–15:40): Tomato base `LN+N4` s0 at the cap → check 1993881; correction to iteration 216
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_tomato_B1_base_LN+N4 … step4_br.py results/step4/tomato/bonus/B1_base_LN+N4 --finished-only --draws 12`.
+  - Submitted: `... br_missing submit` → **1993881** (queued).
+  - s0 has finished at 12,288. s1 (12,072) and s2 (12,120) are still in 1990670. The job checks whichever seeds have finished when it starts; any seed it misses gets its own check later.
+- **Correction to iteration 216.** I wrote there that `br_missing` did not list `LN+N4` because its training job was still running. That reason is wrong: `br_missing` only skips runs with a check job queued, not runs whose training job is still running (`scripts/farmshare/step4_optimal.sh`, the `br_missing` case). At that dry-run (14:39), s0 had not yet finished; it finished before the 14:41 commit.
+- Cells DONE: 7 of 12.
