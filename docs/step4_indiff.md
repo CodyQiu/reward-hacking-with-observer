@@ -55,7 +55,11 @@ A target seed passes when all three hold. Use the same tolerance as elsewhere: 5
 
 - **A1, no hiding.** Round 0's window is exploited with probability ≥ 0.95, so the agent is corrected at once.
 - **A2, honest after its corrections.** In every round after the last correction, and in round 4, true return ≥ honest − 5% of the range.
-- **A3, no farming.** The optimum is caught in a round k ≥ 1 (probability ≥ 0.05) only at a correction level where the best round under the reward in force (mean table) itself uses the bug in the window.
+- **A3, a best round every round (no farming, no hiding).** In every audited round k ≥ 1, at every correction level c the optimum is at with probability ≥ 0.05, its probability of using the bug in the window equals that of the best round under level c's mean reward, within 0.05.
+  - Higher is farming: a correction triggered on purpose.
+  - Lower is hiding: a leftover bug kept out of the window.
+  - A deviation that costs nothing is a tie. It is reported and does not fail A3.
+  - *Amended 2026-11-17, before any target existed.* The first version only asked that a catch happen at a level whose best round uses the window. With random starts, that version passes partial farming, and it misses hiding a leftover bug. The amendment tests the theorem's own prediction, as far as the audit can see.
 
 The method works when every seed of all six envs passes A1–A3.
 
@@ -107,7 +111,7 @@ So it overpaid, and the agent farmed.
 **The estimator** (`g.offset_rule=pool`, written 2026-11-17). It uses the same rule, level += [M̂(r_old) − M̂(r_new)] / T_sub. M̂(r) is the best mean return under r among one pool of plays, each relabelled under r without new env steps. The pool holds:
 - the reference rollouts;
 - the caught play (the rollouts the correction is fitted on);
-- the agent's own **final-round** play from the last `g.pool_episodes` (8) episodes, grouped by correction level.
+- the agent's own **final-round** play from the last `g.pool_episodes` (8) episodes, grouped by correction level. In the targets and the best-response check, only the levels the agent reaches in the final round (probability ≥ 0.05) are used, since training stores only those.
 
 Why each choice:
 - **The same pool serves both terms,** so the errors cancel where the same play is best under both rewards.
@@ -125,7 +129,11 @@ The reference uses its real rollouts. Iteration 0 has no final-round play, so it
 
 **Validation** (pre-registered 2026-11-17). `CAMPAIGN=indiff_pool … targets`, the same 6 envs × 6 seeds. Then `experiments/step4_indiff_check.py results/step4/*/targets/indiff_pool/`, which prints:
 - per seed, A1–A3, and the same seed's exact-rule verdict for comparison;
-- per correction and draw, the estimated drop's error against the margins: overpayment × rounds left < δ, and underpayment < w.
+- per correction, the level's error against the margins.
+  - **The error.** It is the draw-averaged drop paid minus the drop the agent faces. The agent cannot see the draw, so the drop it faces is M of the mean reward before the correction minus after.
+  - **Which direction matters.** If the best round at level c − 1 uses the window, the correction happens anyway, and only underpaying matters: it must stay below w at level c − 1. Otherwise the correction would be deliberate, and only overpaying matters: the excess × (K − c) rounds must stay below δ at level c − 1, the cost of being caught then.
+  - **The same check for the exact rule** measures its value-of-information gap.
+  - **The error against the exact per-draw M** is printed as a diagnostic.
 
 The estimator is validated in an env when every seed passes A1–A3, as the exact rule must. A seed that passes under the exact rule but fails under the estimator is an estimation failure, reported with its error row. Only a validated estimator goes to MountainCar or LunarLander, where M is unknown.
 

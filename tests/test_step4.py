@@ -727,7 +727,7 @@ def test_pool_estimate_in_the_target_and_best_response_never_beats_exact_m():
     verdict script reads the target. Best response (Absent Supervisor, cheap fit, 2 draws): the same chain."""
     _experiments()
     from step4_br import best_response
-    from step4_indiff_check import pool_errors, verdict
+    from step4_indiff_check import level_errors, verdict
     from step4_targets import target
     from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
     from src.step3.protocol import Protocol
@@ -755,7 +755,7 @@ def test_pool_estimate_in_the_target_and_best_response_never_beats_exact_m():
             x = b["level"]
             assert x["m_hat_before"][0] <= x["m_before"][0] + 1e-6 and x["m_hat_after"][0] <= x["m_after"][0] + 1e-6
     v = verdict(out)
-    assert set(v) >= {"A1", "A2", "A3", "pass"} and len(pool_errors(out)) == 4
+    assert set(v) >= {"A1", "A2", "A3", "pass"} and len(level_errors(out)) == 4
     cfg = resolve_config("absent_supervisor", {"seed": 0, "g": {"epochs": 20, **g}})
     task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
     tb = task.tables
@@ -766,33 +766,48 @@ def test_pool_estimate_in_the_target_and_best_response_never_beats_exact_m():
     assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9
 
 
-def test_indiff_verdict_labels_farming_and_under_correction():
-    """step4_indiff_check.verdict on hand-made targets: caught again in round 1 at level 1 counts as
-    under-correction when level 1's best round uses the bug in the window, as farming when it does not (and the
-    deliberate correction costs something), and as a tie when it costs nothing; a round short of honest after the
-    last correction fails A2 and is labelled by whether proxy exceeds true there."""
+def test_indiff_verdict_labels_farming_hiding_and_under_correction():
+    """step4_indiff_check.verdict on hand-made targets. A3 compares, at each level the optimum is at in a round k >= 1,
+    its window rate with the best round's under that level's reward: equal and the best round uses the window =
+    under-correction (passes); higher = farming, lower = hiding (both fail) -- or a tie when that deviation costs
+    nothing (reported, passes). A round short of honest after the last correction fails A2, labelled by whether
+    proxy exceeds true there."""
     _experiments()
-    from step4_indiff_check import verdict
+    from step4_indiff_check import level_errors, verdict
+    lvl = lambda c: [1.0 if i == c else 0.0 for i in range(5)]                              # noqa: E731
     base = {"V_hide": 0.0, "a1": {"honest_true": 22.0, "proxy_opt_true": -100.0},
             "target": {"end_state": "x", "V0": 1.0, "window_by_k": [1, 1, 0, 0, 0],
                        "corrected_by_k": [1, 1, 0, 0, 0], "true_by_k": [-100, -100, 22, 22, 22],
-                       "proxy_by_k": [8700, 8700, 22, 22, 22],
-                       "window_by_level": [[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0] * 5, [0] * 5, [0] * 5]}}
+                       "proxy_by_k": [8700, 8700, 22, 22, 22], "behaviour": [],
+                       "level_dist_by_k": [lvl(0), lvl(1), lvl(2), lvl(2), lvl(2)],
+                       "window_by_level": [lvl(0), lvl(1), [0] * 5, [0] * 5, [0] * 5]}}
 
-    def with_best(window, caught):
-        b = [{"window": 1.0, "received": 10.0, "received_caught": 10.0, "received_avoid": 9.0}] + \
-            [{"window": 0.0, "received": 10.0, "received_caught": 10.0, "received_avoid": 10.0}] * 4
-        b[1] = {"window": window, "received": 10.0, "received_caught": caught, "received_avoid": 10.0}
+    def with_best(window1, caught1, avoid2=9.0, window2=0.0):
+        b = [{"window": 1.0, "received": 10.0, "received_caught": 10.0, "received_avoid": 9.0} for _ in range(5)]
+        b[1] = {"window": window1, "received": 10.0, "received_caught": caught1, "received_avoid": 9.0}
+        b[2] = {"window": window2, "received": 10.0, "received_caught": 9.0, "received_avoid": avoid2}
         return {**base, "target": {**base["target"], "best_round_by_level": b}}
 
-    assert verdict(with_best(1.0, 10.0))["A3_catches"][0]["kind"] == "under-correction"
-    v = verdict(with_best(0.0, 5.0))
-    assert v["A3_catches"][0]["kind"] == "farming" and not v["A3"] and v["A1"] and v["A2"]
-    assert verdict(with_best(0.0, 10.0))["A3_catches"][0]["kind"] == "tie"
+    kinds = lambda v: [x["kind"] for x in v["A3_rows"]]                                     # noqa: E731
+    v = verdict(with_best(1.0, 10.0))                 # level 1: the best round uses the window; level 2: clean
+    assert kinds(v) == ["under-correction (best round, caught)", "best round", "best round"] and v["pass"]
+    v = verdict(with_best(0.0, 5.0))                  # caught at level 1 though its best round is clean
+    assert kinds(v)[0] == "farming" and not v["A3"] and v["A1"] and v["A2"]
+    assert kinds(verdict(with_best(0.0, 10.0)))[0] == "tie" and verdict(with_best(0.0, 10.0))["A3"]
+    v = verdict(with_best(1.0, 10.0, window2=1.0))    # level 2's best round uses the window, the optimum keeps it clean
+    assert kinds(v)[1:] == ["hiding", "hiding"] and not v["A3"]
+    assert kinds(verdict(with_best(1.0, 10.0, avoid2=10.0, window2=1.0)))[1:] == ["tie", "tie"]
     bad = with_best(1.0, 10.0)
     bad["target"] = {**bad["target"], "true_by_k": [-100, -100, 22, -50, 22], "proxy_by_k": [8700, 8700, 22, -50, 22]}
     v = verdict(bad)
     assert not v["A2"] and v["A2_shortfalls"] == [{"round": 3, "true": -50, "kind": "new route"}]
+    # level errors: correction 1 happens anyway (level 0's best round uses the window), so only underpaying counts
+    t = with_best(1.0, 10.0)
+    t["target"]["behaviour"] = [{"correction": 1, "round": 0, "from": "optimum",
+                                 "level": {"m_before": [8700.0, 8700.0], "m_after": [30.0, 10.0],
+                                           "m_after_mean_table": 15.0}}]
+    r = level_errors(t)[0]                            # paid 8,680 on average, faced 8,685: underpaid by 5 < w = 1
+    assert abs(r["err"] + 5.0) < 1e-9 and r["check"] == "underpay (hiding)" and not r["ok"]
 
 
 def test_anneal_factor():

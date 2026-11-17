@@ -123,9 +123,9 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     pool_rule = gcfg.offset and gcfg.offset_rule == "pool"            # ... with M estimated from a pool of plays
     if exact_rule or pool_rule:                                        # each draw's M (best round, no level), level
         m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
-    if pool_rule:      # the agent's final-round play at each level: PPO's own probabilities in round K-1
+    if pool_rule:      # the agent's final-round play: PPO's own probabilities in round K-1, at the levels it reaches
         finals = []
-        for c in range(K):
+        for c in np.flatnonzero(np.asarray(ev_p["level_dist"])[K - 1] >= 0.05):
             Pf = np.stack([np.asarray(probs_at((K - 1) * T + tau), float)[:, c] for tau in range(T)])
             finals.append((lambda P, t0: (lambda t: P[t - t0]))(Pf, (K - 1) * T))
     for c in range(1, K):

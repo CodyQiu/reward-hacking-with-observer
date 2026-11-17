@@ -74,7 +74,7 @@ def pool_level(tb, proto, task, ref_trajs, caught, finals, rb_old, rb_new, p_old
         v = [float(rollout_returns(ref_trajs, task, params).mean()), round_value(tb, proto, rb, *caught)]
         return np.array(v + [round_value(tb, proto, rb, pa, K - 1) for pa in finals])
 
-    names = ["reference", "caught"] + [f"final lvl{c}" for c in range(len(finals))]
+    names = ["reference", "caught"] + [f"final {i}" for i in range(len(finals))]
     vb, va = vals(rb_old, p_old), vals(rb_new, p_new)
     ib, ia = int(np.argmax(vb)), int(np.argmax(va))
     return {"m_hat_before": float(vb[ib]), "m_hat_after": float(va[ia]), "best_before": names[ib],
@@ -167,7 +167,7 @@ def summarise(ev, V0, K, T):
             "true_by_k": ev["true"].tolist(), "window_by_k": ev["window"].tolist(),
             "corrected_by_k": ev["corrected"].tolist(),
             "corrections_per_ep": float(np.sum(ev["corrected"][:K - 1])),
-            "window_by_level": ev["window_by_level"].tolist(),
+            "window_by_level": ev["window_by_level"].tolist(), "level_dist_by_k": ev["level_dist"].tolist(),
             "exploit_by_tau": np.asarray(ev["exploit_t"]).reshape(K, T).tolist(),
             "end_state": end_state(ev, K)}
 
@@ -203,9 +203,11 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         pool = gcfg.offset and gcfg.offset_rule == "pool"     # ... with M estimated from a pool of plays
         if exact or pool:                                     # each draw's M (best round, no level) and level
             m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
-        if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum
+        if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum,
+            # at the levels it reaches in the final round (training only ever stores those)
             rnl_prev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws
-            finals = [] if pol is None else [round_probs(pol, A, level=c) for c in range(K)]
+            finals = [] if pol is None else [round_probs(pol, A, level=c) for c in range(K)
+                                             if ev["level_dist"][K - 1][c] >= 0.05]
         for c in range(1, K):
             w = None if ev is None else np.asarray(ev["window_by_level"])[:K - 1, c - 1]
             if w is not None and w.max() >= 0.05:            # the optimum's own caught round

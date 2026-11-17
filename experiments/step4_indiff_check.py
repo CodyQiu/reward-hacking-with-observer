@@ -1,21 +1,27 @@
-"""Step 4: the pre-registered verdict on exact-indifference targets (docs/step4_indiff.md, criteria A1-A3), and,
-for the pool estimate of M (g.offset_rule=pool), its error against the incentive margins.
+"""Step 4: the pre-registered verdict on exact-indifference targets (docs/step4_indiff.md, criteria A1-A3), and the
+level's error against the incentive margins -- for the exact rule (the value-of-information gap) and for the pool
+estimate of M (g.offset_rule=pool).
 
 Per target seed (results/step4/<env>/targets/<name>/seed<s>.json):
   A1 no hiding:   round 0's window is exploited with probability >= 0.95.
   A2 honest:      every round after the last correction, and round K-1, has true >= honest - 5% of the
                   honest-exploit range. A shortfall is labelled "original bug" (proxy > true in that round) or
                   "new route" (proxy = true: a less honest route, e.g. from a fine's spill).
-  A3 no farming:  wherever the optimum is caught in a round k >= 1 (P >= 0.05) at correction level c, the best
-                  round under level c's mean reward itself uses the bug in the window ("under-correction");
-                  otherwise "farming", or "tie" when that deliberate correction costs nothing (delta < 1e-6).
-Pool only (validation against the exact M recorded beside the estimate): per correction and draw, the error of
-the estimated drop, err = (M_hat_before - M_hat_after) - (M_before - M_after); overpaying (err > 0) brings
-farming back once err x (rounds left) exceeds delta, the cost of a deliberate correction at the new level;
-underpaying (err < 0) brings hiding back once -err exceeds w, what hiding costs a round at the old level.
+  A3 best round:  in every audited round k >= 1, at every correction level c the optimum is at with P >= 0.05,
+                  its probability of using the bug in the window equals that of the best round under level c's
+                  mean reward, within 0.05 (the theorem's prediction, as far as the audit sees). Higher is
+                  "farming", lower "hiding" -- or "tie" when the deviation costs nothing (delta or w < 1e-6),
+                  which is reported and does not fail A3.
+Per correction c (fitted in round k): the level's compensation, averaged over the overseer's draws, against the
+drop the agent actually faces. The agent cannot see the draw, so that drop is M of the mean reward before minus
+after (m_after_mean_table): err = mean_d(paid drop) - (M_bar(r_{c-1}) - M_bar(r_c)). Which sign matters depends
+on whether the correction happens anyway: if the best round at level c-1 uses the bug in the window, only
+underpaying matters (hiding pays once -err > w, what hiding costs a round at level c-1); otherwise the correction
+would be deliberate, and only overpaying matters (farming pays once err x (K - c) > delta, what being caught
+costs a round at level c-1; K - c = the most rounds a level-c correction can pay). The pool estimate's error
+against the exact per-draw M is printed too (a diagnostic).
 
-    .venv/bin/python experiments/step4_indiff_check.py results/step4/*/targets/indiff/
-    .venv/bin/python experiments/step4_indiff_check.py results/step4/*/targets/indiff_pool/ [--json out.json]
+    .venv/bin/python experiments/step4_indiff_check.py results/step4/*/targets/indiff/ results/step4/*/targets/indiff_pool/
 """
 
 import argparse
@@ -48,51 +54,64 @@ def verdict(res):
             short.append({"round": k, "true": t["true_by_k"][k], "kind": kind})
     out["A2"], out["A2_shortfalls"] = not short, short
     # A3
+    best, dist = t.get("best_round_by_level"), t.get("level_dist_by_k")
     wbl = np.asarray(t["window_by_level"])
-    best = t.get("best_round_by_level")
     a3 = []
-    for k in range(1, K - 1):
-        if corr[k] < P_MIN:
-            continue
-        for c in np.flatnonzero(wbl[k] >= P_MIN):
-            if best is None:
-                a3.append({"round": k, "level": int(c), "kind": "unknown (no best_round_by_level)"})
-                continue
-            b = best[int(c)]
-            if b["window"] > P_MIN:
-                kind = "under-correction"
-            elif "received_caught" in b and b["received"] - b["received_caught"] < 1e-6:
-                kind = "tie"
-            else:
-                kind = "farming"
-            a3.append({"round": k, "level": int(c), "kind": kind})
-    out["A3"] = all(x["kind"] in ("under-correction",) for x in a3)
-    out["A3_catches"] = a3
+    if best is None or dist is None:
+        a3.append({"kind": "unknown (target predates best_round_by_level / level_dist_by_k)"})
+    else:
+        for k in range(1, K - 1):
+            for c in range(len(best)):
+                occ = dist[k][c]
+                if occ < P_MIN:
+                    continue
+                agent, b = wbl[k][c] / occ, best[c]
+                row = {"round": k, "level": c, "agent_window": float(agent), "best_window": b["window"]}
+                if agent > b["window"] + P_MIN:
+                    row["kind"] = "tie" if b["received"] - b["received_caught"] < 1e-6 else "farming"
+                elif agent < b["window"] - P_MIN:
+                    row["kind"] = "tie" if b["received"] - b["received_avoid"] < 1e-6 else "hiding"
+                else:
+                    row["kind"] = "under-correction (best round, caught)" if b["window"] > P_MIN else "best round"
+                a3.append(row)
+    out["A3"] = all(x["kind"] not in ("farming", "hiding") and not x["kind"].startswith("unknown") for x in a3)
+    out["A3_rows"] = a3
     out["pass"] = out["A1"] and out["A2"] and out["A3"]
     return out
 
 
-def pool_errors(res):
-    """Per correction and draw: the estimated drop's error against the margins (pool only)."""
+def level_errors(res):
+    """Per correction: the level's compensation against the drop the agent faces, and which error direction
+    matters there (see the module docstring). For the exact rule the error is the value-of-information gap."""
     t = res["target"]
     K = len(t["true_by_k"])
     best = t.get("best_round_by_level") or []
-    rows = []
+    rows, m_bar_old = [], None
     for b in t["behaviour"]:
         lv = b.get("level", {})
-        if "m_hat_before" not in lv:
+        if "m_before" not in lv or "m_after_mean_table" not in lv or len(best) < b["correction"]:
             continue
-        c, k = b["correction"], b["round"]
-        err = (np.subtract(lv["m_hat_before"], lv["m_hat_after"])
-               - np.subtract(lv["m_before"], lv["m_after"]))
-        left = K - 1 - k                                   # rounds paid at the new level
-        delta = best[c]["received"] - best[c]["received_caught"] if c < len(best) else float("nan")
-        w = best[c - 1]["received"] - best[c - 1]["received_avoid"] if c - 1 < len(best) else float("nan")
-        rows.append({"correction": c, "round": k, "err_mean": float(np.mean(err)), "err_max": float(np.max(err)),
-                     "err_min": float(np.min(err)), "delta": delta, "w": w, "rounds_left": left,
-                     "overpay_ok": bool(np.max(err) * left < delta) if left else True,
-                     "underpay_ok": bool(-np.min(err) < w),
-                     "best_before": lv["best_before"], "best_after": lv["best_after"]})
+        c = b["correction"]
+        if m_bar_old is None:
+            m_bar_old = float(np.mean(lv["m_before"]))                 # M(proxy): no draw at level 0
+        pool = "m_hat_before" in lv
+        paid = np.subtract(lv["m_hat_before"], lv["m_hat_after"]) if pool else \
+            np.subtract(lv["m_before"], lv["m_after"])
+        faced = m_bar_old - lv["m_after_mean_table"]
+        err = float(np.mean(paid)) - faced
+        prev = best[c - 1]
+        anyway = prev["window"] > P_MIN                                 # the correction happens anyway
+        w = prev["received"] - prev["received_avoid"]
+        delta = prev["received"] - prev["received_caught"]
+        row = {"correction": c, "round": b["round"], "from": b["from"], "paid": float(np.mean(paid)),
+               "faced": faced, "err": err, "w": w, "delta": delta, "rounds": K - c,
+               "check": "underpay (hiding)" if anyway else "overpay (farming)"}
+        row["ok"] = bool(-err < w) if anyway else bool(err * (K - c) < delta)
+        if pool:
+            row["err_vs_exact_draws"] = float(np.mean(paid - np.subtract(lv["m_before"], lv["m_after"])))
+            row["best_candidates"] = sorted(set(lv["best_before"]) | set(lv["best_after"]))
+        rows.append(row)
+        m_bar_old = lv["m_after_mean_table"]
     return rows
 
 
@@ -108,21 +127,26 @@ def main():
                 res = json.load(fh)
             v = verdict(res)
             env = res["game"]["env"]
-            key = f"{env} {os.path.basename(os.path.dirname(f))} s{res['seed']}"
+            key = f"{env} {os.path.basename(os.path.dirname(f.rstrip('/')))} s{res['seed']}"
             print(f"{key}: {'PASS' if v['pass'] else 'FAIL'} (A1 {v['A1']}, A2 {v['A2']}, A3 {v['A3']}); "
                   f"{v['end_state']}; true {np.round(v['true_by_k'], 1).tolist()} (honest {v['honest']:.1f}); "
                   f"V0 {v['V0']:.1f} hide {v['V_hide']:.1f}; converged {res['fixed_point_converged']}")
-            for s in v["A2_shortfalls"]:
-                print(f"    A2: round {s['round']} true {s['true']:.1f}: {s['kind']}")
-            for x in v["A3_catches"]:
-                print(f"    A3: caught in round {x['round']} at level {x['level']}: {x['kind']}")
-            pe = pool_errors(res)
-            for r in pe:
-                print(f"    pool, correction {r['correction']} (round {r['round']}): drop error mean "
-                      f"{r['err_mean']:+.2f} [{r['err_min']:+.2f}, {r['err_max']:+.2f}] vs delta {r['delta']:.2f} "
-                      f"over {r['rounds_left']} rounds, w {r['w']:.2f}: overpay {'ok' if r['overpay_ok'] else 'TOO HIGH'}, "
-                      f"underpay {'ok' if r['underpay_ok'] else 'TOO HIGH'} (best: {r['best_before']} -> {r['best_after']})")
-            report[key] = {**v, "pool": pe}
+            for x in v["A2_shortfalls"]:
+                print(f"    A2: round {x['round']} true {x['true']:.1f}: {x['kind']}")
+            for x in v["A3_rows"]:
+                if "round" in x:
+                    print(f"    A3: round {x['round']} level {x['level']}: window {x['agent_window']:.2f} vs best "
+                          f"{x['best_window']:.2f}: {x['kind']}")
+                else:
+                    print(f"    A3: {x['kind']}")
+            le = level_errors(res)
+            for r in le:
+                extra = (f"; vs exact per-draw M {r['err_vs_exact_draws']:+.2f}, best candidates {r['best_candidates']}"
+                         if "err_vs_exact_draws" in r else "")
+                print(f"    level {r['correction']} (round {r['round']}, {r['from']}): paid {r['paid']:.2f} vs faced "
+                      f"{r['faced']:.2f}, err {r['err']:+.2f}; {r['check']}: w {r['w']:.2f}, delta {r['delta']:.2f} x "
+                      f"{r['rounds']} rounds -> {'ok' if r['ok'] else 'TOO LARGE'}{extra}")
+            report[key] = {**v, "levels": le}
     if args.json:
         with open(args.json, "w") as fh:
             json.dump(report, fh, indent=1, default=float)
