@@ -2536,3 +2536,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_B1_P1eq1_LN+ES10 … step4_br.py results/step4/tomato_large/bonus/B1_P1eq1_LN+ES10 --finished-only --draws 12`.
   - Submitted: `... br_missing submit` → **1992811**.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 214 (08:55–09:00): tomato_large swap `LE` s1 finished at 1536 → check 1992825
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_B1_P2swap_LE … step4_br.py results/step4/tomato_large/bonus/B1_P2swap_LE --finished-only --draws 12`. s1 has finished at 1536; s0 was checked (0.017); s2 is at 840.
+  - Submitted: `... br_missing submit` → **1992825** (s1 only).
+- Resume: only the NODE_FAIL run (Tomato no-reg `LN_confirm`) is listed. It is held for the user.
+- Cells DONE: 7 of 12.
