@@ -1103,3 +1103,6 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
   - Nothing was written for the other seeds or for Boat Race.
 - **Effect.** The comp log's "same seed's standard-PBRR target" comparison is now missing in Taxi (except s0) and Boat Race. The entries under "Exact predictions" say so. The Boat Race swap comparison (1989680) is still queued.
 - All my jobs: 54 (limit 110). Cells DONE: 3 of 6.
+- **02:51.**
+  - **1989692** (tomato_large `C1_comp_LE`, wave 1) COMPLETED (1-04:28:33). All three seeds have finished at 1536; s0 and s2 get checks once 1991852 (s1) ends.
+  - **1990357** (Tomato `C1_comp_L_confirm`, information only) COMPLETED (14:01:51): `... br_missing submit` → **1992218**, for the record.

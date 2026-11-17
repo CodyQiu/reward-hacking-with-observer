@@ -2435,3 +2435,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LE`: s0 is 0.231; s1 and s2 are still in wave 1 after a resume.
   - Rule 6b runs from `LN` (iteration 195).
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 207 (02:51–02:55): tomato_large swap `LE` s0 finished at 1536 → check 1992215
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_large_B1_P2swap_LE` (s0 finished at 1536; s1 at 960 and s2 at 696 after the 48 h resume).
+  - Submitted: `... br_missing submit` → **1992215**. This is the first check in the tomato_large swap cell.
+- The user cancelled comp's two plain standard-PBRR comparison targets (`docs/step4_comp_log.md`, iteration 70). This campaign's `B1_base_*` runs have the update bonus and were left running.
+- Cells DONE: 7 of 12.

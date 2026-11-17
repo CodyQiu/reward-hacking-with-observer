@@ -887,3 +887,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... br_missing submit` → **1992156 **.
   - If s0 and s2 converge, `LN` is 3/3 and goes to `confirm`.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 86 (02:51–02:55): checks: Taxi `N1_P1eq1_L` s2; Boat Race `LE+ENT3` s1 at the cap
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - Taxi `N1_P1eq1_L`: s2 finished at 768 (s1 was 0.042); s0 is at 720.
+    - Boat Race `N1_P1eq1_LE+ENT3`: s1 finished at 12,288 (s2 was 0.020); s0 is at 9792.
+  - Submitted: `... br_missing submit` → **1992216** (Taxi), **1992217** (Boat Race).
+- Cells DONE: 0 of 2.
