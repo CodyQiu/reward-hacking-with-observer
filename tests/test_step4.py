@@ -720,6 +720,28 @@ def test_overseer_pool_estimate_uses_earlier_final_rounds():
     assert len(over.final_pool) == 1 and over.final_pool[0][:2] == (0, 4) and len(over.final_pool[0][2]) == 2
 
 
+def test_pool_keeps_the_last_pool_episodes_episodes_by_level():
+    """The overseer's pool (offset_rule=pool) holds the final-round play of exactly the last g.pool_episodes
+    episodes, one group per correction level, at most k copies each."""
+    import src.step3.pbrr as pbrr
+    from src.pbrr_core import GConfig
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.tasks import get_task
+    task, P = get_task("grid"), Protocol()
+    uniform = lambda b, t, n, f: np.full((b.n, task.n_actions), 1.0 / task.n_actions)   # noqa: E731
+    ref = pbrr.rollouts(task.make_batch(2, seed=0), uniform, P, np.random.default_rng(0))
+    over = pbrr.Overseer(task, P, AuditedVecEnv(task, P, n_envs=3, seed=0), ref,
+                         GConfig(offset=True, offset_rule="pool", pool_episodes=2), k=1)
+    T = P.t_sub
+    for ep in range(4):
+        over._ep, over._ncorr = ep, np.array([0, 1, 1])
+        over._fk, over._ff = [np.zeros(3, np.int64)] * T, []
+        over._fp, over._ft = [np.full(3, float(ep))] * T, [np.zeros(3)] * T
+        over._store_final_round()
+    assert [(e, c, len(g)) for e, c, g in over.final_pool] == [(2, 0, 1), (2, 1, 1), (3, 0, 1), (3, 1, 1)]
+    assert all(g[0].proxy == T * e for e, _, g in over.final_pool)
+
+
 def test_pool_estimate_in_the_target_and_best_response_never_beats_exact_m():
     """step4_targets / step4_br with offset_rule=pool. Target (grid, one draw, two iterations, so the second uses
     the first optimum's final-round play): the levels chain on the estimate, the estimate's first M_hat_before is the

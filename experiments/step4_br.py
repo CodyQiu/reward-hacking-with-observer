@@ -127,7 +127,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
         finals = []
         for c in np.flatnonzero(np.asarray(ev_p["level_dist"])[K - 1] >= 0.05):
             Pf = np.stack([np.asarray(probs_at((K - 1) * T + tau), float)[:, c] for tau in range(T)])
-            finals.append((lambda P, t0: (lambda t: P[t - t0]))(Pf, (K - 1) * T))
+            finals.append((int(c), (lambda P, t0: (lambda t: P[t - t0]))(Pf, (K - 1) * T)))
     for c in range(1, K):
         w = wbl[:K - 1, c - 1]
         if w.max() >= P_MIN:                                           # PPO's own caught round

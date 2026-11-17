@@ -66,15 +66,15 @@ def pool_level(tb, proto, task, ref_trajs, caught, finals, rb_old, rb_new, p_old
     """The pool estimate of M before and after a correction (GConfig.offset_rule = "pool",
     docs/step4_indiff.md), exactly as the overseer forms it but with the agent's plays valued exactly:
     candidates = the reference rollouts (relabelled, as in training), the caught play ``caught`` = (probs_at,
-    round) and the agent's final-round play at each correction level ``finals`` (probs_at at round K-1).
+    round) and the agent's final-round play ``finals`` = [(level, probs_at at round K-1)].
     rb_* are the expected reward tables (no level), p_* the corrections in force. Returns a dict."""
     K = proto.n_sub
 
     def vals(rb, params):
         v = [float(rollout_returns(ref_trajs, task, params).mean()), round_value(tb, proto, rb, *caught)]
-        return np.array(v + [round_value(tb, proto, rb, pa, K - 1) for pa in finals])
+        return np.array(v + [round_value(tb, proto, rb, pa, K - 1) for _, pa in finals])
 
-    names = ["reference", "caught"] + [f"final {i}" for i in range(len(finals))]
+    names = ["reference", "caught"] + [f"final lvl{c}" for c, _ in finals]
     vb, va = vals(rb_old, p_old), vals(rb_new, p_new)
     ib, ia = int(np.argmax(vb)), int(np.argmax(va))
     return {"m_hat_before": float(vb[ib]), "m_hat_after": float(va[ia]), "best_before": names[ib],
@@ -206,7 +206,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum,
             # at the levels it reaches in the final round (training only ever stores those)
             rnl_prev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws
-            finals = [] if pol is None else [round_probs(pol, A, level=c) for c in range(K)
+            finals = [] if pol is None else [(c, round_probs(pol, A, level=c)) for c in range(K)
                                              if ev["level_dist"][K - 1][c] >= 0.05]
         for c in range(1, K):
             w = None if ev is None else np.asarray(ev["window_by_level"])[:K - 1, c - 1]

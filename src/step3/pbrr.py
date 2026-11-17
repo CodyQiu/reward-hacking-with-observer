@@ -32,7 +32,6 @@ on the task's tables): the agent is then indifferent to being corrected.
 """
 
 import time
-from collections import deque
 from dataclasses import dataclass, field
 
 import jax
@@ -356,7 +355,7 @@ class Overseer(BaseCallback):
             self.m_cache = {}            # (episode, history) -> (table of the correction in force, M of it)
             self._m_proxy = best_round_value(task.tables, task.tables.proxy, proto.t_sub)
         if self.pool:                    # (episode, level, rollouts): the agent's final-round play, by level
-            self.final_pool = deque(maxlen=gcfg.pool_episodes * proto.n_sub)
+            self.final_pool = []
 
     def _on_rollout_start(self):
         v, T = self.venv, self.proto.t_sub
@@ -408,6 +407,8 @@ class Overseer(BaseCallback):
             group = [Rollout(None if K is None else K[j], None if X is None else X[j], P[j], Tr[j],
                              {"episode": int(self._ep), "level": int(lvl)}) for j in idx]
             self.final_pool.append((int(self._ep), int(lvl), group))
+        oldest = int(self._ep) - self.gcfg.pool_episodes + 1          # keep the last pool_episodes episodes
+        self.final_pool = [x for x in self.final_pool if x[0] >= oldest]
 
     def _on_rollout_end(self):
         assert self._i == self.proto.t_sub, f"a round must be {self.proto.t_sub} steps, got {self._i}"
