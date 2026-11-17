@@ -2369,3 +2369,13 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **The record-only check.** **1991194** (AS `LN+RS+GL_confirm` at 24,576) COMPLETED (2:31): s20 0.022 CONVERGED; s21 0.000 CONVERGED; s22 0.039 IMPROVING. It is at the cap, and the cell is DONE.
 - **Tomato base.** All six Tomato base runs are now at or headed to the 12,288 cap.
 - Cells DONE: 7 of 12.
+
+## 2026-11-16, iteration 202 (20:45–20:48): tomato_large base `L` reached 3072 → check 1991405; Tomato base `LE` s0 at the 12,288 cap → check 1991404
+
+- **Training wait.** **1990168** (tomato_large `B1_base_L`, extended to 3072) COMPLETED 20:45 (15:24:57, exit 0).
+- **Tomato `B1_base_LE`** (→ the 12,288 cap, 1989626): s0 finished; s1 and s2 are at 11,976 and 12,000.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1991404** (Tomato `LE` s0), **1991405** (tomato_large `L`, all three seeds).
+  - tomato_large checks take a few hours.
+- Cells DONE: 7 of 12.
