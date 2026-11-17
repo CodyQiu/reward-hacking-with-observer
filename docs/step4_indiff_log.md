@@ -432,5 +432,5 @@ V_hide is 928.0 in every seed.
   - Taxi `I2_indiff_pool_L` s1 finished its 768 episodes in 30 min. Its log shows 3 PBRR rounds in all, windows and off-window exploits 0.00, and proxy −90.1 per round: it never exploits and is never corrected.
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_I2_indiff_pool_L … step4_br.py results/step4/taxi/indiff_pool/I2_indiff_pool_L --finished-only --draws 12`.
   - Submitted: `... br_missing submit` → **1993883**.
-- **Queue:** 17 of the 18 wave-1 runs started between 14:53 and 15:28; 44 jobs in all.
+- **Queue:** all 18 wave-1 runs are running (started from 14:53); 46 jobs in all, 3 pending (the three newest checks).
 - No PPO for `indiff` (the user).
