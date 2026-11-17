@@ -114,6 +114,7 @@ V_hide is 928.0 in every seed.
 
 | Seed | Job | Verdict | End state | True by round | Windows k = 0..4 | V0 / V_hide | Level errors (paid − faced), levels 1–4 |
 |---|---|---|---|---|---|---|---|
+| 1 | 1992076 (6:02:04; converged) | **FAIL A2, A3** | 3.18 corrections (1.0, 0.71, 0.73, 0.75) | 65.0, 503.5, 501.5, 499.9, 498.7 | 1.0, 0.71, 0.73, 0.75, 0.76 | 3,927.9 / 3,686.8 | −0.14, −0.42, −0.16, −0.05 (all ok) |
 | 2 | 1992077 (4:22:49; converged) | **FAIL A3** | 2.88 corrections (by round 1.0, 0.61, 0.63, 0.64) | 65.0, 507.1, 505.7, 504.7, 503.8 | 1.0, 0.61, 0.63, 0.64, 0.65 | 3,928.1 / 3,686.8 | −0.16, −0.39, −0.05, −0.07 (all ok) |
 | 20 | 1992078 (4:22:59; converged) | **PASS** | 1.84 corrections (1.0, 0.30, 0.28, 0.27) | 65.0, 517.9, 518.2, 518.5, 518.5 | 1.0, 0.30, 0.28, 0.27, 0.26 | 3,927.9 / 3,686.8 | −0.42, −0.13, −0.04, −0.15 (all ok) |
 | 21 | 1992079 (4:51:38; converged) | **PASS** | 1.92 corrections (1.0, 0.35, 0.30, 0.28) | 65.0, 516.5, 517.2, 517.5, 517.7 | 1.0, 0.35, 0.30, 0.28, 0.26 | 3,928.3 / 3,686.8 | −0.30, −0.16, −0.04, −0.14 (all ok) |
@@ -122,6 +123,7 @@ V_hide is 928.0 in every seed.
 - **s2: under-correction, as predicted.** After each correction, the best round still touches the bug in the window (probability 0.65–0.70), so the optimum is corrected again, in rounds 1–3 with probability 0.61–0.64.
 - **Mild hiding at level 1.** At level 1 the optimum touches the window with 0.61, against the best round's 0.70, which is why A3 fails. The level errors are tiny (at most 0.39 per round), but the margins at levels 2–4 are as small (w and δ 1.7–2.0). So the agent is near indifferent about the second correction.
 - **The theorem holds:** received is 785.4–786.0 in every round.
+- **s1 fails A2 and A3, both from under-correction.** After every correction the bug stays in the best round (0.75–0.79), so the optimum is corrected 3.18 times. True return falls to 498.7 by round 4, 5.2% of the range below honest, just past A2's 5%. A3 fails at level 1 in rounds 1–2 (window 0.71–0.72 against 0.79), a slight hiding with level errors of at most 0.42 against margins of 1.5–2.7.
 - **s20 and s21 pass, with under-correction.** They are corrected again with probability 0.27–0.35 per round, because the bug stays in the best round. Every window is within 0.05 of the best round's, which A3 allows.
 - **s22 fails A3 only at round 1, level 1** (window 0.50 against the best round's 0.55, at the 0.05 tolerance). Its other rounds are under-correction within tolerance.
 - So under the exact rule, tomato_large's failures come from the fit (under-correction, as predicted), plus near-ties of the agent at the second correction. The level errors are at most 0.42 per round.
@@ -336,4 +338,16 @@ V_hide is 928.0 in every seed.
   - exact: 2 PASS (s20, s21), 2 FAIL A3 (s2, s22);
   - pool: 0 PASS, 2 FAIL A3 (s0, s22).
   - Still running: exact s0, s1; pool s1, s2, s20, s21.
+- No PPO.
+
+## 2026-11-17, iteration 13 (12:42–12:50): indiff tomato_large s1 FAIL A2, A3 (under-correction)
+
+- **Finished.** **1992076** (`targets_tomato_large_indiff_s1`) COMPLETED (6:02:04); converged.
+- **Verdict: FAIL A2 and A3.**
+  - Under-correction leaves the bug in the best round after every correction, so the optimum takes 3.18 corrections.
+  - True return falls to 498.7 by round 4. A2's 5% band ends at 499.7, so it fails A2 by 1 point.
+  - A3: a slight hiding at level 1 (0.71–0.72 vs 0.79).
+  - Level errors are at most 0.42 per round. Recorded under "Exact predictions".
+- **tomato_large exact so far:** 2 PASS (s20, s21), 3 FAIL (s1, s2, s22); s0 still running. Pool: 0 PASS, 2 FAIL; s1, s2, s20, s21 still running.
+- (The first commit of this iteration, 63df52e15, carried only the result files: my log edit had failed on a script error, `NameError: name 'new2' is not defined`. This commit adds the log entry.)
 - No PPO.
