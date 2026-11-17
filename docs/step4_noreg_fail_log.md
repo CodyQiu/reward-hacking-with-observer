@@ -1003,3 +1003,21 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... br_missing submit` → **1992924** (s1 only).
 - **Next (rule 4):** once s1 is checked, the run is extended to 1536 if any seed is IMPROVING.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 95 (10:18–10:22): Taxi `N1_P1eq1_LE` 0/3 at 768 (all IMPROVING) → extend 1536 (1992967)
+
+- **The check.** **1992924** (Taxi `N1_P1eq1_LE` s1 at 768) COMPLETED (25:29).
+
+  | Seed | BR gap at 768 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | 0.048 | IMPROVING | −101.9, then −103 to −90 | −88.2, then −73.5 ×4 |
+  | s1 | **0.051** (s.e. 0.002) | IMPROVING | −100.5, then −91 to −90 | −88.2, then −76.8 ×4 |
+  | s2 | 0.047 | IMPROVING | −100.6, then −104 to −90 | −88.2, then −76.3 ×4 |
+
+  - In every seed PPO has the best response's end state: corrected in round 0, then never again, with a new exploit after it (true −90 against honest 125). It takes a lower-paying route.
+- **Rule 4 (wave-1 run, all IMPROVING, below Taxi's 6144 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi N1_P1eq1_LE 1536` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_LE --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1992967**.
+  - The 0 → 768 leg needed one 48 h resume, so this leg will probably need one too.
+- **Budget:** 3 noreg_fail jobs before this one (limit 20).
+- Cells DONE: 0 of 2.
