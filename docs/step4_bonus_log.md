@@ -2411,3 +2411,5 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1992051**.
   - s0 was 0.160 at the cap, so `L` ends unconverged.
 - Cells DONE: 7 of 12.
+- **01:45.** Check **1992051** (Tomato `B1_base_L` at the 12,288 cap) COMPLETED (19:49): s0, s1 and s2 all **0.160**, PLATEAU, all reactive; the best response hides. At the cap, `L` is finished (0/3).
+- **Tomato base summary.** `L` and `LE` both finished 0/3 at the cap, and `LN` finished 0/3 (PLATEAU). The exploration runs `LN+ENT3`, `LN+N4`, `LN+ES10` and `LN+ES10+N4` are all heading to the cap. Only `LN+ES10+N4` s0/s1 hide (0.000).

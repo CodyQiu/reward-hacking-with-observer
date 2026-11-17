@@ -870,3 +870,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted: `... br_missing submit` → **1992052**.
 - Cells DONE: 0 of 2.
 - **01:30.** Check **1992052** (Boat Race `LE+ENT3` s2 at 12,288) COMPLETED (1:34): **0.020** (s.e. 0.007), CONVERGED. It is corrected once, then the new exploit at −100, like its best response. s0 (9384) and s1 (10,752) are still training. At 6144 they were 0.024 and 0.035.
+
+## 2026-11-17, iteration 84 (01:45–01:48): Taxi `N1_P1eq1_LN` s1 0.023 CONVERGED
+
+- **The check.** **1992023** (Taxi `N1_P1eq1_LN` s1 at 768) COMPLETED (34:39).
+  - s1: BR gap **0.023** (s.e. 0.003), CONVERGED.
+  - Corrected in round 0, then never again: PPO's true is −93 to −100 per round, the best response's −82.8 and the target's −81.3. This is the target's end state: a new exploit after the correction.
+  - s0 (696/768) and s2 (744/768) are nearly done.
+- Cells DONE: 0 of 2.
