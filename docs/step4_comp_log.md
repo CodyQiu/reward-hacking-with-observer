@@ -1314,3 +1314,16 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - It exploits through most audit windows, so it triggers about 3.5 PBRR rounds per episode (about 60 s each in Taxi), against near zero in the hiding seeds. Its last 24 episodes took 4.5 h.
   - At this rate the job reaches its 48 h limit with s0 at roughly 250–300 episodes. Rule 1 (resume) then applies.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 85 (11:30–11:34): Taxi `C1_comp_L` s0 0.158, s2 0.127 at 1536 (both still hide)
+
+- **The check.** **1992987** (Taxi `C1_comp_L` at 1536) COMPLETED (56:06). It covered s0, plus s2, which finished at 1536 before the job started.
+
+  | Seed | BR gap 768 → 1536 | PPO | Best response |
+  |---|---|---|---|
+  | s0 | 0.189 → **0.158** | hides (true about −82 every round) | corrected in round 0, then honest (124.8 ×4) |
+  | s2 | 0.146 → **0.127** | hides (−81.4 to −88.3) | corrected in round 0, then honest (124.7 ×4) |
+
+  - Both gaps are falling, but both seeds still hide.
+- **Rule 4.** No decision yet: s1 is still at 768 in 1992751.
+- Cells DONE: 3 of 6.
