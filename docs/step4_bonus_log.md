@@ -8,6 +8,8 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Flags for the user
 
+- **NEW (2026-11-17, iteration 208): one file is too large for GitHub and stays uncommitted on FarmShare.** `results/step4/tomato/bonus/B1_base_LN+ES10+N4/seed2/logs.npz` is 120,573,945 bytes (115 MiB) after the run reached 12,288 episodes, and GitHub rejects any file over 100 MiB. The repo keeps that seed's 6144-episode `logs.npz` (62 MB), next to its 12,288-episode `metrics.json`, round CSVs and model. The full file is only on FarmShare. `step4_commit.sh` now leaves out any file over 99 MiB and prints a warning (fix and test committed). Say if you want the file kept another way (for example Git LFS, or a copy off the cluster).
+
 - **NEW (2026-11-16, iteration 193): Tomato no-reg `B1_P1eq1_LN_confirm` (job 1988344) was killed by a node failure. I have not resubmitted it, and am waiting for you.**
   - **What happened.** Slurm state `NODE_FAIL` at 11:56:42, after 18:59:31 of its 48 h, exit 1:0.
   - **The node.** `wheat-06`; `sinfo` shows it `down*` with reason "Not responding". None of my other jobs were on it.
@@ -2443,3 +2445,19 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1992215**. This is the first check in the tomato_large swap cell.
 - The user cancelled comp's two plain standard-PBRR comparison targets (`docs/step4_comp_log.md`, iteration 70). This campaign's `B1_base_*` runs have the update bonus and were left running.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 208 (05:20–05:40): push rejected (a file over 100 MiB); step4_commit.sh fixed
+
+- **The error.** `git push` of the comp campaign's iteration-73 commit (d8ba989cc, local only) failed:
+  `remote: error: GH001: Large files detected.` and `! [remote rejected] main -> main (pre-receive hook declined)`. The file named was `results/step4/tomato/bonus/B1_base_LN+ES10+N4/seed2/logs.npz`, a 120,573,945-byte blob (115 MiB).
+- **Cause.** `B1_base_LN+ES10+N4` seed 2 finished at 12,288 episodes with 256 envs (N4). Its `logs.npz` grew from 62 MB at 6144 episodes to 120,573,945 bytes. `step4_commit.sh` stages a finished seed's whole directory, and it had no size check. CLAUDE.md calls it "size-safe", but that covered only running seeds' checkpoints.
+- **Fix (clearly a bug, committed with a test).**
+  - Before committing, `step4_commit.sh` unstages every added or modified file over 99 MiB and prints `not committed (over 99 MiB; GitHub rejects files over 100 MiB): <path>`.
+  - New test: `test_step4_commit_sh_leaves_out_files_github_rejects`. A finished seed with a sparse 100 MiB + 1 byte `logs.npz` is pushed without that file, and with its other files.
+  - `.venv/bin/python tests/test_step4.py`: **39 tests, 0 failed**.
+- **Recovery.**
+  - `git reset --soft HEAD~1` undid the unpushed commit and kept its changes staged.
+  - The fixed script then committed everything except that one file, under a new commit.
+  - No run was overwritten or deleted.
+  - The file is flagged at the top.
+- **Other big files.** The largest committed files are 95.5 MiB (AS no-reg `LN+RS+ENT3_confirm` s21; pushed fine), and nothing else on disk is over 99 MiB. More N4 runs at 12,288 episodes may cross the limit; the script now leaves those out and warns.

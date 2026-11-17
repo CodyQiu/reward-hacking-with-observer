@@ -981,6 +981,39 @@ def test_step4_commit_sh_commits_the_log_before_tomato_large_exists():
             assert fh.read() == "a\nb\nc\n"
 
 
+def test_step4_commit_sh_leaves_out_files_github_rejects():
+    """A finished seed's directory is committed whole, but GitHub rejects any file over 100 MiB and then the
+    whole push fails (GH001: a 115 MiB logs.npz, 2026-11-17). step4_commit.sh leaves such a file out, says so,
+    and commits and pushes the rest of the seed. The big file is sparse, so the test writes no 100 MiB to disk."""
+    import shutil, subprocess, tempfile
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    git = lambda cwd, *a: subprocess.run(["git", *a], cwd=cwd, check=True, capture_output=True, text=True).stdout
+    with tempfile.TemporaryDirectory() as tmp:
+        remote, work = os.path.join(tmp, "remote.git"), os.path.join(tmp, "work")
+        git(tmp, "init", "-q", "--bare", remote)
+        git(tmp, "clone", "-q", remote, work)
+        for k, v in (("user.name", "t"), ("user.email", "t@t"), ("commit.gpgsign", "false")):
+            git(work, "config", k, v)
+        os.makedirs(os.path.join(work, "scripts", "farmshare"))
+        shutil.copy(os.path.join(repo, "scripts", "farmshare", "step4_commit.sh"), os.path.join(work, "scripts", "farmshare"))
+        git(work, "add", "-A"); git(work, "commit", "-qm", "init"); git(work, "push", "-q", "-u", "origin", "HEAD")
+        sd = os.path.join(work, "results", "step4", "grid", "bonus", "R", "seed0")
+        os.makedirs(sd)
+        for f in ("metrics.json", "model.zip"):
+            with open(os.path.join(sd, f), "w") as fh:
+                fh.write("{}\n")
+        with open(os.path.join(sd, "logs.npz"), "wb") as fh:
+            fh.truncate(100 * 1024 * 1024 + 1)
+        out = subprocess.run(["bash", "scripts/farmshare/step4_commit.sh", "msg"], cwd=work, capture_output=True, text=True)
+        assert out.returncode == 0, out.stderr
+        assert "not committed" in out.stderr and "seed0/logs.npz" in out.stderr, out.stderr
+        files = git(remote, "ls-tree", "-r", "--name-only", "HEAD").split()
+        assert "results/step4/grid/bonus/R/seed0/metrics.json" in files
+        assert "results/step4/grid/bonus/R/seed0/model.zip" in files
+        assert "results/step4/grid/bonus/R/seed0/logs.npz" not in files
+        assert git(work, "status", "--porcelain").strip() == "?? results/step4/grid/bonus/R/seed0/logs.npz"
+
+
 def test_finished_seed_is_read_from_the_directory_listing():
     """A resumed seed renames metrics.json to metrics_ep<N>.json. On the NFS home the login node kept the old
     name's cached dentry for many minutes, so os.path.exists / [[ -f ]] called a training seed finished:

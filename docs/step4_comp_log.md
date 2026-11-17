@@ -1136,3 +1136,13 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
   - `LE`: → 3072;
   - the 6b exploration runs from `LN` (iteration 60): 4 runs training.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 73 (05:20–05:23): Boat Race `C1_comp_LN_confirm` s21, s22 at 6144 → check 1992538
+
+- **Tick.** No job failed. Nothing to resume.
+- **Boat Race `C1_comp_LN_confirm`** (→ 6144, 1991432): s21 and s22 finished at 6144; s20, the deciding seed (0.074 at 3072), is at 4416.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_C1_comp_LN_confirm`.
+  - Submitted: `... br_missing submit` → **1992538**.
+- Cells DONE: 3 of 6.
+- **Push note (05:32).** The first commit of this iteration (d8ba989cc) was never pushed: GitHub rejected a 115 MiB `logs.npz` from the bonus campaign. It was redone as a new commit after the commit-script fix (`docs/step4_bonus_log.md`, iteration 208). Nothing in this campaign changed.

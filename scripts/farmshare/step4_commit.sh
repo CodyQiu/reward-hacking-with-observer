@@ -40,6 +40,14 @@ for env in grid absent_supervisor tomato tomato_large taxi boat_race; do
   done
   done
 done
+# GitHub rejects any file over 100 MiB (GH001) and then refuses the whole push; a finished 12,288-episode run
+# with 256 envs wrote a 115 MiB logs.npz (2026-11-17, docs/step4_bonus_log.md). Leave such files out, say so.
+MAX_BYTES=$((99 * 1024 * 1024))
+while IFS= read -r -d '' f; do
+  if (( $(git cat-file -s ":$f") > MAX_BYTES )); then
+    git reset -q -- "$f"; echo "not committed (over 99 MiB; GitHub rejects files over 100 MiB): $f" >&2
+  fi
+done < <(git diff --cached --name-only -z --diff-filter=AM)
 if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
 # pull by merge, never by rebase/autostash: a stash replaces every modified tracked file with a new inode,
 # and a running worker keeps writing its seed log through the old (deleted) one, so its log is lost.
