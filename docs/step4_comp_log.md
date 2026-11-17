@@ -1344,3 +1344,20 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... submit` → **1993102**. At the cap, rule 4 ends the run.
 - **Taxi comp so far:** every checked seed of `L`, `LN` and `LE` (9 of 9) hides. The 6b exploration runs (1991185–1991188, from `LN`) are training; `LN+ENT3` s1 and s2 are being checked (1993060).
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 87 (12:11–12:16): **tomato_large `C1_comp_L` 3/3 CONVERGED at 1536 → `confirm` (1993134)**
+
+- **The check.** **1991926** (tomato_large `C1_comp_L`, all three seeds at 1536) COMPLETED (10:10:51).
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response |
+  |---|---|---|---|---|
+  | s0 | **0.008** | CONVERGED | 65.0, then 515.1–515.3 (corrected in round 0, then never again) | the same end state: 522.6 ×3, 522.1 |
+  | s1 | **0.008** | CONVERGED | 65.0, then 514.4–515.0 (the same) | the same: 522.6 ×3, 521.6 |
+  | s2 | **0.008** | CONVERGED | 65.0, then 514.7–515.8 (the same) | 1.59 corrections; 520.2–521.9 |
+
+  - As in `LE`, PPO is corrected once and is then near honest (about 515 against 522.6). It does not farm.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large C1_comp_L` printed `submit.sh 48 --env tomato_large --run-id C1_comp_L_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/comp --set ppo.ent_coef=0.03 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1993134**.
+  - The cell now has two confirmations running, `LE_confirm` (1992827) and `L_confirm`, as Tomato had. The cell is DONE when either is 3/3; the other is then information only.
+- Cells DONE: 3 of 6.
