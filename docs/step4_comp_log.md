@@ -873,3 +873,14 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - This is the same case as Tomato `C1_comp_L` s1 at 1536 (0.286, honest from round 0), which converged at 3072. Skipping the round-0 correction forgoes the level.
 - **Whether `LN` is IMPROVING or PLATEAU** needs the target. s0 and s2 are still training.
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 55 (16:48–16:51): Taxi `C1_comp_LE` s1 0.182, s2 0.172 (both hide, IMPROVING); s0 at 264/768
+
+- **The check.** **1990810** (Taxi `C1_comp_LE`) COMPLETED (46:22). It covered s1 and also s2, which finished before the check reached it.
+  - s1: **0.182**, IMPROVING.
+  - s2: **0.172**, IMPROVING.
+  - Both hide: never corrected, true −89 to −92 per round. The best response is corrected in round 0, then honest (124.7).
+  - s0 is at 264/768. It is corrected often (true about −96 each round), so it trains slowly.
+- **Rule 4** waits for s0's check: extending now would overwrite the checked seeds' models before s0 is done.
+- **Taxi so far.** 8 of 8 checked seeds across `L`, `LN` and `LE` hide; the target is "corrected once, then honest" in 4 of 6 seeds.
+- Cells DONE: 2 of 6.
