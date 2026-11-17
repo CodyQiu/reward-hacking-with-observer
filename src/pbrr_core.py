@@ -88,6 +88,11 @@ class GConfig:
     # agent rollouts' mean return under r_hat_{k-1} and V_ref_after the reference rollouts' under proxy + g_k
     offset: bool = False
     offset_margin: float = 0.02
+    # How the level is sized. "rollouts" (above; docs/step4_comp.md). "exact" (docs/step4_indiff.md): exact
+    # indifference -- correction k raises the level by [M(r_{k-1}) - M(r_k)] / T_sub, with M(r) the best
+    # expected return of one sub-episode under reward r (exact DP over the task's tables; levels excluded), so
+    # the agent's future is worth the same whether or not, and however, it is corrected (offset_margin unused)
+    offset_rule: str = "rollouts"
     # Step 4 fines only (applied by the overseer, not the fit; docs/step4_comp.md): the correction in force
     # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
     # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)

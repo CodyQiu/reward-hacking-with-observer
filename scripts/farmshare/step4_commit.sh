@@ -1,6 +1,6 @@
 #!/bin/bash
 # Commit and push the Step 4 campaigns' results without bloating git (docs/step4_optimal.md, step4_bonus.md,
-# step4_noreg_fail.md, step4_comp.md):
+# step4_noreg_fail.md, step4_comp.md, step4_indiff.md):
 # every call stages the small files (targets, exact checks, convergence reports and curves, best-response checks,
 # configs, progress, seed logs, runs.csv, the campaign log); a seed's large checkpoint files (logs.npz, model.zip,
 # the round CSVs) only once it has finished (metrics.json), because a running seed rewrites them every 24 episodes.
@@ -15,11 +15,13 @@ MSG=${1:?commit message}
 finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && return 0; done; return 1; }
 # one path at a time: a missing path (tomato_large before its Phase A) fails the whole git add
 for p in docs/step4_optimal_log.md docs/step4_bonus_log.md docs/step4_noreg_fail_log.md docs/step4_comp_log.md \
+         docs/step4_indiff_log.md \
          results/step3/tomato_large; do
   [[ -e $p ]] && git add -A "$p"; done
 for env in grid absent_supervisor tomato tomato_large taxi boat_race; do
   for d in results/step4/$env/targets results/step4/$env/phase_a; do [[ -d $d ]] && git add -A "$d"; done
-  for o in results/step4/$env/optimal results/step4/$env/bonus results/step4/$env/noreg_fail results/step4/$env/comp; do
+  for o in results/step4/$env/optimal results/step4/$env/bonus results/step4/$env/noreg_fail results/step4/$env/comp \
+           results/step4/$env/indiff; do
   [[ -d $o ]] || continue
   [[ -f $o/runs.csv ]] && git add "$o/runs.csv"
   for r in "$o"/*/; do

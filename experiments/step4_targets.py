@@ -26,7 +26,9 @@ With g.offset (the compensated correction, docs/step4_comp.md) each correction a
 draw: level_offset(V_before, V_ref_after), with V_before the caught policy's exact value in its caught
 round under that draw's reward in force (dp.round_value, without the rollouts' action noise: the agent is
 the deterministic optimum, and its own rollouts would carry no noise) and V_ref_after the run's reference
-rollouts' mean under proxy + the draw's new g, as the overseer computes it in training.
+rollouts' mean under proxy + the draw's new g, as the overseer computes it in training. With
+g.offset_rule=exact (exact indifference, docs/step4_indiff.md) the level instead rises by
+[M(r_old) - M(r_new)] / T per draw (dp.best_round_value, levels excluded), as the overseer computes it.
 
 Also reported: the value of never being corrected (hiding) and the margin by which the target beats
 it, and each single draw's own optimum (how robust the end state is to the overseer's randomness).
@@ -51,9 +53,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from step3_ppo import parse_sets  # noqa: E402
 from src.pbrr_core import GConfig, boltzmann_label  # noqa: E402
-from src.step3.dp import (evaluate_levels, round_probs, round_value, solve_levels,  # noqa: E402
-                          solve_subepisode, solve_subepisode_caught, table_policy_fn)
-from src.step3.pbrr import fit_correction_rows, g_table, level_offset, rollout_returns, rollouts  # noqa: E402
+from src.step3.dp import (best_round_value, evaluate_levels, round_probs, round_value,  # noqa: E402
+                          solve_levels, solve_subepisode, solve_subepisode_caught, table_policy_fn)
+from src.step3.pbrr import (exact_level, fit_correction_rows, g_table, level_offset,  # noqa: E402
+                            rollout_returns, rollouts)
 from src.step3.protocol import MinCorrection, Protocol  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
@@ -87,6 +90,44 @@ def sub_value(tb, pol, R, T):
         tot += (m * R[r]).sum()
         d = np.bincount(tb.nxt[r].ravel(), weights=m.ravel(), minlength=tb.n_states)
     return float(tot)
+
+
+def round_window(tb, pol, T, W):
+    """P(a single sub-episode policy ``pol`` (T, S) exploits at least once in the last W steps), from mu0."""
+    d = np.stack([tb.mu0, np.zeros(tb.n_states)], axis=1)              # (S, flag)
+    for tau in range(T):
+        r = np.arange(tb.n_states) * tb.n_actions + pol[tau]
+        hit = tb.exploit[r] & (tau >= T - W)                            # (S, F)
+        nd = np.zeros_like(d)
+        for f in (0, 1):
+            m = d[:, f][:, None] * tb.prob[r]
+            to1 = m * hit if f == 0 else m
+            nd[:, 1] += np.bincount(tb.nxt[r].ravel(), weights=to1.ravel(), minlength=tb.n_states)
+            if f == 0:
+                nd[:, 0] += np.bincount(tb.nxt[r].ravel(), weights=(m * ~hit).ravel(), minlength=tb.n_states)
+        d = nd
+    return float(d[:, 1].sum())
+
+
+def best_rounds(tb, R_lv, T, W, proto=None):
+    """Per correction level: the best single round under the mean reward in force -- whether it uses the bug
+    in the audit window (then a correction there is under-correction, not farming; docs/step4_indiff.md A3)
+    and its true and received return. With ``proto`` also the two tolerances an estimate of M must meet
+    (docs/step4_indiff.md, "Estimating M"): ``received_caught``, the best round that is caught (so
+    ``received - received_caught`` is what a deliberate correction costs), and ``received_avoid``, the best
+    round that keeps the window clean (so ``received - received_avoid`` is what hiding costs a round)."""
+    out = []
+    for R in R_lv:
+        pol = solve_subepisode(tb, R, T)
+        rec = {"window": round_window(tb, pol, T, W), "true": sub_value(tb, pol, tb.true, T),
+               "received": sub_value(tb, pol, R, T)}
+        if proto is not None:
+            rbar = (tb.prob * R).sum(axis=1)
+            rec["received_caught"] = round_value(tb, proto, rbar, round_probs(solve_subepisode_caught(tb, R, T, W),
+                                                                              tb.n_actions), 0)
+            rec["received_avoid"] = sub_value(tb, solve_subepisode(tb, R, T, avoid_window=W), R, T)
+        out.append(rec)
+    return out
 
 
 def end_state(ev, K):
@@ -136,16 +177,19 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         rprev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws if gcfg.offset else None
         corr = [None] * n_draws                               # each draw's correction in force
         G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
+        exact = gcfg.offset and gcfg.offset_rule == "exact"   # exact indifference (docs/step4_indiff.md)
+        if exact:                                             # each draw's M (best round, no level) and level
+            m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
         for c in range(1, K):
             w = None if ev is None else np.asarray(ev["window_by_level"])[:K - 1, c - 1]
             if w is not None and w.max() >= 0.05:            # the optimum's own caught round
                 k = int(w.argmax())
-                fn, exact = table_policy_fn(pol, A, eps), round_probs(pol, A, level=c - 1)
+                fn, exact_p = table_policy_fn(pol, A, eps), round_probs(pol, A, level=c - 1)
                 behaviour.append({"correction": c, "from": "optimum", "round": k, "p_caught": float(w[k])})
             else:                                             # counterfactual: the best policy that is caught
                 k = c - 1
                 pol_c = solve_subepisode_caught(tb, Rbar[c - 1], T, W)
-                fn, exact = table_policy_fn(pol_c, A, eps), round_probs(pol_c, A)
+                fn, exact_p = table_policy_fn(pol_c, A, eps), round_probs(pol_c, A)
                 behaviour.append({"correction": c, "from": "best caught policy (counterfactual)", "round": k})
             acc, lv = np.zeros_like(tb.proxy), []
             for d in range(n_draws):
@@ -161,8 +205,14 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                 else:
                     corr[d] = params
                     Rd = tb.proxy + g_table(params, task)
-                if gcfg.offset:                               # the compensated correction's level
-                    v_before = round_value(tb, proto, rprev[d], exact, k)
+                if exact:                                     # the exact-indifference level
+                    m_new = best_round_value(tb, Rd, T)
+                    lv.append({"level": exact_level(lvl_prev[d], m_prev[d], m_new, T), "m_before": m_prev[d],
+                               "m_after": m_new})
+                    m_prev[d], lvl_prev[d] = m_new, lv[-1]["level"]
+                    Rd = Rd + lv[-1]["level"]
+                elif gcfg.offset:                             # the compensated correction's level
+                    v_before = round_value(tb, proto, rprev[d], exact_p, k)
                     v_ref = float(rollout_returns(ref_trajs, task, corr[d]).mean())
                     lv.append({"level": level_offset(gcfg, v_before, v_ref, T), "v_before": v_before,
                                "v_ref_after": v_ref})
@@ -174,6 +224,9 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
             if lv:
                 behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
             Rbar.append(acc / n_draws)
+            if exact:      # the policy cannot see the draw: the best round of the mean table (level removed)
+                mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
+                behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         R_lv = np.stack(Rbar)
         V0, pol = solve_levels(tb, proto, R_lv)
         ev = evaluate_levels(tb, proto, R_lv, pol)
@@ -184,6 +237,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         rec["best_after_one_correction_true"] = sub_value(tb, pol_1, tb.true, T)
         rec["honest_after_one_correction"] = sub_value(tb, pol_gt, R_lv[1], T)
         rec["exploit_after_one_correction"] = sub_value(tb, pol_px, R_lv[1], T)
+        rec["best_round_by_level"] = best_rounds(tb, R_lv, T, W, proto)
         iters.append(rec)
         log(f"  iteration {it}: {rec['end_state']}; V0 {rec['V0']:.1f} (hide {V_hide:.1f}); true by k "
             f"{np.round(rec['true_by_k'], 1).tolist()}; windows {np.round(rec['window_by_k'], 2).tolist()} "

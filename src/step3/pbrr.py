@@ -26,6 +26,9 @@ The compensated correction (GConfig.offset, docs/step4_comp.md): with every corr
 overseer also installs a level, a constant received on every step until the episode ends,
 sized from the round's own rollouts so that the reference under the new reward earns what the
 caught play earned under the reward in force when it was caught (``level_offset``).
+With GConfig.offset_rule = "exact" (docs/step4_indiff.md) the level instead rises by the exact drop
+in the best round's value, [M(r_old) - M(r_new)] / T_sub (``exact_level``, M = dp.best_round_value
+on the task's tables): the agent is then indifferent to being corrected.
 """
 
 import time
@@ -38,11 +41,12 @@ import optax
 from stable_baselines3.common.callbacks import BaseCallback
 
 from ..pbrr_core import GConfig, boltzmann_label, mlp_apply, mlp_init
+from .dp import best_round_value
 from .protocol import MinCorrection, encode_obs, g_apply
 from .task import exploit_mask
 
 __all__ = ["Rollout", "rollouts", "policy_probs_fn", "fit_correction_rows", "g_on_rows", "rollout_returns",
-           "level_offset", "Overseer"]
+           "level_offset", "exact_level", "Overseer"]
 
 
 # ---------------------------------------------------------------------------------
@@ -295,6 +299,14 @@ def level_offset(gcfg, v_before, v_ref_after, t_sub):
     return (max(0.0, v_before - v_ref_after) + gcfg.offset_margin * abs(v_before)) / t_sub
 
 
+def exact_level(old_level, m_before, m_after, t_sub):
+    """The exact-indifference level (GConfig.offset_rule = "exact"; docs/step4_indiff.md): a correction that
+    replaces reward r by r' raises the level in force by [M(r) - M(r')] / t_sub, M = dp.best_round_value
+    (levels excluded). Then at the start of round k the agent's value is (K - k)(M(r) + t_sub * level) whatever
+    it does, so its best play in every round is the best round under the reward in force."""
+    return old_level + (m_before - m_after) / t_sub
+
+
 # ---------------------------------------------------------------------------------
 # The overseer
 # ---------------------------------------------------------------------------------
@@ -323,6 +335,12 @@ class Overseer(BaseCallback):
         self.on_exploit, self.caught = [], []
         self.step_received, self.step_proxy, self.step_true = [], [], []
         self._ref_rows = _traj_rows(ref_trajs, task)
+        self.exact = gcfg.offset and gcfg.offset_rule == "exact"
+        assert gcfg.offset_rule in ("rollouts", "exact"), gcfg.offset_rule
+        if self.exact:                   # exact indifference: M by DP on the task's tables
+            assert task.tables is not None, "offset_rule=exact needs a tabular task (dp.best_round_value)"
+            self.m_cache = {}            # (episode, history) -> (table of the correction in force, M of it)
+            self._m_proxy = best_round_value(task.tables, task.tables.proxy, proto.t_sub)
 
     def _on_rollout_start(self):
         v, T = self.venv, self.proto.t_sub
@@ -384,10 +402,24 @@ class Overseer(BaseCallback):
             D = D_prev + new
             params, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)))
             self.cache[(episode, history)] = D
+            new_params = params
             if self.gcfg.fine_only:                      # fines only, never relaxed: min(0, g_1, ..., g_k)
                 params = (old_params if old_params is not None else MinCorrection(())).then(params)
             lv = {}
-            if self.gcfg.offset:                         # the compensated correction (docs/step4_comp.md)
+            if self.exact:                               # exact indifference (docs/step4_indiff.md)
+                tb, T = self.task.tables, self.proto.t_sub
+                G_old, m_old = self.m_cache.get((episode, history[:-1]), (None, self._m_proxy))
+                assert G_old is not None or old_params is None, "the reward in force must be cached"
+                g_new = g_table(new_params, self.task)
+                if self.gcfg.fine_only:
+                    G = np.minimum(0.0 if G_old is None else G_old, g_new).astype(np.float32)
+                else:
+                    G = g_new.astype(np.float32)
+                m_new = best_round_value(tb, tb.proxy + G, T)
+                self.m_cache[(episode, history)] = (G, m_new)
+                lv = {"level": exact_level(old_level, m_old, m_new, T), "level_m_before": m_old,
+                      "level_m_after": m_new}
+            elif self.gcfg.offset:                       # the compensated correction (docs/step4_comp.md)
                 v_before = float(rollout_returns(agent, self.task, old_params, old_level).mean())
                 v_ref = float(rollout_returns(self.ref_trajs, self.task, params).mean())
                 lv = {"level": level_offset(self.gcfg, v_before, v_ref, self.proto.t_sub),
@@ -408,6 +440,8 @@ class Overseer(BaseCallback):
                       f"g(ref) {rec['g_ref']:+.2f} ({rec['seconds']:.1f}s)", flush=True)
         cur = v.episode
         self.cache = {key: d for key, d in self.cache.items() if key[0] == cur}
+        if self.exact:
+            self.m_cache = {key: m for key, m in self.m_cache.items() if key[0] == cur}
 
     def _g_summary(self, params, agent):
         """Mean g per step on the agent's exploit transitions, on its other transitions,

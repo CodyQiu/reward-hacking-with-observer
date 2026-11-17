@@ -21,7 +21,7 @@ exploited. ``solve_subepisode`` is the single-sub-episode optimum of a fixed rew
 import numpy as np
 
 __all__ = ["solve_levels", "evaluate_levels", "evaluate_levels_probs", "value_from_occupancy", "onehot_probs",
-           "solve_subepisode", "solve_subepisode_caught", "table_policy_fn", "round_value", "round_probs",
+           "solve_subepisode", "best_round_value", "solve_subepisode_caught", "table_policy_fn", "round_value", "round_probs",
            "refs_from_eval"]
 
 
@@ -209,6 +209,16 @@ def solve_subepisode(tb, R, T, avoid_window=0):
         pol[tau] = Q.argmax(axis=1)
         V = Q.max(axis=1)
     return pol
+
+
+def best_round_value(tb, R, T):
+    """M(R): the best expected return of one sub-episode from mu0 under reward R (S*A, F), no audit -- the
+    exact-indifference level's yardstick (GConfig.offset_rule = "exact"; docs/step4_indiff.md). Every
+    sub-episode restarts the base task, so M does not depend on what happened before."""
+    V = np.zeros(tb.n_states)
+    for tau in range(T - 1, -1, -1):
+        V = _q(tb, R, V[tb.nxt]).max(axis=1)
+    return float(tb.mu0 @ V)
 
 
 def solve_subepisode_caught(tb, R, T, window):

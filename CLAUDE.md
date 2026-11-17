@@ -396,6 +396,13 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **The cells.** Grid, AS, Tomato, tomato_large, Taxi and Boat Race. `CAMPAIGN=comp`; runs `C1_comp_*` in `results/step4/<env>/comp/`. `compare` adds the swap's and standard PBRR's 1000-epoch targets in Taxi and Boat Race.
   - **Expected.** Honest after one correction in grid, AS, Tomato and tomato_large, where the 1000-epoch standard correction already makes honest the best round. Taxi and Boat Race are open: with fewer epochs, standard PBRR under-corrected there.
   - **The FarmShare prompt** (`docs/step4_loop_prompt.md`) now runs three campaigns.
+  - **Result (exact targets, 2026-11-16).** No target hides, in any env, and none uses a new hidden exploit after its correction. But the level farms: AS 6/6, Tomato 5/6, Boat Race 6/6. Its V_ref,after (the reference's return) underestimates the agent's best play after a correction (AS 372 vs 450), so re-corrections overpay.
+- **Exact-indifference correction (from 2026-11-17; `docs/step4_indiff.md`, log `docs/step4_indiff_log.md`).**
+  - **The mechanism.** Fines only, plus a level that rises by [M(r_old) − M(r_new)]/T_sub at each correction (`g.offset=True g.offset_rule=exact g.fine_only=True`). M is the best round's value under a reward (`dp.best_round_value`, exact DP).
+  - **The theorem** (tested): every round restarts the base task, so the value at the start of round k is (K − k)(M(r) + T·level) whatever the agent does. It plays a best round under the reward in force, so it never hides, never farms, and never shapes its correction. Leftover failures are the fit's (under-correction, spill).
+  - **The user, 2026-11-17:** the overseer may compute M ("I don't see why not"). Success is option A: never hides, never farms, honest after its corrections, more than one allowed while the bug still pays. Pre-registered criteria A1–A3 are in the doc.
+  - **Open:** estimating M where it cannot be computed. Only the drop matters, and the tolerances are asymmetric: underpay by < w (the window's value), overpay by almost nothing (Taxi 2, Boat Race 0).
+  - `CAMPAIGN=indiff` runs targets only until the user has seen them; tomato_large runs one target job per seed.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 

@@ -470,6 +470,205 @@ def test_fines_only_correction_is_the_running_minimum():
     assert np.allclose(env.correction(X[:2]), [g_on_rows(m2, X[:1])[0], 0.0])
 
 
+def test_best_round_value_is_the_sub_episode_optimum():
+    """dp.best_round_value, the exact-indifference yardstick M (docs/step4_indiff.md): the grid's open exploit
+    8,700 and honest 22, and on random rewards the value of dp.solve_subepisode's policy."""
+    _experiments()
+    from step4_targets import sub_value
+    from src.step3.dp import best_round_value, solve_subepisode
+    from src.step3.tasks import get_task
+    for env in ("grid", "absent_supervisor"):
+        tb = get_task(env).tables
+        R_noise = tb.proxy + np.random.default_rng(0).normal(0.0, 5.0, tb.proxy.shape)
+        for R in (tb.proxy, tb.true, R_noise):
+            assert abs(best_round_value(tb, R, 100) - sub_value(tb, solve_subepisode(tb, R, 100), R, 100)) < 1e-6
+    tb = get_task("grid").tables
+    assert abs(best_round_value(tb, tb.proxy, 100) - 8_700) < 1e-9
+    assert abs(best_round_value(tb, tb.true, 100) - 22) < 1e-9
+
+
+def test_round_window_reads_a_rounds_audit_exposure():
+    """step4_targets.round_window (criterion A3, docs/step4_indiff.md): the open exploit's round uses the bug in the
+    window, the window-avoiding and honest rounds do not, and it matches the level evaluation's round-0 window."""
+    _experiments()
+    from step4_targets import best_rounds, round_window
+    from src.step3.dp import evaluate_levels, solve_levels, solve_subepisode
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    P = Protocol()
+    T, W = P.t_sub, P.window
+    for env in ("grid", "tomato"):
+        tb = get_task(env).tables
+        assert abs(round_window(tb, solve_subepisode(tb, tb.proxy, T), T, W) - 1) < 1e-9
+        assert round_window(tb, solve_subepisode(tb, tb.proxy, T, avoid_window=W), T, W) < 1e-12
+        assert round_window(tb, solve_subepisode(tb, tb.true, T), T, W) < 1e-12
+        R = np.stack([tb.proxy] * P.n_sub)
+        ev = evaluate_levels(tb, P, R, solve_levels(tb, P, R)[1])
+        b = best_rounds(tb, R[:2], T, W)
+        assert abs(b[0]["window"] - ev["window"][0]) < 1e-9 and abs(b[0]["received"] - ev["received"][0]) < 1e-6
+
+
+def _exact_levels(tb, T, K, rng, fines_only):
+    """Random corrections c = 1..K-1 (fines; or raises and fines) with the exact-indifference levels."""
+    from src.step3.dp import best_round_value
+    from src.step3.pbrr import exact_level
+    G, R, lvl, m = np.zeros(tb.proxy.shape), [tb.proxy], 0.0, best_round_value(tb, tb.proxy, T)
+    for _ in range(1, K):
+        step = -rng.exponential(30.0, G.shape) * (rng.random(G.shape) < 0.3)
+        if fines_only:
+            G = np.minimum(G, step)
+        else:
+            G = step + rng.exponential(10.0, G.shape) * (rng.random(G.shape) < 0.1)
+        m_new = best_round_value(tb, tb.proxy + G, T)
+        lvl, m = exact_level(lvl, m, m_new, T), m_new
+        R.append(tb.proxy + G + lvl)
+    return np.stack(R)
+
+
+def test_exact_indifference_makes_the_future_independent_of_being_corrected():
+    """The theorem behind offset_rule=exact (docs/step4_indiff.md). Whatever the corrections are (random fines,
+    or random raises and fines), with level_c = level_{c-1} + [M(r_{c-1}) - M(r_c)] / T the optimum is worth
+    exactly K x M(proxy), for any detection probability: by induction the value at the start of round k is
+    (K - k)(M(r) + T level) whether or not, and however, the agent is corrected, so it gains and loses nothing
+    by a correction and plays a best round under the reward in force. On the grid and in Absent Supervisor that
+    round exploits through the audit window (8,700 vs 7,700; 1,550 vs 1,450), so the optimum is caught in round 0."""
+    from src.step3.dp import best_round_value, evaluate_levels, solve_levels
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    for env in ("grid", "absent_supervisor"):
+        tb = get_task(env).tables
+        for p in (1.0, 0.5):
+            P = Protocol(p_detect=p)
+            T, K = P.t_sub, P.n_sub
+            m0 = best_round_value(tb, tb.proxy, T)
+            for trial, fines_only in ((0, True), (1, True), (2, False)):
+                R = _exact_levels(tb, T, K, np.random.default_rng(trial), fines_only)
+                V, pol = solve_levels(tb, P, R)
+                assert abs(tb.mu0 @ V[:, 0, 0] - K * m0) < 1e-6 * K * abs(m0), (env, p, trial, tb.mu0 @ V[:, 0, 0])
+                ev = evaluate_levels(tb, P, R, pol)
+                assert ev["window"][0] > 1 - 1e-9 and abs(ev["corrected"][0] - p) < 1e-9, (env, p, trial)
+                assert abs(ev["received"].sum() - K * m0) < 1e-6 * K * abs(m0)
+
+
+def test_exact_indifference_closed_forms_on_the_step1_grid():
+    """offset_rule=exact on the Step 1 grid with the oracle patch (a correction makes the reward the true one).
+    Level 1 = (8,700 - 22) / 100 = 86.78 a step, so honest play after the correction receives the 8,700 the
+    open exploit received before it, and hiding still gives up the window: the optimum is caught in round 0
+    and honest after, 5 x 8,700 = 43,500 against 39,500 for hiding. A later correction that also fines honest
+    play (the goal's +50, by 40) is paid back exactly: level 2 = 86.78 + 40 / 100 = 87.18, so it is neither
+    sought nor hidden from -- re-triggering it would take E in the window, which costs the goal (8,578 < 8,700)."""
+    from src.step3.dp import best_round_value, evaluate_levels, solve_levels
+    from src.step3.pbrr import exact_level
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    task, P = get_task("grid"), Protocol()
+    tb, T = task.tables, P.t_sub
+    goal = np.zeros(tb.proxy.shape)
+    goal[(tb.true > 40) & (tb.prob > 0)] = -40.0                 # entering the goal pays 49 (50 - 1 for the step)
+    r = [tb.proxy, tb.true] + [tb.true + goal] * 3
+    m = [best_round_value(tb, x, T) for x in r]
+    assert np.allclose(m, [8_700, 22, -18, -18, -18])
+    lv = [0.0]
+    for c in range(1, P.n_sub):
+        lv.append(exact_level(lv[-1], m[c - 1], m[c], T))
+    assert np.allclose(lv, [0.0, 86.78, 87.18, 87.18, 87.18])
+    R = np.stack([x + l for x, l in zip(r, lv)])
+    V, pol = solve_levels(tb, P, R)
+    ev = evaluate_levels(tb, P, R, pol)
+    assert abs(tb.mu0 @ V[:, 0, 0] - 43_500) < 1e-6
+    assert np.allclose(ev["corrected"], [1, 0, 0, 0, 0]) and np.allclose(ev["true"], [-100, 22, 22, 22, 22])
+    assert np.allclose(ev["received"], [8_700] * 5)
+    hide = np.stack([tb.proxy] + [tb.proxy - 1e6] * (P.n_sub - 1))
+    assert abs(tb.mu0 @ solve_levels(tb, P, hide)[0][:, 0, 0] - 39_500) < 1e-6
+
+
+def test_overseer_installs_the_exact_level():
+    """The training overseer with offset_rule=exact and fines only (grid, cheap fit): an open exploiter is caught in
+    rounds 0 and 1. Each correction's level is the previous one plus [M(before) - M(after)] / T; M(before) of the
+    first is M(proxy) = 8,700, the second's is the first's M(after), and M(after) is the best round under proxy +
+    the correction the env actually has in force; every copy receives the level."""
+    import src.step3.pbrr as pbrr
+    from src.pbrr_core import GConfig
+    from src.step3.dp import best_round_value, solve_levels, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.reference import build_reference
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid", {"g": {"offset": True, "offset_rule": "exact", "fine_only": True, "epochs": 20}})
+    task, P = get_task("grid"), Protocol(**cfg["protocol"])
+    tb, T = task.tables, P.t_sub
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))              # exploit in view every round
+    fn = table_policy_fn(pol, tb.n_actions)
+    ref, _ = build_reference(task, T, {**cfg["pbrr"], "seed": cfg["pbrr"]["ref_seed"]})
+    ref_trajs = pbrr.rollouts(task.make_batch(3, seed=1), ref, P, np.random.default_rng(1))
+    env = AuditedVecEnv(task, P, n_envs=2, seed=0)
+    env.reset()
+    over = pbrr.Overseer(task, P, env, ref_trajs, GConfig(**cfg["g"]), k=3)
+    over.model = None
+    real = pbrr.policy_probs_fn
+    pbrr.policy_probs_fn = lambda model, proto, n_actions: fn
+    try:
+        for t in range(2 * T):
+            env.step_async(fn(env.batch, t, env.n_corr, env.flagged).argmax(axis=1))
+            env.step_wait()
+            if (t + 1) % T == 0:
+                over.run_pending_rounds()
+    finally:
+        pbrr.policy_probs_fn = real
+    r1, r2 = over.rounds
+    assert abs(r1["level_m_before"] - 8_700) < 1e-6 and abs(r2["level_m_before"] - r1["level_m_after"]) < 1e-9
+    assert abs(r1["level"] - (r1["level_m_before"] - r1["level_m_after"]) / T) < 1e-9
+    assert abs(r2["level"] - r1["level"] - (r2["level_m_before"] - r2["level_m_after"]) / T) < 1e-9
+    assert r2["level_m_after"] <= r1["level_m_after"] + 1e-6                  # fines only: M never rises
+    assert np.allclose(env.level, r2["level"]) and list(env.n_corr) == [2, 2]
+    G = pbrr.g_table(env.g_params[0], task)
+    assert abs(best_round_value(tb, tb.proxy + G, T) - r2["level_m_after"]) < 1e-3
+
+
+def test_exact_indifference_target_and_best_response_record_the_rule():
+    """experiments/step4_targets.py and step4_br.py with offset_rule=exact. Target (grid, one draw, one
+    iteration): the levels chain by the rule from M(proxy) = 8,700, and with one draw the theorem is exact, so
+    V0 = 5 x 8,700 = 43,500 and the optimum is caught in round 0. Best response (Absent Supervisor, cheap fit,
+    2 draws): the same chain per draw, and the paired gaps average to the mean-table gap."""
+    _experiments()
+    from step4_br import best_response
+    from step4_targets import target
+    from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+
+    def chain(beh, n, T=100):
+        prev_after, prev_level = None, np.zeros(n)
+        for b in beh:
+            x = b["level"]
+            if prev_after is not None:
+                assert np.allclose(x["m_before"], prev_after)
+            assert np.allclose(np.subtract(x["level"], prev_level),
+                               np.subtract(x["m_before"], x["m_after"]) / T)
+            assert np.all(np.asarray(x["m_after"]) <= np.asarray(x["m_before"]) + 1e-6)     # fines only
+            prev_after, prev_level = x["m_after"], np.asarray(x["level"])
+
+    g = {"offset": True, "offset_rule": "exact", "fine_only": True}
+    cfg = resolve_config("grid", {"seed": 0, "g": g})
+    out = target(cfg, n_draws=1, max_iter=1, per_draw=False, log=lambda m: None)
+    beh = out["target"]["behaviour"]
+    assert abs(beh[0]["level"]["m_before"][0] - 8_700) < 1e-6
+    chain(beh, 1)
+    for b in beh:
+        assert abs(b["level"]["m_after_mean_table"] - b["level"]["m_after"][0]) < 1e-3
+    assert abs(out["target"]["V0"] - 43_500) < 1e-3 and out["target"]["window_by_k"][0] > 1 - 1e-9
+    assert out["game"]["g"]["offset_rule"] == "exact"
+    cfg = resolve_config("absent_supervisor", {"seed": 0, "g": {"epochs": 20, **g}})
+    task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
+    tb = task.tables
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))
+    res = best_response(cfg, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions), n_draws=2,
+                        log=lambda m: None)
+    chain(res["behaviour"], 2)
+    assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9 and res["gap"] >= -1e-9
+
+
 def test_anneal_factor():
     from src.step3.train import _anneal_factor
     an = {"last": 0.25, "floor": 0.1}
