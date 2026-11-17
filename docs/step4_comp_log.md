@@ -1024,3 +1024,10 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
 - **Rule 5 (wave 2)** waits until every Taxi wave-1 run is finished: `L` (s1 training; s0, s2 IMPROVING) and `LE` (→ 1536) are not. Rule 6b runs from `LN` (iteration 60).
 - Cells DONE: 3 of 6.
 - **22:13.** **1989693** (tomato_large `C1_comp_LN`, wave 1) COMPLETED (23:52:26, exit 0). s0 finished too. Check **1991542** started before that, so s0 gets its own check once `br_missing` lists it.
+
+## 2026-11-16, iteration 66 (23:19–23:23): tomato_large `C1_comp_LE` s1 finished at 1536 → check 1991852
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_large_C1_comp_LE` (s1 finished; s0 at 1032 and s2 at 1296).
+  - Submitted: `... br_missing submit` → **1991852**.
+- The tomato_large comp target (1989675) is still running, at about 24 h of its 36 h. Cells DONE: 3 of 6.
