@@ -893,3 +893,12 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Tomato is DONE once a confirmation is 3/3; s20 and s22 follow.
 - Cells DONE: 2 of 6.
 - **17:21.** **1990232** (Tomato `C1_comp_LN_confirm`, 1536) COMPLETED (6:17:54, exit 0). s20 and s22 have finished too. Check **1990981** is still PENDING, so it will cover all three seeds. If it is 3/3, Tomato is DONE.
+
+## 2026-11-16, iteration 57 (17:41–17:44): Tomato `C1_comp_LE_confirm` at 3072 → check 1991014 
+
+- **Tick.** No job failed. Nothing to resume (Tomato no-reg `LN_confirm` in bonus is still held for the user).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_C1_comp_LE_confirm` (extended to 3072, 1990482).
+  - Submitted: `... br_missing submit` → **1991014 **.
+- **Also running:** check **1990981** (Tomato `C1_comp_LN_confirm`, all three seeds). Either confirmation at 3/3 makes **Tomato DONE**.
+- Cells DONE: 2 of 6.
