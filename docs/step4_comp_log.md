@@ -1291,3 +1291,15 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... submit` → **1992892**.
   - It extends s21 and s22 too, because the run's seeds move together. At the cap, if s20 is still unconverged, the confirmation has failed.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 83 (10:32–10:37): Taxi `C1_comp_LE` finished at 3072; `C1_comp_L` s0 at 1536 → checks 1992987, 1992988
+
+- **Events.**
+  - **1992394** (Taxi `C1_comp_LE`, extension to 3072) COMPLETED (5:44:02). All three seeds are at 3072. This leg was fast: the seeds hide, so they trigger few PBRR rounds.
+  - Taxi `C1_comp_L` (extension to 1536, 1992751, running 3:26) has s0 finished at 1536 and s2 at 1488. s1, the seed that exploits through windows half the time, is still at 768.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed:
+    - `run_cmd.sh 6 4 br_taxi_C1_comp_L … step4_br.py results/step4/taxi/comp/C1_comp_L --finished-only --draws 12`;
+    - `run_cmd.sh 6 4 br_taxi_C1_comp_LE … step4_br.py results/step4/taxi/comp/C1_comp_LE --finished-only --draws 12`.
+  - Submitted: `... br_missing submit` → **1992987** (`L`, s0 at 1536) and **1992988** (`LE`, all three at 3072).
+- Cells DONE: 3 of 6.
