@@ -969,3 +969,12 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
 - **Submitted:** `... submit` → **1991185** (`+ENT3`), **1991186** (`+ES10`), **1991187** (`+N4`), **1991188** (`+ES10+N4`).
   - Taxi trains slowly while seeds are corrected (about 60 s per PBRR round), so these will likely need rule-1 resumes.
 - **Budget.** Comp jobs about 16 (limit 30); all my jobs 38 (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-16, iteration 61 (19:59–20:02): Taxi `C1_comp_LN` reached 1536 → check 1991301; Boat Race `LN_confirm` s21, s22 at 3072 → check 1991302
+
+- **Training wait.** **1990638** (Taxi `C1_comp_LN`, extended to 1536) COMPLETED 19:59 (2:48:54, exit 0). The seeds hide, so they train fast.
+- **Boat Race `C1_comp_LN_confirm`** (→ 3072, 1990749): s21 and s22 finished at 3072; s20, the deciding seed, is at 2496.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
+  - Submitted: `... br_missing submit` → **1991301** (Taxi `LN`), **1991302** (Boat Race `LN_confirm` s21, s22).
+- Cells DONE: 3 of 6.
