@@ -829,3 +829,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - s0 (480/768) and s2 (504/768) are still training, after the 48 h resume.
 - **Rule 4** waits for s0 and s2.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 80 (00:37–00:40): Boat Race `LE+ES10_confirm` reached the 12,288 cap → check 1991999 
+
+- **Training wait.** **1990372** (Boat Race `N1_P1eq1_LE+ES10_confirm`, extended to 12,288) COMPLETED 00:37 (11:44:25, exit 0).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ES10_confirm`.
+  - Submitted: `... br_missing submit` → **1991999 **.
+  - At 6144 it was s20 0.019, s21 0.011, s22 0.044. If s22 is ≤ 0.03 now, the Boat Race cell is DONE (tuning `LE+ES10` was 3/3); otherwise this confirmation has failed at the cap.
+- Cells DONE: 0 of 2.
