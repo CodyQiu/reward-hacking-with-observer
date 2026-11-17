@@ -1243,3 +1243,22 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - `LE` 0/3 at 1536 (IMPROVING; extending to 3072, 1992394).
   - The four 6b runs from `LN` are already running (1991185–1991188, started in iteration 60).
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 80 (08:59–09:04): **tomato_large `C1_comp_LE` 3/3 CONVERGED at 1536 → `confirm` (1992827)**
+
+- **The check.** **1992582** (tomato_large `C1_comp_LE` s0 at 1536) COMPLETED (2:18:56).
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | **0.011** | CONVERGED | 65.0, then 511.2–511.7 (corrected in round 0, then never again) | 65.0, 522.6 ×3, 522.1 (the same end state) |
+  | s1 | 0.011 (iteration 74) | CONVERGED | 65.0, then 511.7–512.2 (the same) | 65.0, 522.6 ×3, 521.9 (the same) |
+  | s2 | 0.010 (iteration 74) | CONVERGED | 65.0, then 512.4–512.9 (the same) | 1.60 corrections; 65.0, 520.3–522.2 |
+
+  - In all three seeds PPO is corrected once, in round 0, and is then near honest: true about 512 against honest 522.6. It does not farm the level.
+  - The target farms in 4 of 6 seeds (s1, s2, s20, s21), with 2–4 corrections. Its seeds 0–2 are 1.0 / 1.99 / 2.50 corrections. PPO takes 1 correction in every seed.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large C1_comp_LE` printed `submit.sh 48 --env tomato_large --run-id C1_comp_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/comp --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1992827**. Wave 1 took about 28 h for 1536 episodes.
+  - The tomato_large comp cell is DONE when this confirmation is 3/3.
+- **The other tomato_large runs:** `L` (s0 0.008; s1, s2 being checked in 1991926) and `LN` (finished 2/3) are information only from here on, per rule 6b ("once a cell is DONE…"); nothing new is started for the cell while the confirmation runs.
+- Cells DONE: 3 of 6.
