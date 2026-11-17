@@ -1162,3 +1162,16 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
   - `step4_br.py` skips seeds that already have their check file, so this job checks s0 only.
 - **tomato_large comp so far** at 1536: `LE` s1 and s2 CONVERGED; `LN` s1 PLATEAU 0.343 (honest from round 0, never corrected), `LN` s2 0.003. `L` s1/s2 and `LN` s0 are being checked (1991926, 1991927). `L` s0 and `LE` s0 come next.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 75 (05:47–05:52): Boat Race `C1_comp_LN_confirm` s21 0.015, s22 0.023 at 6144 (CONVERGED); s20 still training
+
+- **The check.** **1992538** (Boat Race `C1_comp_LN_confirm` s21, s22 at 6144) COMPLETED (2:32).
+
+  | Seed | BR gap 3072 → 6144 | Verdict | Best response | PPO true by round |
+  |---|---|---|---|---|
+  | s21 | → **0.015** (s.e. 0.005) | CONVERGED | 3 corrections (rounds 0–2), true −94, then 50 ×4 | −94, then 50.0 ×4 |
+  | s22 | → **0.023** (s.e. 0.008) | CONVERGED | 4 corrections, true −94, then 50 ×4 | −94, then 50.0 ×4 |
+
+  - PPO: open exploit in round 0, then honest laps with 4 corrections per episode (the level farms, as in the tuning seeds).
+- **Rule 4.** No decision yet. s20, the deciding seed (0.074 at 3072), is at 4656 of 6144 in 1991432; at its last evaluation it exploits in every round (true −94 ×5). Its check is submitted when it finishes. If s20 converges at 6144 the confirmation is 3/3 and the cell is DONE; otherwise rule 4 applies to it (IMPROVING → 12,288, the cap).
+- Cells DONE: 3 of 6.
