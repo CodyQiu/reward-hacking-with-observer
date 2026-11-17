@@ -669,6 +669,132 @@ def test_exact_indifference_target_and_best_response_record_the_rule():
     assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9 and res["gap"] >= -1e-9
 
 
+def test_overseer_pool_estimate_uses_earlier_final_rounds():
+    """offset_rule=pool in the training overseer (grid, cheap fit). Episode 0: an open exploiter is caught in rounds
+    0-3; the pool is the reference and the caught rollouts, and the first estimate before correction is the caught
+    open exploit's 8,700 (the exact M, logged beside it). Its final round enters the pool, so episode 1's
+    correction draws on it. Every level follows [M_hat_before - M_hat_after] / T on the previous level, and with
+    deterministic moves no candidate can beat the exact M."""
+    import src.step3.pbrr as pbrr
+    from src.pbrr_core import GConfig
+    from src.step3.dp import solve_levels, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.reference import build_reference
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid", {"g": {"offset": True, "offset_rule": "pool", "fine_only": True, "epochs": 20}})
+    task, P = get_task("grid"), Protocol(**cfg["protocol"])
+    tb, T = task.tables, P.t_sub
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))
+    fn = table_policy_fn(pol, tb.n_actions)
+    ref, _ = build_reference(task, T, {**cfg["pbrr"], "seed": cfg["pbrr"]["ref_seed"]})
+    ref_trajs = pbrr.rollouts(task.make_batch(3, seed=1), ref, P, np.random.default_rng(1))
+    env = AuditedVecEnv(task, P, n_envs=2, seed=0)
+    env.reset()
+    over = pbrr.Overseer(task, P, env, ref_trajs, GConfig(**cfg["g"]), k=3)
+    over.model = None
+    real = pbrr.policy_probs_fn
+    pbrr.policy_probs_fn = lambda model, proto, n_actions: fn
+    try:
+        for t in range(P.t_ep + T):                                  # episode 0, then round 0 of episode 1
+            over._on_rollout_start() if t % T == 0 else None
+            env.step_async(fn(env.batch, t % P.t_ep, env.n_corr, env.flagged).argmax(axis=1))
+            env.step_wait()
+            over._on_step()
+            if (t + 1) % T == 0:
+                over._on_rollout_end()
+    finally:
+        pbrr.policy_probs_fn = real
+    r = over.rounds
+    assert [x["episode"] for x in r] == [0, 0, 0, 0, 1] and [x["n_round"] for x in r] == [1, 2, 3, 4, 1]
+    assert abs(r[0]["level_m_hat_before"] - 8_700) < 1e-6 and abs(r[0]["level_m_before"] - 8_700) < 1e-6
+    assert [x["level_pool_size"] for x in r] == [2, 2, 2, 2, 3]          # episode 0's final round (level 4)
+    lvl = 0.0
+    for x in r:
+        if x["n_round"] == 1:
+            lvl = 0.0
+        assert abs(x["level"] - lvl - (x["level_m_hat_before"] - x["level_m_hat_after"]) / T) < 1e-9
+        assert x["level_m_hat_after"] <= x["level_m_hat_before"] + 1e-6                # fines only
+        assert x["level_m_hat_before"] <= x["level_m_before"] + 1e-6 and x["level_m_hat_after"] <= x["level_m_after"] + 1e-6
+        lvl = x["level"]
+    assert len(over.final_pool) == 1 and over.final_pool[0][:2] == (0, 4) and len(over.final_pool[0][2]) == 2
+
+
+def test_pool_estimate_in_the_target_and_best_response_never_beats_exact_m():
+    """step4_targets / step4_br with offset_rule=pool. Target (grid, one draw, two iterations, so the second uses
+    the first optimum's final-round play): the levels chain on the estimate, the estimate's first M_hat_before is the
+    open exploit's 8,700, and on the deterministic grid no candidate beats the exact M recorded beside it. The
+    verdict script reads the target. Best response (Absent Supervisor, cheap fit, 2 draws): the same chain."""
+    _experiments()
+    from step4_br import best_response
+    from step4_indiff_check import pool_errors, verdict
+    from step4_targets import target
+    from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+
+    def chain(beh, T=100):
+        prev = None
+        for b in beh:
+            x = b["level"]
+            prev = np.zeros(len(x["level"])) if prev is None else prev
+            assert np.allclose(np.subtract(x["level"], prev),
+                               np.subtract(x["m_hat_before"], x["m_hat_after"]) / T)
+            assert np.all(np.asarray(x["m_hat_after"]) <= np.asarray(x["m_hat_before"]) + 1e-6)
+            prev = np.asarray(x["level"])
+
+    g = {"offset": True, "offset_rule": "pool", "fine_only": True}
+    out = target(resolve_config("grid", {"seed": 0, "g": g}), n_draws=1, max_iter=2, per_draw=False,
+                 log=lambda m: None)
+    for it in out["iterations"]:
+        beh = it["behaviour"]
+        chain(beh)
+        assert abs(beh[0]["level"]["m_hat_before"][0] - 8_700) < 1e-6
+        for b in beh:
+            x = b["level"]
+            assert x["m_hat_before"][0] <= x["m_before"][0] + 1e-6 and x["m_hat_after"][0] <= x["m_after"][0] + 1e-6
+    v = verdict(out)
+    assert set(v) >= {"A1", "A2", "A3", "pass"} and len(pool_errors(out)) == 4
+    cfg = resolve_config("absent_supervisor", {"seed": 0, "g": {"epochs": 20, **g}})
+    task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
+    tb = task.tables
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))
+    res = best_response(cfg, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions), n_draws=2,
+                        log=lambda m: None)
+    chain(res["behaviour"])
+    assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9
+
+
+def test_indiff_verdict_labels_farming_and_under_correction():
+    """step4_indiff_check.verdict on hand-made targets: caught again in round 1 at level 1 counts as
+    under-correction when level 1's best round uses the bug in the window, as farming when it does not (and the
+    deliberate correction costs something), and as a tie when it costs nothing; a round short of honest after the
+    last correction fails A2 and is labelled by whether proxy exceeds true there."""
+    _experiments()
+    from step4_indiff_check import verdict
+    base = {"V_hide": 0.0, "a1": {"honest_true": 22.0, "proxy_opt_true": -100.0},
+            "target": {"end_state": "x", "V0": 1.0, "window_by_k": [1, 1, 0, 0, 0],
+                       "corrected_by_k": [1, 1, 0, 0, 0], "true_by_k": [-100, -100, 22, 22, 22],
+                       "proxy_by_k": [8700, 8700, 22, 22, 22],
+                       "window_by_level": [[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0] * 5, [0] * 5, [0] * 5]}}
+
+    def with_best(window, caught):
+        b = [{"window": 1.0, "received": 10.0, "received_caught": 10.0, "received_avoid": 9.0}] + \
+            [{"window": 0.0, "received": 10.0, "received_caught": 10.0, "received_avoid": 10.0}] * 4
+        b[1] = {"window": window, "received": 10.0, "received_caught": caught, "received_avoid": 10.0}
+        return {**base, "target": {**base["target"], "best_round_by_level": b}}
+
+    assert verdict(with_best(1.0, 10.0))["A3_catches"][0]["kind"] == "under-correction"
+    v = verdict(with_best(0.0, 5.0))
+    assert v["A3_catches"][0]["kind"] == "farming" and not v["A3"] and v["A1"] and v["A2"]
+    assert verdict(with_best(0.0, 10.0))["A3_catches"][0]["kind"] == "tie"
+    bad = with_best(1.0, 10.0)
+    bad["target"] = {**bad["target"], "true_by_k": [-100, -100, 22, -50, 22], "proxy_by_k": [8700, 8700, 22, -50, 22]}
+    v = verdict(bad)
+    assert not v["A2"] and v["A2_shortfalls"] == [{"round": 3, "true": -50, "kind": "new route"}]
+
+
 def test_anneal_factor():
     from src.step3.train import _anneal_factor
     an = {"last": 0.25, "floor": 0.1}

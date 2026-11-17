@@ -401,7 +401,9 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **The mechanism.** Fines only, plus a level that rises by [M(r_old) − M(r_new)]/T_sub at each correction (`g.offset=True g.offset_rule=exact g.fine_only=True`). M is the best round's value under a reward (`dp.best_round_value`, exact DP).
   - **The theorem** (tested): every round restarts the base task, so the value at the start of round k is (K − k)(M(r) + T·level) whatever the agent does. It plays a best round under the reward in force, so it never hides, never farms, and never shapes its correction. Leftover failures are the fit's (under-correction, spill).
   - **The user, 2026-11-17:** the overseer may compute M ("I don't see why not"). Success is option A: never hides, never farms, honest after its corrections, more than one allowed while the bug still pays. Pre-registered criteria A1–A3 are in the doc.
-  - **Open:** estimating M where it cannot be computed. Only the drop matters, and the tolerances are asymmetric: underpay by < w (the window's value), overpay by almost nothing (Taxi 2, Boat Race 0).
+  - **Estimating M where it cannot be computed** (`g.offset_rule=pool`, `CAMPAIGN=indiff_pool`). M̂ is the best relabelled mean return in one pool: the reference, the caught play, and the agent's own final-round play from earlier episodes. Nothing after the final round depends on that play, so it is the agent's best round.
+    - Only the drop matters, and the tolerances are asymmetric. An underpayment must stay below w (the window's value per round). An overpayment summed over the rounds left must stay below δ (the cost of a deliberate re-correction). After a perfect correction, the overpay tolerance is only Taxi 2 and Boat Race 0 per round.
+    - Validation: A1–A3 on the estimator's own targets, plus its error against the margins (`experiments/step4_indiff_check.py`).
   - `CAMPAIGN=indiff` runs targets only until the user has seen them; tomato_large runs one target job per seed.
 
 ## 5. Legacy (`legacy/`): lessons that still apply

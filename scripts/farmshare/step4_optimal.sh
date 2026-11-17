@@ -36,6 +36,8 @@
 # (g.fine_only=True), plus a level that rises by the exact drop in the best round's value at each correction
 # (g.offset=True g.offset_rule=exact); variant indiff, all six exact envs, runs I1_indiff_<tag> in
 # results/step4/<env>/indiff, targets indiff (tomato_large: one target job per seed, to stay inside 36 h).
+# CAMPAIGN=indiff_pool: the same with M estimated from a pool of plays (g.offset_rule=pool; docs/step4_indiff.md,
+# "Estimating M"); variant indiff_pool, runs I2_indiff_pool_<tag> in results/step4/<env>/indiff_pool.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -54,6 +56,8 @@ case $CAMPAIGN in
         HYP="Step 4 compensated-correction campaign (docs/step4_comp.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, never relaxed, plus the level that pays back each correction" ;;
   indiff) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race); VARIANTS=(indiff); PFX=I1; EXTRA=""
           HYP="Step 4 exact-indifference campaign (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, never relaxed, plus the level that pays exactly the drop in the best round's value at each correction" ;;
+  indiff_pool) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race); VARIANTS=(indiff_pool); PFX=I2; EXTRA=""
+          HYP="Step 4 exact-indifference campaign, M estimated from a pool of plays (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only plus the level that pays the estimated drop in the best round's value" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
@@ -81,6 +85,7 @@ gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fi
     base) echo "${ep# }$EXTRA" ;;                                # standard PBRR (max1), as in Steps 2-3
     comp) echo "g.fine_only=True g.offset=True g.offset_margin=0.0$ep$EXTRA" ;;   # fines only + the paying level
     indiff) echo "g.fine_only=True g.offset=True g.offset_rule=exact$ep$EXTRA" ;;  # fines only + the exact level
+    indiff_pool) echo "g.fine_only=True g.offset=True g.offset_rule=pool$ep$EXTRA" ;;  # ... M estimated by the pool
     *) echo "unknown variant $v" >&2; exit 1 ;;
   esac
 }
@@ -132,7 +137,7 @@ case $CMD in
   targets)
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do
       dep=""; [[ $env == tomato_large && -n ${PHASEA_JOB:-} ]] && dep="afterok:$PHASEA_JOB"
-      if [[ $CAMPAIGN == indiff && $env == tomato_large ]]; then   # one job per seed (a seed takes 3-8 h)
+      if [[ $CAMPAIGN == indiff* && $env == tomato_large ]]; then  # one job per seed (a seed takes 3-8 h)
         for s in "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}"; do
           # shellcheck disable=SC2046
           run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$(tname "$v")_s$s" .venv/bin/python -u \

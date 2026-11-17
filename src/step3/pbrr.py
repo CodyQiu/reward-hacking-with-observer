@@ -32,6 +32,7 @@ on the task's tables): the agent is then indifferent to being corrected.
 """
 
 import time
+from collections import deque
 from dataclasses import dataclass, field
 
 import jax
@@ -46,7 +47,7 @@ from .protocol import MinCorrection, encode_obs, g_apply
 from .task import exploit_mask
 
 __all__ = ["Rollout", "rollouts", "policy_probs_fn", "fit_correction_rows", "g_on_rows", "rollout_returns",
-           "level_offset", "exact_level", "Overseer"]
+           "level_offset", "exact_level", "pool_values", "Overseer"]
 
 
 # ---------------------------------------------------------------------------------
@@ -299,6 +300,15 @@ def level_offset(gcfg, v_before, v_ref_after, t_sub):
     return (max(0.0, v_before - v_ref_after) + gcfg.offset_margin * abs(v_before)) / t_sub
 
 
+def pool_values(groups, task, params=None):
+    """Each group's mean return under proxy + ``params`` (no level): the candidates of the pool estimate of M
+    (GConfig.offset_rule = "pool"), relabelled in one pass over all their rows."""
+    flat = [t for g in groups for t in g]
+    ret = rollout_returns(flat, task, params)
+    edges = np.cumsum([0] + [len(g) for g in groups])
+    return np.array([ret[a:b].mean() for a, b in zip(edges[:-1], edges[1:])])
+
+
 def exact_level(old_level, m_before, m_after, t_sub):
     """The exact-indifference level (GConfig.offset_rule = "exact"; docs/step4_indiff.md): a correction that
     replaces reward r by r' raises the level in force by [M(r) - M(r')] / t_sub, M = dp.best_round_value
@@ -336,11 +346,17 @@ class Overseer(BaseCallback):
         self.step_received, self.step_proxy, self.step_true = [], [], []
         self._ref_rows = _traj_rows(ref_trajs, task)
         self.exact = gcfg.offset and gcfg.offset_rule == "exact"
-        assert gcfg.offset_rule in ("rollouts", "exact"), gcfg.offset_rule
-        if self.exact:                   # exact indifference: M by DP on the task's tables
+        self.pool = gcfg.offset and gcfg.offset_rule == "pool"
+        assert gcfg.offset_rule in ("rollouts", "exact", "pool"), gcfg.offset_rule
+        if self.exact:
             assert task.tables is not None, "offset_rule=exact needs a tabular task (dp.best_round_value)"
+        # exact M by DP: the exact rule's yardstick, and the pool estimate's validation where tables exist
+        self.track_m = self.exact or (self.pool and task.tables is not None)
+        if self.track_m:
             self.m_cache = {}            # (episode, history) -> (table of the correction in force, M of it)
             self._m_proxy = best_round_value(task.tables, task.tables.proxy, proto.t_sub)
+        if self.pool:                    # (episode, level, rollouts): the agent's final-round play, by level
+            self.final_pool = deque(maxlen=gcfg.pool_episodes * proto.n_sub)
 
     def _on_rollout_start(self):
         v, T = self.venv, self.proto.t_sub
@@ -353,6 +369,10 @@ class Overseer(BaseCallback):
         self._sr, self._sp, self._st = np.zeros(T), np.zeros(T), np.zeros(T)
         self._det = np.zeros(n, np.uint8)
         self._i = 0
+        self._ep = v.episode
+        self._final = self.pool and self._k == self.proto.n_sub - 1     # record the final round's play
+        if self._final:
+            self._fk, self._ff, self._fp, self._ft = [], [], [], []
 
     def _on_step(self):
         L = self.venv.last
@@ -365,7 +385,29 @@ class Overseer(BaseCallback):
         self._sp[self._i] = L["proxy"].mean()
         self._st[self._i] = L["true"].mean()
         self._i += 1
+        if self._final:
+            if L["key"] is not None:
+                self._fk.append(np.asarray(L["key"]).copy())
+            else:
+                self._ff.append(np.asarray(L["feat"], np.float32).copy())
+            self._fp.append(np.asarray(L["proxy"], float).copy())
+            self._ft.append(np.asarray(L["true"], float).copy())
         return True
+
+    def _store_final_round(self):
+        """The final round's play of up to k copies per correction level, into the pool (GConfig.offset_rule
+        = "pool"). Nothing after the final round depends on it, so it is the agent's best round under the reward
+        then in force, whatever the level's estimate gets wrong; it is used from the next episode on."""
+        K = np.stack(self._fk, axis=1) if self._fk else None
+        X = np.stack(self._ff, axis=1) if self._ff else None
+        P, Tr = np.stack(self._fp, axis=1), np.stack(self._ft, axis=1)
+        for lvl in np.unique(self._ncorr):
+            idx = np.flatnonzero(self._ncorr == lvl)
+            if len(idx) > self.k:
+                idx = self.rng.choice(idx, self.k, replace=False)
+            group = [Rollout(None if K is None else K[j], None if X is None else X[j], P[j], Tr[j],
+                             {"episode": int(self._ep), "level": int(lvl)}) for j in idx]
+            self.final_pool.append((int(self._ep), int(lvl), group))
 
     def _on_rollout_end(self):
         assert self._i == self.proto.t_sub, f"a round must be {self.proto.t_sub} steps, got {self._i}"
@@ -378,6 +420,8 @@ class Overseer(BaseCallback):
                           "received_return": float(self._rec.mean()), "proxy_return": float(self._prx.mean()),
                           "true_return": float(self._tru.mean()), "caught": float(self._det.mean()),
                           "mean_n_corr": float(self._ncorr.mean())})
+        if self._final:
+            self._store_final_round()
         self.run_pending_rounds()
 
     def run_pending_rounds(self):
@@ -405,9 +449,9 @@ class Overseer(BaseCallback):
             new_params = params
             if self.gcfg.fine_only:                      # fines only, never relaxed: min(0, g_1, ..., g_k)
                 params = (old_params if old_params is not None else MinCorrection(())).then(params)
-            lv = {}
-            if self.exact:                               # exact indifference (docs/step4_indiff.md)
-                tb, T = self.task.tables, self.proto.t_sub
+            lv, T = {}, self.proto.t_sub
+            if self.track_m:                             # exact M of the reward before and after (DP)
+                tb = self.task.tables
                 G_old, m_old = self.m_cache.get((episode, history[:-1]), (None, self._m_proxy))
                 assert G_old is not None or old_params is None, "the reward in force must be cached"
                 g_new = g_table(new_params, self.task)
@@ -417,8 +461,18 @@ class Overseer(BaseCallback):
                     G = g_new.astype(np.float32)
                 m_new = best_round_value(tb, tb.proxy + G, T)
                 self.m_cache[(episode, history)] = (G, m_new)
-                lv = {"level": exact_level(old_level, m_old, m_new, T), "level_m_before": m_old,
-                      "level_m_after": m_new}
+                lv = {"level_m_before": m_old, "level_m_after": m_new}
+            if self.exact:                               # exact indifference (docs/step4_indiff.md)
+                lv["level"] = exact_level(old_level, m_old, m_new, T)
+            elif self.pool:                              # ... with M estimated from one pool of plays
+                groups = [self.ref_trajs, agent] + [g for _, _, g in self.final_pool]
+                names = ["reference", "caught"] + [f"final ep{e} lvl{c}" for e, c, _ in self.final_pool]
+                vb, va = pool_values(groups, self.task, old_params), pool_values(groups, self.task, params)
+                ib, ia = int(np.argmax(vb)), int(np.argmax(va))
+                lv.update({"level": exact_level(old_level, float(vb[ib]), float(va[ia]), T),
+                           "level_m_hat_before": float(vb[ib]), "level_m_hat_after": float(va[ia]),
+                           "level_pool_best_before": names[ib], "level_pool_best_after": names[ia],
+                           "level_pool_size": len(groups)})
             elif self.gcfg.offset:                       # the compensated correction (docs/step4_comp.md)
                 v_before = float(rollout_returns(agent, self.task, old_params, old_level).mean())
                 v_ref = float(rollout_returns(self.ref_trajs, self.task, params).mean())
@@ -440,7 +494,7 @@ class Overseer(BaseCallback):
                       f"g(ref) {rec['g_ref']:+.2f} ({rec['seconds']:.1f}s)", flush=True)
         cur = v.episode
         self.cache = {key: d for key, d in self.cache.items() if key[0] == cur}
-        if self.exact:
+        if self.track_m:
             self.m_cache = {key: m for key, m in self.m_cache.items() if key[0] == cur}
 
     def _g_summary(self, params, agent):

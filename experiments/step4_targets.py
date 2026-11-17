@@ -29,6 +29,9 @@ the deterministic optimum, and its own rollouts would carry no noise) and V_ref_
 rollouts' mean under proxy + the draw's new g, as the overseer computes it in training. With
 g.offset_rule=exact (exact indifference, docs/step4_indiff.md) the level instead rises by
 [M(r_old) - M(r_new)] / T per draw (dp.best_round_value, levels excluded), as the overseer computes it.
+With g.offset_rule=pool, M is estimated as in training from one pool of plays (``pool_level``); the agent's
+final-round play is the previous iteration's optimum (iteration 0: reference and caught play only), and
+the exact M is recorded beside the estimate (m_before / m_after) for the validation.
 
 Also reported: the value of never being corrected (hiding) and the margin by which the target beats
 it, and each single draw's own optimum (how robust the end state is to the overseer's randomness).
@@ -57,6 +60,25 @@ from src.step3.dp import (best_round_value, evaluate_levels, round_probs, round_
                           solve_levels, solve_subepisode, solve_subepisode_caught, table_policy_fn)
 from src.step3.pbrr import (exact_level, fit_correction_rows, g_table, level_offset,  # noqa: E402
                             rollout_returns, rollouts)
+
+
+def pool_level(tb, proto, task, ref_trajs, caught, finals, rb_old, rb_new, p_old, p_new):
+    """The pool estimate of M before and after a correction (GConfig.offset_rule = "pool",
+    docs/step4_indiff.md), exactly as the overseer forms it but with the agent's plays valued exactly:
+    candidates = the reference rollouts (relabelled, as in training), the caught play ``caught`` = (probs_at,
+    round) and the agent's final-round play at each correction level ``finals`` (probs_at at round K-1).
+    rb_* are the expected reward tables (no level), p_* the corrections in force. Returns a dict."""
+    K = proto.n_sub
+
+    def vals(rb, params):
+        v = [float(rollout_returns(ref_trajs, task, params).mean()), round_value(tb, proto, rb, *caught)]
+        return np.array(v + [round_value(tb, proto, rb, pa, K - 1) for pa in finals])
+
+    names = ["reference", "caught"] + [f"final lvl{c}" for c in range(len(finals))]
+    vb, va = vals(rb_old, p_old), vals(rb_new, p_new)
+    ib, ia = int(np.argmax(vb)), int(np.argmax(va))
+    return {"m_hat_before": float(vb[ib]), "m_hat_after": float(va[ia]), "best_before": names[ib],
+            "best_after": names[ia]}
 from src.step3.protocol import MinCorrection, Protocol  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
@@ -178,8 +200,12 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         corr = [None] * n_draws                               # each draw's correction in force
         G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
         exact = gcfg.offset and gcfg.offset_rule == "exact"   # exact indifference (docs/step4_indiff.md)
-        if exact:                                             # each draw's M (best round, no level) and level
+        pool = gcfg.offset and gcfg.offset_rule == "pool"     # ... with M estimated from a pool of plays
+        if exact or pool:                                     # each draw's M (best round, no level) and level
             m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
+        if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum
+            rnl_prev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws
+            finals = [] if pol is None else [round_probs(pol, A, level=c) for c in range(K)]
         for c in range(1, K):
             w = None if ev is None else np.asarray(ev["window_by_level"])[:K - 1, c - 1]
             if w is not None and w.max() >= 0.05:            # the optimum's own caught round
@@ -198,6 +224,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                                  t0=k * T, n_corr=c - 1)
                 D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
                 params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)))
+                corr_old = corr[d]
                 if gcfg.fine_only:                               # fines only, never relaxed (min with the last)
                     G_in[d] = np.minimum(G_in[d], g_table(params, task)).astype(np.float32)
                     corr[d] = (corr[d] or MinCorrection(())).then(params)
@@ -210,6 +237,14 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                     lv.append({"level": exact_level(lvl_prev[d], m_prev[d], m_new, T), "m_before": m_prev[d],
                                "m_after": m_new})
                     m_prev[d], lvl_prev[d] = m_new, lv[-1]["level"]
+                    Rd = Rd + lv[-1]["level"]
+                elif pool:                                    # the same rule, M estimated from the pool
+                    m_new, rb_new = best_round_value(tb, Rd, T), (tb.prob * Rd).sum(axis=1)
+                    est = pool_level(tb, proto, task, ref_trajs, (exact_p, k), finals, rnl_prev[d], rb_new,
+                                     corr_old, corr[d])
+                    lv.append({"level": exact_level(lvl_prev[d], est["m_hat_before"], est["m_hat_after"], T),
+                               "m_before": m_prev[d], "m_after": m_new, **est})
+                    m_prev[d], lvl_prev[d], rnl_prev[d] = m_new, lv[-1]["level"], rb_new
                     Rd = Rd + lv[-1]["level"]
                 elif gcfg.offset:                             # the compensated correction's level
                     v_before = round_value(tb, proto, rprev[d], exact_p, k)
@@ -224,7 +259,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
             if lv:
                 behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
             Rbar.append(acc / n_draws)
-            if exact:      # the policy cannot see the draw: the best round of the mean table (level removed)
+            if exact or pool:  # the policy cannot see the draw: the best round of the mean table (level removed)
                 mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
                 behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         R_lv = np.stack(Rbar)

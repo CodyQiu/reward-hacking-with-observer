@@ -104,14 +104,39 @@ Measured with each env's campaign settings, under the proxy and under the true r
 
 So it overpaid, and the agent farmed.
 
+**The estimator** (`g.offset_rule=pool`, written 2026-11-17). It uses the same rule, level += [M̂(r_old) − M̂(r_new)] / T_sub. M̂(r) is the best mean return under r among one pool of plays, each relabelled under r without new env steps. The pool holds:
+- the reference rollouts;
+- the caught play (the rollouts the correction is fitted on);
+- the agent's own **final-round** play from the last `g.pool_episodes` (8) episodes, grouped by correction level.
+
+Why each choice:
+- **The same pool serves both terms,** so the errors cancel where the same play is best under both rewards.
+- **Final-round play is the agent's best round under the reward in force,** because nothing after the final round depends on it. So it measures this agent's own capability, even when the level is mis-sized.
+- **Earlier episodes can't be gamed** by a learner whose return ends with the episode.
+- **Every candidate is a real play,** so M̂ ≤ M in a deterministic env (tested). The only systematic error is overpaying by how far the best candidate falls short of M(r_new).
+
+In the targets and the best-response check, the agent's plays are valued exactly:
+- the caught policy;
+- the final-round policy at each level: the previous iteration's optimum, or PPO's own policy in the best-response check.
+
+The reference uses its real rollouts. Iteration 0 has no final-round play, so its pool is the reference and the caught play only.
+
+**One subtlety.** The estimator is compared with the exact per-draw M. But the agent cannot see the draw, so its achievable best round is M of the average reward. Part of any apparent overpayment therefore compensates that value of information (VOI), which is the direction the exact rule gets wrong. The decisive test is A1–A3 on the estimator's own targets, which model the agent correctly. The error table is a diagnostic.
+
+**Validation** (pre-registered 2026-11-17). `CAMPAIGN=indiff_pool … targets`, the same 6 envs × 6 seeds. Then `experiments/step4_indiff_check.py results/step4/*/targets/indiff_pool/`, which prints:
+- per seed, A1–A3, and the same seed's exact-rule verdict for comparison;
+- per correction and draw, the estimated drop's error against the margins: overpayment × rounds left < δ, and underpayment < w.
+
+The estimator is validated in an env when every seed passes A1–A3, as the exact rule must. A seed that passes under the exact rule but fails under the estimator is an estimation failure, reported with its error row. Only a validated estimator goes to MountainCar or LunarLander, where M is unknown.
+
 ## Pipeline
 
-1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` submits 11 jobs:
+1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` (the exact rule) and `CAMPAIGN=indiff_pool … targets submit` (the estimator) each submit 11 jobs:
    - grid, AS, Tomato, Taxi and Boat Race: one job each, seeds 0–2 and 20–22;
    - tomato_large: one job per seed (a seed takes 3–8 h, and the job limit is 36 h).
 
    Targets go to `results/step4/<env>/targets/indiff/seed<s>.json`, with the settings `g.fine_only=True g.offset=True g.offset_rule=exact`, plus `g.epochs=1000` outside the grid and `task.obs=onehot` for Taxi.
-2. **The verdict per seed, by A1–A3,** goes in `docs/step4_indiff_log.md`, under "Exact predictions". For each seed record:
+2. **The verdict per seed, by A1–A3** (`experiments/step4_indiff_check.py`), goes in `docs/step4_indiff_log.md`, under "Exact predictions". For each seed record:
    - end state, true by round against honest, corrections by round;
    - V0 against V_hide and against K × M(proxy), the single-draw theorem value; the difference is the VOI loss;
    - each correction's level, with M before and after;
@@ -122,13 +147,19 @@ So it overpaid, and the agent farmed.
 
 ## Code
 
-- **`src/pbrr_core.py`:** `GConfig.offset_rule` (`"rollouts"`, the default and comp's rule, | `"exact"`).
+- **`src/pbrr_core.py`:** `GConfig.offset_rule` (`"rollouts"`, the default and comp's rule, | `"exact"` | `"pool"`) and `GConfig.pool_episodes`.
 - **`src/step3/dp.py`:** `best_round_value`.
-- **`src/step3/pbrr.py`:** `exact_level`. The Overseer caches each catch history's correction table and its M within the episode, and logs `level`, `level_m_before` and `level_m_after` in `pbrr_rounds.csv`.
+- **`src/step3/pbrr.py`:**
+  - `exact_level` and `pool_values`.
+  - The Overseer caches each catch history's correction table and its M within the episode, and logs `level`, `level_m_before` and `level_m_after` in `pbrr_rounds.csv`.
+  - With `pool`, the Overseer stores each episode's final-round play by level (`AuditedVecEnv.last` now carries the transition keys or features), and logs `level_m_hat_before`, `level_m_hat_after`, the winning candidates and the pool size, with the exact M beside them wherever the task has tables.
+- **`experiments/step4_indiff_check.py`:** the A1–A3 verdict per seed, plus the estimator's error against the margins.
 - **`experiments/step4_targets.py` and `experiments/step4_br.py`:** the same rule per draw. They record `behaviour[].level` = {level, m_before, m_after} plus `m_after_mean_table`.
 - **Tests in `tests/test_step4.py`:**
   - the theorem on random corrections, grid and AS, p = 1 and 0.5;
   - the oracle-grid closed form;
   - `best_round_value` against `solve_subepisode`;
   - the Overseer installing the chained levels;
-  - the target and best-response chains, including single-draw V0 = 43,500.
+  - the target and best-response chains, including single-draw V0 = 43,500;
+  - the pool: in the Overseer, an earlier final round entering the pool, the chained levels, and M̂ ≤ M on the deterministic grid; in the target and best-response check, the same;
+  - the verdict script's labels: under-correction, farming, tie, and the A2 shortfall kinds.

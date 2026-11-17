@@ -231,6 +231,7 @@ class AuditedVecEnv(VecEnv):
                 self.t, self.episode = 0, self.episode + 1
                 self._reset_reward_state()
         self.last = {"received": received, "proxy": out.proxy, "true": out.true, "exploit": exploit,
+                     "key": out.key, "feat": out.feat,
                      "in_window": in_win, "detected": detected}
         return self._obs(), (received * self.reward_scale).astype(np.float32), dones, infos
 

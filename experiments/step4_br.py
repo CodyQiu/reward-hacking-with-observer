@@ -32,7 +32,9 @@ level, sized as in training from the play the correction is fitted on: V_before 
 in its caught round under the draw's reward in force (PPO's own probabilities, or the counterfactual caught
 policy without its rollout noise), V_ref_after = the reference rollouts' mean under proxy + the new g. The
 levels are part of the tables, so V_PPO and V_BR include them. With g.offset_rule=exact (exact indifference,
-docs/step4_indiff.md) each draw's level instead rises by [M(r_old) - M(r_new)] / T (dp.best_round_value).
+docs/step4_indiff.md) each draw's level instead rises by [M(r_old) - M(r_new)] / T (dp.best_round_value); with
+g.offset_rule=pool, by the pool estimate of that drop (step4_targets.pool_level; PPO's own final-round play at
+each level is the agent's candidate), with the exact M recorded beside it.
 
     .venv/bin/python experiments/step4_br.py results/step4/<env>/optimal/<run> [...] [--finished-only]
     .venv/bin/python experiments/step4_br.py --missing results/step4/*/optimal/*/   (runs that need one)
@@ -51,7 +53,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from step4_targets import end_state, game_key, sub_value  # noqa: E402
+from step4_targets import end_state, game_key, pool_level, sub_value  # noqa: E402
 from src.pbrr_core import GConfig, boltzmann_label  # noqa: E402
 from src.step3.dp import (best_round_value, evaluate_levels_probs, onehot_probs, round_probs,  # noqa: E402
                           round_value,
@@ -118,8 +120,14 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     corr = [None] * n_draws                                            # each draw's correction in force
     G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
     exact_rule = gcfg.offset and gcfg.offset_rule == "exact"          # exact indifference (docs/step4_indiff.md)
-    if exact_rule:                                                     # each draw's M (best round, no level), level
+    pool_rule = gcfg.offset and gcfg.offset_rule == "pool"            # ... with M estimated from a pool of plays
+    if exact_rule or pool_rule:                                        # each draw's M (best round, no level), level
         m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
+    if pool_rule:      # the agent's final-round play at each level: PPO's own probabilities in round K-1
+        finals = []
+        for c in range(K):
+            Pf = np.stack([np.asarray(probs_at((K - 1) * T + tau), float)[:, c] for tau in range(T)])
+            finals.append((lambda P, t0: (lambda t: P[t - t0]))(Pf, (K - 1) * T))
     for c in range(1, K):
         w = wbl[:K - 1, c - 1]
         if w.max() >= P_MIN:                                           # PPO's own caught round
@@ -142,6 +150,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
                              t0=k * T, n_corr=c - 1)
             D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
             params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)))
+            corr_old = corr[d]
             if gcfg.fine_only:                               # fines only, never relaxed (min with the last)
                 G_in[d] = np.minimum(G_in[d], g_table(params, task)).astype(np.float32)
                 corr[d] = (corr[d] or MinCorrection(())).then(params)
@@ -155,6 +164,15 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
                            "m_after": m_new})
                 m_prev[d], lvl_prev[d] = m_new, lv[-1]["level"]
                 Rd = Rd + lv[-1]["level"]
+            elif pool_rule:                                            # the same rule, M estimated from the pool
+                m_new = best_round_value(tb, Rd, T)
+                rb_new = (tb.prob * Rd).sum(axis=1)
+                est = pool_level(tb, proto, task, ref_trajs, (exact, k), finals,
+                                 rbar_d[d, c - 1] - lvl_prev[d], rb_new, corr_old, corr[d])    # no level
+                lv.append({"level": exact_level(lvl_prev[d], est["m_hat_before"], est["m_hat_after"], T),
+                           "m_before": m_prev[d], "m_after": m_new, **est})
+                m_prev[d], lvl_prev[d] = m_new, lv[-1]["level"]
+                Rd = Rd + lv[-1]["level"]
             elif gcfg.offset:                                          # the compensated correction's level
                 v_before = round_value(tb, proto, rbar_d[d, c - 1], exact, k)
                 v_ref = float(rollout_returns(ref_trajs, task, corr[d]).mean())
@@ -166,7 +184,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
         if lv:
             behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
         Rbar.append(acc / n_draws)
-        if exact_rule:     # the policy cannot see the draw: the best round of the mean table (level removed)
+        if exact_rule or pool_rule:  # the policy cannot see the draw: the best round of the mean table (no level)
             mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
             behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         log(f"  correction {c}: fitted on {behaviour[-1]['from']} in round {k} ({time.time() - t0:.0f}s)")

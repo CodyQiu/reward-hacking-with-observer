@@ -91,8 +91,13 @@ class GConfig:
     # How the level is sized. "rollouts" (above; docs/step4_comp.md). "exact" (docs/step4_indiff.md): exact
     # indifference -- correction k raises the level by [M(r_{k-1}) - M(r_k)] / T_sub, with M(r) the best
     # expected return of one sub-episode under reward r (exact DP over the task's tables; levels excluded), so
-    # the agent's future is worth the same whether or not, and however, it is corrected (offset_margin unused)
+    # the agent's future is worth the same whether or not, and however, it is corrected (offset_margin unused).
+    # "pool" (docs/step4_indiff.md, "Estimating M"): the same rule with M estimated by rollouts -- M_hat(r) = the
+    # best mean return under r among one pool of plays, relabelled: the reference rollouts, the caught play, and
+    # the agent's own final-round play from the last ``pool_episodes`` episodes (nothing after the final round
+    # depends on it, so it is the agent's best round under the reward then in force)
     offset_rule: str = "rollouts"
+    pool_episodes: int = 8
     # Step 4 fines only (applied by the overseer, not the fit; docs/step4_comp.md): the correction in force
     # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
     # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)
