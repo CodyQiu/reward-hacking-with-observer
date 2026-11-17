@@ -848,3 +848,18 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both runs.
   - Submitted: `... br_missing submit` → **1990810** (Taxi `LE`, s1), **1990811** (Boat Race `LE`, 6144).
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 53 (16:03–16:06): Boat Race `C1_comp_LE` finished at 6144, 1/3 (s0, s2 PLATEAU)
+
+- **The check.** **1990811** (Boat Race `C1_comp_LE` at 6144) COMPLETED (2:55):
+
+  | Seed | BR gap at 1536 / 3072 / 6144 | Verdict | PPO's true after round 0 |
+  |---|---|---|---|
+  | s0 | 0.021 / 0.044 / **0.066** | PLATEAU | 37.8 |
+  | s1 | 0.025 / 0.022 / **0.023** | CONVERGED | 49.7 |
+  | s2 | 0.037 / 0.082 / **0.037** | PLATEAU | 49.8 |
+
+  - All three take 4 corrections per episode, like the target. s0 has lost true reward since 1536 (50 → 37.8); s1 and s2 are honest by the true reward.
+- **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished (1/3) and not extended.
+- **Rules 5 and 6b** don't apply to Boat Race: `C1_comp_LN` is CONVERGED 3/3. The cell rests on `C1_comp_LN_confirm` (→ 3072, 1990749; s20 0.074 IMPROVING, s21 and s22 CONVERGED).
+- Cells DONE: 2 of 6.
