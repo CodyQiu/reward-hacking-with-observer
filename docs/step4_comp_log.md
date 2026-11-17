@@ -1031,3 +1031,15 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_tomato_large_C1_comp_LE` (s1 finished; s0 at 1032 and s2 at 1296).
   - Submitted: `... br_missing submit` → **1991852**.
 - The tomato_large comp target (1989675) is still running, at about 24 h of its 36 h. Cells DONE: 3 of 6.
+
+## 2026-11-16, iteration 67 (23:55–23:59): tomato_large `C1_comp_LN` s2 0.003 (corrected once, then honest); checks 1991926 (`L` s1, s2), 1991927 (`LN` s0)
+
+- **The check.** **1991542** (tomato_large `C1_comp_LN` s2 at 1536) COMPLETED (2:14:06). The verdict still needs the target, so the gap is read from `step4_br/seed2_ep1536.json`:
+  - s2: BR gap **0.003**. PPO is corrected in round 0, then honest (true 65, then 519 ×4, against honest about 523). The best response takes 1.39 corrections.
+  - s1 (iteration 54): 0.343, honest from round 0 and never corrected.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two runs:
+    - tomato_large `C1_comp_L`: s1 and s2 finished at 1536; s0 is at 1224.
+    - tomato_large `C1_comp_LN`: s0, which finished after 1991542 started.
+  - Submitted: `... br_missing submit` → **1991926** (`L`), **1991927** (`LN`).
+- Cells DONE: 3 of 6.

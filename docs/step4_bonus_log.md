@@ -2401,3 +2401,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1991848** (`L`), **1991849** (`LN+ES10+N4`).
 - Cells DONE: 7 of 12.
 - **23:34.** Check **1991849** (Tomato `B1_base_LN+ES10+N4` s0, s1 at the 12,288 cap) COMPLETED (12:24): s0 **0.000** and s1 **0.000**, both CONVERGED and both still hiding, exactly as the target does. s2 is at 9000/12,288 and still reactive (true about 430 after round 0). It is the deciding seed: if it converges at the cap, the run is 3/3 and goes to `confirm`.
+- **23:55.** Check **1991848** (Tomato `B1_base_L` s0 at the 12,288 cap) COMPLETED (15:05): **0.160**, PLATEAU, reactive. s1 and s2 are about 500 episodes short of the cap.
