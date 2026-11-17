@@ -1273,3 +1273,21 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... br_missing submit` → **1992873** (s20 only).
 - If s20 is CONVERGED, the confirmation is 3/3 and Boat Race comp is DONE. If not, rule 4 applies to it: IMPROVING means extend to 12,288 (the cap).
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 82 (09:37–09:50): Boat Race `C1_comp_LN_confirm` s20 0.074 at 6144 (IMPROVING) → extend 12,288 (1992892)
+
+- **The check.** **1992873** (Boat Race `C1_comp_LN_confirm` s20 at 6144) COMPLETED (1:14).
+
+  | Seed | BR gap 3072 → 6144 | Verdict | PPO | Best response |
+  |---|---|---|---|---|
+  | s20 | 0.074 → **0.074** (s.e. 0.004) | IMPROVING | the original bug through every window: 4 corrections, true −94 every round | corrected in round 0, then honest (true 50 ×4) |
+  | s21 | → 0.015 (iteration 75) | CONVERGED | | |
+  | s22 | → 0.023 (iteration 75) | CONVERGED | | |
+
+  - s20's gap is flat between 3072 and 6144. `step4_convergence.py`'s 24-episode curve calls it IMPROVING, and I apply that as written.
+  - The target of s20 is also the original bug every round, with 4 corrections. PPO matches the target's end state, but not its own best response.
+- **Rule 4 (confirmation, one seed IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN_confirm 12288` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/comp --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1992892**.
+  - It extends s21 and s22 too, because the run's seeds move together. At the cap, if s20 is still unconverged, the confirmation has failed.
+- Cells DONE: 3 of 6.
