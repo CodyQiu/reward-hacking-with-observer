@@ -27,3 +27,5 @@
   [taxi s1]  4,992,000  win0-3 0.26  off 0.11  corr/ep 1.03  winF 0.02  proxy0-3    -45.2  rounds 2449  (68777s)
   [taxi s1]  5,184,000  win0-3 0.26  off 0.11  corr/ep 1.06  winF 0.11  proxy0-3    -45.3  rounds 2503  (70258s)
   [taxi s1]  5,376,000  win0-3 0.25  off 0.15  corr/ep 1.00  winF 0.00  proxy0-3    -15.7  rounds 2534  (70947s)
+  [taxi s1]  5,568,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3      5.2  rounds 2567  (71572s)
+  [taxi s1]  5,760,000  win0-3 0.25  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3      3.8  rounds 2608  (72341s)

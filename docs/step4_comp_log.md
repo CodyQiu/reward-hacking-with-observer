@@ -1264,3 +1264,12 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - `LN` finished 2/3.
   - `L`: s0 is 0.008; s1 and s2 are being checked (1991926). Rule 4 still applies to it while the cell is not DONE: if it is 3/3, it gets its own confirmation, as Tomato's `L` and `LE` did.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 81 (09:19–09:22): Boat Race `C1_comp_LN_confirm` s20 finished at 6144 → check 1992873
+
+- **Event.** **1991432** (Boat Race `C1_comp_LN_confirm`, extension to 6144) COMPLETED (7:10:02). s20 has finished at 6144; s21 (0.015) and s22 (0.023) were checked at 6144 (iteration 75).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_boat_race_C1_comp_LN_confirm … step4_br.py results/step4/boat_race/comp/C1_comp_LN_confirm --finished-only --draws 12`.
+  - Submitted: `... br_missing submit` → **1992873** (s20 only).
+- If s20 is CONVERGED, the confirmation is 3/3 and Boat Race comp is DONE. If not, rule 4 applies to it: IMPROVING means extend to 12,288 (the cap).
+- Cells DONE: 3 of 6.
