@@ -2357,3 +2357,15 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **18:41.** Check **1991132** (AS `LN+RS+GL_confirm`; information only) COMPLETED (0:44): seed20  RUNNING (ep 24264);seed21  RUNNING (ep 24336);seed22 0.039 IMPROVING (ep 24576).
 - **18:49.** **1990224** (Tomato `B1_base_LN+ES10`, 6b, → 6144) COMPLETED (9:13:16, exit 0). Check **1991133** started at 18:42, before s1 and s2 finished. If it misses them, `br_missing` lists them once it ends, and I submit them then.
 - **19:00.** **1988882** (AS `B1_P1eq1_LN+RS+GL_confirm`, 24,576; information only) COMPLETED (23:14:14). Its s20/s21 check, for the record: `... br_missing submit` → **1991194 **.
+
+## 2026-11-16, iteration 201 (19:05–19:10): Tomato base `LN+ES10` (6b) 0/3 at 6144 → extend to the cap, 12,288 (1991210 ); AS `GL_confirm` (information only) 2/3 at its cap
+
+- **The check.** **1991133** (Tomato `B1_base_LN+ES10` at 6144; all three seeds were checked: `step4_br/seed{0,1,2}_ep6144.json`) COMPLETED (21:46).
+  - All three seeds: **0.159**, PLATEAU. The gap has been 0.159–0.160 since 1536.
+  - Reactive (true 46, then about 432); the best response hides.
+- **Rule 6b extension rule (exploration run): extend 2×**, which is the cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato B1_base_LN+ES10 12288` printed `submit.sh 48 --env tomato --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato/bonus --resume --extend-to 12288`.
+  - Submitted: `... submit` → **1991210 **. The last leg took 9:13 h, so this one should take about 18 h.
+- **The record-only check.** **1991194** (AS `LN+RS+GL_confirm` at 24,576) COMPLETED (2:31): . It is at the cap, and the cell is DONE.
+- **Tomato base.** All six Tomato base runs are now at or headed to the 12,288 cap.
+- Cells DONE: 7 of 12.
