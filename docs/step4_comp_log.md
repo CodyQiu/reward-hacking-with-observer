@@ -1115,3 +1115,24 @@ Pending: the Boat Race swap comparison target (1989680). The standard-PBRR compa
   - Submitted: `... br_missing submit` → **1992264 **.
 - Cells DONE: 3 of 6.
 - **03:41.** Check **1992218** (Tomato `C1_comp_L_confirm` at 3072; information only) COMPLETED: seed20 0.025 CONVERGED;seed21 0.027 CONVERGED;seed22 0.008 CONVERGED. This is 3/3 as well. Tomato comp has now been confirmed 3/3 by three configs: `LN_confirm` (the DONE config), `LE_confirm` (at 3072) and `L_confirm` (at 3072).
+
+## 2026-11-17, iteration 72 (04:27–04:31): Taxi `C1_comp_LE` 0/3 at 1536 (all hide, IMPROVING) → extend 3072 (1992394 )
+
+- **The check.** **1992264** (Taxi `C1_comp_LE` s1, s2 at 1536) COMPLETED (1:02:47).
+
+  | Seed | BR gap at 768 → 1536 | Verdict |
+  |---|---|---|
+  | s0 | 0.196 → **0.189** | IMPROVING |
+  | s1 | 0.182 → **0.175** | IMPROVING |
+  | s2 | 0.172 → **0.152** | IMPROVING |
+
+  - All three still hide (never corrected, true about −90). The best response is corrected once, then honest (124.7).
+- **Rule 4 (wave-1 run, seeds IMPROVING, below the Taxi cap of 6144): extend 2×.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LE 3072` printed `submit.sh 48 --env taxi --run-id C1_comp_LE --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1992394 **.
+- **Taxi comp now:**
+  - `L`: s1 still training;
+  - `LN`: finished 0/3;
+  - `LE`: → 3072;
+  - the 6b exploration runs from `LN` (iteration 60): 4 runs training.
+- Cells DONE: 3 of 6.
