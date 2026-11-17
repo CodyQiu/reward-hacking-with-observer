@@ -863,3 +863,13 @@ Pending: tomato_large comp target (1989675), and the comparison targets 1989679�
 - **Rule 4.** Every unconverged seed is PLATEAU, so the run is finished (1/3) and not extended.
 - **Rules 5 and 6b** don't apply to Boat Race: `C1_comp_LN` is CONVERGED 3/3. The cell rests on `C1_comp_LN_confirm` (→ 3072, 1990749; s20 0.074 IMPROVING, s21 and s22 CONVERGED).
 - Cells DONE: 2 of 6.
+
+## 2026-11-16, iteration 54 (16:41–16:44): tomato_large `C1_comp_LN` s1: BR gap 0.343 (honest from round 0, never corrected); the target is still running
+
+- **The check.** **1990311** (tomato_large `C1_comp_LN` s1 at 1536) COMPLETED (2:08:55). `step4_convergence.py` prints NO TARGET (the tomato_large comp target 1989675 is on seed 21, the 5th of 6). From `step4_br/seed1_ep1536.json`:
+  - BR gap **0.343** (s.e. 0.000), above 0.03.
+  - PPO never exploits in view and is never corrected: true about 520 every round, honest from round 0.
+  - The best response is corrected in round 0 (true 65), then honest (about 523).
+  - This is the same case as Tomato `C1_comp_L` s1 at 1536 (0.286, honest from round 0), which converged at 3072. Skipping the round-0 correction forgoes the level.
+- **Whether `LN` is IMPROVING or PLATEAU** needs the target. s0 and s2 are still training.
+- Cells DONE: 2 of 6.
