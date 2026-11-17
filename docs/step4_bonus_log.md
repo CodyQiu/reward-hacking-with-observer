@@ -2464,7 +2464,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 ## 2026-11-17, iteration 209 (05:34–05:40): Tomato base `LN+ES10+N4` s2 finished at the cap → check 1992583; `LN+ENT3` check held for s1/s2
 
-- **Events.** **1990613** (Tomato `B1_base_LN+ES10+N4`, extension to 12,288) COMPLETED 05:21 (13:24:44). All three seeds are at the cap. s0 and s1 were already checked at 12,288 (0.000, both hiding); s2 is the deciding seed (iteration 205's note).
+- **Events.** **1990613** (Tomato `B1_base_LN+ES10+N4`, extension to 12,288) COMPLETED 05:21 (13:24:44). All three seeds are at the cap. s0 and s1 were already checked at 12,288 (0.000, both hiding); s2 is the deciding seed (iteration 204's note).
 - **Rule 3.**
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed two lines:
     - `run_cmd.sh 6 4 br_tomato_B1_base_LN+ENT3 … step4_br.py results/step4/tomato/bonus/B1_base_LN+ENT3 --finished-only --draws 12`;
