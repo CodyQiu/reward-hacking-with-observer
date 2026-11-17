@@ -1087,3 +1087,4 @@ Pending: the comparison targets 1989679–1989681 (Taxi base, Boat Race swap and
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE` (extended to 1536, 1991184): s0 finished at 1536; s1 is at 864 and s2 at 1080.
   - Submitted: `... br_missing submit` → **1992105 **.
 - Cells DONE: 3 of 6.
+- **02:09.** Tomato `C1_comp_L_confirm` (information only; Tomato is DONE) has finished seeds → `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1992157 **, for the record.

@@ -878,3 +878,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Corrected in round 0, then never again: PPO's true is −93 to −100 per round, the best response's −82.8 and the target's −81.3. This is the target's end state: a new exploit after the correction.
   - s0 (696/768) and s2 (744/768) are nearly done.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 85 (02:09–02:12): Taxi `N1_P1eq1_LN` finished at 768 → check 1992156  (s0, s2)
+
+- **Training wait.** **1990409** (Taxi `N1_P1eq1_LN`, resumed after the 48 h limit) COMPLETED 02:09 (12:51:09, exit 0). s1 was already CONVERGED (0.023).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_LN`.
+  - Submitted: `... br_missing submit` → **1992156 **.
+  - If s0 and s2 converge, `LN` is 3/3 and goes to `confirm`.
+- Cells DONE: 0 of 2.
