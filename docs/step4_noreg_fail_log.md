@@ -853,3 +853,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - **Rule 4: a confirmation at the cap with s22 unconverged has failed.** This is the sixth Boat Race confirmation to fail on s22 (0.034–0.045). The flag at the top is updated.
 - **Boat Race still open:** the exploration run `LE+ENT3` (→ 12,288, 1990270; at 6144, s0 0.024, s1 and s2 0.035). When it finishes, rule 6b continues: 3/3 → confirm; otherwise stage 2.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 82 (00:57–01:00): Taxi `N1_P1eq1_LN` s1 finished → check 1992023 
+
+- **Tick.** No job failed. Nothing to resume.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_N1_P1eq1_LN`, resumed after the 48 h limit (1990409): s1 finished at 768; s0 is at 648 and s2 at 672.
+  - Submitted: `... br_missing submit` → **1992023 **.
+- Cells DONE: 0 of 2.
