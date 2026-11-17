@@ -2389,3 +2389,4 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1991539 **.
   - s0 was 0.162 at the cap, so `LE` ends unconverged whatever s1/s2 show.
 - Cells DONE: 7 of 12.
+- **21:54.** Check **1991539** (Tomato `B1_base_LE` at the 12,288 cap) COMPLETED (13:55): seed0 0.162 IMPROVING;seed1 0.162 IMPROVING;seed2 0.162 IMPROVING. All three seeds are reactive and the best response hides. At the cap with every seed unconverged, `LE` is finished (0/3).
