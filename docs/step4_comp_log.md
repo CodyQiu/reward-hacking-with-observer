@@ -1260,5 +1260,7 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large C1_comp_LE` printed `submit.sh 48 --env tomato_large --run-id C1_comp_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/comp --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. This is identical to the run's `overrides.json`.
   - Submitted: `... submit` → **1992827**. Wave 1 took about 28 h for 1536 episodes.
   - The tomato_large comp cell is DONE when this confirmation is 3/3.
-- **The other tomato_large runs:** `L` (s0 0.008; s1, s2 being checked in 1991926) and `LN` (finished 2/3) are information only from here on, per rule 6b ("once a cell is DONE…"); nothing new is started for the cell while the confirmation runs.
+- **The other tomato_large runs.**
+  - `LN` finished 2/3.
+  - `L`: s0 is 0.008; s1 and s2 are being checked (1991926). Rule 4 still applies to it while the cell is not DONE: if it is 3/3, it gets its own confirmation, as Tomato's `L` and `LE` did.
 - Cells DONE: 3 of 6.
