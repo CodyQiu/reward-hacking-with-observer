@@ -1199,3 +1199,13 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Rule 4.** s21 is IMPROVING, so this run extends 2× (to 3072, within Tomato's 12,288 cap) once the job ends. s20 (480) and s22 (672) are still training, and the run's seeds move together. Nothing to submit now.
   - s20 and s22 so far: corrected in round 0, then about 387–393 per round (target 434).
 - 109 jobs in all (limit 110). The 16 remaining `indiff_twin` runs still wait for slots.
+
+## 2026-11-18, iteration 63 (04:25–04:30): Taxi `LN` (indiff_pool) s0: 0.143, IMPROVING (hides; 0 deliveries after a correction)
+
+- **Check 1995412** (Taxi `I2_indiff_pool_LN`, s0) COMPLETED (30:08).
+  - **s0: gap 0.143, IMPROVING.** PPO's true return is −90.0 in every round, and it is never corrected. **Deliveries** (iteration 61, `step4_level_play.py`): level 0, 0.0 deliveries and 41.3 repeat pickups per round; level 1, **0.0 deliveries** and 1.3 repeat pickups (honest 7.1). It hides, and could not deliver if it were corrected.
+  - s1 (1995276, earlier): 0.179, PLATEAU, same behaviour.
+  - The best response for both is corrected in round 0, then honest: −88.2, then 124.7–124.8 ×4.
+- **Rule 4.** s2 is still training (168 of 768). Once the job ends, s0 IMPROVING means extend 2× (to 1536, within Taxi's 6144 cap). Nothing to submit now.
+- Taxi indiff_pool runs: `L` at 1008 of 1536 (extension), `LE` at 240 of 768, `LN` waiting on s2. The 6b exploration runs `L+ES10` and `L+ES10+N4` (user-requested, iteration 57) are training.
+- 106 jobs in all (limit 110).
