@@ -1060,3 +1060,8 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - The s.e. (0.019) is large next to the 0.03 bar.
 - s21 (11,184) and s22 (11,664) are still training to the cap. The confirmation is decided when they finish.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 100 (09:03–09:15): Boat Race `N1_P1eq1_LE+ENT3_confirm` s21, s22 at the cap → check 1995639
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3_confirm` (s21 and s22 now finished at 12,288; s20 was 0.024). `... submit` → **1995639**. This check decides the confirmation.
+- 110 jobs in all.
