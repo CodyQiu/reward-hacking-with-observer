@@ -118,6 +118,14 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | Boat Race `LE` s1 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LE` s2 | 0.001 (CONVERGED) | 1.00; −94, then 49.9 ×4 | **2** (farms one extra correction in round 1); −94, then 50 ×4 |
 
+### indiff_mean PPO against its exact target (updated as checks come in)
+
+Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targets/indiff_mean/seed<s>.json` (3 draws per correction, each a 6-fit mean). For each target, the A1–A3 verdict comes from `experiments/step4_indiff_check.py`, which also records the leftover gap per level: `m_after` per draw against `m_after_mean_table`.
+
+| Env / run / seed | BR gap (verdict) | PPO: corrections, true by round | Target: corrections, true by round |
+|---|---|---|---|
+| (none yet) | | | |
+
 ## Flags for the user
 
 - **Excluded nodes.** Every submit carries `EXCLUDE=barley-04,wheat-06`.
@@ -961,3 +969,24 @@ V_hide is 928.0 in every seed.
   - running: `LE+RS`, `LE+ENT3`, `LE+GL`, `LE+AN`, `LE+N4`;
   - failed: `LE`, `LE+LR`. Both failures come from one fresh seed at 0.093 (hiding) or 0.032.
 - Cells DONE: indiff_pool 1 of 6.
+
+## 2026-11-18, iteration 51 (00:44–00:50): the user's indiff_mean instruction (already carried out in iteration 48); four indiff_pool checks
+
+- **The user (pasted, 00:45):** "start a fourth indifference campaign, CAMPAIGN=indiff_mean … submit BOTH now, together … targets submit (23 jobs) … wave1 submit (18 runs). Run it in every later iteration under exactly the indiff_pool rules … log it in docs/step4_indiff_log.md with its own per-seed PPO-vs-target table, and check each target with experiments/step4_indiff_check.py (record the leftover gap per level: m_after per draw vs m_after_mean_table). Do not touch the running indiff_pool, comp, bonus or noreg_fail runs."
+- **Already done at 00:07 (iteration 48)**, from the user's commit 982137579:
+  - `git pull`; tests 42/42;
+  - both dry-runs checked;
+  - targets submitted → 1995152–1995172;
+  - wave 1 submitted → 1995173–1995190.
+  - `squeue` now shows all 39 `indiff_mean` jobs (10 running, 29 pending), so nothing is resubmitted.
+- **"23 jobs":** the driver lists 21 target jobs:
+  - grid, AS and Boat Race: one job each, seeds 0–2 and 20–22;
+  - Tomato, tomato_large and Taxi: one per seed, 18 jobs.
+  - That matches the doc's "one job per seed in Tomato, tomato_large and Taxi": 3 + 18 = 21. The "23" looks like an arithmetic slip; all of the driver's jobs were submitted.
+- **Added** the indiff_mean per-seed PPO-vs-target table at the top. From now on every indiff_mean target is checked with `step4_indiff_check.py`, with the leftover gap per level recorded.
+- **indiff_pool, rule 3.**
+  - Grid `LE+NET` (1994524) and `LE+EP` (1994526) have finished. Grid `LE+AN_confirm` and Boat Race `LN_confirm` (1994211, 6:12:06, s20 included) have finished seeds.
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+AN_confirm`, `br_grid_I2_indiff_pool_LE+EP`, `br_grid_I2_indiff_pool_LE+NET` and `br_boat_race_I2_indiff_pool_LN_confirm`.
+  - Submitted: `... br_missing submit` → **1995212 1995213 1995214 1995215**.
+- **Budget:** 81 jobs in all (limit 110).
+- Cells DONE: indiff_pool 1 of 6; indiff_mean 0 of 6.
