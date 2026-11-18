@@ -2683,3 +2683,14 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - Submitted: the dry-run's line, run verbatim → **1995410**.
 - Resume dry-run: only the held Tomato no-reg `B1_P1eq1_LN_confirm` (NODE_FAIL, awaiting the user; flagged at the top).
 - 110 jobs in all (limit 110).
+
+## 2026-11-18, iteration 226 (04:09–04:20): tomato_large base `B1_base_LN+N4` 0/3 at 1536 (best response hides; PPO corrected, then honest) → extend 3072 (rule 6b; 1995426)
+
+- **The check.** **1994780** (tomato_large `B1_base_LN+N4`, all three seeds at 1536) COMPLETED (6:34:59): **0.222 / 0.221 / 0.221, all PLATEAU.**
+  - PPO in every seed: corrected in round 0 (true 64.9–65.0), then honest at about 520.5 per round.
+  - **The best response hides**: true 84.2 in rounds 0–3, then 65.0 in round 4. The target is the same (standard PBRR with the bonus hides in tomato_large; see "Exact predictions").
+  - So PPO does the opposite of its optimum: it is corrected and honest, while the optimum hides.
+- **Rule 6b.** `LN+N4` is a stage-1 exploration run, which extends 2× whatever the verdict, up to the 12,288 cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_LN+N4 3072` printed `submit.sh 48 --env tomato_large --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1995426**.
+- **Budget:** bonus 11 jobs (cap 60); 108 in all (limit 110).
