@@ -1633,3 +1633,9 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Rule 4:** seeds are IMPROVING, so extend 2× to 3072. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+EP 3072` printed `... --resume --extend-to 3072`. `... submit` → **1995834**.
 - **Boat Race wave 2 so far:** `LN+LR` 2/3 → 3072; `LN+GL` 0/3 → 3072; `LN+RS` 1/3 → 3072; `LN+EP` 1/3 → 3072; `LN+AN` s0, s1 CONVERGED (s2 training); `LN+NET` s1, s2 PLATEAU (s0 check 1995756).
 - comp 23 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 117 (11:36–11:45): Boat Race wave 2 `LN+NET` finished 1/3 (0.021 / 0.216 / 0.184)
+
+- **Check 1995756** (`C1_comp_LN+NET` s0): **0.021, CONVERGED.** It farms 4 corrections and is honest by the true reward. s1 (0.216) and s2 (0.184) are PLATEAU: both hide.
+- **Rule 4:** every unconverged seed is PLATEAU, so the run is **finished at 1/3**.
+- 110 jobs in all.

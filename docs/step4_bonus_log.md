@@ -2741,3 +2741,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 ## 2026-11-18, iteration 232 (11:05): tomato_large swap wave 2 `B1_P2swap_LE+NET` → 1995752
 
 - The third wave-2 run from iteration 227's dry-run (`ppo.net_arch=[256,256]`), line run verbatim. Still queued: `+RS`, `+EP`, `+AN` and the four 6b runs.
+
+## 2026-11-18, iteration 233 (11:42): tomato_large swap wave 2 `B1_P2swap_LE+RS` → 1995870
+
+- The fourth wave-2 run from iteration 227's dry-run (`reward_scale=0.0325`), line run verbatim. Still queued: `+EP`, `+AN` and the four 6b runs.
