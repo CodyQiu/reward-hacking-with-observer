@@ -1395,3 +1395,20 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **The check.** **1994469** (s21, s22 at 12,288) COMPLETED (4:16): s21 **0.014**, s22 **0.024**, both CONVERGED (they were 0.015 / 0.023 at 6144). Both are corrected in round 0, then play honest laps (50.0 ×4) with 1.00 correction per episode.
 - s20, the deciding seed, is at 8784 of 12,288 in 1992892. At the cap, if it is still unconverged, the confirmation has failed.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 92 (20:14–20:18): Taxi `C1_comp_LN+N4` 0/3 at 768 (all hide) → extend 1536 (rule 6b; 1994671)
+
+- **The check.** **1993609** (Taxi `C1_comp_LN+N4`, all three seeds at 768) COMPLETED (1:38:38).
+
+  | Seed | BR gap at 768 | PPO | Best response |
+  |---|---|---|---|
+  | s0 | **0.076** | hides: −66.1 ×4, then −89.7 (bug in the final window), 0 corrections | corrected in round 0, then honest (124.8 ×4) |
+  | s1 | **0.091** | hides: −63.3 ×4, then −87.0 | the same (124.7 ×4) |
+  | s2 | **0.052** | hides: −63.2 ×4, then −87.2 | the same (124.7 ×4) |
+
+  - These are the smallest gaps of any Taxi comp run so far (others 0.13–0.90), but every seed still hides. That makes 14 of 14 checked Taxi comp seeds hiding.
+- **Rule 6b (exploration runs extend 2× whatever the verdict, up to the 6144 cap).**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+N4 1536` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+N4 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1994671**.
+- **Budget:** 9 comp jobs (limit 30).
+- Cells DONE: 3 of 6.
