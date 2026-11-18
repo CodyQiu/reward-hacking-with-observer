@@ -666,3 +666,12 @@ V_hide is 928.0 in every seed.
 - **Boat Race `LE_confirm`:** s21 **0.024** and s22 **0.001** CONVERGED (corrected once, then honest laps). s20 is at about 500 of 1536 and is the deciding seed.
 - **Queue:** 49 jobs.
 - Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 32 (20:31–20:34): AS `L_confirm` finished → check 1994686
+
+- **Event.** **1994332** (AS `I2_indiff_pool_L_confirm`, seeds 20–22 at 3072) COMPLETED (1:57:47).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_absent_supervisor_I2_indiff_pool_L_confirm …`.
+  - Submitted: `... br_missing submit` → **1994686**.
+  - The AS cell is DONE if this confirmation is 3/3. The targets of s20 and s22 farm one extra correction; s21's passes.
+- Cells DONE: 0 of 6.
