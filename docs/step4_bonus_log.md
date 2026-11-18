@@ -2719,3 +2719,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - `... submit` → **1995567**.
 - The tomato_large swap wave 2 and 6b runs (iteration 227) are still queued for job slots.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 229 (08:30): tomato_large swap wave 2, first run: `B1_P2swap_LE+LR` → 1995599
+
+- A slot freed up. The first wave-2 run from iteration 227's dry-run (`... ppo tomato_large P2swap LE+LR "<extras> ppo.learning_rate=0.0001"`, line run verbatim) → **1995599**.
+- Still queued: `+GL`, `+NET`, `+RS`, `+EP`, `+AN` and the four 6b runs (flag at the top of docs/step4_indiff_log.md).
+- 110 jobs in all.
