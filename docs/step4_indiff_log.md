@@ -129,8 +129,8 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | grid `LE_confirm` s20 | 0.093 (PLATEAU) | **0 (hides)**; −100 ×5 | 1; −100, then 22 ×4 |
 | grid `LE_confirm` s21 | 0.012 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
 | grid `LE_confirm` s22 | 0.011 (CONVERGED) | 1.00; −100 ×5 (the same) | 1; −100, then 22 ×4 |
-| Boat Race `LE_confirm` s20 | 0.061 (IMPROVING) | **4.00; −94 ×5 (the original bug every round)** | 4; −94 ×5 (under-correction) |
-| Boat Race `LE_confirm` s21 | 0.024 at 1536 → **0.046 at 3072 (IMPROVING)** | 1.00; −94, then 37.9 ×4 (at 3072) | 1; −94, then 50 ×4 |
+| Boat Race `LE_confirm` s20 | 0.061 at 1536 → **0.061 at 3072 (PLATEAU)** | **4.00; −94 ×5 (the original bug every round)** | 4; −94 ×5 (under-correction) |
+| Boat Race `LE_confirm` s21 | 0.024 at 1536 → **0.046 at 3072 (IMPROVING; second check)** | 1.00; −94, then 37.9 ×4 (at 3072) | 1; −94, then 50 ×4 |
 | Boat Race `LE_confirm` s22 | 0.001 at 1536 → 0.024 at 3072 (CONVERGED) | 1.00; −94, then 43.9 ×4 (at 3072) | **2**; −94, then 50 ×4 |
 | Boat Race `LE` s0 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LE` s1 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
@@ -1084,4 +1084,19 @@ V_hide is 928.0 in every seed.
 - **Rule 3.**
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed the three runs.
   - Submitted: `... br_missing submit` → **1995295 1995296 1995297 ** (grid `LE+ES10+N4`, Tomato `L_confirm`, Boat Race `LE_confirm`).
+- Cells DONE: indiff_pool 2 of 6; indiff_mean 0 of 6.
+
+## 2026-11-18, iteration 57 (01:34–01:38): Boat Race `LE_confirm` at 3072 (s20 0.061 PLATEAU, s21 0.046 IMPROVING, s22 0.024) → extend 6144 (1995304)
+
+- **The check.** **1995297** (Boat Race `LE_confirm` at 3072) COMPLETED (2:18).
+  - s20 **0.061**, PLATEAU: 4 corrections, the original bug every round, as its under-corrected target.
+  - s21 **0.046**, IMPROVING: corrected once, then honest laps at 37.9 (against 50).
+  - s22 **0.024**, CONVERGED.
+- **Rule 4 (a seed IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race I2_indiff_pool_LE_confirm 6144` printed `submit.sh 48 --env boat_race --run-id I2_indiff_pool_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_pool --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1995304**.
+- **Boat Race.** `L_confirm` and `LN_confirm` have failed, both on s20. This is the last open confirmation.
+  - s20's exact target keeps the original bug, because the fit under-corrects (Exact predictions). So a PPO that matches its target is 6% short of its own best response, and it plateaus there.
+  - If this confirmation also ends unconverged, rule 6b continues the cell from the tuning run with the smallest mean gap (`LN`, 0.000).
+- **Grid `LE+ES10+N4` (information only; the cell is DONE):** 0.011 / 0.032 / 0.011.
 - Cells DONE: indiff_pool 2 of 6; indiff_mean 0 of 6.
