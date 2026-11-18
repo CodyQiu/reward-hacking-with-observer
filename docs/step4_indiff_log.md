@@ -52,6 +52,11 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | Boat Race `LN` s0 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 (honest) | 1; −94, then 50 ×4 |
 | Boat Race `LN` s1 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LN` s2 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 | **2**; −94, then 50 ×4 |
+| grid `LE_confirm` s20 | 0.093 (PLATEAU) | **0 (hides)**; −100 ×5 | 1; −100, then 22 ×4 |
+| grid `LE_confirm` s21 | 0.012 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
+| grid `LE_confirm` s22 | 0.011 (CONVERGED) | 1.00; −100 ×5 (the same) | 1; −100, then 22 ×4 |
+| Boat Race `LE_confirm` s21 | 0.024 (CONVERGED) | 1.00; −94, then 43.7–43.8 | 1; −94, then 50 ×4 |
+| Boat Race `LE_confirm` s22 | 0.001 (CONVERGED) | 1.00; −94, then 49.9 ×4 | **2**; −94, then 50 ×4 |
 | Boat Race `LE` s0 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LE` s1 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LE` s2 | 0.001 (CONVERGED) | 1.00; −94, then 49.9 ×4 | **2** (farms one extra correction in round 1); −94, then 50 ×4 |
@@ -632,4 +637,32 @@ V_hide is 928.0 in every seed.
 - **Rule 3.**
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_boat_race_I2_indiff_pool_LE_confirm …`; grid `LE_confirm` was "check still queued/running".
   - Submitted: `... br_missing submit` → **1994517** (Boat Race `LE_confirm`, its finished seeds).
+- Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 31 (19:20–19:30): grid `LE_confirm` 2/3, s20 PLATEAU → failed; grid wave 2 (6 runs) and rule 6b (4 runs) from `LE`
+
+- **Checks COMPLETED:** **1994471** (grid `LE_confirm`, all three seeds at 1536; 3:13), **1994517** (Boat Race `LE_confirm` s21, s22; 3:00).
+- **Grid `I2_indiff_pool_LE_confirm`: s20 0.093 PLATEAU (hides); s21 0.012 and s22 0.011 CONVERGED** (corrected, then never reach the goal, as in the tuning seeds).
+  - **Rule 4:** the only unconverged seed is PLATEAU, so the run is finished and **this confirmation failed (2/3)**. This is the same treatment as the bonus campaign's failed confirmations (e.g. its iteration 96).
+- **Grid's next step.** All three wave-1 runs are finished without a passing confirmation: `L` 2/3 and `LN` 2/3 (both finished, PLATEAU), `LE` 3/3 but its confirmation failed.
+  - I read a failed confirmation as the config not counting as CONVERGED 3/3 for rules 5 and 6b, as rule 6b's stage-2 wording does ("CONVERGED but failed its confirmation"). So both rules start now, from the run with the smallest mean gap, `LE` (0.011; `LN` 0.035, `L` 0.040).
+  - **Rule 5 (wave 2).**
+    - Extras are `LE`'s overrides minus `episodes=`, from `.venv/bin/python scripts/farmshare/run_sets.py results/step4/grid/indiff_pool/I2_indiff_pool_LE`: `g.fine_only=True g.offset=True g.offset_rule=pool anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03`.
+    - Each run was dry-run, then submitted with `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo grid indiff_pool "LE+<tag>" "<extras> <factor>" submit`, at 1536 episodes:
+      - `LR` (`ppo.learning_rate=0.0001`) → **1994522**;
+      - `GL` (`ppo.gae_lambda=1.0`) → **1994523**;
+      - `NET` (`ppo.net_arch=[256,256]`) → **1994524**;
+      - `RS` (`reward_scale=0.0025`, 0.25 × the grid's 0.01) → **1994525**;
+      - `EP` (`ppo.n_epochs=20`) → **1994526**;
+      - `AN` (`anneal.last=0.5`) → **1994527**.
+  - **Rule 6b.**
+    - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore grid indiff_pool I2_indiff_pool_LE` printed 4 runs at 1536, all distinct from the base:
+      - `+ENT3` (`ppo.ent_coef=0.09`);
+      - `+ES10` (`anneal.ent_start=10 anneal.ent_episodes=768`);
+      - `+N4` (`n_envs=64 ppo.batch_size=1600`);
+      - `+ES10+N4`.
+    - Submitted: `... submit` → **1994528, 1994529, 1994530, 1994531**.
+  - The grid caveat stands: the 3% verdict can pass seeds that never reach the goal after their correction (flag at the top).
+- **Boat Race `LE_confirm`:** s21 **0.024** and s22 **0.001** CONVERGED (corrected once, then honest laps). s20 is at about 500 of 1536 and is the deciding seed.
+- **Queue:** 49 jobs.
 - Cells DONE: 0 of 6.
