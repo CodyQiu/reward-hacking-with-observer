@@ -47,6 +47,9 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | Tomato `LE` s0 | 0.008 (CONVERGED) | 1.00; 46, then 427.7–428.1 (honest) | 1.03; 46, then 433.8–434.0 |
 | Tomato `LE` s1 | 0.009 (CONVERGED) | 1.00; 45.7, then 427.0–427.6 (honest) | 1; 46, then 434.1 ×4 |
 | Tomato `LE` s2 | 0.010 (CONVERGED) | 1.00; 46, then 426.7–427.0 (honest) | 1; 46, then 434.1 ×4 |
+| Tomato `LN` s0 | 0.002 (CONVERGED) | 1.00; 46, then 432.5–432.6 (honest) | 1.03; 46, then 433.8–434.0 |
+| Tomato `LN` s1 | 0.002 (CONVERGED) | 1.00; 46, then 432.3–432.6 | 1; 46, then 434.1 ×4 |
+| Tomato `LN` s2 | 0.003 (CONVERGED) | 1.00; 46, then 431.7–432.0 | 1; 46, then 434.1 ×4 |
 | Taxi `L` s1 | 1.231 (not converged) | **0, never exploits and never finishes the task**; true about −90 every round | 1 (s1 passes); −88.2, then 124.7 ×4 |
 | Taxi `L` s2 | 0.155 (not converged) | **0.02 (hides)**: −87.3 to −87.5, then −89.8 | 1 (the target fails A3 by avoiding a second, underpaid correction); −88.2, then 124.7 ×3, 124.6 |
 | grid `LE` s0 | 0.011 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
@@ -931,3 +934,16 @@ V_hide is 928.0 in every seed.
   - Submitted: `... submit` → **1995191**. Tomato now has two confirmations running (`L_confirm` 1995101, `LE_confirm`).
 - **Budget:** 83 jobs in all (limit 110).
 - Cells DONE: indiff_pool 1 of 6; indiff_mean 0 of 6.
+
+## 2026-11-18, iteration 49 (00:18–00:23): Tomato `LN` 3/3 → `confirm` (1995197); checks for grid `LE+N4` and Taxi `L` s0
+
+- **The check.** **1995089** (Tomato `I2_indiff_pool_LN`, all three at 1536) COMPLETED (42:21): **0.002 / 0.002 / 0.003**, CONVERGED. PPO is corrected once, then honest (431.7–432.6 against 434).
+- **Rule 4: `confirm`.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato I2_indiff_pool_LN` printed `submit.sh 48 --env tomato --run-id I2_indiff_pool_LN_confirm --seeds 20 21 22 --results-dir results/step4/tomato/indiff_pool --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_rule=pool g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1995197**.
+  - **Tomato:** all three wave-1 runs are 3/3 (9 of 9 seeds corrected once, then honest), each in confirmation (`L` 1995101, `LE` 1995191, `LN` 1995197).
+- **Rule 3.**
+  - Taxi `L` (1993589, 9:15:27) has finished all three seeds; s0 is unchecked. Grid `LE+N4` has finished.
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+N4` and `br_taxi_I2_indiff_pool_L`.
+  - Submitted: `... br_missing submit` → **1995199 1995201**.
+- Cells DONE: indiff_pool 1 of 6.
