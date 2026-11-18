@@ -1705,3 +1705,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - `C1_comp_LN+ES10+N4` (1995510) had finished at 1536. Its dry-run line, run verbatim → **1996052**.
 - `LN+ES10`'s extension to 3072 (1995878) COMPLETED (47:53). Its check goes in at the next free slot.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 127 (14:31–14:38): Boat Race 6b `LN+ES10+N4` 0/3 at 1536 (all hide) → extend 3072 (queued for a slot)
+
+- **Check 1996052** (`C1_comp_LN+ES10+N4`, all three at 1536): **0.146 / 0.173 / 0.184, all PLATEAU.** All three hide: never corrected, true −82 in rounds 0–3.
+- **Rule 6b:** exploration runs extend 2× whatever the verdict. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+ES10+N4 3072` printed `... --resume --extend-to 3072`. It is first in the slot queue.
+- Checks waiting for slots: `LN+ES10` (3072), `LN+N4` (1536).
+- 110 jobs in all.

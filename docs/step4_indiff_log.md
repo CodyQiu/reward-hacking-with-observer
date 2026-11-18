@@ -1698,3 +1698,10 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - s2: level 0, true −82.3, 0.3 deliveries, 40.7 repeat pickups; level 1, **0.0 deliveries**.
   - After 3072 episodes neither can deliver after a correction. Both still exploit off-window and hide.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 101 (14:31–14:38): checks for twin Boat Race pure `LN_confirm` (s21, s22; 1996139) and indiff_mean AS `LE` (1996142)
+
+- **Tick.** `br_missing` (dry-runs) lists 8 checks: comp Boat Race `LN+ES10`, `LN+N4`; indiff_pool Taxi `LE`, `LN`; indiff_mean AS `LE`; twin AS pure `L` (6144), Tomato practice `L`, Boat Race pure `LN_confirm`.
+- With 1–2 free slots I took the confirmation first: twin Boat Race pure `LN_confirm` (s21 and s22 finished at 1536; s20 at 936) → **1996139**. Then indiff_mean AS `LE` → **1996142**.
+- The rest go in as slots free up.
+- 110 jobs in all.
