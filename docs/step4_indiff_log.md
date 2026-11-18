@@ -1317,3 +1317,13 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   | 2 | −88.8, 0.2, 40.6 | −170.6 / −171.1, **0.1**, 21.8 / 22.2 |
 
   - All three seeds farm the pickup bug at level 0 (about 40 repeat pickups per round). After a correction none of them delivers (0.0–0.1, against 7.1). s2 keeps repeating pickups at level 1 (about 22 per round) under the fine, at true −171.
+
+## 2026-11-18, iteration 70 (05:59–06:08): Taxi `L` (indiff_pool) finished at 1536 → check 1995483 (s0, s2)
+
+- **Event.** The extension of Taxi `I2_indiff_pool_L` to 1536 (1995224) COMPLETED (2:18:21). All three seeds are at 1536; s1 was checked (1.231, PLATEAU).
+- **Rule 3.** The dry-run's `br_taxi_I2_indiff_pool_L` line, run verbatim → **1995483**.
+- **Deliveries** (`step4_level_play.py`, at 1536; honest 7.1):
+  - s0: level 0, true −90.0, 0.0 deliveries, 41.0 repeat pickups; level 1, true −98.0 / −98.4, **0.1 / 0.0 deliveries**.
+  - s2: level 0, true −90.0, 0.0 deliveries, 40.7 repeat pickups; level 1, true −99.2 / −99.3, **0.0 deliveries**.
+  - Both hide (exploit off-window, never corrected) and cannot deliver after a correction, like s1.
+- 109 jobs in all. The one free slot is kept for a twin pair; the queue (flag at the top) resumes once two slots are free.
