@@ -1431,3 +1431,4 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Boat Race `I2_indiff_pool_LE_confirm`: s21 and s22 are at 6144; s20, the deciding seed, is at 3960. The dry-run line, run verbatim → **1995568**.
   - The bonus check is in docs/step4_bonus_log.md.
 - 110 jobs in all.
+- **08:16:** a slot freed up. `CAMPAIGN=indiff_mean EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid I3_indiff_mean_LN submit` → **1995585** (dry-run above).
