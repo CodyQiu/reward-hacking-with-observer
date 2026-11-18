@@ -58,6 +58,8 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | AS `L_confirm` s22 | 0.000 (CONVERGED) | 1.00; −109.2, then 449.1–449.3 | **2**; −100, 400, then 450 ×3 |
 | Boat Race `L_confirm` s21 | 0.001 (CONVERGED) | 1.00; −94, then 49.8–50.0 (honest) | 1; −94, then 50 ×4 |
 | Boat Race `L_confirm` s22 | 0.001 (CONVERGED) | 1.00; −94, then 49.4–50.0 | **2**; −94, then 50 ×4 |
+| Boat Race `LN_confirm` s21 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 (honest) | 1; −94, then 50 ×4 |
+| Boat Race `LN_confirm` s22 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 | **2**; −94, then 50 ×4 |
 | AS `LE_confirm` s20 | 0.013 (CONVERGED) | 1.00; −51.4, −97.2, then 449.0–449.5 (corrected in round 1, then honest) | 2; −100, 400, then 450 ×3 |
 | AS `LE_confirm` s21 | 0.000 (CONVERGED) | 1.00; −110.4, then 448.8–449.3 | 1; −100, then 450 ×4 |
 | AS `LE_confirm` s22 | 0.001 (CONVERGED) | 1.00; −104.1, then 447.3–449.2 | 2; −100, 400, then 450 ×3 |
@@ -735,4 +737,13 @@ V_hide is 928.0 in every seed.
     - `br_taxi_I2_indiff_pool_L` (a further seed finished);
     - `br_boat_race_I2_indiff_pool_LN_confirm` (finished seeds).
   - Submitted: `... br_missing submit` → **1994781** (Taxi `L`) and **1994782** (Boat Race `LN_confirm`).
+- Cells DONE: 1 of 6.
+
+## 2026-11-17, iteration 37 (21:30–21:34): Boat Race `LN_confirm` s21, s22 0.000
+
+- **The check.** **1994782** (Boat Race `LN_confirm` s21, s22 at 1536) COMPLETED (2:03): **0.000 / 0.000**, CONVERGED (corrected once, then honest laps).
+- **All three Boat Race confirmations** now have s21 and s22 CONVERGED. Each waits on its s20, the seed whose target is under-corrected (4 corrections, the original bug every round):
+  - `LE_confirm`: s20 0.061 at 1536, extending to 3072 (1994745);
+  - `L_confirm`: s20 at about 600 of 1536;
+  - `LN_confirm`: s20 at 552 of 1536.
 - Cells DONE: 1 of 6.
