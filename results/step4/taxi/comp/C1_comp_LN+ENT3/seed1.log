@@ -30,3 +30,7 @@
   [taxi s1] 23,040,000  win0-3 0.00  off 0.93  corr/ep 0.00  winF 0.00  proxy0-3    319.5  rounds 470  (34545s)
   [taxi s1] 23,808,000  win0-3 0.00  off 0.93  corr/ep 0.00  winF 0.00  proxy0-3    320.2  rounds 470  (34665s)
   [taxi s1] 24,576,000  win0-3 0.00  off 0.93  corr/ep 0.00  winF 0.00  proxy0-3    321.2  rounds 470  (34785s)
+  [taxi s1] resumed at episode 768 -> 1536
+  [taxi s1] 25,344,000  win0-3 0.00  off 0.89  corr/ep 0.00  winF 0.00  proxy0-3    305.3  rounds 470  (82s)
+  [taxi s1] 26,112,000  win0-3 0.00  off 0.88  corr/ep 0.00  winF 0.00  proxy0-3    300.2  rounds 470  (159s)
+  [taxi s1] 26,880,000  win0-3 0.00  off 0.89  corr/ep 0.00  winF 0.00  proxy0-3    303.0  rounds 471  (278s)

@@ -747,3 +747,11 @@ V_hide is 928.0 in every seed.
   - `L_confirm`: s20 at about 600 of 1536;
   - `LN_confirm`: s20 at 552 of 1536.
 - Cells DONE: 1 of 6.
+
+## 2026-11-17, iteration 38 (21:37–21:40): grid `LE+LR` (wave 2) finished → check 1994792 
+
+- **Event.** **1994522** (grid `I2_indiff_pool_LE+LR`, wave 2) COMPLETED (1:41:18); all three seeds are at 1536.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+LR`. Taxi `L` was "check still queued/running".
+  - Submitted: `... br_missing submit` → **1994792 **.
+- Cells DONE: 1 of 6.

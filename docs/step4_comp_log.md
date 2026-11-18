@@ -1432,3 +1432,9 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+ENT3 1536` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 1536`.
   - Submitted: `... submit` → **1994783**.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 95 (21:37–21:40): Taxi `C1_comp_LE` s1 0.164 at the 6144 cap (hides)
+
+- **The check.** **1994696** (Taxi `C1_comp_LE` s1 at 6144) COMPLETED (32:52): **0.164**, not converged. PPO hides (−84.3 ×4, then −90.1); the best response is corrected in round 0, then honest (124.7 ×4). The gap was 0.163 at 3072.
+- s0 and s2 are still finishing the extension to the cap (1993102). At the cap, rule 4 ends the run whatever the verdict.
+- Cells DONE: 3 of 6.
