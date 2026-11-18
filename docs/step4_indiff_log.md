@@ -1594,3 +1594,10 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **All 8 wait in the job queue** (positions 3–10, ahead of the tomato_large runs: grid runs take about 4 h each, so they free slots quickly). See the updated flag at the top.
 - **Rule 3**, submitted from the dry-runs: comp Boat Race `LN+AN` → 1995741, `LN+NET` → 1995742 (comp log); twin grid `practice_L` → **1995743**. indiff_mean grid `I3_indiff_mean_LE` (finished at 1536) waits for a slot.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 90 (11:00–11:06): twin grid practice `L` s0 0.023, s1 0.011 (CONVERGED; true −100); checks 1995750 (indiff_mean grid `LE`) and 1995751 (twin AS `LE`)
+
+- **Check 1995743** (grid practice `I4_indiff_twin_practice_L` s0, s1): **0.023 and 0.011, CONVERGED.** Both are corrected once, then true −100 (the grid caveat). s0's best response takes 2 corrections, then honest. s2 is at 1464.
+- **Rule 3.** indiff_mean grid `I3_indiff_mean_LE` (finished at 1536) → **1995750**. Twin AS `I4_indiff_twin_LE` (finished seeds) → **1995751**.
+- The queue's next item, bonus tomato_large `B1_P2swap_LE+NET` → **1995752** (bonus log).
+- 110 jobs in all; 23 runs still queued.

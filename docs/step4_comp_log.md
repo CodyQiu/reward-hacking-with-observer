@@ -1607,3 +1607,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 
 - `br_missing` (dry-run) listed both: their seeds have finished at 1536. Lines run verbatim → **1995741**, **1995742**.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 113 (11:00–11:06): Boat Race wave 2: `LN+AN` s0, s1 0.021 (CONVERGED, honest by the true reward); `LN+NET` s1 0.216, s2 0.184 (PLATEAU, hide); `LN+EP` → check 1995749
+
+- **Check 1995741** (`C1_comp_LN+AN` s0, s1): **0.021 and 0.021, CONVERGED.** Both farm 4 corrections and are honest by the true reward (−94, then 50 ×4), like their best responses. s2 is at 624.
+- **Check 1995742** (`C1_comp_LN+NET` s1, s2): **0.216 and 0.184, PLATEAU.** Both hide: never corrected, true −94 / −82. s0 is at 1440 and is honest by the true reward so far.
+- **Rule 3.** `LN+EP` (1995476) finished at 1536. `br_missing submit` → **1995749**.
+- comp 22 jobs (cap 30); 110 in all.
