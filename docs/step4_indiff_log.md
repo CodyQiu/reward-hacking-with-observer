@@ -876,3 +876,12 @@ V_hide is 928.0 in every seed.
   - Submitted: `... submit` → **1995102**.
 - **Grid `LE+LR_confirm`:** s21 0.014 and s22 0.011 CONVERGED (corrected, then never reach the goal); s20 is at 1320.
 - Cells DONE: 1 of 6.
+
+## 2026-11-17, iteration 46 (23:43–23:46): grid `LE+AN` and `LE+LR_confirm` finished → checks 1995110 1995111 
+
+- **Events.** **1994527** (grid `I2_indiff_pool_LE+AN`, wave 2, 2:57:44) and **1994798** (grid `LE+LR_confirm`, 1:56:56) COMPLETED.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+AN` and `br_grid_I2_indiff_pool_LE+LR_confirm` (s20).
+  - Submitted: `... br_missing submit` → **1995110 1995111 **.
+  - If `LE+LR_confirm` s20 converges, the confirmation is 3/3 and the grid cell is DONE by the verdict, with the behavioural caveat (the flag at the top).
+- Cells DONE: 1 of 6.
