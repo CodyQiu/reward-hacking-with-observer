@@ -1358,3 +1358,11 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Its check 1995491 (submitted for s22) is still pending. With `--finished-only` it will now cover s20 as well.
   - I submit the extension once that check has run: an extension started first would rewrite s20's and s22's checkpoints before they are checked at 1536.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 74 (06:47–06:55): Taxi `LN` (indiff_pool) finished at 768 → check 1995502 (s2); extension waits for it
+
+- **Event.** Taxi `I2_indiff_pool_LN` (1993591) COMPLETED (15:47:09). s2 has finished at 768 (s0: 0.143 IMPROVING; s1: 0.179 PLATEAU).
+- **Rule 3.** The dry-run's `br_taxi_I2_indiff_pool_LN` line, run verbatim → **1995502**.
+- **Rule 4.** s0 is IMPROVING, so the run extends to 1536 once s2's check has read its 768 checkpoint.
+- **s2 deliveries** (`step4_level_play.py`, at 768; honest 7.1): level 0, true −69.6, 0.8 deliveries, 40.4 repeat pickups; level 1, true −96.5 / −96.6, **0.0 deliveries**, 1.1–1.4 repeat pickups.
+- 110 jobs in all.
