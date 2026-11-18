@@ -47,7 +47,7 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
 from ..pbrr_core import mlp_apply
 
-__all__ = ["Protocol", "obs_dim", "encode_obs", "AuditedVecEnv", "g_apply", "MinCorrection"]
+__all__ = ["Protocol", "obs_dim", "encode_obs", "AuditedVecEnv", "g_apply", "MinCorrection", "EnsembleCorrection"]
 
 
 @dataclass(frozen=True)
@@ -109,6 +109,7 @@ def encode_obs(proto, base, t, n_corr, flagged):
 
 
 g_apply = jax.jit(mlp_apply)
+_g_apply_many = jax.jit(jax.vmap(mlp_apply, in_axes=(0, None)))
 
 
 class MinCorrection:
@@ -127,6 +128,27 @@ class MinCorrection:
         for p in self.params:
             out = np.minimum(out, np.asarray(g_apply(p, X), float))
         return out
+
+
+class EnsembleCorrection:
+    """The correction in force under GConfig.offset_rule = "exact_mean" (docs/step4_indiff.md, "The average
+    correction"): the mean of n networks fitted independently on one catch (each on its own rollouts, labels
+    and init). With fines only it is mean_i min(prev(x), g_i(x)), prev = the correction in force before (0 at
+    the first): every term is <= prev, so no transition is raised and no fine is relaxed. Without fines only it
+    is mean_i g_i(x). The agent cannot see which fit it got; averaging makes the reward it faces close to the
+    one the level is priced on. Evaluated wherever a single network's parameters would be."""
+
+    def __init__(self, prev, members, fine_only):
+        self.prev, self.fine_only = prev, bool(fine_only)
+        self.members = tuple(members)
+        self._stacked = jax.tree_util.tree_map(lambda *a: jnp.stack(a), *self.members)
+
+    def apply(self, X):
+        G = np.asarray(_g_apply_many(self._stacked, X), float)          # (n members, rows)
+        if self.fine_only:
+            base = np.zeros(G.shape[1]) if self.prev is None else np.asarray(self.prev.apply(X), float)
+            G = np.minimum(base[None], G)
+        return G.mean(axis=0)
 
 
 class AuditedVecEnv(VecEnv):
@@ -176,7 +198,8 @@ class AuditedVecEnv(VecEnv):
         for p, idx in groups.values():
             X = np.zeros((n, feat.shape[1]), np.float32)
             X[:len(idx)] = feat[idx]
-            g = p.apply(jnp.asarray(X)) if isinstance(p, MinCorrection) else g_apply(p, jnp.asarray(X))
+            g = (p.apply(jnp.asarray(X)) if isinstance(p, (MinCorrection, EnsembleCorrection))
+                 else g_apply(p, jnp.asarray(X)))
             corr[idx] = np.asarray(g, float)[:len(idx)]
         return corr
 

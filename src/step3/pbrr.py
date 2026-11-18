@@ -42,7 +42,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 
 from ..pbrr_core import GConfig, boltzmann_label, mlp_apply, mlp_init
 from .dp import best_round_value
-from .protocol import MinCorrection, encode_obs, g_apply
+from .protocol import EnsembleCorrection, MinCorrection, encode_obs, g_apply
 from .task import exploit_mask
 
 __all__ = ["Rollout", "rollouts", "policy_probs_fn", "fit_correction_rows", "g_on_rows", "rollout_returns",
@@ -244,20 +244,22 @@ def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
 
 
 def g_on_rows(params, X, chunk=65_536):
-    """Evaluate a correction network -- or a MinCorrection, min(0, g_1, ..., g_k) -- on many rows (chunked,
-    padded to fixed shapes)."""
+    """Evaluate a correction network -- or a MinCorrection, min(0, g_1, ..., g_k), or an EnsembleCorrection
+    (offset_rule = "exact_mean") -- on many rows (chunked, padded to fixed shapes)."""
     X = np.asarray(X, np.float32)
     if isinstance(params, MinCorrection):
         out = np.zeros(len(X))
         for p in params.params:
             out = np.minimum(out, g_on_rows(p, X, chunk))
         return out
+    ens = isinstance(params, EnsembleCorrection)
     out = np.zeros(len(X))
     for i in range(0, len(X), chunk):
         part = X[i:i + chunk]
         P = np.zeros((_bucket(len(part)), X.shape[1]), np.float32)
         P[:len(part)] = part
-        out[i:i + len(part)] = np.asarray(g_apply(params, jnp.asarray(P)), float)[:len(part)]
+        g = params.apply(jnp.asarray(P)) if ens else g_apply(params, jnp.asarray(P))
+        out[i:i + len(part)] = np.asarray(g, float)[:len(part)]
     return out
 
 
@@ -346,11 +348,14 @@ class Overseer(BaseCallback):
         self._ref_rows = _traj_rows(ref_trajs, task)
         self.exact = gcfg.offset and gcfg.offset_rule == "exact"
         self.pool = gcfg.offset and gcfg.offset_rule == "pool"
-        assert gcfg.offset_rule in ("rollouts", "exact", "pool"), gcfg.offset_rule
-        if self.exact:
-            assert task.tables is not None, "offset_rule=exact needs a tabular task (dp.best_round_value)"
-        # exact M by DP: the exact rule's yardstick, and the pool estimate's validation where tables exist
-        self.track_m = self.exact or (self.pool and task.tables is not None)
+        self.exact_mean = gcfg.offset and gcfg.offset_rule == "exact_mean"
+        assert gcfg.offset_rule in ("rollouts", "exact", "pool", "exact_mean"), gcfg.offset_rule
+        if self.exact or self.exact_mean:
+            assert task.tables is not None, f"offset_rule={gcfg.offset_rule} needs a tabular task (dp.best_round_value)"
+        if self.exact_mean:
+            assert gcfg.n_ensemble >= 1, gcfg.n_ensemble
+        # exact M by DP: the exact rules' yardstick, and the pool estimate's validation where tables exist
+        self.track_m = self.exact or self.exact_mean or (self.pool and task.tables is not None)
         if self.track_m:
             self.m_cache = {}            # (episode, history) -> (table of the correction in force, M of it)
             self._m_proxy = best_round_value(task.tables, task.tables.proxy, proto.t_sub)
@@ -436,49 +441,14 @@ class Overseer(BaseCallback):
         policy = policy_probs_fn(self.model, self.proto, self.task.n_actions)
         for (episode, history), members in groups.items():
             t0 = time.time()
-            D_prev = self.cache.get((episode, history[:-1]), [])
             k = history[-1]
             # the reward in force when the group was caught (identical catch history: one correction)
             old_params, old_level = v.g_params[members[0]], float(v.level[members[0]])
             assert np.allclose(v.level[members], old_level)
-            agent = rollouts(self.batch, policy, self.proto, self.rng, t0=k * self.proto.t_sub,
-                             n_corr=len(history) - 1)
-            new = [(a, r, boltzmann_label(a, r, self.rng, self.beta)) for a in agent for r in self.ref_trajs]
-            D = D_prev + new
-            params, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)))
-            self.cache[(episode, history)] = D
-            new_params = params
-            if self.gcfg.fine_only:                      # fines only, never relaxed: min(0, g_1, ..., g_k)
-                params = (old_params if old_params is not None else MinCorrection(())).then(params)
-            lv, T = {}, self.proto.t_sub
-            if self.track_m:                             # exact M of the reward before and after (DP)
-                tb = self.task.tables
-                G_old, m_old = self.m_cache.get((episode, history[:-1]), (None, self._m_proxy))
-                assert G_old is not None or old_params is None, "the reward in force must be cached"
-                g_new = g_table(new_params, self.task)
-                if self.gcfg.fine_only:
-                    G = np.minimum(0.0 if G_old is None else G_old, g_new).astype(np.float32)
-                else:
-                    G = g_new.astype(np.float32)
-                m_new = best_round_value(tb, tb.proxy + G, T)
-                self.m_cache[(episode, history)] = (G, m_new)
-                lv = {"level_m_before": m_old, "level_m_after": m_new}
-            if self.exact:                               # exact indifference (docs/step4_indiff.md)
-                lv["level"] = exact_level(old_level, m_old, m_new, T)
-            elif self.pool:                              # ... with M estimated from one pool of plays
-                groups = [self.ref_trajs, agent] + [g for _, _, g in self.final_pool]
-                names = ["reference", "caught"] + [f"final ep{e} lvl{c}" for e, c, _ in self.final_pool]
-                vb, va = pool_values(groups, self.task, old_params), pool_values(groups, self.task, params)
-                ib, ia = int(np.argmax(vb)), int(np.argmax(va))
-                lv.update({"level": exact_level(old_level, float(vb[ib]), float(va[ia]), T),
-                           "level_m_hat_before": float(vb[ib]), "level_m_hat_after": float(va[ia]),
-                           "level_pool_best_before": names[ib], "level_pool_best_after": names[ia],
-                           "level_pool_size": len(groups)})
-            elif self.gcfg.offset:                       # the compensated correction (docs/step4_comp.md)
-                v_before = float(rollout_returns(agent, self.task, old_params, old_level).mean())
-                v_ref = float(rollout_returns(self.ref_trajs, self.task, params).mean())
-                lv = {"level": level_offset(self.gcfg, v_before, v_ref, self.proto.t_sub),
-                      "level_v_before": v_before, "level_v_ref_after": v_ref}
+            if self.exact_mean:                          # n independent fits, applied as their mean
+                params, agent, info, lv = self._ensemble_round(episode, history, policy, old_params, old_level)
+            else:
+                params, agent, info, lv = self._single_round(episode, history, policy, old_params, old_level)
             v.set_correction(members, params, lv.get("level", 0.0))
             rec = {"timesteps": int(self.num_timesteps), "episode": int(episode), "k": int(k),
                    "n_round": len(history), "n_envs": len(members), "n_pairs": info["n_pairs"],
@@ -497,6 +467,78 @@ class Overseer(BaseCallback):
         self.cache = {key: d for key, d in self.cache.items() if key[0] == cur}
         if self.track_m:
             self.m_cache = {key: m for key, m in self.m_cache.items() if key[0] == cur}
+
+    def _ensemble_round(self, episode, history, policy, old_params, old_level):
+        """GConfig.offset_rule = "exact_mean": ``n_ensemble`` corrections, each fitted on its own fresh rollouts
+        and labels (its own D, accumulated over the episode's catches like a single fit's), applied as their
+        mean (protocol.EnsembleCorrection); the level is priced on M of exactly that mean reward."""
+        n, k, T, tb = self.gcfg.n_ensemble, history[-1], self.proto.t_sub, self.task.tables
+        D_prev = self.cache.get((episode, history[:-1]), [[] for _ in range(n)])
+        Ds, fits, agents, infos = [], [], [], []
+        for i in range(n):
+            agent = rollouts(self.batch, policy, self.proto, self.rng, t0=k * T, n_corr=len(history) - 1)
+            D = D_prev[i] + [(a, r, boltzmann_label(a, r, self.rng, self.beta)) for a in agent
+                             for r in self.ref_trajs]
+            p, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)))
+            Ds.append(D), fits.append(p), agents.append(agent), infos.append(info)
+        self.cache[(episode, history)] = Ds
+        assert old_params is None or isinstance(old_params, EnsembleCorrection), type(old_params)
+        params = EnsembleCorrection(old_params, fits, self.gcfg.fine_only)
+        G_old, m_old = self.m_cache.get((episode, history[:-1]), (None, self._m_proxy))
+        assert G_old is not None or old_params is None, "the reward in force must be cached"
+        Gs = np.stack([g_table(p, self.task) for p in fits])
+        if self.gcfg.fine_only:
+            Gs = np.minimum(0.0 if G_old is None else G_old, Gs)
+        G = Gs.mean(axis=0).astype(np.float32)
+        m_new = best_round_value(tb, tb.proxy + G, T)
+        self.m_cache[(episode, history)] = (G, m_new)
+        lv = {"level": exact_level(old_level, m_old, m_new, T), "level_m_before": m_old, "level_m_after": m_new,
+              "n_ensemble": n}
+        return params, agents[0], infos[0], lv
+
+    def _single_round(self, episode, history, policy, old_params, old_level):
+        """One correction fitted on the caught play (every offset_rule but "exact_mean")."""
+        k = history[-1]
+        D_prev = self.cache.get((episode, history[:-1]), [])
+        agent = rollouts(self.batch, policy, self.proto, self.rng, t0=k * self.proto.t_sub,
+                         n_corr=len(history) - 1)
+        new = [(a, r, boltzmann_label(a, r, self.rng, self.beta)) for a in agent for r in self.ref_trajs]
+        D = D_prev + new
+        params, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)))
+        self.cache[(episode, history)] = D
+        new_params = params
+        if self.gcfg.fine_only:                      # fines only, never relaxed: min(0, g_1, ..., g_k)
+            params = (old_params if old_params is not None else MinCorrection(())).then(params)
+        lv, T = {}, self.proto.t_sub
+        if self.track_m:                             # exact M of the reward before and after (DP)
+            tb = self.task.tables
+            G_old, m_old = self.m_cache.get((episode, history[:-1]), (None, self._m_proxy))
+            assert G_old is not None or old_params is None, "the reward in force must be cached"
+            g_new = g_table(new_params, self.task)
+            if self.gcfg.fine_only:
+                G = np.minimum(0.0 if G_old is None else G_old, g_new).astype(np.float32)
+            else:
+                G = g_new.astype(np.float32)
+            m_new = best_round_value(tb, tb.proxy + G, T)
+            self.m_cache[(episode, history)] = (G, m_new)
+            lv = {"level_m_before": m_old, "level_m_after": m_new}
+        if self.exact:                               # exact indifference (docs/step4_indiff.md)
+            lv["level"] = exact_level(old_level, m_old, m_new, T)
+        elif self.pool:                              # ... with M estimated from one pool of plays
+            groups = [self.ref_trajs, agent] + [g for _, _, g in self.final_pool]
+            names = ["reference", "caught"] + [f"final ep{e} lvl{c}" for e, c, _ in self.final_pool]
+            vb, va = pool_values(groups, self.task, old_params), pool_values(groups, self.task, params)
+            ib, ia = int(np.argmax(vb)), int(np.argmax(va))
+            lv.update({"level": exact_level(old_level, float(vb[ib]), float(va[ia]), T),
+                       "level_m_hat_before": float(vb[ib]), "level_m_hat_after": float(va[ia]),
+                       "level_pool_best_before": names[ib], "level_pool_best_after": names[ia],
+                       "level_pool_size": len(groups)})
+        elif self.gcfg.offset:                       # the compensated correction (docs/step4_comp.md)
+            v_before = float(rollout_returns(agent, self.task, old_params, old_level).mean())
+            v_ref = float(rollout_returns(self.ref_trajs, self.task, params).mean())
+            lv = {"level": level_offset(self.gcfg, v_before, v_ref, self.proto.t_sub),
+                  "level_v_before": v_before, "level_v_ref_after": v_ref}
+        return params, agent, info, lv
 
     def _g_summary(self, params, agent):
         """Mean g per step on the agent's exploit transitions, on its other transitions,

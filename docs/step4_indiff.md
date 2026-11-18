@@ -137,6 +137,39 @@ The reference uses its real rollouts. Iteration 0 has no final-round play, so it
 
 The estimator is validated in an env when every seed passes A1–A3, as the exact rule must. A seed that passes under the exact rule but fails under the estimator is an estimation failure, reported with its error row. Only a validated estimator goes to MountainCar or LunarLander, where M is unknown.
 
+## The average correction (`offset_rule=exact_mean`, `CAMPAIGN=indiff_mean`; 2026-11-17)
+
+**Why.** The exact rule's targets hid in Taxi in 6/6 seeds. The cause is a pricing gap, not the theorem.
+- The agent cannot see which fit a catch produced. After a correction it can only play the best round of the *mean* correction, which is worth M(r̄) ≤ mean_i M(r_i).
+- The rule paid each fit's own drop, mean_i [M(r_old) − M(r_i)]. So it underpaid by the value of information, mean_i M(r_i) − M(r̄).
+- In Taxi: single fits leave M at 259–352, but the mean of the 6 is 122. That is an underpayment of 63–190 per round against a hiding cost of 26.
+
+**The user, 2026-11-17:** "okay, make the fix".
+
+**The rule.**
+- Each catch fits `g.n_ensemble` = 6 corrections independently: each on its own fresh rollouts of the caught play, its own Boltzmann labels, its own init, and its own D accumulated over the episode's catches.
+- The overseer applies their mean (`protocol.EnsembleCorrection`). With fines only that is mean_i min(prev, g_i), so no transition is raised and no fine is ever relaxed.
+- The level rises by [M(r_old) − M(r_mean)]/T_sub, on exactly the reward applied.
+- What is left of the gap is between ensembles: it shrinks with n. The targets record it (`m_after` per draw vs `m_after_mean_table`).
+
+**Settings.** `g.fine_only=True g.offset=True g.offset_rule=exact_mean g.n_ensemble=6`, with `g.epochs=1000` outside the grid and `task.obs=onehot` in Taxi.
+- Variant `indiff_mean`; runs `I3_indiff_mean_<tag>` in `results/step4/<env>/indiff_mean/`.
+- `game_key` leaves `n_ensemble` out at 1, so every earlier run and target keeps its key.
+
+**The old rules are unchanged.** `exact` and `pool` and their runs, targets and checks are byte-identical: the tests that pinned them pass unchanged.
+
+**Cost.**
+- Every catch is 6 fits.
+- Targets use 3 draws per correction, each a 6-fit mean, so 3× the fits of a 6-draw target. They run one job per seed in Tomato, tomato_large and Taxi.
+- The best-response check uses 4 draws of 6-fit means, with 3× the hours.
+- PPO with many catches (early training) is up to 6× slower per catch. Taxi will need rule-1 resumes.
+
+**Pipeline.** Targets and PPO wave 1 are submitted together (the user's standing instruction: never gate PPO behind targets):
+- `CAMPAIGN=indiff_mean bash scripts/farmshare/step4_optimal.sh targets submit`: 23 jobs;
+- `CAMPAIGN=indiff_mean bash scripts/farmshare/step4_optimal.sh wave1 submit`: 18 runs, `L/LE/LN` × 6 envs, seeds 0–2.
+
+The loop rules, caps, verdict and criteria are those of `indiff_pool`. The A1–A3 verdict per target is from `experiments/step4_indiff_check.py`, which reads the same fields. Log: `docs/step4_indiff_log.md`.
+
 ## Pipeline
 
 1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` (the exact rule) and `CAMPAIGN=indiff_pool … targets submit` (the estimator) each submit 11 jobs:
@@ -155,14 +188,15 @@ The estimator is validated in an env when every seed passes A1–A3, as the exac
 
 ## Code
 
-- **`src/pbrr_core.py`:** `GConfig.offset_rule` (`"rollouts"`, the default and comp's rule, | `"exact"` | `"pool"`) and `GConfig.pool_episodes`.
+- **`src/pbrr_core.py`:** `GConfig.offset_rule` (`"rollouts"`, the default and comp's rule, | `"exact"` | `"pool"` | `"exact_mean"`), `GConfig.pool_episodes` and `GConfig.n_ensemble`.
+- **`src/step3/protocol.py`:** `EnsembleCorrection` (`exact_mean`: the mean of a catch's fits; fines only: mean_i min(prev, g_i)).
 - **`src/step3/dp.py`:** `best_round_value`.
 - **`src/step3/pbrr.py`:**
   - `exact_level` and `pool_values`.
   - The Overseer caches each catch history's correction table and its M within the episode, and logs `level`, `level_m_before` and `level_m_after` in `pbrr_rounds.csv`.
   - With `pool`, the Overseer stores each episode's final-round play by level (`AuditedVecEnv.last` now carries the transition keys or features), and logs `level_m_hat_before`, `level_m_hat_after`, the winning candidates and the pool size, with the exact M beside them wherever the task has tables.
 - **`experiments/step4_indiff_check.py`:** the A1–A3 verdict per seed, plus the estimator's error against the margins.
-- **`experiments/step4_targets.py` and `experiments/step4_br.py`:** the same rule per draw. They record `behaviour[].level` = {level, m_before, m_after} plus `m_after_mean_table`.
+- **`experiments/step4_targets.py` and `experiments/step4_br.py`:** the same rule per draw (`exact_mean`: `step4_targets.ensemble_draw`, one draw = one catch's 6-fit mean). They record `behaviour[].level` = {level, m_before, m_after} plus `m_after_mean_table`.
 - **Tests in `tests/test_step4.py`:**
   - the theorem on random corrections, grid and AS, p = 1 and 0.5;
   - the oracle-grid closed form;
@@ -170,4 +204,5 @@ The estimator is validated in an env when every seed passes A1–A3, as the exac
   - the Overseer installing the chained levels;
   - the target and best-response chains, including single-draw V0 = 43,500;
   - the pool: in the Overseer, an earlier final round entering the pool, the chained levels, and M̂ ≤ M on the deterministic grid; in the target and best-response check, the same;
-  - the verdict script's labels: under-correction, farming, tie, and the A2 shortfall kinds.
+  - the verdict script's labels: under-correction, farming, tie, and the A2 shortfall kinds;
+  - `exact_mean`: `EnsembleCorrection` against mean_i min(prev, g_i); the Overseer fitting 3 data sets per catch and pricing M on the applied mean; the target and best-response chains; old game keys unchanged.

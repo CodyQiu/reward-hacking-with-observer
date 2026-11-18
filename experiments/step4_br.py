@@ -53,7 +53,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from step4_targets import end_state, game_key, pool_level, sub_value  # noqa: E402
+from step4_targets import end_state, ensemble_draw, game_key, pool_level, sub_value  # noqa: E402
 from src.pbrr_core import GConfig, boltzmann_label  # noqa: E402
 from src.step3.dp import (best_round_value, evaluate_levels_probs, onehot_probs, round_probs,  # noqa: E402
                           round_value,
@@ -121,7 +121,10 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
     exact_rule = gcfg.offset and gcfg.offset_rule == "exact"          # exact indifference (docs/step4_indiff.md)
     pool_rule = gcfg.offset and gcfg.offset_rule == "pool"            # ... with M estimated from a pool of plays
-    if exact_rule or pool_rule:                                        # each draw's M (best round, no level), level
+    ens_rule = gcfg.offset and gcfg.offset_rule == "exact_mean"       # ... priced on the mean of n fits per catch
+    if ens_rule:                                                       # each draw = one catch's n_ensemble fits
+        D = [[[] for _ in range(gcfg.n_ensemble)] for _ in range(n_draws)]
+    if exact_rule or pool_rule or ens_rule:                            # each draw's M (best round, no level), level
         m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
     if pool_rule:      # the agent's final-round play: PPO's own probabilities in round K-1, at the levels it reaches
         finals = []
@@ -134,7 +137,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
             k = int(w.argmax())
             fn = policy_fn
             behaviour.append({"correction": c, "from": "policy", "round": k, "p_caught": float(w[k])})
-            if gcfg.offset and not exact_rule:                         # PPO's probabilities at level c-1, round k
+            if gcfg.offset and not (exact_rule or ens_rule):           # PPO's probabilities at level c-1, round k
                 Pk = np.stack([np.asarray(probs_at(k * T + tau), float)[:, c - 1] for tau in range(T)])
                 exact = (lambda P, t0: (lambda t: P[t - t0]))(Pk, k * T)
         else:                                                          # counterfactual: the best caught policy
@@ -146,6 +149,14 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
         acc, lv = np.zeros_like(tb.proxy), []
         for d in range(n_draws):
             rng = np.random.default_rng([seed, d, c, 5])               # own stream (the targets use ..., 4)
+            if ens_rule:                                               # the average correction ("exact_mean")
+                Rd, rec_lv = ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D[d], corr, d,
+                                           G_in, m_prev, lvl_prev)
+                lv.append(rec_lv)
+                Rd = Rd + rec_lv["level"]
+                acc += Rd
+                rbar_d[d, c] = (tb.prob * Rd).sum(axis=1)
+                continue
             agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
                              t0=k * T, n_corr=c - 1)
             D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
@@ -184,7 +195,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
         if lv:
             behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
         Rbar.append(acc / n_draws)
-        if exact_rule or pool_rule:  # the policy cannot see the draw: the best round of the mean table (no level)
+        if exact_rule or pool_rule or ens_rule:  # the policy cannot see the draw: best round of the mean table
             mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
             behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         log(f"  correction {c}: fitted on {behaviour[-1]['from']} in round {k} ({time.time() - t0:.0f}s)")

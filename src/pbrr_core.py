@@ -96,8 +96,16 @@ class GConfig:
     # best mean return under r among one pool of plays, relabelled: the reference rollouts, the caught play, and
     # the agent's own final-round play from the last ``pool_episodes`` episodes (nothing after the final round
     # depends on it, so it is the agent's best round under the reward then in force)
+    # "exact_mean" (docs/step4_indiff.md, "The average correction"; 2026-11-17): "exact" priced on the reward the
+    # agent actually faces. The agent cannot see which fit a catch produced, so after a correction it can only
+    # play the best round of the *mean* correction, worth M(r_bar) <= mean M(r_i); "exact" priced each fit's own
+    # drop and so underpaid by that gap (Taxi: 63-190 per round, against a hiding cost of 26). Here a catch fits
+    # ``n_ensemble`` corrections independently (own rollouts, labels, init), applies their mean
+    # (protocol.EnsembleCorrection; fines only: mean_i min(prev, g_i)) and raises the level by
+    # [M(r_old) - M(r_mean)] / T_sub on exactly the reward applied
     offset_rule: str = "rollouts"
     pool_episodes: int = 8
+    n_ensemble: int = 1               # offset_rule = "exact_mean" only: fits per catch, applied as their mean
     # Step 4 fines only (applied by the overseer, not the fit; docs/step4_comp.md): the correction in force
     # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
     # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)

@@ -79,7 +79,7 @@ def pool_level(tb, proto, task, ref_trajs, caught, finals, rb_old, rb_new, p_old
     ib, ia = int(np.argmax(vb)), int(np.argmax(va))
     return {"m_hat_before": float(vb[ib]), "m_hat_after": float(va[ia]), "best_before": names[ib],
             "best_after": names[ia]}
-from src.step3.protocol import MinCorrection, Protocol  # noqa: E402
+from src.step3.protocol import EnsembleCorrection, MinCorrection, Protocol  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
 from src.step3.train import ROOT, resolve_config  # noqa: E402
@@ -88,7 +88,35 @@ OUT = os.path.join(ROOT, "results", "step4")
 KEY_FIELDS = ("env", "task", "protocol", "pbrr", "g")      # what defines the game (not PPO's knobs)
 
 
-OFF = {"protocol": {"update_bonus": 0.0}}                   # fields added later, at their "off" value
+OFF = {"protocol": {"update_bonus": 0.0}, "g": {"n_ensemble": 1}}   # fields added later, at their "off" value
+
+
+def ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D_members, corr, d, G_in, m_prev, lvl_prev):
+    """One draw of correction c under GConfig.offset_rule = "exact_mean", as the training overseer makes it
+    (pbrr.Overseer._ensemble_round): ``n_ensemble`` fits, each on its own rollouts of ``fn`` in round k and its
+    own labels (its own D, extended in place), applied as their mean (fines only: mean_i min(G_in, g_i)); the
+    level rises by [M(r_old) - M(r_mean)] / T on exactly that mean. Updates corr[d], G_in[d], m_prev[d],
+    lvl_prev[d]; returns the reward table without the level, and the level record."""
+    tb, T = task.tables, proto.t_sub
+    fits = []
+    for i in range(gcfg.n_ensemble):
+        agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
+                         t0=k * T, n_corr=c - 1)
+        D_members[i] = D_members[i] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent
+                                       for r in ref_trajs]
+        fits.append(fit_correction_rows(D_members[i], task, gcfg, seed=int(rng.integers(2 ** 31)))[0])
+    Gs = np.stack([g_table(p, task) for p in fits])
+    if gcfg.fine_only:
+        Gs = np.minimum(G_in[d][None], Gs)
+    G = Gs.mean(axis=0).astype(np.float32)
+    if gcfg.fine_only:
+        G_in[d] = G
+    corr[d] = EnsembleCorrection(corr[d], fits, gcfg.fine_only)
+    Rd = tb.proxy + G
+    m_new = best_round_value(tb, Rd, T)
+    rec = {"level": exact_level(lvl_prev[d], m_prev[d], m_new, T), "m_before": m_prev[d], "m_after": m_new}
+    m_prev[d], lvl_prev[d] = m_new, rec["level"]
+    return Rd, rec
 
 
 def game_key(cfg):
@@ -201,7 +229,10 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
         exact = gcfg.offset and gcfg.offset_rule == "exact"   # exact indifference (docs/step4_indiff.md)
         pool = gcfg.offset and gcfg.offset_rule == "pool"     # ... with M estimated from a pool of plays
-        if exact or pool:                                     # each draw's M (best round, no level) and level
+        ens = gcfg.offset and gcfg.offset_rule == "exact_mean"   # ... priced on the mean of n fits per catch
+        if ens:                                               # each draw = one catch's n_ensemble fits
+            D = [[[] for _ in range(gcfg.n_ensemble)] for _ in range(n_draws)]
+        if exact or pool or ens:                              # each draw's M (best round, no level) and level
             m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
         if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum,
             # at the levels it reaches in the final round (training only ever stores those)
@@ -222,6 +253,15 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
             acc, lv = np.zeros_like(tb.proxy), []
             for d in range(n_draws):
                 rng = np.random.default_rng([seed, d, c, 4])    # common random numbers across iterations
+                if ens:                                       # the average correction (GConfig "exact_mean")
+                    Rd, rec_lv = ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D[d], corr, d,
+                                               G_in, m_prev, lvl_prev)
+                    lv.append(rec_lv)
+                    Rd = Rd + rec_lv["level"]
+                    acc += Rd
+                    if per_draw:
+                        draws[d].append(Rd.astype(np.float32))
+                    continue
                 agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
                                  t0=k * T, n_corr=c - 1)
                 D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
@@ -261,7 +301,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
             if lv:
                 behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
             Rbar.append(acc / n_draws)
-            if exact or pool:  # the policy cannot see the draw: the best round of the mean table (level removed)
+            if exact or pool or ens:  # the policy cannot see the draw: the best round of the mean table (no level)
                 mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
                 behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         R_lv = np.stack(Rbar)

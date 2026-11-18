@@ -1053,5 +1053,122 @@ def test_finished_seed_is_read_from_the_directory_listing():
         assert not finished(os.path.join(run, "seed9"))                            # a missing dir is not finished
 
 
+def test_ensemble_correction_is_the_mean_of_fines():
+    """protocol.EnsembleCorrection (offset_rule=exact_mean): with fines only it is mean_i min(prev, g_i), so it
+    never raises a transition and never relaxes the correction before it; without, mean_i g_i. pbrr.g_on_rows
+    gives the same values."""
+    import jax
+    import jax.numpy as jnp
+    from src.pbrr_core import mlp_apply, mlp_init
+    from src.step3.pbrr import g_on_rows
+    from src.step3.protocol import EnsembleCorrection
+    X = np.random.default_rng(0).normal(size=(300, 7)).astype(np.float32)
+    nets = [mlp_init(jax.random.PRNGKey(i), [7, 16, 16, 1], "torch_default") for i in range(5)]
+    g = np.stack([np.asarray(mlp_apply(p, jnp.asarray(X)), float) for p in nets])
+    first = EnsembleCorrection(None, nets[:3], True)
+    assert np.allclose(first.apply(jnp.asarray(X)), np.minimum(0.0, g[:3]).mean(axis=0), atol=1e-5)
+    second = EnsembleCorrection(first, nets[3:], True)
+    want = np.minimum(np.minimum(0.0, g[:3]).mean(axis=0)[None], g[3:]).mean(axis=0)
+    got = second.apply(jnp.asarray(X))
+    assert np.allclose(got, want, atol=1e-5)
+    assert np.all(got <= first.apply(jnp.asarray(X)) + 1e-6) and np.all(got <= 1e-6)
+    assert np.allclose(g_on_rows(second, X), want, atol=1e-5)
+    assert np.allclose(EnsembleCorrection(None, nets, False).apply(jnp.asarray(X)), g.mean(axis=0), atol=1e-5)
+
+
+def test_overseer_installs_the_mean_level():
+    """The training overseer with offset_rule=exact_mean, n_ensemble 3 and fines only (grid, cheap fit): an open
+    exploiter is caught in rounds 0 and 1. Each catch fits 3 corrections on their own rollouts (3 data sets),
+    the env applies their mean, and the level chains by [M(before) - M(after)] / T with M(after) the best round
+    under exactly the correction the env has in force."""
+    import src.step3.pbrr as pbrr
+    from src.pbrr_core import GConfig
+    from src.step3.dp import best_round_value, solve_levels, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, EnsembleCorrection, Protocol
+    from src.step3.reference import build_reference
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid", {"g": {"offset": True, "offset_rule": "exact_mean", "n_ensemble": 3,
+                                        "fine_only": True, "epochs": 20}})
+    task, P = get_task("grid"), Protocol(**cfg["protocol"])
+    tb, T = task.tables, P.t_sub
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))              # exploit in view every round
+    fn = table_policy_fn(pol, tb.n_actions)
+    ref, _ = build_reference(task, T, {**cfg["pbrr"], "seed": cfg["pbrr"]["ref_seed"]})
+    ref_trajs = pbrr.rollouts(task.make_batch(3, seed=1), ref, P, np.random.default_rng(1))
+    env = AuditedVecEnv(task, P, n_envs=2, seed=0)
+    env.reset()
+    over = pbrr.Overseer(task, P, env, ref_trajs, GConfig(**cfg["g"]), k=3)
+    over.model = None
+    real = pbrr.policy_probs_fn
+    pbrr.policy_probs_fn = lambda model, proto, n_actions: fn
+    try:
+        for t in range(2 * T):
+            env.step_async(fn(env.batch, t, env.n_corr, env.flagged).argmax(axis=1))
+            env.step_wait()
+            if (t + 1) % T == 0:
+                over.run_pending_rounds()
+    finally:
+        pbrr.policy_probs_fn = real
+    r1, r2 = over.rounds
+    assert r1["n_ensemble"] == 3 and abs(r1["level_m_before"] - 8_700) < 1e-6
+    assert abs(r2["level_m_before"] - r1["level_m_after"]) < 1e-9
+    assert abs(r1["level"] - (r1["level_m_before"] - r1["level_m_after"]) / T) < 1e-9
+    assert abs(r2["level"] - r1["level"] - (r2["level_m_before"] - r2["level_m_after"]) / T) < 1e-9
+    assert r2["level_m_after"] <= r1["level_m_after"] + 1e-6                  # fines only: M never rises
+    assert np.allclose(env.level, r2["level"]) and list(env.n_corr) == [2, 2]
+    corr = env.g_params[0]
+    assert isinstance(corr, EnsembleCorrection) and len(corr.members) == 3 and isinstance(corr.prev, EnsembleCorrection)
+    Ds = over.cache[max(over.cache, key=lambda key: len(key[1]))]             # after the second catch
+    assert len(Ds) == 3 and all(len(D) == 2 * 3 * 3 for D in Ds)            # 2 catches x 3 rollouts x 3 refs each
+    G = pbrr.g_table(corr, task)
+    assert abs(best_round_value(tb, tb.proxy + G, T) - r2["level_m_after"]) < 1e-3
+
+
+def test_mean_rule_target_and_best_response_record_the_rule():
+    """experiments/step4_targets.py and step4_br.py with offset_rule=exact_mean (n_ensemble 2). The levels chain
+    by the rule per draw from M(proxy) = 8,700 (grid target, 2 draws; Absent Supervisor best response, cheap
+    fit); the game key carries n_ensemble, and a config without it keeps its old key."""
+    _experiments()
+    from step4_br import best_response
+    from step4_targets import game_key, target
+    from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+
+    def chain(beh, n, T=100):
+        prev_after, prev_level = None, np.zeros(n)
+        for b in beh:
+            x = b["level"]
+            if prev_after is not None:
+                assert np.allclose(x["m_before"], prev_after)
+            assert np.allclose(np.subtract(x["level"], prev_level),
+                               np.subtract(x["m_before"], x["m_after"]) / T)
+            assert np.all(np.asarray(x["m_after"]) <= np.asarray(x["m_before"]) + 1e-6)     # fines only
+            assert "m_after_mean_table" in x
+            prev_after, prev_level = x["m_after"], np.asarray(x["level"])
+
+    g = {"offset": True, "offset_rule": "exact_mean", "n_ensemble": 2, "fine_only": True}
+    cfg = resolve_config("grid", {"seed": 0, "g": g})
+    out = target(cfg, n_draws=2, max_iter=1, per_draw=False, log=lambda m: None)
+    beh = out["target"]["behaviour"]
+    assert np.allclose(beh[0]["level"]["m_before"], 8_700)
+    chain(beh, 2)
+    assert out["game"]["g"]["offset_rule"] == "exact_mean" and out["game"]["g"]["n_ensemble"] == 2.0
+    old = resolve_config("grid", {"seed": 0, "g": {"offset": True, "offset_rule": "exact", "fine_only": True}})
+    assert "n_ensemble" not in game_key(old)["g"]
+    old["g"]["n_ensemble"] = 1
+    assert "n_ensemble" not in game_key(old)["g"]
+    cfg = resolve_config("absent_supervisor", {"seed": 0, "g": {"epochs": 20, **g}})
+    task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
+    tb = task.tables
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))
+    res = best_response(cfg, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions), n_draws=2,
+                        log=lambda m: None)
+    chain(res["behaviour"], 2)
+    assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9 and res["gap"] >= -1e-9
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")
