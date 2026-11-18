@@ -1507,3 +1507,31 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - Submitted: `... br_missing submit` → **1995467** (tomato_large `L_confirm`) and **1995468** (Boat Race `LN_confirm`).
 - If Boat Race s20 is still unconverged at the cap, this confirmation has failed: rule 4, a confirmation that finishes unconverged.
 - 105 jobs in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 103 (05:24–05:45): **Boat Race `LN_confirm` failed (2/3: s20 0.074 at the cap)** → rule 5 (wave 2, 6 runs: 1995472–1995477) and rule 6b (4 runs, waiting for job slots)
+
+- **Check 1995468** (Boat Race `C1_comp_LN_confirm` at the 12,288 cap) COMPLETED (2:08).
+  - **s20: 0.074 (s.e. 0.004), PLATEAU.** PPO is corrected in every round (4.00 corrections per episode), true −94.0 every round. That is s20's target end state: its correction under-corrects, so the target is also corrected 4 times, at −94 per round. But PPO's best response under its own corrections is corrected once, then honest (−94.0, then 50.0 ×4).
+  - s21 0.014 and s22 0.024: CONVERGED (iteration 91).
+  - **Rule 4.** The run is at the cap and its only unconverged seed is PLATEAU, so **this confirmation failed (2/3).**
+- **The Boat Race cell now.** No wave-1 run is DONE:
+  - `L`: 2/3 (s2 0.187, PLATEAU);
+  - `LE`: 1/3 at 6144 (0.066 / 0.023 / 0.037, PLATEAU);
+  - `LN`: 3/3 (0.021 / 0.022 / 0.000), but its confirmation failed.
+  - As in earlier iterations, a failed confirmation counts as "not 3/3" for rules 5 and 6b. **Both apply now**, from `LN`, the run with the smallest mean gap (0.014).
+- **Rule 5 (wave 2).**
+  - Each command was dry-run first: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo boat_race comp LN+<tag> "n_envs=64 ppo.batch_size=1600 <factor>" submit`. These are `LN`'s extras plus one factor, 1536 episodes.
+
+    | Run | Factor | Job |
+    |---|---|---|
+    | `C1_comp_LN+LR` | `ppo.learning_rate=0.0001` | **1995472** |
+    | `C1_comp_LN+GL` | `ppo.gae_lambda=1.0` | **1995473** |
+    | `C1_comp_LN+NET` | `ppo.net_arch=[256,256]` | **1995474** |
+    | `C1_comp_LN+RS` | `reward_scale=0.125` (0.25 × Boat Race's 0.5) | **1995475** |
+    | `C1_comp_LN+EP` | `ppo.n_epochs=20` | **1995476** |
+    | `C1_comp_LN+AN` | `anneal.last=0.5` | **1995477** |
+- **Rule 6b, stage 1, from `C1_comp_LN`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race comp C1_comp_LN` lists `+ENT3` (`ppo.ent_coef=0.09`), `+ES10` (`anneal.ent_start=10 anneal.ent_episodes=768`), `+N4` (`n_envs=256 ppo.batch_size=6400`) and `+ES10+N4`.
+  - **Not submitted yet.** The job count is at the 110 cap after wave 2. They go in as slots free up (flag at the top of docs/step4_indiff_log.md: the budget is now binding).
+- tomato_large `L_confirm` s20: check 1995467 is queued; `LE_confirm`: check 1995459 is queued.
+- **Budget:** comp 14 jobs (cap 30); 110 in all (limit 110). Cells DONE: 3 of 6.

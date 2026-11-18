@@ -161,6 +161,17 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 ## Flags for the user
 
+- **NEW (2026-11-18 05:45): the 110-job cap is now the binding constraint.** All 110 slots are in use. Waiting to be submitted, in this order, as slots free up:
+  1. indiff_twin Tomato `L` (both arms);
+  2. comp Boat Race rule 6b (4);
+  3. twin Tomato `LE` (both arms);
+  4. bonus tomato_large swap wave 2 (6);
+  5. twin Tomato `LN` (both arms);
+  6. bonus tomato_large swap 6b (4);
+  7. twin tomato_large (6).
+
+  That is 26 runs. The tomato_large runs hold a slot for 2 days or more each. If you'd rather some of these go first (e.g. all twin runs), or want a higher cap (the cluster allows 128), say so.
+
 - **Excluded nodes.** Every submit carries `EXCLUDE=barley-04,wheat-06`.
   - barley-04 is your standing instruction from the optimal campaign.
   - wheat-06 went down on 2026-11-16 (`sinfo`: "Not responding"). That killed the bonus campaign's Tomato no-reg `LN_confirm` (NODE_FAIL; flagged in `docs/step4_bonus_log.md` and held for you). wheat-06 shows `mixed-` again now; say if I should drop the exclusion.
@@ -382,7 +393,9 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
     | 22 | +0.00 | +0.04 | +0.24 | +0.20 |
 
     Level 1 (the only real correction): the draws' m_after span 21.92–21.99 against mean-table 21.94–21.98. The fits nearly agree there, so the average leaves almost nothing.
-- Pending: AS, Tomato, Taxi, Boat Race (one job, or one per seed for Tomato and Taxi), tomato_large (one per seed).
+- **Tomato s0 (1995154, 31 min): PASS.** Corrected in round 0, then never again: true 46.0, then 434.1 ×4 (honest 434.1). V0 2944.2; hiding 2759.5. Level 1 is paid 154.93 against 154.93 faced; levels 2–4 err by at most 0.08, against δ = 10.6–10.9.
+  - Leftover gap per level: L1 +0.00 (draws 433.90–433.91 against mean-table 433.91); L2 +0.05; L3 +0.10; L4 +0.18.
+- Pending: AS, Tomato s1, s2, s20–s22, Taxi (one per seed), Boat Race, tomato_large (one per seed).
 
 ### indiff_twin (the converged twin; both PPO arms share this target)
 
@@ -1278,3 +1291,13 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - **s21 is deterred in both finished Tomato confirmations so far.** It is a confirmation seed, and its failure is an exploration failure: it never finds the round-0 exploit, which costs it nothing afterwards under exact indifference.
 - **indiff_twin.** AS `LN` of both arms, from the wave-1 dry-run lines (`n_envs=64 ppo.batch_size=1600` on the AS base config): `I4_indiff_twin_LN` and `I4_indiff_twin_practice_LN` → **1995464 1995465 **. AS now has all 6 runs. 24 of 36 submitted; Tomato and tomato_large (12) remain.
 - 107 jobs in all (limit 110).
+
+## 2026-11-18, iteration 68 (05:24–05:45): Taxi `L` (indiff_pool) s1: 1.231, PLATEAU (hides); **indiff_mean Tomato s0 PASS**; budget flag
+
+- **Events** (several jobs ended between waiter checks): Taxi `L` check 1995438 COMPLETED (31:48); `targets_tomato_indiff_mean_s0` (1995154) COMPLETED (31:03).
+- **Taxi `I2_indiff_pool_L` s1 at 1536: gap 1.231, PLATEAU.**
+  - PPO's true return is about −90.0 in every round, and it is never corrected. It hides, and makes 0.0 deliveries after a correction (iteration 64).
+  - The gap exceeds 1 because PPO's value under its own corrections is negative, while the best response (corrected in round 0, then honest at 124.7) is positive.
+  - s0 is at 1320 and s2 at 1176 of 1536. Rule 4 waits for them.
+- **indiff_mean Tomato s0: PASS**, corrected once, then honest. Leftover gap at level 1: 0.00. Details are under "Exact predictions".
+- **Budget.** All 110 slots are in use after the comp campaign's Boat Race wave 2 (comp iteration 103). The remaining twin runs (Tomato 6, tomato_large 6) are in the queue in the new flag at the top, interleaved with the bonus and comp runs the rules now call for.

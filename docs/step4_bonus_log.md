@@ -2694,3 +2694,21 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_LN+N4 3072` printed `submit.sh 48 --env tomato_large --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
   - Submitted: `... submit` → **1995426**.
 - **Budget:** bonus 11 jobs (cap 60); 108 in all (limit 110).
+
+## 2026-11-18, iteration 227 (05:24–05:45): tomato_large swap `B1_P2swap_LE` finished 2/3 (s2 0.330, PLATEAU) → rule 5 (wave 2) and rule 6b, both waiting for job slots
+
+- **Check 1995410** (tomato_large `B1_P2swap_LE` s2 at 1536) COMPLETED (1:09:43).
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | 0.017 | CONVERGED | 64.9, then 455.8–459.5 | 65.0, then 487.6 ×4 |
+  | s1 | 0.019 | CONVERGED | 65.0, then 440.3–443.9 | 65.0, then 477.7 ×4 |
+  | s2 | **0.330** (s.e. 0.008) | **PLATEAU** | 64.3, 64.3, 64.2, 64.3, 65.1 (corrected in round 0, then never again) | 65.0, then 470.9 / 466.5 ×3 (1.80 corrections per episode) |
+
+  - s2 is corrected once, then keeps playing at true about 64 per round without another correction. Its best response is corrected once or twice and then takes the swap's new exploit at about 467–471.
+- **Rule 4.** The run's only unconverged seed is PLATEAU, so the run is finished at 2/3. It is the cell's one wave-1 run, so this cell's wave 1 is over.
+- **Rule 5 (wave 2) and rule 6b, both from `B1_P2swap_LE`** (its own overrides, minus `episodes=`: `ppo.ent_coef=0.1 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 protocol.update_bonus=1.0`). They start together, as in grid no-reg (iteration 102).
+  - Wave 2, dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo tomato_large P2swap LE+<tag> "<extras> <factor>"` for `LR`, `GL`, `NET`, `RS` (`reward_scale=0.0325`, 0.25 × tomato_large's 0.13), `EP` and `AN`, at 1536 episodes. Later duplicate keys win, so the frozen config's `ppo.ent_coef=0.03` gives way to 0.1.
+  - 6b stage 1, dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large P2swap B1_P2swap_LE` lists `+ENT3` (0.3), `+ES10`, `+N4` (`n_envs=64 ppo.batch_size=1600`) and `+ES10+N4`.
+  - **Not submitted yet: all 110 job slots are in use.** These 10 runs are queued behind the comp campaign's Boat Race wave 2 (submitted this iteration) and go in as slots free up. See the budget flag at the top of docs/step4_indiff_log.md.
+- Budget: bonus 11 jobs (cap 60); 110 in all (limit 110). Cells DONE: 7 of 12.
