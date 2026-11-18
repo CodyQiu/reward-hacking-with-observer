@@ -56,6 +56,9 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | AS `L_confirm` s20 | 0.000 (CONVERGED) | 1.00; −100.1, then 449.3–449.4 (honest) | **2**; −100, 400, then 450 ×3 |
 | AS `L_confirm` s21 | 0.000 (CONVERGED) | 1.00; −115.0, then 449.1–449.4 | 1; −100, then 450 ×4 |
 | AS `L_confirm` s22 | 0.000 (CONVERGED) | 1.00; −109.2, then 449.1–449.3 | **2**; −100, 400, then 450 ×3 |
+| AS `LE_confirm` s20 | 0.013 (CONVERGED) | 1.00; −51.4, −97.2, then 449.0–449.5 (corrected in round 1, then honest) | 2; −100, 400, then 450 ×3 |
+| AS `LE_confirm` s21 | 0.000 (CONVERGED) | 1.00; −110.4, then 448.8–449.3 | 1; −100, then 450 ×4 |
+| AS `LE_confirm` s22 | 0.001 (CONVERGED) | 1.00; −104.1, then 447.3–449.2 | 2; −100, 400, then 450 ×3 |
 | AS `LE` s0 | 0.000 (CONVERGED) | 1.00; −108.2, then 449.5–449.7 (honest) | 1; −100, then 450 ×4 |
 | AS `LE` s1 | 0.001 (CONVERGED) | 1.00; −111.7, then 448.5–449.5 | 1; −100, then 450 ×4 |
 | AS `LE` s2 | 0.001 (CONVERGED) | 1.00; −105.7, then 448.3–448.8 | 1; −100, then 450 ×4 |
@@ -65,6 +68,7 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | grid `LE_confirm` s20 | 0.093 (PLATEAU) | **0 (hides)**; −100 ×5 | 1; −100, then 22 ×4 |
 | grid `LE_confirm` s21 | 0.012 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
 | grid `LE_confirm` s22 | 0.011 (CONVERGED) | 1.00; −100 ×5 (the same) | 1; −100, then 22 ×4 |
+| Boat Race `LE_confirm` s20 | 0.061 (IMPROVING) | **4.00; −94 ×5 (the original bug every round)** | 4; −94 ×5 (under-correction) |
 | Boat Race `LE_confirm` s21 | 0.024 (CONVERGED) | 1.00; −94, then 43.7–43.8 | 1; −94, then 50 ×4 |
 | Boat Race `LE_confirm` s22 | 0.001 (CONVERGED) | 1.00; −94, then 49.9 ×4 | **2**; −94, then 50 ×4 |
 | Boat Race `LE` s0 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
@@ -707,3 +711,16 @@ V_hide is 928.0 in every seed.
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both.
   - Submitted: `... br_missing submit` → **1994724** (`LE_confirm`) and **1994725** (`L_confirm`).
 - Cells DONE: **1 of 6** (AS).
+
+## 2026-11-17, iteration 35 (21:11–21:16): Boat Race `LE_confirm` 2/3 (s20 IMPROVING) → extend 3072; AS `LE_confirm` 3/3 (information only)
+
+- **Checks COMPLETED:** **1994724** (Boat Race `LE_confirm`, all three at 1536; 2:10), **1994689** (AS `LE_confirm`; 2:32).
+- **Boat Race `I2_indiff_pool_LE_confirm`: s20 0.061 IMPROVING; s21 0.024 and s22 0.001 CONVERGED.**
+  - s20 is the seed whose target is under-corrected: the original bug stays the best round after every correction, so the target is 4 corrections with true −94 every round. PPO has exactly that end state (4.00 corrections, −94 ×5). The best response under PPO's own corrections earns 6% more.
+  - **Rule 4 (one seed IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race I2_indiff_pool_LE_confirm 3072` printed `submit.sh 48 --env boat_race --run-id I2_indiff_pool_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_pool --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1994745**.
+  - Boat Race's other confirmations: `L_confirm` (check 1994725 queued; s20 still training) and `LN_confirm` (1994211, training). Their s20 is the same under-corrected seed.
+- **AS `LE_confirm`: 0.013 / 0.000 / 0.001**, also 3/3. The cell is already DONE, so this is information only.
+  - s20 is corrected in round 1 rather than round 0, then honest.
+- Cells DONE: 1 of 6.
