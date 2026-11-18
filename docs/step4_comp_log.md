@@ -1496,3 +1496,14 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - Submitted: `... br_missing submit` → **1995459**.
 - tomato_large comp: `L_confirm` is still training. Taxi: `LN+N4` → 3072 (1995400), `LN+ENT3`, `LN+ES10`, `LN+ES10+N4` and `L` s1 are training. Boat Race `LN_confirm` s20 → cap.
 - 108 jobs in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 102 (05:17–05:22): Boat Race `C1_comp_LN_confirm` at the 12,288 cap → check 1995468 (decides s20); tomato_large `L_confirm` s20 → check 1995467
+
+- **Event.** The extension of Boat Race `C1_comp_LN_confirm` to 12,288 (1992892) COMPLETED (19:38:53). All three seeds are at the cap; s20 is the deciding seed (s21 and s22 already converged at 12,288).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - `br_tomato_large_C1_comp_L_confirm`: s20 finished at 1536; s21 at 1008, s22 at 984;
+  - `br_boat_race_C1_comp_LN_confirm`.
+  - `tomato_large/C1_comp_LE_confirm`'s check (1995459) is still queued.
+- Submitted: `... br_missing submit` → **1995467** (tomato_large `L_confirm`) and **1995468** (Boat Race `LN_confirm`).
+- If Boat Race s20 is still unconverged at the cap, this confirmation has failed: rule 4, a confirmation that finishes unconverged.
+- 105 jobs in all (limit 110). Cells DONE: 3 of 6.
