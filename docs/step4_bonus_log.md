@@ -2760,3 +2760,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 ## 2026-11-18, iteration 236 (13:15): tomato_large base `B1_base_LN+ES10+N4` → check 1995957
 
 - `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995957**.
+
+## 2026-11-18, iteration 237 (13:23–13:32): tomato_large base `B1_base_LN+ES10` stopped by the 48 h limit → resumed (1995965)
+
+- **Rule 1.** 1990469 (tomato_large `B1_base_LN+ES10`) ended TIMEOUT at 2-00:00:28: the 48 h limit. Seeds at 528 / 288 / 600 of 1536.
+- The resume dry-run lists it and the held Tomato `B1_P1eq1_LN_confirm`. I ran only this run's line, verbatim: `submit.sh 48 --env tomato_large --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **1995965**. The held run stays held.

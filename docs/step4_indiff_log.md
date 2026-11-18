@@ -25,7 +25,13 @@ This log is append-only below the three summary sections. Every driver command r
 
 The verdict per seed (A1–A3, level errors) comes from `experiments/step4_indiff_check.py`. It goes under "Exact predictions" as targets finish.
 
-**indiff_pool PPO (wave 1, submitted 14:36): 18 runs, `I2_indiff_pool_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_pool/`.** Cells DONE: **2 of 6** (AS; grid by the verdict only).
+**indiff_pool PPO (wave 1, submitted 14:36): 18 runs, `I2_indiff_pool_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_pool/`.** Cells DONE: **3 of 6** (AS; Tomato; grid by the verdict only).
+
+**Tomato: DONE (iteration 98, 2026-11-18 13:25).** Config `I2_indiff_pool_LN` (the env's frozen Step 3 config with `g.fine_only=True g.offset=True g.offset_rule=pool g.epochs=1000 n_envs=64 ppo.batch_size=1600`), 1536 episodes.
+- Tuning seeds 0–2: 0.002 / 0.002 / 0.003.
+- Confirmation seeds 20–22: 0.003 / 0.002 / 0.003.
+- **Behaviour:** in all six seeds PPO is corrected once in round 0, then honest at about 431–432 per round (honest 434.1). This matches the target and the best response.
+- The other Tomato confirmations: `L_confirm` failed (s21 deterred: honest from round 0, never takes the exploit, 0.272); `LE_confirm` is extending to 3072 for the same s21 (0.277). Both are information only now.
 
 **Grid: DONE by the verdict (iteration 55), but PPO is not honest after its correction.** Config `I2_indiff_pool_LE+ENT3` (the grid's `LE` with entropy ×3, 0.09; a rule-6b run), 1536 episodes.
 - Tuning seeds 0–2: 0.011 / 0.012 / 0.012.
@@ -1666,4 +1672,14 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - **Rule 4:** the unconverged seeds are PLATEAU, so the run is **finished at 2/3**. The Boat Race pure-twin cell continues with `LN` (3/3, `LN_confirm` running) and `LE` (→ 3072).
 - **Check 1995944** (AS practice `I4_indiff_twin_practice_L` s0, s1 at 3072): **0.032 (IMPROVING), 0.003 (CONVERGED).** Both are corrected once, then honest (about 448). Their best responses farm under the run's twin. s2 → check below.
 - **Rule 3.** Twin AS practice `L` s2 → **1995955**; twin Boat Race practice `LE` → **1995956** (dry-run, `br_missing submit`).
+- 110 jobs in all.
+
+## 2026-11-18, iteration 98 (13:23–13:32): **indiff_pool Tomato DONE** (`LN_confirm` 0.003 / 0.002 / 0.003); twin AS practice `L` → extend 6144 (1995966); twin Boat Race practice `LE` s0 0.053, s1 0.016; grid pure-twin `L+EP`, `L+AN`, `L+ES10` (1995967–1995969)
+
+- **Check 1995926** (Tomato `I2_indiff_pool_LN_confirm`, all three at 1536): **0.003 / 0.002 / 0.003, 3/3 CONVERGED.** All three are corrected in round 0, then honest at 431.2–432.1 (honest 434.1).
+  - With the tuning run's 3/3 (iteration 49), **the Tomato indiff_pool cell is DONE.** Status updated at the top.
+  - Seed 21, which was deterred in `L_confirm` and `LE_confirm`, behaves exactly as the target here.
+- **Check 1995955** (twin AS practice `I4_indiff_twin_practice_L` s2 at 3072): **0.052, IMPROVING.** With s0 0.032 (IMPROVING) and s1 0.003, rule 4 extends 2× to 6144. Dry-run printed `... --resume --extend-to 6144`. `... submit` → **1995966**.
+- **Check 1995956** (twin Boat Race practice `I4_indiff_twin_practice_LE` s1): **0.016, CONVERGED** (partly honest, 47.1–47.8). s0: 0.053 (PLATEAU); s2 is at 1056.
+- **Queue.** Grid pure-twin `L+EP` → **1995967**, `L+AN` → **1995968** (wave 2) and `L+ES10` → **1995969** (6b), from iteration 89's dry-run lines, verbatim. 15 runs still queued.
 - 110 jobs in all.
