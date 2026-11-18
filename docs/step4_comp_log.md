@@ -1614,3 +1614,8 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Check 1995742** (`C1_comp_LN+NET` s1, s2): **0.216 and 0.184, PLATEAU.** Both hide: never corrected, true −94 / −82. s0 is at 1440 and is honest by the true reward so far.
 - **Rule 3.** `LN+EP` (1995476) finished at 1536. `br_missing submit` → **1995749**.
 - comp 22 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 114 (11:11): Boat Race `LN+NET` finished (s0 at 1536) → check 1995756
+
+- `C1_comp_LN+NET` (1995474) COMPLETED (2:45:08). `br_missing submit` → **1995756** (s0; s1 0.216 and s2 0.184 were PLATEAU).
+- 110 jobs in all.

@@ -1601,3 +1601,8 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Rule 3.** indiff_mean grid `I3_indiff_mean_LE` (finished at 1536) → **1995750**. Twin AS `I4_indiff_twin_LE` (finished seeds) → **1995751**.
 - The queue's next item, bonus tomato_large `B1_P2swap_LE+NET` → **1995752** (bonus log).
 - 110 jobs in all; 23 runs still queued.
+
+## 2026-11-18, iteration 91 (11:11): twin grid practice `L` finished (s2) → check 1995757
+
+- `I4_indiff_twin_practice_L` (1995364) COMPLETED (5:32:14). `CAMPAIGN=indiff_twin ... br_missing submit` → **1995757** (s2; s0 0.023 and s1 0.011 were CONVERGED).
+- 110 jobs in all.
