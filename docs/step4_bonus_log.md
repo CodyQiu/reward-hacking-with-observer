@@ -2745,3 +2745,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 ## 2026-11-18, iteration 233 (11:42): tomato_large swap wave 2 `B1_P2swap_LE+RS` → 1995870
 
 - The fourth wave-2 run from iteration 227's dry-run (`reward_scale=0.0325`), line run verbatim. Still queued: `+EP`, `+AN` and the four 6b runs.
+
+## 2026-11-18, iteration 234 (12:34–12:40): tomato_large no-reg `B1_P1eq1_LN+ES10+ENT3` stopped by the 48 h limit → resumed (1995924)
+
+- **Rule 1 (resume).** 1990239 (tomato_large `B1_P1eq1_LN+ES10+ENT3`) ended TIMEOUT at 2-00:00:26 (11:37), i.e. the 48 h limit. Seeds at 192 / 168 / 360 of 1536.
+  - The resume dry-run (`CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume`) lists this run and the held Tomato `B1_P1eq1_LN_confirm` (NODE_FAIL, awaiting the user).
+  - **I ran only this run's line, verbatim**: `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **1995924**. `resume submit` would also have resubmitted the held run; the permission check stopped that attempt, rightly. The held run stays held.
+- 110 jobs in all.

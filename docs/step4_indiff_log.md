@@ -1639,3 +1639,9 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Check 1995869** (indiff_pool Taxi `I2_indiff_pool_L` s1 at 3072): **1.231, PLATEAU** (unchanged from 1536). It still hides (true −90 every round, never corrected). s0 and s2 are at 2064.
 - **Queue.** Grid pure-twin wave 2: `I4_indiff_twin_L+GL` → **1995904**, `L+NET` → **1995905**, `L+RS` → **1995906** (iteration 89's dry-run lines, verbatim). 18 runs still queued.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 95 (12:34–12:40): Tomato `LN_confirm` (indiff_pool) → check 1995926; other checks wait for slots
+
+- **Rule 3.** `br_missing` (dry-run) listed indiff_pool Tomato `I2_indiff_pool_LN_confirm`, twin Boat Race `practice_LE`, and comp Boat Race `LN+LR`, `LN+RS` (both at 3072).
+  - Submitted (dry-run line, verbatim): Tomato `LN_confirm` → **1995926**. This is the last open Tomato indiff_pool confirmation: `L` failed, and `LE` is extending for s21.
+  - The other three wait for slots (110 jobs; a bonus resume took precedence under rule 1).
