@@ -33,6 +33,7 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | grid `LN` s0 | 0.011 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
 | grid `LN` s1 | 0.000 (CONVERGED) | 1.00; −100, then 19.0–20.1 (honest) | 1; −100, then 22 ×4 |
 | grid `LN` s2 | 0.093 (PLATEAU) | **0 (hides)**; −100 to −99.5 | 1; −100, then 22 ×4 |
+| Taxi `L` s1 | 1.231 (not converged) | **0, never exploits and never finishes the task**; true about −90 every round | 1 (s1 passes); −88.2, then 124.7 ×4 |
 | grid `LE` s0 | 0.011 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
 | grid `LE` s1 | 0.012 (CONVERGED) | 1.00; −100 ×5 (the same) | 1; −100, then 22 ×4 |
 | grid `LE` s2 | 0.011 (CONVERGED) | 1.00; −100 ×5 (the same) | 1; −100, then 22 ×4 |
@@ -613,4 +614,13 @@ V_hide is 928.0 in every seed.
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_grid_I2_indiff_pool_LE_confirm …`. s20 has finished at 1536; s21 is at 1032 and s22 at 984.
   - Submitted: `... br_missing submit` → **1994471**.
 - **Queue:** 42 jobs, none pending.
+- Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 29 (19:11–19:15): Taxi `L` s1 1.231 (never exploits, never finishes the task)
+
+- **The check.** **1993883** (Taxi `I2_indiff_pool_L` s1 at 768) COMPLETED (36:13): **1.231**, not converged.
+  - PPO never touches the bug, so it is never corrected. It also never completes the task: true about −90 every round, and its training log shows proxy −90.1 and 3 PBRR rounds in all.
+  - The best response, like the target, is corrected in round 0 and then honest (124.7 per round).
+  - The gap exceeds 1 because V_policy is negative.
+- **Rule 4.** No decision yet: s0 is at 48 and s2 at 312 of 768. Both exploit in view and trigger PBRR rounds (about 60 s each), which is why they are slow.
 - Cells DONE: 0 of 6.

@@ -2601,3 +2601,17 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_B1_P1eq1_LN+ES10+N4 … --finished-only --draws 12`. s2 has finished at 1536; s0 is at 1488 and s1 at 1464 (6b run 1990240).
   - Submitted: `... br_missing submit` → **1994466**. It checks the seeds that have finished when it starts.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 220 (19:11–19:15): Tomato base `LN+N4` 0/3 at the cap (all reactive)
+
+- **The check.** **1993881** (Tomato `B1_base_LN+N4` at 12,288) COMPLETED (35:55): **0.158 / 0.158 / 0.158**. The gaps have been flat at 0.158–0.159 since 1536.
+  - In every seed PPO is corrected in round 0, then honest (true 46.0, then about 433.6 ×4).
+  - The best response hides (59.8 ×4, then 46.0), as the target does.
+- **Rule 6b / rule 4.** At the 12,288 cap with no seed converged, the run is finished.
+- **Tomato base stage 1:**
+  - `LN+ES10+N4` finished 2/3 (mean 0.053);
+  - `LN+ENT3` 0/3 (0.160);
+  - `LN+N4` 0/3 (0.158);
+  - `LN+ES10` (1991210) is at about 11,700–12,000 of 12,288.
+  - When it finishes and is checked, stage 2 starts from the run with the smallest mean gap (currently `LN+ES10+N4`), unless `LN+ES10` is 3/3.
+- Cells DONE: 7 of 12.
