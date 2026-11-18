@@ -624,3 +624,4 @@ V_hide is 928.0 in every seed.
   - The gap exceeds 1 because V_policy is negative.
 - **Rule 4.** No decision yet: s0 is at 48 and s2 at 312 of 768. Both exploit in view and trigger PBRR rounds (about 60 s each), which is why they are slow.
 - Cells DONE: 0 of 6.
+- **Commit note (19:14).** `step4_commit.sh` printed `error: short read while indexing results/step4/absent_supervisor/indiff_pool/I2_indiff_pool_L_confirm/seed22/progress.json`. The running job rewrote that small file while git read it, so it was not staged that time. The commit and push went through (`main...origin/main` in sync); the file is picked up by the next commit. Harmless, nothing changed.
