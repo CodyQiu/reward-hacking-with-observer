@@ -1051,3 +1051,12 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 - Submitted: `... br_missing submit` → **1995513**.
 - Resume: nothing. Taxi `L` → 3072, `LE` → 1536 and `LN_confirm` are still training.
 - 110 jobs in all (limit 110).
+
+## 2026-11-18, iteration 99 (07:51–08:00): Boat Race `N1_P1eq1_LE+ENT3_confirm` s20: 0.024, CONVERGED at the 12,288 cap
+
+- **Check 1995513** (s20 at 12,288) COMPLETED (1:40). **s20: 0.024 (s.e. 0.019), CONVERGED.**
+  - PPO: corrected in round 0, then never again; true −93.9, then −85.5 / −83.8 / −81.9 / −81.1.
+  - Best response: corrected in round 0, then never again; true −94.0, then −100 ×4. Its target is the same (a new exploit after the correction).
+  - The s.e. (0.019) is large next to the 0.03 bar.
+- s21 (11,184) and s22 (11,664) are still training to the cap. The confirmation is decided when they finish.
+- 110 jobs in all.
