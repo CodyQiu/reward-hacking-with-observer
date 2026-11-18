@@ -64,17 +64,17 @@ from src.step3.pbrr import (exact_level, fit_correction_rows, g_table, level_off
 
 def pool_level(tb, proto, task, ref_trajs, caught, finals, rb_old, rb_new, p_old, p_new):
     """The pool estimate of M before and after a correction (GConfig.offset_rule = "pool",
-    docs/step4_indiff.md), exactly as the overseer forms it but with the agent's plays valued exactly:
+    docs/step4_indiff.md), exactly as the overseer forms it but with the plays valued exactly:
     candidates = the reference rollouts (relabelled, as in training), the caught play ``caught`` = (probs_at,
-    round) and the agent's final-round play ``finals`` = [(level, probs_at at round K-1)].
-    rb_* are the expected reward tables (no level), p_* the corrections in force. Returns a dict."""
-    K = proto.n_sub
+    round) and the further candidates ``finals`` = [(name, probs_at, round)] of GConfig.pool_source (the
+    agent's final-round play by default; ``pool_candidates``). rb_* are the expected reward tables (no level),
+    p_* the corrections in force. Returns a dict."""
 
     def vals(rb, params):
         v = [float(rollout_returns(ref_trajs, task, params).mean()), round_value(tb, proto, rb, *caught)]
-        return np.array(v + [round_value(tb, proto, rb, pa, K - 1) for _, pa in finals])
+        return np.array(v + [round_value(tb, proto, rb, pa, k) for _, pa, k in finals])
 
-    names = ["reference", "caught"] + [f"final lvl{c}" for c, _ in finals]
+    names = ["reference", "caught"] + [name for name, _, _ in finals]
     vb, va = vals(rb_old, p_old), vals(rb_new, p_new)
     ib, ia = int(np.argmax(vb)), int(np.argmax(va))
     return {"m_hat_before": float(vb[ib]), "m_hat_after": float(va[ia]), "best_before": names[ib],
@@ -88,7 +88,33 @@ OUT = os.path.join(ROOT, "results", "step4")
 KEY_FIELDS = ("env", "task", "protocol", "pbrr", "g")      # what defines the game (not PPO's knobs)
 
 
-OFF = {"protocol": {"update_bonus": 0.0}, "g": {"n_ensemble": 1}}   # fields added later, at their "off" value
+OFF = {"protocol": {"update_bonus": 0.0},                    # fields added later, at their "off" value
+       "g": {"n_ensemble": 1, "pool_source": "final"}}
+
+
+def pool_candidates(source, pol, ev, R_lv, tb, proto, A, min_occ=0.05):
+    """The pool's candidates besides the reference and the caught play, from the last iteration's optimum
+    ``pol`` (its evaluation ``ev``, its level reward tables ``R_lv``), by GConfig.pool_source:
+      final  -- its final-round play at each level it reaches in the final round (the original rule);
+      none   -- nothing;
+      rounds -- its play in each ordinary (audited) round k < K-1, at each level it reaches there;
+      twin   -- the overseer's own optimiser at convergence: the best single round of each level's mean
+                reward (levels the optimum reaches in some round), i.e. what a policy trained to maximise one
+                round of the reward in force, with nothing at stake, converges to.
+    Returns [(name, probs_at, round)] for pool_level."""
+    K, T = proto.n_sub, proto.t_sub
+    if pol is None or source == "none":
+        return []
+    occ = np.asarray(ev["level_dist"])                              # (K rounds, K levels)
+    if source == "final":
+        return [(f"final lvl{c}", round_probs(pol, A, level=c), K - 1) for c in range(K) if occ[K - 1][c] >= min_occ]
+    if source == "rounds":
+        return [(f"round{k} lvl{c}", round_probs(pol, A, level=c), k) for k in range(K - 1) for c in range(K)
+                if occ[k][c] >= min_occ]
+    if source == "twin":
+        return [(f"twin lvl{c}", round_probs(solve_subepisode(tb, R_lv[c], T), A), K - 1) for c in range(K)
+                if occ[:, c].max() >= min_occ]
+    raise ValueError(f"unknown pool_source {source}")
 
 
 def ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D_members, corr, d, G_in, m_prev, lvl_prev):
@@ -127,7 +153,7 @@ def game_key(cfg):
         for f, v in fields.items():
             if key[group].get(f, v) == v:
                 key[group].pop(f, None)
-            else:
+            elif isinstance(v, (int, float)):
                 key[group][f] = float(key[group][f])        # "=1" and "=1.0" are the same game
     return key
 
@@ -220,6 +246,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
     V_hide = float(tb.mu0 @ solve_levels(tb, proto, R_hide)[0][:, 0, 0])
 
     pol, ev, prev_sig, iters = None, None, None, []
+    R_lv_prev = None                                          # the last iteration's level reward tables
     for it in range(max_iter):
         t_it = time.time()
         Rbar, D, draws, behaviour = [tb.proxy.copy()], [[] for _ in range(n_draws)], [[] for _ in range(n_draws)], []
@@ -237,8 +264,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum,
             # at the levels it reaches in the final round (training only ever stores those)
             rnl_prev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws
-            finals = [] if pol is None else [(c, round_probs(pol, A, level=c)) for c in range(K)
-                                             if ev["level_dist"][K - 1][c] >= 0.05]
+            finals = pool_candidates(gcfg.pool_source, pol, ev, R_lv_prev, tb, proto, A)
         for c in range(1, K):
             w = None if ev is None else np.asarray(ev["window_by_level"])[:K - 1, c - 1]
             if w is not None and w.max() >= 0.05:            # the optimum's own caught round
@@ -307,6 +333,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         R_lv = np.stack(Rbar)
         V0, pol = solve_levels(tb, proto, R_lv)
         ev = evaluate_levels(tb, proto, R_lv, pol)
+        R_lv_prev = R_lv
         rec = {"iteration": it, "behaviour": behaviour,
                **summarise(ev, float(tb.mu0 @ V0[:, 0, 0]), K, T), "seconds": time.time() - t_it}
         pol_1 = solve_subepisode(tb, R_lv[1], T)
