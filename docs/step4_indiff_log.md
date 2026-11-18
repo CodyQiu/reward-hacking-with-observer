@@ -675,3 +675,11 @@ V_hide is 928.0 in every seed.
   - Submitted: `... br_missing submit` → **1994686**.
   - The AS cell is DONE if this confirmation is 3/3. The targets of s20 and s22 farm one extra correction; s21's passes.
 - Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 33 (20:34–20:38): AS `LE_confirm` finished → check 1994689
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_absent_supervisor_I2_indiff_pool_LE_confirm …`. All three confirmation seeds are at 3072.
+  - Submitted: `... br_missing submit` → **1994689**.
+- AS now has two confirmations being checked (`L_confirm` 1994686, `LE_confirm` 1994689) and one training (`LN_confirm` 1994199).
+- Cells DONE: 0 of 6.

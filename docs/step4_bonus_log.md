@@ -2623,3 +2623,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1994583**.
 - 1990240 (tomato_large no-reg `LN+ES10+N4`) finished at 1536; its check 1994466 is running.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 222 (20:34–20:38): Tomato base `LN+ES10` s0 at the cap → check 1994688
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_tomato_B1_base_LN+ES10 … --finished-only --draws 12`. s0 has finished at 12,288; s1 (12,216) and s2 (12,240) finish within minutes.
+  - Submitted: `... br_missing submit` → **1994688**. It is queued (13 jobs pending), so it will likely cover all three seeds.
+- This is the last Tomato base stage-1 run. Once it is checked, rule 6b stage 2 applies unless it is 3/3.
+- Cells DONE: 7 of 12.
