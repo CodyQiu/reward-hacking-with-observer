@@ -157,7 +157,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | Target: corrections, true by round |
 |---|---|---|---|
-| (none yet) | | | |
+| taxi / `I3_indiff_mean_L` / s1 (768) | **1.240** (not converged; no target yet) | never exploits and never corrected: true and received −90.8 every round; 0.0 deliveries at level 1 | (pending; best response: corrected in round 0, then honest, true −88.2 then 124.7 ×4, V_br 1897.5) |
 
 ## Flags for the user
 
@@ -1327,3 +1327,12 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - s2: level 0, true −90.0, 0.0 deliveries, 40.7 repeat pickups; level 1, true −99.2 / −99.3, **0.0 deliveries**.
   - Both hide (exploit off-window, never corrected) and cannot deliver after a correction, like s1.
 - 109 jobs in all. The one free slot is kept for a twin pair; the queue (flag at the top) resumes once two slots are free.
+
+## 2026-11-18, iteration 71 (06:10–06:18): first indiff_mean Taxi check (`I3_indiff_mean_L` s1): 1.240 (PPO never exploits, never delivers); twin Tomato `L` runs (1995487, 1995488)
+
+- **Check 1995413** (Taxi `I3_indiff_mean_L` s1 at 768) COMPLETED (54:03). **Gap 1.240** (s.e. 0.0003), not converged. The verdict class (IMPROVING or PLATEAU) needs the Taxi indiff_mean target, which is still queued, so the report says NO TARGET.
+  - **PPO:** true = received = −90.8 every round. It never takes the bug (window probability below 1e-12, 0.0 repeat pickups), is never corrected, and never delivers (0.0 deliveries at level 1; iteration 61). It is neither hiding nor honest: it does nothing useful, and V_policy = −454.5.
+  - **Best response under its own corrections:** exploits round 0 (received 379.7), is corrected, then honest (true 124.7 ×4, received 379.5 per round with the level). V_br = 1897.5, about 5 × M(proxy) = 1898.4: the average correction nearly removes the value-of-information loss here.
+  - Level 1 per draw (4 draws): m_after 123.99–124.84 against m_after_mean_table 124.12, so the leftover gap is 0.24 per round at level 1.
+- **indiff_twin.** Two slots were free: queue items 1–2, the twin Tomato `L` runs of both arms, from the wave-1 dry-run lines: `I4_indiff_twin_L` → **1995487**, `I4_indiff_twin_practice_L` → **1995488**. 26 of 36 submitted.
+- 110 jobs in all. 24 runs are still in the queue (flag at the top).
