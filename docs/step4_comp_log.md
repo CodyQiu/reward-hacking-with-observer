@@ -1558,3 +1558,9 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - s21 and s22 are at 1248 of 1536. Rule 4 waits for them; if s20 is still IMPROVING then, the run extends to 3072.
 - **Rule 3.** `br_missing` also lists Taxi `C1_comp_LN+ENT3` (s0 and s1 at 3072; s2 at 2976). I wait for s2 so one check covers all three; the job count is at 110.
 - 110 jobs in all. Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 107 (07:30–07:33): Taxi `C1_comp_LN+ENT3` finished at 3072 → check 1995518 
+
+- **Event.** The extension of Taxi `C1_comp_LN+ENT3` to 3072 (1995223) COMPLETED (4:34:56). All three seeds are at 3072.
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_taxi_C1_comp_LN+ENT3` only. `... submit` → **1995518 **.
+- 110 jobs in all (limit 110).
