@@ -2756,3 +2756,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 ## 2026-11-18, iteration 235 (13:00): tomato_large base `B1_base_LN+ES10+N4` finished (1990471, 1-23:38) — check waits for a slot
 
 - `br_missing` (dry-run) lists `br_tomato_large_B1_base_LN+ES10+N4`. All 110 slots are in use; it goes in at the next free slot.
+
+## 2026-11-18, iteration 236 (13:15): tomato_large base `B1_base_LN+ES10+N4` → check 1995957
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995957**.

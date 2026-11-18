@@ -1688,3 +1688,9 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Rule 3.** `LN+RS` (at 3072) → **1995939**.
 - Still waiting for a slot: the `LN+ENT3` extension (6b).
 - comp 25 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 124 (13:12–13:20): Boat Race `LN+RS` at 3072: s1 0.173, s2 0.184 PLATEAU (hide) → s0 check 1995953; 6b `LN+ENT3` → extend 3072 (1995958)
+
+- **Check 1995939** (`C1_comp_LN+RS` s1, s2 at 3072): **0.173 and 0.184, PLATEAU.** Both still hide. s0 (finished at 3072) → `br_missing submit` → **1995953**.
+- **Rule 6b:** the `LN+ENT3` extension to 3072 (iteration 121's dry-run line, verbatim) → **1995958**.
+- comp 26 jobs (cap 30); 110 in all.
