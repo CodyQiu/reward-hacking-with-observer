@@ -1683,3 +1683,8 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Check 1995956** (twin Boat Race practice `I4_indiff_twin_practice_LE` s1): **0.016, CONVERGED** (partly honest, 47.1–47.8). s0: 0.053 (PLATEAU); s2 is at 1056.
 - **Queue.** Grid pure-twin `L+EP` → **1995967**, `L+AN` → **1995968** (wave 2) and `L+ES10` → **1995969** (6b), from iteration 89's dry-run lines, verbatim. 15 runs still queued.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 99 (13:33–13:36): first twin Tomato check (pure `L`) → 1995982
+
+- **Tick.** 109 jobs. No resumes are listed beyond the held bonus run. `br_missing` (dry-run) lists twin Tomato `I4_indiff_twin_L` (finished seeds), indiff_mean AS `I3_indiff_mean_LE`, and comp Boat Race `LN+ES10+N4`.
+- Submitted: `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995982**. The other two wait for slots.
