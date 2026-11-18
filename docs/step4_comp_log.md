@@ -1389,3 +1389,9 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_boat_race_C1_comp_LN_confirm …`. s21 and s22 have finished the extension to 12,288; s20, the deciding seed (0.074 at 3072 and 6144), is at 8784.
   - Submitted: `... br_missing submit` → **1994469**. s21 and s22 were already CONVERGED at 6144; this check is information until s20 finishes.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 91 (19:15–19:18): Boat Race `C1_comp_LN_confirm` s21 0.014, s22 0.024 at 12,288
+
+- **The check.** **1994469** (s21, s22 at 12,288) COMPLETED (4:16): s21 **0.014**, s22 **0.024**, both CONVERGED (they were 0.015 / 0.023 at 6144). Both are corrected in round 0, then play honest laps (50.0 ×4) with 1.00 correction per episode.
+- s20, the deciding seed, is at 8784 of 12,288 in 1992892. At the cap, if it is still unconverged, the confirmation has failed.
+- Cells DONE: 3 of 6.
