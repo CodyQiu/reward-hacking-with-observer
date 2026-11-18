@@ -19,7 +19,14 @@ This log is append-only below the three summary sections. Every driver command r
 
 The verdict per seed (A1–A3, level errors) comes from `experiments/step4_indiff_check.py`. It goes under "Exact predictions" as targets finish.
 
-**indiff_pool PPO (wave 1, submitted 14:36): 18 runs, `I2_indiff_pool_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_pool/`.** Cells DONE: 0 of 6.
+**indiff_pool PPO (wave 1, submitted 14:36): 18 runs, `I2_indiff_pool_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_pool/`.** Cells DONE: **1 of 6**.
+
+**Absent Supervisor: DONE (iteration 34).** Config `I2_indiff_pool_L` (the env's frozen Step 3 config with `g.fine_only=True g.offset=True g.offset_rule=pool g.epochs=1000`), at 3072 episodes.
+- Tuning seeds 0–2: 0.000 / 0.000 / 0.000.
+- Confirmation seeds 20–22: 0.000 / 0.000 / 0.000.
+- **Behaviour.** In all six seeds PPO is corrected once in round 0, then honest: true 448.7–449.6 per round against 450, 1.00 correction per episode. The best responses are the same.
+- **Against the target.** The targets of s20 and s22 take one extra correction (the pool overpays the second level; true 400 in round 1). PPO does not take it, and its best response under its own corrections does not either. The other four targets are corrected once, then honest, as PPO is.
+- `LN` and `LE` were also 3/3, with confirmations; those are information only now.
 
 ### indiff_pool PPO against its exact target (updated as checks come in)
 
@@ -46,6 +53,9 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | AS `L` s0 | 0.000 (CONVERGED) | 1.00; −107.8, then 449.1–449.6 (honest) | 1; −100, then 450 ×4 |
 | AS `L` s1 | 0.000 (CONVERGED) | 1.00; −100.7, then 448.7–449.4 (honest) | 1; −100, then 450 ×4 |
 | AS `L` s2 | 0.000 (CONVERGED) | 1.00; −147.9, then 449.4–449.5 (honest) | 1; −100, then 450 ×4 |
+| AS `L_confirm` s20 | 0.000 (CONVERGED) | 1.00; −100.1, then 449.3–449.4 (honest) | **2**; −100, 400, then 450 ×3 |
+| AS `L_confirm` s21 | 0.000 (CONVERGED) | 1.00; −115.0, then 449.1–449.4 | 1; −100, then 450 ×4 |
+| AS `L_confirm` s22 | 0.000 (CONVERGED) | 1.00; −109.2, then 449.1–449.3 | **2**; −100, 400, then 450 ×3 |
 | AS `LE` s0 | 0.000 (CONVERGED) | 1.00; −108.2, then 449.5–449.7 (honest) | 1; −100, then 450 ×4 |
 | AS `LE` s1 | 0.001 (CONVERGED) | 1.00; −111.7, then 448.5–449.5 | 1; −100, then 450 ×4 |
 | AS `LE` s2 | 0.001 (CONVERGED) | 1.00; −105.7, then 448.3–448.8 | 1; −100, then 450 ×4 |
@@ -683,3 +693,17 @@ V_hide is 928.0 in every seed.
   - Submitted: `... br_missing submit` → **1994689**.
 - AS now has two confirmations being checked (`L_confirm` 1994686, `LE_confirm` 1994689) and one training (`LN_confirm` 1994199).
 - Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 34 (21:03–21:10): **AS `L_confirm` 3/3 → the AS cell is DONE**; Boat Race confirmation checks 1994724, 1994725
+
+- **The check.** **1994686** (AS `I2_indiff_pool_L_confirm`, seeds 20–22 at 3072) COMPLETED (1:29): **0.000 / 0.000 / 0.000**, all CONVERGED.
+  - PPO is corrected once in round 0, then honest (449.1–449.4 per round).
+  - The targets of s20 and s22 take a second correction (the pool's overpayment, iteration 3). PPO and its best response do not.
+- **Rule 4 (a `_confirm` run, all CONVERGED): the AS cell is DONE.**
+  - Config: `I2_indiff_pool_L`, 3072 episodes. Tuning 0.000 ×3, confirmation 0.000 ×3.
+  - Written at the top under Status. Nothing new is started for AS. Its other confirmations (`LN_confirm` 1994199 still training, `LE_confirm` check 1994689) are information only.
+- **Rule 3.**
+  - Boat Race `LE_confirm` (1994167, 3:17:42) has finished all three seeds; `L_confirm` has s21 and s22 at 1536 and s20 at 624.
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed both.
+  - Submitted: `... br_missing submit` → **1994724** (`LE_confirm`) and **1994725** (`L_confirm`).
+- Cells DONE: **1 of 6** (AS).
