@@ -1240,3 +1240,11 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **indiff_twin.** Two more wave-1 runs from the dry-run lines: AS `I4_indiff_twin_LE` → **1995439** and AS `I4_indiff_twin_practice_LE` → **1995440** (`ppo.ent_coef=0.3`, the LE entropy, on the AS base config). 22 of 36 submitted. Still to submit: AS `LN` of both arms, Tomato 6, tomato_large 6.
 - **Budget:** 107 jobs in all (limit 110).
 - **Taxi `L` s1 deliveries** (`.venv/bin/python experiments/step4_level_play.py results/step4/taxi/indiff_pool/I2_indiff_pool_L/seed1`, at 1536): level 0, true −90.0, 0.0 deliveries, 0.0 repeat pickups. Level 1: true −129.2 (round 1) and −115.9 (round 3), **0.0 deliveries**, 0.0 repeat pickups (honest 7.1). The verdict comes from check 1995438.
+
+## 2026-11-18, iteration 65 (04:52–04:56): first indiff_mean grid check (`I3_indiff_mean_L` s0) → 1995460
+
+- **Tick.** 106 jobs. The resume dry-runs list nothing for the indiff campaigns. `indiff_twin` has no finished seeds yet.
+- **Rule 3.** `CAMPAIGN=indiff_mean EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `run_cmd.sh 6 4 br_grid_I3_indiff_mean_L … --finished-only --draws 4`. s0 has finished at 1536; s1 is at 936 and s2 at 1056.
+  - Submitted: `... submit` → **1995460**.
+- indiff_pool's grid `LE+GL_confirm` and `LE+RS_confirm` checks are still held back. They are information only (the grid cell is DONE), and the job count is near the cap.
+- 108 jobs in all (limit 110).

@@ -1489,3 +1489,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... submit` → **1995400**.
 - Taxi comp runs now: `LN+ENT3` → 3072 (about 1680), `LN+ES10` and `LN+ES10+N4` (stage 2, about 72–96 of 768), `LN+N4` → 3072, `L` s1 (984 of 1536). `L`, `LE` and `LN` are finished: 0/3, all hiding.
 - **Budget:** comp 8 jobs (cap 30); 105 in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 101 (04:52–04:56): tomato_large `C1_comp_LE_confirm` finished (all three at 1536) → check 1995459
+
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `run_cmd.sh 12 4 br_tomato_large_C1_comp_LE_confirm … --finished-only --draws 12`. s20, s21 and s22 are all finished at 1536.
+- Submitted: `... br_missing submit` → **1995459**.
+- tomato_large comp: `L_confirm` is still training. Taxi: `LN+N4` → 3072 (1995400), `LN+ENT3`, `LN+ES10`, `LN+ES10+N4` and `L` s1 are training. Boat Race `LN_confirm` s20 → cap.
+- 108 jobs in all (limit 110). Cells DONE: 3 of 6.
