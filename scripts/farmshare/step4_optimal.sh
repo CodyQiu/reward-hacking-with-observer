@@ -38,6 +38,11 @@
 # results/step4/<env>/indiff, targets indiff (tomato_large: one target job per seed, to stay inside 36 h).
 # CAMPAIGN=indiff_pool: the same with M estimated from a pool of plays (g.offset_rule=pool; docs/step4_indiff.md,
 # "Estimating M"); variant indiff_pool, runs I2_indiff_pool_<tag> in results/step4/<env>/indiff_pool.
+# CAMPAIGN=indiff_mean: the exact rule priced on the average correction (g.offset_rule=exact_mean g.n_ensemble=6;
+# docs/step4_indiff.md, "The average correction"): each catch fits 6 corrections, applies their mean and prices the
+# level on exactly that reward; variant indiff_mean, runs I3_indiff_mean_<tag> in results/step4/<env>/indiff_mean.
+# Every fit is 6x, so targets use 3 draws (each a 6-fit mean) and one job per seed in Tomato, tomato_large and
+# Taxi; the best-response check uses 4 draws and 3x the hours.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -58,6 +63,8 @@ case $CAMPAIGN in
           HYP="Step 4 exact-indifference campaign (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, never relaxed, plus the level that pays exactly the drop in the best round's value at each correction" ;;
   indiff_pool) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race); VARIANTS=(indiff_pool); PFX=I2; EXTRA=""
           HYP="Step 4 exact-indifference campaign, M estimated from a pool of plays (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only plus the level that pays the estimated drop in the best round's value" ;;
+  indiff_mean) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race); VARIANTS=(indiff_mean); PFX=I3; EXTRA=""
+          HYP="Step 4 exact-indifference campaign, priced on the average correction (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, each catch the mean of 6 fits, plus the level that pays exactly the drop in the best round's value of that mean" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
@@ -72,6 +79,11 @@ ANNEAL="anneal.last=0.25 anneal.floor=0.1"
 finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && return 0; done; return 1; }
 BR_DRAWS=12                                                       # overseer draws of the best-response check
 br_hours() { case $1 in tomato_large) echo 12 ;; tomato|taxi) echo 6 ;; *) echo 2 ;; esac; }
+TARGET_DRAWS=6                                                    # overseer draws per correction of a target
+if [[ $CAMPAIGN == indiff_mean ]]; then                           # each draw is itself a 6-fit mean
+  BR_DRAWS=4; TARGET_DRAWS=3
+  br_hours() { case $1 in tomato_large) echo 36 ;; tomato|taxi) echo 18 ;; *) echo 6 ;; esac; }
+fi
 TUNE_SEEDS=(0 1 2)
 CONFIRM_SEEDS=(20 21 22)
 
@@ -86,6 +98,7 @@ gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fi
     comp) echo "g.fine_only=True g.offset=True g.offset_margin=0.0$ep$EXTRA" ;;   # fines only + the paying level
     indiff) echo "g.fine_only=True g.offset=True g.offset_rule=exact$ep$EXTRA" ;;  # fines only + the exact level
     indiff_pool) echo "g.fine_only=True g.offset=True g.offset_rule=pool$ep$EXTRA" ;;  # ... M estimated by the pool
+    indiff_mean) echo "g.fine_only=True g.offset=True g.offset_rule=exact_mean g.n_ensemble=6$ep$EXTRA" ;;  # ... priced on the 6-fit mean
     *) echo "unknown variant $v" >&2; exit 1 ;;
   esac
 }
@@ -137,17 +150,19 @@ case $CMD in
   targets)
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do
       dep=""; [[ $env == tomato_large && -n ${PHASEA_JOB:-} ]] && dep="afterok:$PHASEA_JOB"
-      if [[ $CAMPAIGN == indiff* && $env == tomato_large ]]; then  # one job per seed (a seed takes 3-8 h)
-        for s in "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}"; do
+      if [[ ( $CAMPAIGN == indiff* && $env == tomato_large ) || ( $CAMPAIGN == indiff_mean && ( $env == taxi || $env == tomato ) ) ]]; then
+        for s in "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}"; do   # one job per seed (a seed takes hours)
           # shellcheck disable=SC2046
           run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$(tname "$v")_s$s" .venv/bin/python -u \
-            experiments/step4_targets.py --env "$env" --name "$(tname "$v")" --seeds "$s" --set $(gsets "$env" "$v")
+            experiments/step4_targets.py --env "$env" --name "$(tname "$v")" --seeds "$s" --draws "$TARGET_DRAWS" \
+            --set $(gsets "$env" "$v")
         done
         continue
       fi
       # shellcheck disable=SC2046
       DEPENDENCY=$dep run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$(tname "$v")" .venv/bin/python -u experiments/step4_targets.py \
-        --env "$env" --name "$(tname "$v")" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" --set $(gsets "$env" "$v")
+        --env "$env" --name "$(tname "$v")" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" --draws "$TARGET_DRAWS" \
+        --set $(gsets "$env" "$v")
     done; done ;;
   wave1)
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do

@@ -6,7 +6,8 @@ Procedure: `docs/step4_indiff.md`. Two campaigns, one log:
 
 **PPO.**
 - **`indiff_pool`: PPO started 2026-11-17 14:36, on the user's instruction ("Start PPO for the indifference pool campaign now"). It runs under the same loop rules as the comp campaign (`docs/step4_optimal.md`): best-response checks, extensions, confirmations, resumes after the 48 h limit, rule 6b. Each seed's PPO behaviour (corrections per episode, true return by round) is reported next to its exact target.**
-- **`indiff` (the exact rule): still no PPO.** The user is pushing a pricing fix first (2026-11-17).
+- **`indiff` (the exact rule): still no PPO.** It is superseded by its pricing fix.
+- **`indiff_mean` (the exact rule priced on the average correction; docs/step4_indiff.md, "The average correction"): the user, 2026-11-17: "okay, make the fix".** Targets (23 jobs) and PPO wave 1 (18 runs) are submitted together, under the same loop rules as `indiff_pool`. Runs are `I3_indiff_mean_*` in `results/step4/<env>/indiff_mean/`. Targets are `results/step4/<env>/targets/indiff_mean/`, 3 draws per correction, each a 6-fit mean.
 - Cell caps as in comp: grid, Tomato, tomato_large and Boat Race 12,288 episodes; AS 24,576; Taxi 6144.
 
 This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff` or `CAMPAIGN=indiff_pool`, and the jobs count toward the 110 total.

@@ -405,6 +405,7 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
     - Only the drop matters, and the tolerances are asymmetric. An underpayment must stay below w (the window's value per round). An overpayment summed over the rounds left must stay below δ (the cost of a deliberate re-correction). After a perfect correction, the overpay tolerance is only Taxi 2 and Boat Race 0 per round.
     - Validation: A1–A3 on the estimator's own targets, plus its error against the margins (`experiments/step4_indiff_check.py`).
   - `CAMPAIGN=indiff` runs targets only until the user has seen them; tomato_large runs one target job per seed.
+  - **The average correction** (`g.offset_rule=exact_mean g.n_ensemble=6`, `CAMPAIGN=indiff_mean`, 2026-11-17). The exact rule underpaid by the value of information: the agent faces the mean of the overseer's possible fits, but each fit's own drop was paid (Taxi hid in 6/6). Now each catch fits 6 corrections, the overseer applies their mean (`protocol.EnsembleCorrection`), and the level is priced on M of exactly that reward. `exact` and `pool` are unchanged. Targets and PPO are submitted together.
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 
