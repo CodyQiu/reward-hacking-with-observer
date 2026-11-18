@@ -2594,3 +2594,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The 1536 → 3072 leg took 21 h; this one should take about 42 h, so it may need a 48 h resume.
 - The cell's 6b runs (`+ES10+ENT3` 1990239, `+ES10+N4` 1990240) are still training.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 219 (18:51–18:56): tomato_large no-reg `LN+ES10+N4` s2 finished at 1536 → check 1994466
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_B1_P1eq1_LN+ES10+N4 … --finished-only --draws 12`. s2 has finished at 1536; s0 is at 1488 and s1 at 1464 (6b run 1990240).
+  - Submitted: `... br_missing submit` → **1994466**. It checks the seeds that have finished when it starts.
+- Cells DONE: 7 of 12.

@@ -606,3 +606,11 @@ V_hide is 928.0 in every seed.
   - Submitted: `... submit` → **1994443**.
 - **AS:** all three wave-1 runs are 3/3 (9 of 9 seeds: corrected once, then honest), and each is in confirmation (`LN` 1994199, `L` 1994332, `LE` 1994443). The cell is DONE when one of them is 3/3.
 - Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 28 (18:51–18:56): grid `LE_confirm` s20 finished → check 1994471
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_grid_I2_indiff_pool_LE_confirm …`. s20 has finished at 1536; s21 is at 1032 and s22 at 984.
+  - Submitted: `... br_missing submit` → **1994471**.
+- **Queue:** 42 jobs, none pending.
+- Cells DONE: 0 of 6.

@@ -1382,3 +1382,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... br_missing submit` → **1993609**.
 - **Queue:** 47 jobs in all (18 pending), including the 18 new indiff_pool PPO runs (`docs/step4_indiff_log.md`, iteration 15).
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 90 (18:51–18:56): Boat Race `C1_comp_LN_confirm` s21, s22 at 12,288 → check 1994469
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_boat_race_C1_comp_LN_confirm …`. s21 and s22 have finished the extension to 12,288; s20, the deciding seed (0.074 at 3072 and 6144), is at 8784.
+  - Submitted: `... br_missing submit` → **1994469**. s21 and s22 were already CONVERGED at 6144; this check is information until s20 finishes.
+- Cells DONE: 3 of 6.
