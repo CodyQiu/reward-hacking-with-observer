@@ -2615,3 +2615,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LN+ES10` (1991210) is at about 11,700–12,000 of 12,288.
   - When it finishes and is checked, stage 2 starts from the run with the smallest mean gap (currently `LN+ES10+N4`), unless `LN+ES10` is 3/3.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 221 (19:42–19:46): tomato_large base `LN+ENT3` s1 finished at 1536 → check 1994583
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 12 4 br_tomato_large_B1_base_LN+ENT3 … --finished-only --draws 12`. s1 has finished at 1536; s0 is at 1416 and s2 at 1464 (6b run 1990468).
+  - Submitted: `... br_missing submit` → **1994583**.
+- 1990240 (tomato_large no-reg `LN+ES10+N4`) finished at 1536; its check 1994466 is running.
+- Cells DONE: 7 of 12.
