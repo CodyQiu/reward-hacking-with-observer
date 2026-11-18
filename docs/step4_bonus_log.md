@@ -2631,3 +2631,33 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1994688**. It is queued (13 jobs pending), so it will likely cover all three seeds.
 - This is the last Tomato base stage-1 run. Once it is checked, rule 6b stage 2 applies unless it is 3/3.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 223 (21:23–21:30): Tomato base `LN+ES10` 0/3 at the cap → stage 1 over → **rule 6b stage 2** from `LN+ES10+N4` (1994777, 1994778); checks 1994779, 1994780
+
+- **The check.** **1994688** (Tomato `B1_base_LN+ES10` at 12,288) COMPLETED (19:45): **0.159 / 0.159 / 0.158**.
+  - In every seed PPO is corrected in round 0, then honest (about 433 ×4). The best response hides, as the target does.
+  - At the cap with no seed converged, the run is finished.
+- **Tomato base stage 1 is over.** All four runs reached the 12,288 cap without the cell DONE:
+
+  | Run | Mean gap | Result |
+  |---|---|---|
+  | `LN+ES10+N4` | 0.053 | s0, s1 hide (0.000); s2 reactive |
+  | `LN+N4` | 0.158 | 0/3 |
+  | `LN+ES10` | 0.159 | 0/3 |
+  | `LN+ENT3` | 0.160 | 0/3 |
+
+- **Rule 6b stage 2**, from the stage-1 run with the smallest mean gap, `B1_base_LN+ES10+N4`.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato base B1_base_LN+ES10+N4 stage2` printed 2 runs at 1536, with the base's `ppo.batch_size=6400 g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1 n_envs=256`:
+    - `+ENT10`: `ppo.ent_coef=0.3`, with the base's ES10 schedule;
+    - `+ES30`: `ppo.ent_coef=0.03 anneal.ent_start=30 anneal.ent_episodes=1536`.
+    - `+ES30+N4` is not listed: the base already has 256 envs (the N4 maximum), so it would duplicate `+ES30`.
+  - Submitted: `... stage2 submit` → **1994777** (`+ENT10`) and **1994778** (`+ES30`).
+  - Both are extended 2× whatever their verdict, up to the cap.
+  - If stage 2 also ends without the cell DONE, the cell is flagged for the user, with each seed's failure mode, and its unconverged runs keep extending.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed:
+    - `br_tomato_large_B1_P1eq1_LN+ES10+N4`: s0 and s1, now finished at 1536. s2 was checked by 1994466: **0.047**, corrected once, then near honest (520.6); its best response takes 4 corrections.
+    - `br_tomato_large_B1_base_LN+N4`: 1990470 COMPLETED, all three at 1536.
+  - Submitted: `... br_missing submit` → **1994779** (no-reg `LN+ES10+N4`) and **1994780** (base `LN+N4`).
+- **Budget:** 51 jobs in all.
+- Cells DONE: 7 of 12.

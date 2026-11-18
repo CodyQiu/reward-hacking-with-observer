@@ -1423,3 +1423,40 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... br_missing submit` → **1994696** (`LE`, s1) and **1994697** (`LN+ENT3`, s0).
 - **Next.** `LN+ENT3` is an exploration run, so it will be extended to 1536 whatever its verdict (rule 6b) once s0's check is in. `LE` is at the cap; if no seed converges, the run is finished.
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 94 (21:30–21:34): Taxi `C1_comp_LN+ENT3` 0/3 at 768 (all hide) → extend 1536 (rule 6b; 1994783)
+
+- **The check.** **1994697** (Taxi `C1_comp_LN+ENT3` s0 at 768) COMPLETED (23:32): **0.115**. PPO never exploits in view (true about −61.7 every round); the best response is corrected in round 0, then honest (124.8 ×4).
+- **All three seeds:** 0.115 / 0.177 / 0.139, all hiding. That makes 15 of 15 checked Taxi comp seeds hiding.
+- **Rule 6b (exploration runs extend 2× whatever the verdict, up to the 6144 cap).**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+ENT3 1536` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 1536`.
+  - Submitted: `... submit` → **1994783**.
+- Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 95 (21:37–21:40): Taxi `C1_comp_LE` s1 0.164 at the 6144 cap (hides)
+
+- **The check.** **1994696** (Taxi `C1_comp_LE` s1 at 6144) COMPLETED (32:52): **0.164**, not converged. PPO hides (−84.3 ×4, then −90.1); the best response is corrected in round 0, then honest (124.7 ×4). The gap was 0.163 at 3072.
+- s0 and s2 are still finishing the extension to the cap (1993102). At the cap, rule 4 ends the run whatever the verdict.
+- Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 96 (21:53–21:56): Taxi `C1_comp_LE` finished at the 6144 cap → check 1994853
+
+- **Event.** **1993102** (Taxi `C1_comp_LE`, extension to the 6144 cap) COMPLETED (10:02:17). s1 was checked at the cap (0.164, hides).
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE`.
+  - Submitted: `... br_missing submit` → **1994853** (s0, s2).
+- Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 97 (23:05–23:12): Taxi `C1_comp_LE` 0/3 at the 6144 cap → finished; Taxi `LN+ENT3` at 1536 → check 1995057
+
+- **The check.** **1994853** (Taxi `C1_comp_LE` s0, s2 at the 6144 cap) COMPLETED (1:10:49): s0 **0.181**, s2 **0.142**, both hiding (true about −90 / −85). With s1 (0.164), the run is 0/3 at the cap.
+  - **Rule 4:** at Taxi's 6144 cap, the run is finished.
+- **Taxi comp wave 1, all finished or running:**
+  - `LN` 0/3 at 1536 (PLATEAU);
+  - `LE` 0/3 at 6144 (cap);
+  - `L` extending to 1536 (1992751; s1 still slow).
+  - All 18 checked seeds hide.
+- **Rule 3.** **1994783** (Taxi `C1_comp_LN+ENT3`, extension to 1536) COMPLETED in 1:17:24: the seeds hide, so they trigger few PBRR rounds and train fast.
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LN+ENT3`.
+  - Submitted: `... br_missing submit` → **1995057**.
+- Cells DONE: 3 of 6.
