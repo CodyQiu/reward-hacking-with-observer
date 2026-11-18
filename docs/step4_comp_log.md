@@ -1564,3 +1564,11 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Event.** The extension of Taxi `C1_comp_LN+ENT3` to 3072 (1995223) COMPLETED (4:34:56). All three seeds are at 3072.
 - **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_taxi_C1_comp_LN+ENT3` only. `... submit` → **1995518 **.
 - 110 jobs in all (limit 110).
+
+## 2026-11-18, iteration 108 (09:24–09:35): tomato_large `L_confirm` finished → check 1995655; Boat Race wave-2 `LN+LR` finished (check waits for a slot)
+
+- **Events.** tomato_large `C1_comp_L_confirm` (1993134) COMPLETED (21:08:49), all three at 1536. s20 was 0.038 IMPROVING. Boat Race `C1_comp_LN+LR` (1995472) COMPLETED (1:31:43). `LN+GL` and `LN+RS` have finished seeds.
+- **Rule 3.** `br_missing` (dry-run) listed tomato_large `L_confirm` and Boat Race `LN+LR`, `LN+GL`, `LN+RS`.
+  - Submitted: tomato_large `L_confirm` → **1995655** (the dry-run line, verbatim).
+  - The three Boat Race wave-2 checks wait for slots (110 jobs).
+- comp 18 jobs (cap 30).

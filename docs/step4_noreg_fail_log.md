@@ -1065,3 +1065,26 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 
 - **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3_confirm` (s21 and s22 now finished at 12,288; s20 was 0.024). `... submit` → **1995639**. This check decides the confirmation.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 101 (09:24–09:35): **Boat Race `LE+ENT3_confirm` failed at the cap (2/3: s22 0.043)** → rule 6b stage 2 from `LE+ES10` (`+ENT10` 1995663; `+ES30`, `+ES30+N4` queued)
+
+- **Check 1995639** (s21, s22 at 12,288) COMPLETED (1:55).
+  - **s21: 0.020, CONVERGED. s22: 0.043 (s.e. 0.016), IMPROVING at the cap.** s20 was 0.024.
+  - PPO s22: corrected once, then true −78.3 to −71.3 (a new exploit). The best response is corrected once, then −100 per round, a different new exploit.
+  - **Rule 4:** at the cap an unconverged seed cannot be extended, so **this confirmation failed (2/3).** That makes **seven Boat Race confirmations failed, all on s22** (`L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.045, `LE+ES10+N4` 0.044, `LE+ES10` 0.036, `LE+ENT3` 0.043).
+- **Rule 6b, stage 2.** All four stage-1 runs (`+ENT3`, `+ES10`, `+N4`, `+ES10+N4`) were 3/3 and all failed their confirmations, so stage 1 is over without the cell DONE.
+  - Base: the stage-1 run with the smallest mean best-response gap. Final checks:
+
+    | Run | Gaps | Mean |
+    |---|---|---|
+    | `LE+ES10` (6144) | 0.013 / 0.002 / 0.008 | **0.008** |
+    | `LE+ES10+N4` (1536) | 0.022 / 0.026 / 0.008 | 0.019 |
+    | `LE+N4` (3072) | 0.015 / 0.023 / 0.023 | 0.021 |
+    | `LE+ENT3` (12,288) | 0.018 / 0.023 / 0.020 | 0.021 |
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race P1eq1 N1_P1eq1_LE+ES10 stage2` lists:
+    - `+ENT10`: `ppo.ent_coef=0.9`, with the base's ES10 schedule;
+    - `+ES30`: `anneal.ent_start=30 anneal.ent_episodes=1536`;
+    - `+ES30+N4`: `n_envs=64 ppo.batch_size=1600`.
+  - Submitted (dry-run line, verbatim): `N1_P1eq1_LE+ES10+ENT10` → **1995663**. `+ES30` and `+ES30+N4` wait at the top of the job queue (110 jobs).
+- **Flag (update to the s22 flag above):** if stage 2 also ends without the cell DONE, the cell is flagged for you with each seed's failure mode, and its unconverged runs keep extending.
+- 110 jobs in all. Cells DONE: as before.
