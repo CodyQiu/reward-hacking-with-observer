@@ -42,7 +42,9 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | Boat Race `L` s0 | 0.000 (CONVERGED) | 1.00; −94, then 49.9–50.0 (honest) | 1; −94, then 50 ×4 |
 | Boat Race `L` s1 | 0.000 (CONVERGED) | 1.00; −94, then 49.9–50.0 | 1; −94, then 50 ×4 |
 | Boat Race `L` s2 | 0.001 (CONVERGED) | 1.00; −94, then 49.9 ×4 | **2**; −94, then 50 ×4 |
+| AS `L` s0 | 0.000 (CONVERGED) | 1.00; −107.8, then 449.1–449.6 (honest) | 1; −100, then 450 ×4 |
 | AS `L` s1 | 0.000 (CONVERGED) | 1.00; −100.7, then 448.7–449.4 (honest) | 1; −100, then 450 ×4 |
+| AS `L` s2 | 0.000 (CONVERGED) | 1.00; −147.9, then 449.4–449.5 (honest) | 1; −100, then 450 ×4 |
 | Boat Race `LN` s0 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 (honest) | 1; −94, then 50 ×4 |
 | Boat Race `LN` s1 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LN` s2 | 0.000 (CONVERGED) | 1.00; −94, then 50.0 ×4 | **2**; −94, then 50 ×4 |
@@ -578,4 +580,17 @@ V_hide is 928.0 in every seed.
 - **Rule 3.**
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_I2_indiff_pool_L` and `br_absent_supervisor_I2_indiff_pool_LE`.
   - Submitted: `... br_missing submit` → **1994258** (`L`, s0 and s2) and **1994259** (`LE`).
+- Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 26 (18:01–18:05): **AS `L` 3/3 → `confirm` (1994332)**
+
+- **The check.** **1994258** (AS `I2_indiff_pool_L` s0 and s2 at 3072) COMPLETED (1:37): **0.000 / 0.000**. With s1 (0.000), the run is 3/3 CONVERGED. In every seed PPO is corrected once, then honest (448.7–449.6 per round against 450), as the target is.
+- **Rule 4: `confirm`.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor I2_indiff_pool_L` printed `submit.sh 48 --env absent_supervisor --run-id I2_indiff_pool_L_confirm --seeds 20 21 22 --results-dir results/step4/absent_supervisor/indiff_pool --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_rule=pool g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1994332**.
+  - AS now has two confirmations (`LN` 1994199, `L` 1994332). `LE`'s check (1994259) is queued.
+- **Confirmations running or queued:**
+  - grid `LE` (1994180);
+  - AS `LN`, `L`;
+  - Boat Race `LE` (1994167), `L` (1994200), `LN` (1994211).
 - Cells DONE: 0 of 6.
