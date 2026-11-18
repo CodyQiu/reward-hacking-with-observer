@@ -179,7 +179,9 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 | grid / pure / `I4_indiff_twin_L` / s0 (1536) | **0.001** (CONVERGED) | corrected once, then honest: −100, then 13.4–14.2 (goal reached part of the time) | corrected once, then honest |
 | grid / pure / `I4_indiff_twin_LN` / s0, s1 (1536) | **0.303** (PLATEAU) / 0.011 (CONVERGED) | corrected once, then true −100 | s0's BR farms 4 corrections |
 | boat_race / practice / `I4_indiff_twin_practice_LE` / s0 (1536) | **0.053** (PLATEAU) | corrected once, then partly honest (43.8 ×4) | corrected once, then honest; the BR under the run's twin farms 4 corrections |
-| absent_supervisor / pure / `I4_indiff_twin_LN` / s1 (3072) | **0.000** (CONVERGED) | corrected in round 0, then honest (449.7–449.8 ×4) | the same (no farming in this seed's BR) |
+| absent_supervisor / pure / `I4_indiff_twin_LN` / s0–s2 (3072) | **0.000 / 0.000 / 0.000** (CONVERGED) | corrected in round 0, then honest (449.7–449.8 ×4) | the same (no farming in these seeds' BRs) |
+| boat_race / pure / `I4_indiff_twin_LN` / s1 (1536) | **0.008** (CONVERGED) | corrected once, then honest from round 2 (38.0, then 49.9–50.0) | the BR takes 2 corrections |
+| boat_race / pure / `I4_indiff_twin_LE` / s2 (1536) | 0.030 (CONVERGED) | corrected once, then honest (49.7–49.8) | the BR farms 4 corrections |
 | boat_race / pure / `I4_indiff_twin_LE` / s1 (1536) | **0.030** (PLATEAU; just above the bar) | corrected once, then partly honest (43.9 ×4) | the BR farms 4 corrections |
 | boat_race / pure / `I4_indiff_twin_LN` / s0 (1536) | 0.013 (CONVERGED) | corrected once, then honest (49.9–50.0) | the same; the BR takes 2 corrections |
 
@@ -1565,3 +1567,14 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Rule 3.** `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995718–1995720** (AS `LN` s0, s2; Boat Race `LN` s1; Boat Race `LE` s2).
 - Two queue items (noreg_fail stage 2 `N1_P1eq1_LE+ES10+ES30+N4` → 1995721; bonus tomato_large `B1_P2swap_LE+GL` → 1995722) are logged in their campaigns.
 - 109 jobs in all; 16 runs still queued.
+
+## 2026-11-18, iteration 88 (10:16–10:25): **first twin cells at 3/3: AS pure `LN` (0.000 ×3, honest) and Boat Race pure `LN` (0.013 / 0.008 / 0.000)** → both `confirm` (, 1995728); Boat Race pure `LE` → extend 3072 (); grid `LN` check ()
+
+- **Checks** 1995718 (AS pure `LN` s0, s2), 1995719 (Boat Race pure `LE` s2) and 1995720 (Boat Race pure `LN` s1) COMPLETED.
+- **AS pure `I4_indiff_twin_LN` at 3072: 0.000 / 0.000 / 0.000, 3/3 CONVERGED.** All three are corrected in round 0, then honest at 449.7–449.8 per round (honest 450). Their best responses do not farm: in AS `LN` (64 envs), the overpayment seen in AS `L` is absent.
+  - **Rule 4 → confirm.** Dry-run: `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor I4_indiff_twin_LN` printed `submit.sh 48 --env absent_supervisor --run-id I4_indiff_twin_LN_confirm --seeds 20 21 22 ... --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 episodes=3072 anneal.last=0.25 anneal.floor=0.1 n_envs=64`. `... submit` → ****.
+- **Boat Race pure `I4_indiff_twin_LN` at 1536: 0.013 / 0.008 / 0.000, 3/3 CONVERGED.** All three are corrected in round 0, then honest (s1 from round 2). The best responses of s0 and s1 take one extra correction, which the overpaying twin pays for, but the gap stays under 0.03.
+  - **Rule 4 → confirm.** Dry-run: `... confirm boat_race I4_indiff_twin_LN` printed `... --run-id I4_indiff_twin_LN_confirm --seeds 20 21 22 ... n_envs=64 ppo.batch_size=1600 ...`. `... submit` → **1995728**.
+- **Boat Race pure `I4_indiff_twin_LE` at 1536: 0.047 (IMPROVING) / 0.030 (PLATEAU) / 0.030 (CONVERGED).** **Rule 4 → extend 3072.** Dry-run printed `... --run-id I4_indiff_twin_LE ... --resume --extend-to 3072`. `... submit` → ****.
+- **Rule 3.** grid pure `LN` (s2 now finished) → ****.
+- 109 jobs in all.

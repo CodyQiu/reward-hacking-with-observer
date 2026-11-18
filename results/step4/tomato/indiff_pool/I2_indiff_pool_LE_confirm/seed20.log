@@ -63,3 +63,5 @@
   [tomato s20] 12,096,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    467.3  rounds 1802  (17276s)
   [tomato s20] 12,288,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    468.1  rounds 1826  (17441s)
   [tomato s20] resumed at episode 1536 -> 3072
+  [tomato s20] 12,480,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    454.0  rounds 1850  (377s)
+  [tomato s20] 12,672,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    443.9  rounds 1874  (754s)
