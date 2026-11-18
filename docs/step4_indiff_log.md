@@ -1100,3 +1100,14 @@ V_hide is 928.0 in every seed.
   - If this confirmation also ends unconverged, rule 6b continues the cell from the tuning run with the smallest mean gap (`LN`, 0.000).
 - **Grid `LE+ES10+N4` (information only; the cell is DONE):** 0.011 / 0.032 / 0.011.
 - Cells DONE: indiff_pool 2 of 6; indiff_mean 0 of 6.
+
+## 2026-11-18, iteration 58 (01:42–01:50): Tomato `L_confirm` s21 PLATEAU at 0.272 (honest from round 0, never exploits) → this confirmation will fail
+
+- **Event.** Check **1995296** (Tomato `I2_indiff_pool_L_confirm`, finished seeds) COMPLETED (13:32). Only s21 had finished: with no corrections there are no PBRR fits, so it trains much faster than s20 and s22, which are at 456 of 1536.
+- **s21: gap 0.272, PLATEAU.**
+  - PPO's true return by round is 429.0 / 429.6 / 430.4 / 428.7 / 430.2. It plays honestly from round 0 and is never corrected.
+  - The best response (and the target) exploit in round 0, are corrected, and are honest after: true 46.0, then 434.1 ×4.
+  - So s21 is deterred rather than hiding. It gives up the round-0 exploit, which under the exact level costs it nothing afterwards. This is an exploration failure (it never found the bug), not avoidance of correction.
+- **Rule 4.** s21 is at its final episode and PLATEAU, so **`L_confirm` cannot reach 3/3; it will fail** whatever s20 and s22 do. The job keeps running for them, as the run's seeds move together. Nothing to submit.
+- Tomato confirmations: `L` will fail (s21); `LE_confirm` (1995191) running; `LN_confirm` (1995197) pending. The Tomato cell needs one of these two to reach 3/3.
+- Nothing new from resume or br_missing (dry-runs at 01:38). indiff_mean: targets and wave 1 are still pending or running.
