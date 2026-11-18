@@ -2733,3 +2733,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s1 is at 600 of 1536 after its 48 h resume. Rule 4 waits for it.
 - **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995672** (tomato_large `B1_base_LN+ES10+N4`).
 - 110 jobs in all.
+
+## 2026-11-18, iteration 231 (10:12): tomato_large swap wave 2 `B1_P2swap_LE+GL` → 1995722
+
+- The second wave-2 run from iteration 227's dry-run (`ppo.gae_lambda=1.0`), line run verbatim. Still queued: `+NET`, `+RS`, `+EP`, `+AN` and the four 6b runs.

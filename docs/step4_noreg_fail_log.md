@@ -1092,3 +1092,7 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 ## 2026-11-18, iteration 102 (09:50): Boat Race stage 2 `N1_P1eq1_LE+ES10+ES30` → 1995673
 
 - The next run from iteration 101's stage-2 dry-run, line run verbatim. `+ES30+N4` is now first in the job queue.
+
+## 2026-11-18, iteration 103 (10:12): Boat Race stage 2 `N1_P1eq1_LE+ES10+ES30+N4` → 1995721
+
+- The last stage-2 run from iteration 101's dry-run, line run verbatim. All three stage-2 runs are now in: 1995663 (`+ENT10`), 1995673 (`+ES30`), 1995721 (`+ES30+N4`).
