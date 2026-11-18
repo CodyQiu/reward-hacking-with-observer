@@ -1639,3 +1639,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Check 1995756** (`C1_comp_LN+NET` s0): **0.021, CONVERGED.** It farms 4 corrections and is honest by the true reward. s1 (0.216) and s2 (0.184) are PLATEAU: both hide.
 - **Rule 4:** every unconverged seed is PLATEAU, so the run is **finished at 1/3**.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 118 (11:56–12:05): Boat Race 6b `LN+ES10` 0/3 at 1536 (all hide) → extend 3072 (1995878); `LN+GL` at 3072 → check 1995879
+
+- **Check 1995780** (`C1_comp_LN+ES10`, all three at 1536): **0.146 / 0.173 / 0.184, all PLATEAU.** All three hide: never corrected, true −82 in rounds 0–3, then −94.
+  - **Rule 6b:** exploration runs extend 2× whatever the verdict. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+ES10 3072` printed `... --resume --extend-to 3072`. `... submit` → **1995878**.
+- **Rule 3.** `LN+GL` finished its extension to 3072 (1995678). `br_missing submit` → **1995879**.
+- comp 24 jobs (cap 30); 110 in all.
