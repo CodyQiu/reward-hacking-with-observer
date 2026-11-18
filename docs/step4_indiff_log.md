@@ -1534,3 +1534,9 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Boat Race pure `LE` s0: 0.047 (IMPROVING); PPO is corrected once, then partly honest (37.8 against 50). Boat Race pure `LN` s2: **0.000**, corrected once, then honest. `LE` s1, s2 and `LN` s1 are still training.
 - **Rule 5 / 6b** for the grid twin cells wait until every wave-1 run of each cell has finished and been checked (`L`, `LN` and the practice `L`, `LN` are still training or unchecked).
 - 110 jobs in all.
+
+## 2026-11-18, iteration 85 (09:47–09:55): twin checks for grid `L` (s0), grid `LN`, Boat Race `practice_LE` → 1995679 1995680 1995681 
+
+- **Events.** Twin grid `I4_indiff_twin_L` (1995361) COMPLETED (4:08:55). Grid `LN` and Boat Race `practice_LE` have finished seeds.
+- **Rule 3.** `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995679 1995680 1995681 **.
+- 110 jobs in all.
