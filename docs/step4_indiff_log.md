@@ -1076,3 +1076,11 @@ V_hide is 928.0 in every seed.
 - **Grid `LE+AN_confirm`:** the only unconverged seed is PLATEAU, so **this confirmation failed (2/3)**.
 - **Grid `LE+ES10`:** rule 6b would extend it (s1 unconverged), but the cell is now DONE. Per rule 6b ("Once a cell is DONE, start nothing new for it"), nothing new is started; the running grid confirmations (`LE+RS`, `LE+GL`, `LE+N4`, `LE+EP`) finish as information only.
 - Cells DONE: **indiff_pool 2 of 6** (AS; grid by the verdict only); indiff_mean 0 of 6.
+
+## 2026-11-18, iteration 56 (01:27–01:30): checks for Boat Race `LE_confirm` (s20 at 3072), Tomato `L_confirm`, grid `LE+ES10+N4` (information only)
+
+- **Events.** Boat Race `LE_confirm` (1994745, extension to 3072) COMPLETED; s20 is the deciding seed for the Boat Race cell. Tomato `L_confirm` has finished seeds. Grid `LE+ES10+N4` (1994531) finished; the grid cell is DONE, so it is information only.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed the three runs.
+  - Submitted: `... br_missing submit` → **1995295 1995296 1995297 ** (grid `LE+ES10+N4`, Tomato `L_confirm`, Boat Race `LE_confirm`).
+- Cells DONE: indiff_pool 2 of 6; indiff_mean 0 of 6.

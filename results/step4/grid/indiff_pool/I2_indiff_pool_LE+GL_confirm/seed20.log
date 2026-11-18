@@ -30,3 +30,8 @@
   [grid s20]  5,760,000  win0-3 0.02  off 0.94  corr/ep 0.10  winF 0.88  proxy0-3   7221.0  rounds 1312  (7059s)
   [grid s20]  5,952,000  win0-3 0.02  off 0.94  corr/ep 0.08  winF 0.92  proxy0-3   7240.8  rounds 1337  (7201s)
   [grid s20]  6,144,000  win0-3 0.01  off 0.97  corr/ep 0.04  winF 0.95  proxy0-3   7515.7  rounds 1350  (7296s)
+  [grid s20]  6,336,000  win0-3 0.01  off 0.99  corr/ep 0.03  winF 0.97  proxy0-3   7614.1  rounds 1361  (7379s)
+  [grid s20]  6,528,000  win0-3 0.01  off 0.98  corr/ep 0.04  winF 0.95  proxy0-3   7583.1  rounds 1376  (7480s)
+  [grid s20]  6,720,000  win0-3 0.01  off 0.98  corr/ep 0.05  winF 0.95  proxy0-3   7557.9  rounds 1393  (7589s)
+  [grid s20]  6,912,000  win0-3 0.01  off 0.98  corr/ep 0.06  winF 0.94  proxy0-3   7543.8  rounds 1412  (7711s)
+  [grid s20]  7,104,000  win0-3 0.01  off 0.98  corr/ep 0.05  winF 0.94  proxy0-3   7564.7  rounds 1427  (7812s)
