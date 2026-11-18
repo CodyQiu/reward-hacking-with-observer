@@ -1712,3 +1712,8 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Rule 6b:** exploration runs extend 2× whatever the verdict. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+ES10+N4 3072` printed `... --resume --extend-to 3072`. It is first in the slot queue.
 - Checks waiting for slots: `LN+ES10` (3072), `LN+N4` (1536).
 - 110 jobs in all.
+
+## 2026-11-18, iteration 128 (14:58): Taxi 6b `LN+N4` at 3072 → check 1996189
+
+- `C1_comp_LN+N4`'s extension to 3072 (1995400) has finished seeds. Its dry-run line, run verbatim → **1996189**.
+- Boat Race `LN+ES10` (3072) and `LN+N4` (1536) checks wait for slots.

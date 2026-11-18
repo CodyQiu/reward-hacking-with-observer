@@ -1,0 +1,14 @@
+{
+ "g": {
+  "fine_only": true,
+  "offset": true,
+  "offset_rule": "twin"
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "episodes": 1536
+}
