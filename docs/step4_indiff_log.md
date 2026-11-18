@@ -1301,3 +1301,19 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - s0 is at 1320 and s2 at 1176 of 1536. Rule 4 waits for them.
 - **indiff_mean Tomato s0: PASS**, corrected once, then honest. Leftover gap at level 1: 0.00. Details are under "Exact predictions".
 - **Budget.** All 110 slots are in use after the comp campaign's Boat Race wave 2 (comp iteration 103). The remaining twin runs (Tomato 6, tomato_large 6) are in the queue in the new flag at the top, interleaved with the bonus and comp runs the rules now call for.
+
+## 2026-11-18, iteration 69 (05:48–05:58): Taxi `LE` (indiff_pool) finished at 768 → check 1995482; Taxi `L` s0 finished at 1536 (check waits for a slot)
+
+- **Event.** Taxi `I2_indiff_pool_LE` (1993590) COMPLETED (14:50:49). All three seeds are at 768.
+- **Rule 3.** `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed Taxi `LE` and Taxi `L` (s0 now finished at 1536; s1 checked at 1536; s2 at 1416), besides the two held grid checks.
+  - Submitted: the Taxi `LE` line, run verbatim → **1995482**. That makes 110 jobs.
+  - The Taxi `L` check waits for the next free slot.
+- **Taxi `LE` deliveries** (`.venv/bin/python experiments/step4_level_play.py "results/step4/taxi/indiff_pool/I2_indiff_pool_LE/seed*"`; honest 7.1 per round):
+
+  | seed | level 0 (round 0): true, deliveries, repeat pickups | level 1 (rounds 1 / 3): true, deliveries, repeat pickups |
+  |---|---|---|
+  | 0 | −81.6, 0.5, 40.1 | −98.5 / −98.7, **0.0**, 0.7 / 1.0 |
+  | 1 | −90.3, 0.0, 40.3 | −98.9 / −98.9, **0.0**, 0.0 |
+  | 2 | −88.8, 0.2, 40.6 | −170.6 / −171.1, **0.1**, 21.8 / 22.2 |
+
+  - All three seeds farm the pickup bug at level 0 (about 40 repeat pickups per round). After a correction none of them delivers (0.0–0.1, against 7.1). s2 keeps repeating pickups at level 1 (about 22 per round) under the fine, at true −171.
