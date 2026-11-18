@@ -1239,3 +1239,4 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Still held back: the two grid information-only checks.
 - **indiff_twin.** Two more wave-1 runs from the dry-run lines: AS `I4_indiff_twin_LE` → **1995439** and AS `I4_indiff_twin_practice_LE` → **1995440** (`ppo.ent_coef=0.3`, the LE entropy, on the AS base config). 22 of 36 submitted. Still to submit: AS `LN` of both arms, Tomato 6, tomato_large 6.
 - **Budget:** 107 jobs in all (limit 110).
+- **Taxi `L` s1 deliveries** (`.venv/bin/python experiments/step4_level_play.py results/step4/taxi/indiff_pool/I2_indiff_pool_L/seed1`, at 1536): level 0, true −90.0, 0.0 deliveries, 0.0 repeat pickups. Level 1: true −129.2 (round 1) and −115.9 (round 3), **0.0 deliveries**, 0.0 repeat pickups (honest 7.1). The verdict comes from check 1995438.
