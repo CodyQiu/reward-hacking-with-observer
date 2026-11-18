@@ -102,6 +102,9 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | grid `LE+AN` s0 | 0.011 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
 | grid `LE+AN` s1 | 0.011 (CONVERGED) | 1.00; −100 ×5 | 1; −100, then 22 ×4 |
 | grid `LE+AN` s2 | 0.011 (CONVERGED) | 1.00; −100 ×5 | 1; −100, then 22 ×4 |
+| grid `LE+N4` s0 | 0.011 (CONVERGED) | 1.00; −100 ×5 (corrected, then never reaches the goal) | 1; −100, then 22 ×4 |
+| grid `LE+N4` s1 | 0.011 (CONVERGED) | 1.00; −100 ×5 | 1; −100, then 22 ×4 |
+| grid `LE+N4` s2 | 0.011 (CONVERGED) | 1.00; −100 ×5 | 1; −100, then 22 ×4 |
 | grid `LE+RS` s0 | 0.011 (CONVERGED) | 1.00; −100 ×5 (the same) | 1; −100, then 22 ×4 |
 | grid `LE+RS` s1 | 0.011 (CONVERGED) | 1.00; −100 ×5 | 1; −100, then 22 ×4 |
 | grid `LE+RS` s2 | 0.011 (CONVERGED) | 1.00; −100 ×5 | 1; −100, then 22 ×4 |
@@ -946,4 +949,15 @@ V_hide is 928.0 in every seed.
   - Taxi `L` (1993589, 9:15:27) has finished all three seeds; s0 is unchecked. Grid `LE+N4` has finished.
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+N4` and `br_taxi_I2_indiff_pool_L`.
   - Submitted: `... br_missing submit` → **1995199 1995201**.
+- Cells DONE: indiff_pool 1 of 6.
+
+## 2026-11-18, iteration 50 (00:24–00:27): grid `LE+N4` 3/3 → `confirm` (1995206)
+
+- **The check.** **1995199** (grid `I2_indiff_pool_LE+N4`, a 6b run, all three at 1536) COMPLETED (3:34): 0.011 ×3, CONVERGED. Every seed is corrected, then never reaches the goal.
+- **Rule 6b / 4: `confirm`.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid I2_indiff_pool_LE+N4` printed `submit.sh 48 --env grid --run-id I2_indiff_pool_LE+N4_confirm --seeds 20 21 22 --results-dir results/step4/grid/indiff_pool --set g.fine_only=True g.offset=True g.offset_rule=pool anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03 ppo.batch_size=1600 episodes=1536 n_envs=64`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1995206**.
+- **Grid confirmations:**
+  - running: `LE+RS`, `LE+ENT3`, `LE+GL`, `LE+AN`, `LE+N4`;
+  - failed: `LE`, `LE+LR`. Both failures come from one fresh seed at 0.093 (hiding) or 0.032.
 - Cells DONE: indiff_pool 1 of 6.
