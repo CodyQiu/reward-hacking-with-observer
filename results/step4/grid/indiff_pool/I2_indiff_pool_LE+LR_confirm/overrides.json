@@ -1,0 +1,16 @@
+{
+ "g": {
+  "fine_only": true,
+  "offset": true,
+  "offset_rule": "pool"
+ },
+ "episodes": 1536,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ },
+ "ppo": {
+  "ent_coef": 0.03,
+  "learning_rate": 0.0001
+ }
+}
