@@ -1190,3 +1190,12 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - **indiff_mean `L` s1:** round 0 at level 0: true −90.8, 0.0 deliveries, 0.0 repeat pickups. Level 1: true −125.8 (round 1) and −103.2 (round 3), **0.0 deliveries**, 0.0 repeat pickups.
   - Neither seed can deliver after a correction. That is the skill deficit docs/step4_indiff.md predicts for Taxi.
   - The indiff_mean report says "NO TARGET" for Taxi `L` s1 and Boat Race `L` s0: their indiff_mean targets (Taxi one job per seed, Boat Race one job) are still pending. The checks run regardless.
+
+## 2026-11-18, iteration 62 (04:02–04:06): Tomato `LE_confirm` s21: 0.277, IMPROVING (deterred: honest from round 0)
+
+- **Check 1995411** (Tomato `I2_indiff_pool_LE_confirm`, s21) COMPLETED (11:48). **s21: gap 0.277, IMPROVING.**
+  - PPO's true return by round is 424.6 / 425.2 / 426.1 / 424.6 / 426.2, and it is never corrected. The best response is corrected in round 0, then honest: 46.0, then 434.1 ×4.
+  - So seed 21 is deterred in both Tomato confirmations so far (`L_confirm` 0.272 PLATEAU, `LE_confirm` 0.277 IMPROVING). It never takes the round-0 exploit.
+- **Rule 4.** s21 is IMPROVING, so this run extends 2× (to 3072, within Tomato's 12,288 cap) once the job ends. s20 (480) and s22 (672) are still training, and the run's seeds move together. Nothing to submit now.
+  - s20 and s22 so far: corrected in round 0, then about 387–393 per round (target 434).
+- 109 jobs in all (limit 110). The 16 remaining `indiff_twin` runs still wait for slots.
