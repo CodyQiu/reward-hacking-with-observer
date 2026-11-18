@@ -1043,3 +1043,12 @@ V_hide is 928.0 in every seed.
   - So after a correction, Taxi PPO delivers almost no passengers (against 7.1 for honest play), whether it hides (s0, s2) or never exploits (s1). It has not learned the task's honest part at all, which is consistent with all 18 comp seeds hiding.
 - **Budget:** 83 jobs in all (limit 110).
 - Cells DONE: indiff_pool 1 of 6; indiff_mean 0 of 6.
+
+## 2026-11-18, iteration 54 (01:13–01:17): four checks (grid `LE+AN_confirm`, `LE+ENT3_confirm`, `LE+ES10` at 3072; Taxi `LN`)
+
+- **Events.** Grid `LE+AN_confirm` (1995135), `LE+ENT3_confirm` (1995069) and `LE+ES10` (extension to 3072, 1995102) COMPLETED. Taxi `LN` has finished seeds.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed the four runs.
+  - Submitted: `... br_missing submit` → **1995273 1995274 1995275 1995276 ** (grid `LE+AN_confirm`, `LE+ENT3_confirm`, `LE+ES10`; Taxi `LN`).
+  - The Taxi `LN` deliveries will come from `experiments/step4_taxi_deliveries.py` once its check is in.
+- Cells DONE: indiff_pool 1 of 6; indiff_mean 0 of 6.
