@@ -1460,3 +1460,12 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LN+ENT3`.
   - Submitted: `... br_missing submit` → **1995057**.
 - Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 98 (00:51–00:56): Taxi `C1_comp_LN+ENT3` 0/3 at 1536 (all hide) → extend 3072 (rule 6b; 1995223)
+
+- **The check.** **1995057** (Taxi `C1_comp_LN+ENT3` at 1536) COMPLETED (1:41:14): **0.118 / 0.177 / 0.122**, all IMPROVING by the curve.
+  - PPO never exploits in view (true −65.8 to −71.3 every round). The best response is corrected in round 0, then honest (124.7–124.8).
+- **Rule 6b (exploration runs extend 2× whatever the verdict, up to the 6144 cap).**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+ENT3 3072` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1995223**.
+- Taxi comp: 18 of 18 checked seeds hide. Cells DONE: 3 of 6.
