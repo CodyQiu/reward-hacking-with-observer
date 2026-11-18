@@ -433,7 +433,7 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Boat Race (1995354, 6 min): 5/6 PASS.** s0, s1, s2, s21 and s22 are corrected in round 0, then honest: true −94.0, then 50.0 ×4. V0 = 1000.0 = 5 × M(proxy); hiding 928.0.
   - **s20: FAIL A2.** It is corrected in every round (4.00 per episode) at true −94.0 per round, and round 4 still uses the original bug. Every extra correction is under-correction: the best round at that level is caught, with probability 1.00. Level 1 pays only 32.7, against 154.9 for a full Tomato correction.
   - This is the same seed that fails under the exact rule, the pool and comp (its correction does not remove the bug). The doc predicted it: "Fit-limited seeds (Boat Race s20-type under-correction) stay as their targets".
-- **Twin targets so far (grid, AS, Tomato, Taxi, Boat Race): 28/30 PASS. No hiding in any seed. Level error 0.00 at every level of every seed.** The two failures (Taxi s21, s22) and Boat Race s20 are under-corrections by the fit, not pricing errors; that makes 3 failures in 30, the 27 others PASS. (Count: grid 6, AS 6, Tomato 6, Taxi 4, Boat Race 5 = 27 PASS.)
+- **Twin targets so far (grid, AS, Tomato, Taxi, Boat Race): 27/30 PASS** (grid 6, AS 6, Tomato 6, Taxi 4, Boat Race 5). **No hiding in any seed. Level error 0.00 at every level of every seed.** The three failures (Taxi s21, s22; Boat Race s20) are under-corrections by the fit, not pricing errors.
 - Pending: tomato_large (1995347–1995352).
 
 ## 2026-11-17, iteration 0 (01:35–01:42): both campaigns' targets submitted
