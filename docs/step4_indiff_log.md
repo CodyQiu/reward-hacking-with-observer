@@ -10,7 +10,7 @@ Procedure: `docs/step4_indiff.md`. Two campaigns, one log:
 - **`indiff_mean` (the exact rule priced on the average correction; docs/step4_indiff.md, "The average correction"): the user, 2026-11-17: "okay, make the fix".** Targets (23 jobs) and PPO wave 1 (18 runs) are submitted together, under the same loop rules as `indiff_pool`. Runs are `I3_indiff_mean_*` in `results/step4/<env>/indiff_mean/`. Targets are `results/step4/<env>/targets/indiff_mean/`, 3 draws per correction, each a 6-fit mean.
 - Cell caps as in comp: grid, Tomato, tomato_large and Boat Race 12,288 episodes; AS 24,576; Taxi 6144.
 
-This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff` or `CAMPAIGN=indiff_pool`, and the jobs count toward the 110 total.
+This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff`, `CAMPAIGN=indiff_pool` or `CAMPAIGN=indiff_mean`, and the jobs count toward the 110 total.
 
 ## Status
 
@@ -44,6 +44,7 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | Tomato `L` s0 | 0.005 (CONVERGED) | 1.00; 46, then 429.9–430.2 (honest) | 1.03; 46, then 433.8–434.0 |
 | Tomato `L` s1 | 0.006 (CONVERGED) | 1.00; 45.9, then 429.6–430.0 (honest) | 1; 46, then 434.1 ×4 |
 | Tomato `L` s2 | 0.005 (CONVERGED) | 1.00; 46, then 429.9–430.5 (honest) | 1; 46, then 434.1 ×4 |
+| Tomato `LE` s0 | 0.008 (CONVERGED) | 1.00; 46, then 427.7–428.1 (honest) | 1.03; 46, then 433.8–434.0 |
 | Tomato `LE` s1 | 0.009 (CONVERGED) | 1.00; 45.7, then 427.0–427.6 (honest) | 1; 46, then 434.1 ×4 |
 | Tomato `LE` s2 | 0.010 (CONVERGED) | 1.00; 46, then 426.7–427.0 (honest) | 1; 46, then 434.1 ×4 |
 | Taxi `L` s1 | 1.231 (not converged) | **0, never exploits and never finishes the task**; true about −90 every round | 1 (s1 passes); −88.2, then 124.7 ×4 |
@@ -908,3 +909,25 @@ V_hide is 928.0 in every seed.
   - Tomato `LE` s0 finished after check 1995063 started; `br_missing` listed `br_tomato_I2_indiff_pool_LE`.
   - Submitted: `... br_missing submit` → **1995136**.
 - Cells DONE: 1 of 6.
+
+## 2026-11-18, iteration 48 (00:00–00:12): **`indiff_mean` launched: 21 target jobs and 18 wave-1 runs**; Tomato `LE` 3/3 → `confirm` (1995191)
+
+- **The user's pricing fix arrived** with `git pull` at 00:00: commit 982137579, "Step 4: exact-indifference priced on the average correction (offset_rule=exact_mean, CAMPAIGN=indiff_mean)".
+  - Each catch fits 6 corrections and applies their mean (fines only). The level is priced on M of exactly that mean reward, which removes the value-of-information underpayment that made the exact rule hide in Taxi (iteration 8).
+  - The doc ("The average correction") says to submit targets and PPO wave 1 together, under `indiff_pool`'s loop rules. This follows the user's 2026-11-17 message ("I'm pushing a pricing fix first").
+- `.venv/bin/python tests/test_step4.py`: **42 tests, 0 failed**.
+- **Targets.**
+  - Dry-run: `CAMPAIGN=indiff_mean EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh targets` printed 21 `run_cmd.sh 36 4 targets_<env>_indiff_mean[_s<seed>] … step4_targets.py --env <env> --name indiff_mean … --draws 3 --set g.fine_only=True g.offset=True g.offset_rule=exact_mean g.n_ensemble=6`, plus `g.epochs=1000` outside the grid and `task.obs=onehot` in Taxi:
+    - grid, AS and Boat Race: one job each, seeds 0–2 and 20–22;
+    - Tomato, tomato_large and Taxi: one job per seed.
+  - The doc says 23 jobs; the driver lists 21 (1 + 1 + 6 + 6 + 6 + 1). I submitted the driver's 21.
+  - Submitted: `... targets submit` → **1995152–1995172**.
+- **Wave 1.**
+  - Dry-run: `CAMPAIGN=indiff_mean EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh wave1` printed 18 `submit.sh 48` lines, `--run-id I3_indiff_mean_{L,LE,LN} --seeds 0 1 2 --results-dir results/step4/<env>/indiff_mean`. They are `indiff_pool`'s wave-1 configs with `g.offset_rule=exact_mean g.n_ensemble=6`.
+  - Submitted: `... wave1 submit` → **1995173–1995190**.
+- **Tomato `I2_indiff_pool_LE` (indiff_pool): 0.008 / 0.009 / 0.010, CONVERGED** (check 1995136, 14:32). PPO is corrected once, then honest (about 427).
+  - **Rule 4: `confirm`.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato I2_indiff_pool_LE` printed `submit.sh 48 --env tomato --run-id I2_indiff_pool_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato/indiff_pool --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_rule=pool g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1995191**. Tomato now has two confirmations running (`L_confirm` 1995101, `LE_confirm`).
+- **Budget:** 83 jobs in all (limit 110).
+- Cells DONE: indiff_pool 1 of 6; indiff_mean 0 of 6.
