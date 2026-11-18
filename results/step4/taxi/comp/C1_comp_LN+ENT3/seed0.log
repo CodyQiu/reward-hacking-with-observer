@@ -64,3 +64,9 @@
   [taxi s0] 48,384,000  win0-3 0.00  off 0.97  corr/ep 0.00  winF 0.00  proxy0-3    341.4  rounds 1695  (4539s)
   [taxi s0] 49,152,000  win0-3 0.00  off 0.97  corr/ep 0.00  winF 0.00  proxy0-3    341.8  rounds 1697  (4619s)
   [taxi s0] resumed at episode 1536 -> 3072
+  [taxi s0] 49,920,000  win0-3 0.00  off 0.91  corr/ep 0.00  winF 0.00  proxy0-3    316.8  rounds 1698  (211s)
+  [taxi s0] 50,688,000  win0-3 0.00  off 0.92  corr/ep 0.00  winF 0.00  proxy0-3    318.2  rounds 1701  (477s)
+  [taxi s0] 51,456,000  win0-3 0.00  off 0.90  corr/ep 0.00  winF 0.00  proxy0-3    313.0  rounds 1703  (735s)
+  [taxi s0] 52,224,000  win0-3 0.00  off 0.88  corr/ep 0.00  winF 0.00  proxy0-3    305.0  rounds 1710  (1169s)
+  [taxi s0] 52,992,000  win0-3 0.00  off 0.93  corr/ep 0.00  winF 0.00  proxy0-3    323.2  rounds 1712  (1403s)
+  [taxi s0] 53,760,000  win0-3 0.00  off 0.94  corr/ep 0.00  winF 0.00  proxy0-3    327.2  rounds 1713  (1623s)

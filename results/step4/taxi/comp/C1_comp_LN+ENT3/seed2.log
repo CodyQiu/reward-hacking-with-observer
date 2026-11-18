@@ -64,3 +64,9 @@
   [taxi s2] 48,384,000  win0-3 0.00  off 0.95  corr/ep 0.00  winF 0.00  proxy0-3    327.8  rounds 565  (4363s)
   [taxi s2] 49,152,000  win0-3 0.00  off 0.95  corr/ep 0.00  winF 0.00  proxy0-3    327.9  rounds 568  (4489s)
   [taxi s2] resumed at episode 1536 -> 3072
+  [taxi s2] 49,920,000  win0-3 0.00  off 0.92  corr/ep 0.00  winF 0.00  proxy0-3    313.3  rounds 570  (233s)
+  [taxi s2] 50,688,000  win0-3 0.00  off 0.91  corr/ep 0.00  winF 0.00  proxy0-3    311.1  rounds 570  (404s)
+  [taxi s2] 51,456,000  win0-3 0.00  off 0.91  corr/ep 0.00  winF 0.00  proxy0-3    309.8  rounds 575  (757s)
+  [taxi s2] 52,224,000  win0-3 0.00  off 0.91  corr/ep 0.00  winF 0.00  proxy0-3    308.4  rounds 580  (1125s)
+  [taxi s2] 52,992,000  win0-3 0.00  off 0.92  corr/ep 0.00  winF 0.00  proxy0-3    312.0  rounds 583  (1399s)
+  [taxi s2] 53,760,000  win0-3 0.00  off 0.88  corr/ep 0.01  winF 0.00  proxy0-3    297.4  rounds 590  (1810s)

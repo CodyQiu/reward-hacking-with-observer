@@ -1476,3 +1476,16 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LN+N4`; its extension to 1536 (1994671) has finished seeds.
   - Submitted: `... br_missing submit` → **1995309 **.
 - Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 100 (03:18–03:25): Taxi `C1_comp_LN+N4` 0/3 at 1536 (all hide) → extend 3072 (rule 6b; 1995400)
+
+- **The check.** **1995309** (Taxi `C1_comp_LN+N4`, all three seeds at 1536) COMPLETED (1:23:46).
+  - **0.075 / 0.090 / 0.052, all PLATEAU** (at 768: all hid as well).
+  - PPO's true return by round: s0 −66.1 / −66.1 / −66.0 / −65.9 / −89.7; s1 −63.3 ×4 / −87.2; s2 −63.2 ×4 / −87.1. It is never corrected in rounds 0–3 (window gap 1.000, corrections 1.00 below the target), and it exploits the final round. **It hides.**
+  - The best response, and the target, are corrected in round 0, then honest: true −88.2, then 124.7–124.8 ×4.
+  - The gaps fell from 768 (iteration 92), but every seed is still far above 0.03.
+- **Rule 6b.** `LN+N4` is a stage-1 exploration run, which extends 2× whatever the verdict, up to Taxi's 6144 cap.
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+N4 3072` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+N4 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1995400**.
+- Taxi comp runs now: `LN+ENT3` → 3072 (about 1680), `LN+ES10` and `LN+ES10+N4` (stage 2, about 72–96 of 768), `LN+N4` → 3072, `L` s1 (984 of 1536). `L`, `LE` and `LN` are finished: 0/3, all hiding.
+- **Budget:** comp 8 jobs (cap 30); 105 in all (limit 110). Cells DONE: 3 of 6.
