@@ -1264,3 +1264,17 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - The two failures are the fit's: the extra corrections in s21 and s22 (2.81 and 3.44 per episode) are all under-corrections, i.e. the best round at that level is still caught.
   - This matches the doc's pre-registered prediction (at least the pool's 4/6, limited by s21 and s22). Details are under "Exact predictions".
 - 107 jobs in all. No new submissions this iteration.
+
+## 2026-11-18, iteration 67 (05:12–05:18): **Tomato `L_confirm` failed (2/3: s21 deterred, 0.272)**; AS `LN` twin runs (1995464 1995465 )
+
+- **Check 1995437** (Tomato `I2_indiff_pool_L_confirm`, s20 and s22) COMPLETED (29:55).
+  - **s20: 0.005, CONVERGED; s22: 0.006, CONVERGED.** Both are corrected in round 0, then honest: true 45.2–46.9, then 428–430 per round (target 434.1).
+  - s21: 0.272, PLATEAU (iteration 58). It is honest from round 0 and never corrected.
+  - **Rule 4.** The only unconverged seed is PLATEAU and the run is finished, so **this confirmation failed (2/3).**
+- **Tomato confirmations now:**
+  - `L_confirm`: failed on s21;
+  - `LE_confirm`: s21 0.277 IMPROVING, extends to 3072 once s20 and s22 finish;
+  - `LN_confirm` (1995197): pending.
+  - **s21 is deterred in both finished Tomato confirmations so far.** It is a confirmation seed, and its failure is an exploration failure: it never finds the round-0 exploit, which costs it nothing afterwards under exact indifference.
+- **indiff_twin.** AS `LN` of both arms, from the wave-1 dry-run lines (`n_envs=64 ppo.batch_size=1600` on the AS base config): `I4_indiff_twin_LN` and `I4_indiff_twin_practice_LN` → **1995464 1995465 **. AS now has all 6 runs. 24 of 36 submitted; Tomato and tomato_large (12) remain.
+- 107 jobs in all (limit 110).
