@@ -2725,3 +2725,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - A slot freed up. The first wave-2 run from iteration 227's dry-run (`... ppo tomato_large P2swap LE+LR "<extras> ppo.learning_rate=0.0001"`, line run verbatim) → **1995599**.
 - Still queued: `+GL`, `+NET`, `+RS`, `+EP`, `+AN` and the four 6b runs (flag at the top of docs/step4_indiff_log.md).
 - 110 jobs in all.
+
+## 2026-11-18, iteration 230 (09:37–09:50): tomato_large base `LE` s0, s2: 0.231 (IMPROVING; PPO honest, the best response hides); check 1995672 (`LN+ES10+N4`)
+
+- **Check 1995567** (tomato_large `B1_base_LE` s2; s0 was checked earlier) COMPLETED (1:08:26).
+  - **s0 and s2: 0.231, IMPROVING.** PPO is corrected in round 0, then honest at about 508 per round. The best response and the target hide (84.2 ×4, then 65.0).
+  - s1 is at 600 of 1536 after its 48 h resume. Rule 4 waits for it.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995672** (tomato_large `B1_base_LN+ES10+N4`).
+- 110 jobs in all.

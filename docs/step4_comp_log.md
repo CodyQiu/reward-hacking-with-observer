@@ -1572,3 +1572,16 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: tomato_large `L_confirm` → **1995655** (the dry-run line, verbatim).
   - The three Boat Race wave-2 checks wait for slots (110 jobs).
 - comp 18 jobs (cap 30).
+
+## 2026-11-18, iteration 109 (09:37–09:50): tomato_large `LE_confirm` s20 0.038 (IMPROVING) → extend 3072 (1995667); Taxi `LN+ENT3` 0/3 at 3072 (all hide) → extend 6144 (1995668); Boat Race wave-2 checks (1995669–1995671)
+
+- **Check 1995459** (tomato_large `C1_comp_LE_confirm`, all three at 1536) COMPLETED (4:29:09).
+  - **s20: 0.038, IMPROVING. s21: 0.020 and s22: 0.010, CONVERGED.**
+  - PPO in all three: corrected once (s20, s21 farm about 4 corrections, like their best responses), then about 506–509 per round.
+  - **Rule 4:** extend 2× to 3072. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large C1_comp_LE_confirm 3072` printed `... --seeds 20 21 22 ... --resume --extend-to 3072`. `... submit` → ****.
+- **Check 1995518** (Taxi `C1_comp_LN+ENT3`, all three at 3072) COMPLETED (1:28:34).
+  - **0.118 / 0.176 / 0.102, all IMPROVING.** All three hide: true −64.9 to −72.3 per round, never corrected.
+  - The best response is corrected in round 0, then honest (124.7–124.8).
+  - **Rule 6b** (exploration runs extend 2× whatever the verdict): to 6144, Taxi's cap. Dry-run printed `... --run-id C1_comp_LN+ENT3 ... --resume --extend-to 6144`. `... submit` → ****.
+- **Rule 3.** `br_missing submit` → **1995669** (Boat Race `LN+GL`), **1995670** (`LN+LR`), **1995671** (`LN+RS`).
+- comp 20 jobs (cap 30); 110 in all.

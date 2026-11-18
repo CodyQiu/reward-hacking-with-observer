@@ -1088,3 +1088,7 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Submitted (dry-run line, verbatim): `N1_P1eq1_LE+ES10+ENT10` → **1995663**. `+ES30` and `+ES30+N4` wait at the top of the job queue (110 jobs).
 - **Flag (update to the s22 flag above):** if stage 2 also ends without the cell DONE, the cell is flagged for you with each seed's failure mode, and its unconverged runs keep extending.
 - 110 jobs in all. Cells DONE: as before.
+
+## 2026-11-18, iteration 102 (09:50): Boat Race stage 2 `N1_P1eq1_LE+ES10+ES30` → 1995673
+
+- The next run from iteration 101's stage-2 dry-run, line run verbatim. `+ES30+N4` is now first in the job queue.
