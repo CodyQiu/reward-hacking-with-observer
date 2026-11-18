@@ -2661,3 +2661,18 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - Submitted: `... br_missing submit` → **1994779** (no-reg `LN+ES10+N4`) and **1994780** (base `LN+N4`).
 - **Budget:** 51 jobs in all.
 - Cells DONE: 7 of 12.
+
+## 2026-11-18, iteration 224 (00:00–00:05): tomato_large no-reg `LN+ES10+N4` 0/3 at 1536 → extend 3072 (rule 6b; 1995145)
+
+- **The check.** **1994779** (tomato_large `B1_P1eq1_LN+ES10+N4`, all three at 1536) COMPLETED (2:30:36): **0.069 / 0.043 / 0.047** (IMPROVING / PLATEAU / IMPROVING).
+  - In every seed PPO is corrected once, then near honest (about 520.5 against 523).
+  - The best response farms 4 corrections (true about 515.8, then 522.4), collecting the +1 bonus each time, as the target does.
+- **Rule 6b (exploration runs extend 2× whatever the verdict, up to the 12,288 cap).**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_P1eq1_LN+ES10+N4 3072` printed `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10+N4 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1995145**.
+- **tomato_large no-reg so far:**
+  - `LN+ES10` (the base, extending to 6144);
+  - `LN+ES10+N4` (→ 3072);
+  - `LN+ES10+ENT3` (1990239, still training).
+  - Every checked seed takes 1 correction, then is near honest; the best responses take 3–4.
+- Cells DONE: 7 of 12.
