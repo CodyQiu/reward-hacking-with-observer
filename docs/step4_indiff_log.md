@@ -777,3 +777,12 @@ V_hide is 928.0 in every seed.
   - That is the same failure as all 15 checked Taxi comp seeds.
 - **Taxi `L` so far:** s1 1.231 (never exploits, never finishes the task), s2 0.155 (hides). s0 is at 240 of 768 and still exploits in view, which makes it slow.
 - Cells DONE: 1 of 6.
+
+## 2026-11-17, iteration 41 (22:14–22:18): checks for grid `LE+GL`, `LE+RS` (wave 2) and Tomato `L` s0
+
+- **Events.** Grid `I2_indiff_pool_LE+RS` (1994525, 1:33:58) and `LE+GL` have finished. Tomato `I2_indiff_pool_L` s0 has finished at 1536; s1 is at 1320 and s2 at 1512.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+GL`, `br_grid_I2_indiff_pool_LE+RS` and `br_tomato_I2_indiff_pool_L`.
+  - Submitted: `... br_missing submit` → **1994933**, **1994934** and **1994936** (in that order).
+- **Queue:** 47 jobs, none pending.
+- Cells DONE: 1 of 6.
