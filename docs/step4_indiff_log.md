@@ -466,5 +466,5 @@ V_hide is 928.0 in every seed.
   - **Rule 4:** all seeds have checks and the only unconverged one is PLATEAU, so the run is finished at 1536 (2/3) and is not extended.
 - **Grid `LN` s2: 0.093 PLATEAU, hides** (the same as `L` s2). s0 and s1 are at 1224. One of them (s1) is honest after its correction at its last evaluation (true about 16 per round).
 - **Boat Race `LE`: s0 0.024 and s2 0.001 CONVERGED.** Both are corrected once, then play honest laps (true 43.9 / 49.9 against 50). s2's target farms one extra correction (iteration 4), but PPO does not. s1 is at 1344.
-- **Grid rule 6b** waits until `LE` (s0–s2 at about 1100–1300 episodes) and `LN` have checks.
+- **Grid rule 6b** waits until `LE` (s0–s2 at 1008–1032 episodes) and `LN` have checks.
 - Cells DONE: 0 of 6.
