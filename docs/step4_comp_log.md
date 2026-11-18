@@ -1469,3 +1469,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+ENT3 3072` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 3072`.
   - Submitted: `... submit` → **1995223**.
 - Taxi comp: 18 of 18 checked seeds hide. Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 99 (01:38–01:41): Taxi `C1_comp_LN+N4` at 1536 → check 1995309 
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LN+N4`; its extension to 1536 (1994671) has finished seeds.
+  - Submitted: `... br_missing submit` → **1995309 **.
+- Cells DONE: 3 of 6.
