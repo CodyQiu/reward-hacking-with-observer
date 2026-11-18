@@ -1549,3 +1549,12 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 
 - The fourth stage-1 run, from iteration 103's `explore boat_race comp C1_comp_LN` dry-run (line run verbatim). All four stage-1 runs are now in: 1995494–1995496 and 1995510.
 - comp 18 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 106 (07:10–07:15): tomato_large `L_confirm` s20: 0.038, IMPROVING; Taxi `LN+ENT3` check waits for s2 (2976 of 3072)
+
+- **Check 1995467** (tomato_large `C1_comp_L_confirm` s20 at 1536) COMPLETED (1:30:21). **s20: 0.038, IMPROVING.**
+  - PPO: 4.00 corrections per episode; true 58.7, then 511.0–513.1 per round.
+  - Best response: 4 corrections; true 65.0, then about 512.5, then 521.0 in round 4. That is the same end state (farming the level).
+  - s21 and s22 are at 1248 of 1536. Rule 4 waits for them; if s20 is still IMPROVING then, the run extends to 3072.
+- **Rule 3.** `br_missing` also lists Taxi `C1_comp_LN+ENT3` (s0 and s1 at 3072; s2 at 2976). I wait for s2 so one check covers all three; the job count is at 110.
+- 110 jobs in all. Cells DONE: 3 of 6.

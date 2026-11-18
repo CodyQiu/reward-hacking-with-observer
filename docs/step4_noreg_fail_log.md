@@ -1044,3 +1044,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi N1_P1eq1_L 3072` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_L --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume --extend-to 3072`.
   - Submitted: `... submit` → **1994622**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-18, iteration 98 (07:10–07:15): Boat Race `N1_P1eq1_LE+ENT3_confirm` s20 at the 12,288 cap → check 1995513
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_boat_race_N1_P1eq1_LE+ENT3_confirm`. s20 has finished at the 12,288 cap; s21 is at 10,272 and s22 at 10,704.
+- Submitted: `... br_missing submit` → **1995513**.
+- Resume: nothing. Taxi `L` → 3072, `LE` → 1536 and `LN_confirm` are still training.
+- 110 jobs in all (limit 110).

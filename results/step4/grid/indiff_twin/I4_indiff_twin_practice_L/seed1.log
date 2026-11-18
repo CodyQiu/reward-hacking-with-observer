@@ -12,3 +12,6 @@
   [grid s1]  2,304,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3   2058.5  rounds 445  (4522s)
   [grid s1]  2,496,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2090.2  rounds 470  (4769s)
   [grid s1]  2,688,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2094.4  rounds 494  (5012s)
+  [grid s1]  2,880,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2094.5  rounds 518  (5255s)
+  [grid s1]  3,072,000  win0-3 0.25  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   1944.7  rounds 542  (5501s)
+  [grid s1]  3,264,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3   2108.0  rounds 569  (5804s)
