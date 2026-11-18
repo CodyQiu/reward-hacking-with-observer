@@ -2712,3 +2712,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - 6b stage 1, dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large P2swap B1_P2swap_LE` lists `+ENT3` (0.3), `+ES10`, `+N4` (`n_envs=64 ppo.batch_size=1600`) and `+ES10+N4`.
   - **Not submitted yet: all 110 job slots are in use.** These 10 runs are queued behind the comp campaign's Boat Race wave 2 (submitted this iteration) and go in as slots free up. See the budget flag at the top of docs/step4_indiff_log.md.
 - Budget: bonus 11 jobs (cap 60); 110 in all (limit 110). Cells DONE: 7 of 12.
+
+## 2026-11-18, iteration 228 (08:05–08:15): tomato_large base `B1_base_LE` s2 finished at 1536 → check 1995567
+
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_tomato_large_B1_base_LE`. s2 has finished at 1536; s0 was checked; s1 is at 576 after its 48 h resume.
+- `... submit` → **1995567**.
+- The tomato_large swap wave 2 and 6b runs (iteration 227) are still queued for job slots.
+- 110 jobs in all.
