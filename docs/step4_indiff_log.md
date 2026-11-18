@@ -56,6 +56,8 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | AS `L_confirm` s20 | 0.000 (CONVERGED) | 1.00; −100.1, then 449.3–449.4 (honest) | **2**; −100, 400, then 450 ×3 |
 | AS `L_confirm` s21 | 0.000 (CONVERGED) | 1.00; −115.0, then 449.1–449.4 | 1; −100, then 450 ×4 |
 | AS `L_confirm` s22 | 0.000 (CONVERGED) | 1.00; −109.2, then 449.1–449.3 | **2**; −100, 400, then 450 ×3 |
+| Boat Race `L_confirm` s21 | 0.001 (CONVERGED) | 1.00; −94, then 49.8–50.0 (honest) | 1; −94, then 50 ×4 |
+| Boat Race `L_confirm` s22 | 0.001 (CONVERGED) | 1.00; −94, then 49.4–50.0 | **2**; −94, then 50 ×4 |
 | AS `LE_confirm` s20 | 0.013 (CONVERGED) | 1.00; −51.4, −97.2, then 449.0–449.5 (corrected in round 1, then honest) | 2; −100, 400, then 450 ×3 |
 | AS `LE_confirm` s21 | 0.000 (CONVERGED) | 1.00; −110.4, then 448.8–449.3 | 1; −100, then 450 ×4 |
 | AS `LE_confirm` s22 | 0.001 (CONVERGED) | 1.00; −104.1, then 447.3–449.2 | 2; −100, 400, then 450 ×3 |
@@ -723,4 +725,14 @@ V_hide is 928.0 in every seed.
   - Boat Race's other confirmations: `L_confirm` (check 1994725 queued; s20 still training) and `LN_confirm` (1994211, training). Their s20 is the same under-corrected seed.
 - **AS `LE_confirm`: 0.013 / 0.000 / 0.001**, also 3/3. The cell is already DONE, so this is information only.
   - s20 is corrected in round 1 rather than round 0, then honest.
+- Cells DONE: 1 of 6.
+
+## 2026-11-17, iteration 36 (21:23–21:30): Boat Race `L_confirm` s21, s22 CONVERGED; checks 1994781, 1994782
+
+- **The check.** **1994725** (Boat Race `L_confirm` s21, s22 at 1536) COMPLETED (3:56): **0.001 / 0.001**, CONVERGED. Both are corrected once, then honest laps. s20, the under-corrected seed, is still training.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed:
+    - `br_taxi_I2_indiff_pool_L` (a further seed finished);
+    - `br_boat_race_I2_indiff_pool_LN_confirm` (finished seeds).
+  - Submitted: `... br_missing submit` → **1994781** (Taxi `L`) and **1994782** (Boat Race `LN_confirm`).
 - Cells DONE: 1 of 6.
