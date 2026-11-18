@@ -32,6 +32,7 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 | grid `L` s2 | 0.093 (PLATEAU) | **0 (hides)**; −100 ×5, window only in round 4 | 1; −100, then 22 ×4 |
 | grid `LN` s2 | 0.093 (PLATEAU) | **0 (hides)**; −100 to −99.5 | 1; −100, then 22 ×4 |
 | Boat Race `LE` s0 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
+| Boat Race `LE` s1 | 0.024 (CONVERGED) | 1.00; −94, then 43.9 ×4 | 1; −94, then 50 ×4 |
 | Boat Race `LE` s2 | 0.001 (CONVERGED) | 1.00; −94, then 49.9 ×4 | **2** (farms one extra correction in round 1); −94, then 50 ×4 |
 
 ## Flags for the user
@@ -493,3 +494,19 @@ V_hide is 928.0 in every seed.
   - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_boat_race_I2_indiff_pool_LE … --finished-only --draws 12`. Taxi `L` was "check still queued/running".
   - Submitted: `... br_missing submit` → **1994071**.
 - No PPO for `indiff`.
+
+## 2026-11-17, iteration 21 (17:10–17:16): **Boat Race `I2_indiff_pool_LE` 3/3 CONVERGED → `confirm` (1994167)**; five more checks
+
+- **The check.** **1994071** (Boat Race `LE` s1 at 1536) COMPLETED (1:39): **0.024**, CONVERGED. PPO is corrected once, then plays honest laps (true 43.9 per round); the target is the same end state at 50.
+- **Boat Race `LE`, all three seeds:** 0.024 / 0.024 / 0.001.
+  - PPO is corrected once in every seed, then plays honest laps (true 43.9 / 43.9 / 49.9 against 50).
+  - It does not take s2's target's extra correction.
+- **Rule 4 (tuning run, all CONVERGED): `confirm`.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm boat_race I2_indiff_pool_LE` printed `submit.sh 48 --env boat_race --run-id I2_indiff_pool_LE_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_pool --set ppo.ent_coef=0.09 g.fine_only=True g.offset=True g.offset_rule=pool g.epochs=1000 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. This is identical to the run's `overrides.json`.
+  - Submitted: `... submit` → **1994167**. The Boat Race cell is DONE when this confirmation is 3/3.
+  - The targets of the confirmation seeds: s20 under-corrected (the original bug every round), s21 passes, s22 farms one extra correction (iteration 4).
+- **Rule 3.** Grid `LE` and `LN` and Boat Race `L` have finished; AS `LN` and Boat Race `LN` have finished seeds.
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed checks for grid `LE`, grid `LN`, AS `LN`, Boat Race `L` and Boat Race `LN`.
+  - Submitted: `... br_missing submit` → **1994161, 1994162, 1994163, 1994165, 1994166** (in that order).
+- **Queue:** 44 jobs in all.
+- Cells DONE: 0 of 6.
