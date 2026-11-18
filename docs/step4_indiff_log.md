@@ -159,6 +159,8 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 |---|---|---|---|
 | grid / `I3_indiff_mean_L` / s0 (1536) | 0.012 (CONVERGED) | corrected in round 0, then never again; true −100 every round (never reaches the goal: the grid caveat) | corrected in round 0, then honest: −100, then 22 ×4 |
 | boat_race / `I3_indiff_mean_L` / s0 (1536) | **0.073** (not converged; no target yet) | **hides**: never corrected, true −82.0 ×4, then −94.0 in round 4 | (pending; best response: corrected in round 0, then honest, −94.0 then 50.0 ×4) |
+| boat_race / `I3_indiff_mean_L` / s1 (1536) | **0.001** (CONVERGED) | corrected in round 0, then never again; true −94.0, then 49.8–49.9 ×4 (honest 50) | (pending) |
+| boat_race / `I3_indiff_mean_L` / s2 (1536) | **0.000** (CONVERGED) | corrected in round 0, then never again; true −94.0, then 49.9–50.0 ×4 | (pending) |
 | taxi / `I3_indiff_mean_L` / s1 (768) | **1.240** (not converged; no target yet) | never exploits and never corrected: true and received −90.8 every round; 0.0 deliveries at level 1 | (pending; best response: corrected in round 0, then honest, true −88.2 then 124.7 ×4, V_br 1897.5) |
 
 ## Flags for the user
@@ -1394,3 +1396,18 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Boat Race `I3_indiff_mean_LN` (all three at 1536).
   - `... submit` → **1995538**, **1995539**, **1995540**.
 - 110 jobs in all. The twin Tomato `LE` pair is next in the queue.
+
+## 2026-11-18, iteration 77 (08:01–08:08): Tomato `LE_confirm` s20 0.008, s22 0.010, s21 0.277 IMPROVING → extend 3072 (1995546); **indiff_mean Boat Race `L` s1, s2 CONVERGED and honest**; twin Tomato `LE` runs (1995547, 1995548)
+
+- **Check 1995491** (Tomato `I2_indiff_pool_LE_confirm`, s20 and s22) COMPLETED (24:01).
+  - **s20: 0.008 and s22: 0.010, CONVERGED.** Both are corrected in round 0, then honest: about 424 per round (target 434.1).
+  - s21: 0.277, IMPROVING (iteration 62). It is deterred: honest from round 0, never corrected.
+  - **Rule 4:** s21 is IMPROVING and all seeds are now checked, so extend 2× to 3072.
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato I2_indiff_pool_LE_confirm 3072` printed `submit.sh 48 --env tomato --run-id I2_indiff_pool_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato/indiff_pool --resume --extend-to 3072`. `... submit` → **1995546**.
+- **Check 1995492** (Boat Race `I3_indiff_mean_L`, s1 and s2) COMPLETED (8:24).
+  - **s1: 0.001 and s2: 0.000, CONVERGED.** Both are corrected in round 0, then honest at 49.8–50.0 per round (honest 50). These are the first indiff-type Boat Race seeds that are honest after the correction.
+  - s0: 0.073, hides (iteration 72).
+  - The verdict class for s0 (IMPROVING or PLATEAU) needs the Boat Race indiff_mean target (1995172, still pending), so rule 4 for this run waits for it.
+- AS `I3_indiff_mean_L` (1995176) finished at 3072. Its pending check 1995538 will cover all three seeds.
+- **indiff_twin.** Queue items: Tomato `I4_indiff_twin_LE` → **1995547** and `I4_indiff_twin_practice_LE` → **1995548**. 28 of 36 submitted.
+- 110 jobs in all; 18 runs still queued.
