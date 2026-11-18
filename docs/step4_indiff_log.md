@@ -13,7 +13,7 @@ This log is append-only below the three summary sections. Every driver command r
 
 ## Status
 
-**Targets submitted 2026-11-17 01:41: 11 jobs per campaign (iteration 0). First started 06:39 after about 5 h queued (Priority). Finished: indiff AS 6/6, grid 6/6, Tomato 6/6, Boat Race 3/6, Taxi 0/6 (hides), tomato_large 2/6; indiff_pool grid 6/6, AS 4/6, Tomato 6/6, Taxi 3/6, Boat Race 3/6.**
+**Targets submitted 2026-11-17 01:41: 11 jobs per campaign (iteration 0). First started 06:39 after about 5 h queued (Priority). Finished: indiff AS 6/6, grid 6/6, Tomato 6/6, Boat Race 3/6, Taxi 0/6 (hides), tomato_large 2/6; indiff_pool grid 6/6, AS 4/6, Tomato 6/6, Taxi 3/6, Boat Race 3/6, tomato_large 2/6. All 72 targets are in.**
 - grid, AS, Tomato, Taxi and Boat Race: one job each, seeds 0–2 and 20–22.
 - tomato_large: one job per seed.
 
@@ -205,10 +205,13 @@ V_hide is 928.0 in every seed.
 | 0 | 1992086 (4:07:55; converged) | **FAIL A3 (hiding)** | corrected in round 0, then never again | 65.0, 522.6 ×3, 506.9 | 3,919.6 / 3,686.8 | 260.53 vs 261.76 (−1.22); w 60.76 → ok | 0.73 vs 8.98, **−8.25**; w 1.77, δ 1.77 → TOO LARGE |
 | 1 | 1992087 (8:42:38; **not converged**) | **FAIL A3 (hiding)** | 2.25 corrections (1.0, 0.45, 0.34, 0.46) | 65.0, 510.3, 513.1, 509.3, 503.0 | 3,927.5 / 3,686.8 | 261.13 vs 260.85 (+0.28) → ok | 8.27 vs 8.76, −0.49 → ok; level 3: 2.23 vs 4.50, **−2.27** (w 1.83) → TOO LARGE |
 | 21 | 1992090 (8:43:28; converged) | **PASS** | 2.05 corrections (1.0, 0.39, 0.35, 0.32) | 65.0, 515.6, 516.3, 516.7, 516.9 | 3,929.8 / 3,686.8 | 262.87 vs 262.87 (−0.00) → ok | 4.44 vs 4.45, −0.01 → ok |
+| 2 | 1992088 (9:55:59; converged) | **FAIL A3 (hiding)** | 2.64 corrections (1.0, 0.56, 0.53, 0.55) | 65.0, 508.3, 508.7, 507.5, 504.5 | 3,930.3 / 3,686.8 | 261.83 vs 261.46 (+0.36) → ok | 7.67 vs 7.72, −0.06 → ok; level 4: 1.64 vs 3.95, **−2.31** (w 1.71) → TOO LARGE |
 | 20 | 1992089 (8:38:46; converged) | **PASS** | 1.97 corrections (1.0, 0.35, 0.32, 0.30) | 65.0, 517.2, 517.6, 517.9, 518.1 | 3,929.8 / 3,686.8 | 263.00 vs 263.02 (−0.02) → ok | 5.69 vs 5.69, +0.00 → ok |
 | 22 | 1992091 (4:30:03; converged) | **FAIL A3 (hiding)** | corrected in round 0, then never again | 65.0, 522.6 ×3, 511.6 | 3,922.7 / 3,686.8 | 261.45 vs 262.33 (−0.88) → ok | 0.65 vs 8.75, **−8.10**; w 1.19, δ 2.20 → TOO LARGE |
 
 - **s20 passes, the same as under the exact rule** (exact: 1.84 corrections, true about 518). Here the optimum is corrected again (under-correction, 0.30–0.35 per round), so its own level-2 and level-3 final rounds enter the pool, and the later levels are priced almost exactly (err ≤ 0.05).
+- **s2 fails A3 by partial hiding.** The pool underpays the fourth level by 2.31 per round (w 1.71), so the optimum touches the window less often than the best round: 0.56 vs 0.70 at level 1 in round 1, 0.42 vs 0.64 at level 2, 0.36 vs 0.63 at level 3. The exact rule's s2 fails A3 too, with a smaller shortfall (0.61 vs 0.70).
+- **Summary (all 6 seeds): PASS 2/6 (s20, s21), the same two seeds as the exact rule.** All fail by avoiding a later correction that the pool underpays, not by farming. The exact rule fails s0, s1, s2 and s22 by under-correction plus slight hiding.
 - **s21 passes like s20**, matching the exact rule's s21 (exact: 1.92 corrections, true about 517). The levels are priced almost exactly (err ≤ 0.12).
 - **s1 fails A3, and its fixed point did not converge** (1.27 → 2.02 → 1.90 → 2.08 → 2.25 corrections). The pool underpays level 3 by 2.27 per round (w 1.83), so the optimum hides from the third correction. Windows at level 2 are 0.07 and 0.39 against the best round's 0.69. The exact rule's s1 fails too, but by under-correction (3.18 corrections).
 - **s0 and s22: the same failure as Taxi pool s2.**
@@ -468,3 +471,25 @@ V_hide is 928.0 in every seed.
 - **Boat Race `LE`: s0 0.024 and s2 0.001 CONVERGED.** Both are corrected once, then play honest laps (true 43.9 / 49.9 against 50). s2's target farms one extra correction (iteration 4), but PPO does not. s1 is at 1344.
 - **Grid rule 6b** waits until `LE` (s0–s2 at 1008–1032 episodes) and `LN` have checks.
 - Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 20 (16:41–16:48): indiff_pool tomato_large s2 FAIL A3; all 72 targets in; Boat Race `LE` s1 → check 1994071
+
+- **Target finished.** **1992088** (`targets_tomato_large_indiff_pool_s2`) COMPLETED (9:55:59); converged.
+  - **FAIL A3** by partial hiding: the pool underpays the fourth level by 2.31 per round (w 1.71). 2.64 corrections; true about 505–509. Recorded under "Exact predictions".
+- **All 72 targets are in.** Seeds passing A1–A3, of 6:
+
+  | Env | exact (`indiff`) | pool (`indiff_pool`) |
+  |---|---|---|
+  | grid | 6 | 6 |
+  | AS | 6 | 4 |
+  | Tomato | 6 | 6 |
+  | Boat Race | 3 | 3 |
+  | Taxi | 0 | 3 |
+  | tomato_large | 2 | 2 |
+  | **total** | **23 / 36** | **24 / 36** |
+
+- **indiff_pool PPO, rule 3.**
+  - Boat Race `I2_indiff_pool_LE` (1993593) COMPLETED (1:33:10), so s1 has finished at 1536.
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 2 4 br_boat_race_I2_indiff_pool_LE … --finished-only --draws 12`. Taxi `L` was "check still queued/running".
+  - Submitted: `... br_missing submit` → **1994071**.
+- No PPO for `indiff`.
