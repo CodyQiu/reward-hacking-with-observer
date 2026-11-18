@@ -1535,3 +1535,12 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - **Not submitted yet.** The job count is at the 110 cap after wave 2. They go in as slots free up (flag at the top of docs/step4_indiff_log.md: the budget is now binding).
 - tomato_large `L_confirm` s20: check 1995467 is queued; `LE_confirm`: check 1995459 is queued.
 - **Budget:** comp 14 jobs (cap 30); 110 in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 104 (06:34–06:40): Boat Race rule 6b stage 1, 3 of 4 runs submitted (1995494–1995496)
+
+- Slots freed up, so I submitted queued Boat Race exploration runs from iteration 103's dry-run (`CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race comp C1_comp_LN`), lines run verbatim:
+  - `C1_comp_LN+ENT3` → **1995494**;
+  - `C1_comp_LN+ES10` → **1995495**;
+  - `C1_comp_LN+N4` → **1995496**.
+- `C1_comp_LN+ES10+N4` is next in the queue (flag at the top of docs/step4_indiff_log.md).
+- comp 17 jobs (cap 30); 110 in all.

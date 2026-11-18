@@ -1348,3 +1348,13 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Submitted (dry-run lines, verbatim): Tomato `LE_confirm` → **1995491** and Boat Race `I3_indiff_mean_L` → **1995492**.
   - Waiting for slots: grid `I3_indiff_mean_L` s2, then the queue (flag at the top). The grid information-only checks stay held.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 73 (06:34–06:40): grid `I3_indiff_mean_L` finished → check 1995493; Tomato `LE_confirm` finished (extension waits for its checks)
+
+- **Events.** grid `I3_indiff_mean_L` (1995173) COMPLETED (6:22:53). Tomato `I2_indiff_pool_LE_confirm` (1995191) COMPLETED (4:50:57). grid `LE+EP_confirm` (1995225) COMPLETED; it is information only (the grid cell is DONE).
+- **Rule 3.** The dry-run's `br_grid_I3_indiff_mean_L` line, run verbatim → **1995493** (s1, s2; s0 was 0.012).
+- **Tomato `LE_confirm`.**
+  - s21 is 0.277, IMPROVING (iteration 62), so rule 4 extends the run to 3072.
+  - Its check 1995491 (submitted for s22) is still pending. With `--finished-only` it will now cover s20 as well.
+  - I submit the extension once that check has run: an extension started first would rewrite s20's and s22's checkpoints before they are checked at 1536.
+- 110 jobs in all.
