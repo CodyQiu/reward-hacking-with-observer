@@ -1167,3 +1167,21 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - `I4_indiff_twin_practice_L` → **1995378**: the same plus `twin.practice=0.25`.
   - **106 jobs** in all now.
   - **Still to submit (16):** AS `LE` and `LN` of both arms, and Tomato and tomato_large (6 each).
+
+## 2026-11-18, iteration 61 (03:35–03:50): checks for Tomato `LE_confirm` s21, Taxi `LN` s0 (indiff_pool), Taxi `L` s1 and Boat Race `L` s0 (indiff_mean, the first ones); grid information-only checks held back (110-job cap)
+
+- **Tick.** 105 jobs (55 pending). Resume dry-runs: nothing new for any indiff campaign. `indiff_twin` lists nothing to resume and no checks yet: its first runs are pending.
+- **Checks (rule 3).** `br_missing` (dry-run) listed:
+  - indiff_pool: grid `LE+GL_confirm`, grid `LE+RS_confirm`, Tomato `LE_confirm` (s21 finished; s20 at 312, s22 at 504), Taxi `LN` (s0 finished; s1 was checked in 1995276; s2 at 96 of 768);
+  - indiff_mean: Taxi `I3_indiff_mean_L` (s1 finished at 768; s0 at 48, s2 at 24) and Boat Race `I3_indiff_mean_L` (s0 finished at 1536; s1 at 432, s2 at 528).
+- **Submitted**, by running the dry-run's lines verbatim:
+  - Tomato `LE_confirm` → **1995411**;
+  - Taxi `LN` (indiff_pool) → **1995412**;
+  - Taxi `I3_indiff_mean_L` → **1995413** (18 h, 4 draws: the driver's indiff_mean settings);
+  - Boat Race `I3_indiff_mean_L` → **1995414**.
+- **Held back:** the two grid confirmations. The grid cell is DONE (iteration 55), so these checks are information only, and the job count is at the 110 cap. They go in once slots are free.
+- **What the reports already show** (target gaps, not verdicts):
+  - **Tomato `LE_confirm` s21:** true 424.6 / 425.2 / 426.1 / 424.6 / 426.2, never corrected: honest from round 0, as `L_confirm` s21 (0.272). If the check agrees, **seed 21 is deterred in both Tomato confirmations**, and `LE_confirm` fails as well. `LN_confirm` (1995197) is still pending.
+  - **Taxi `LN` s0 (indiff_pool):** true −90.0 in every round, never corrected (corrections 0.99 below the target). It hides, like the other Taxi seeds.
+- Deliveries for the two Taxi seeds: `experiments/step4_level_play.py` is running. They are logged with the checks.
+- `indiff_twin`: 20 of 36 runs submitted. The other 16 (AS `LE`/`LN`, Tomato, tomato_large) wait for slots: 110 jobs in all now.

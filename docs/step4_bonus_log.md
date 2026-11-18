@@ -2676,3 +2676,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LN+ES10+ENT3` (1990239, still training).
   - Every checked seed takes 1 correction, then is near honest; the best responses take 3–4.
 - Cells DONE: 7 of 12.
+
+## 2026-11-18, iteration 225 (03:35–03:50): tomato_large swap `B1_P2swap_LE` s2 → check 1995410
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_tomato_large_B1_P2swap_LE`. All three seeds are at 1536; s0 and s1 already have checks, s2 does not.
+- Submitted: the dry-run's line, run verbatim → **1995410**.
+- Resume dry-run: only the held Tomato no-reg `B1_P1eq1_LN_confirm` (NODE_FAIL, awaiting the user; flagged at the top).
+- 110 jobs in all (limit 110).
