@@ -2575,3 +2575,22 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - s0 has finished at 12,288. s1 (12,072) and s2 (12,120) are still in 1990670. The job checks whichever seeds have finished when it starts; any seed it misses gets its own check later.
 - **Correction to iteration 216.** I wrote there that `br_missing` did not list `LN+N4` because its training job was still running. That reason is wrong: `br_missing` only skips runs with a check job queued, not runs whose training job is still running (`scripts/farmshare/step4_optimal.sh`, the `br_missing` case). At that dry-run (14:39), s0 had not yet finished; it finished before the 14:41 commit.
 - Cells DONE: 7 of 12.
+
+## 2026-11-17, iteration 218 (17:40–17:45): tomato_large no-reg `LN+ES10` 0/3 at 3072 (s1 IMPROVING) → extend 6144 (1994255)
+
+- **The check.** **1992811** (tomato_large `B1_P1eq1_LN+ES10` at 3072) COMPLETED (9:03:52).
+
+  | Seed | BR gap 1536 → 3072 | Verdict | PPO | Best response | Target |
+  |---|---|---|---|---|---|
+  | s0 | 0.073 → **0.060** | PLATEAU | 1.00 correction; true 65, then about 519.6 | 4.00 corrections; 515.7–515.9, then 522.5 | 3 corrections |
+  | s1 | 0.055 → **0.050** | IMPROVING | 1.00; 65, then about 519.9 | 3.93; 515.4–516.3, then 522.4 | 4 corrections (not converged) |
+  | s2 | 0.037 → **0.037** | PLATEAU | 1.00; 65, then about 520.0 | 4.00; 515.7–515.8, then 522.5 | 3 corrections |
+
+  - At 3072, PPO is corrected once and then plays near honest (about 520 against 523). The best response, like the target, farms the corrections (3–4 per episode, +1 bonus each) with true about 516.
+  - At 1536 PPO took 3–4 corrections (iteration 182). It has since dropped to 1, which pays less under its own corrections.
+- **Rule 4 (wave-1 run, one seed IMPROVING, below the 12,288 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_P1eq1_LN+ES10 6144` printed `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 6144`.
+  - Submitted: `... submit` → **1994255**.
+  - The 1536 → 3072 leg took 21 h; this one should take about 42 h, so it may need a 48 h resume.
+- The cell's 6b runs (`+ES10+ENT3` 1990239, `+ES10+N4` 1990240) are still training.
+- Cells DONE: 7 of 12.

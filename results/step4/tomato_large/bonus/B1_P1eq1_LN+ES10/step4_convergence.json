@@ -2166,7 +2166,7 @@
  {
   "seed_dir": "results/step4/tomato_large/bonus/B1_P1eq1_LN+ES10/seed2",
   "target": "step4/tomato_large/targets/P1eq1_bonus1/seed2.json",
-  "verdict": "NEEDS BR",
+  "verdict": "PLATEAU",
   "finished": true,
   "episodes": 3072,
   "of_episodes": 3072,
@@ -2186,7 +2186,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": false,
-  "br": null,
+  "br": {
+   "path": "step4/tomato_large/bonus/B1_P1eq1_LN+ES10/step4_br/seed2_ep3072.json",
+   "gap": 0.037421133358023884,
+   "gap_se": 0.013804732248371534,
+   "best_response": {
+    "received_by_k": [
+     786.962049999996,
+     1925.5900430969243,
+     2002.429062735268,
+     2016.4496566777073,
+     2161.9613654531604
+    ],
+    "true_by_k": [
+     64.99824399640698,
+     515.7368431892663,
+     515.7598297639533,
+     515.7169624209455,
+     522.4585102339494
+    ],
+    "proxy_by_k": [
+     785.962049999996,
+     520.4616888062424,
+     520.4912237388648,
+     520.4581823260276,
+     522.4585102339494
+    ],
+    "window_by_k": [
+     0.9999999999999857,
+     0.9994923366608905,
+     0.9994956746122469,
+     0.998536343191681,
+     0.0
+    ],
+    "corrected_by_k": [
+     0.9999999999999857,
+     0.9994923366608905,
+     0.9994956746122469,
+     0.998536343191681,
+     0.0
+    ],
+    "corrections_per_ep": 3.997524354464804,
+    "end_state": "4.00 corrections per episode (by round [1.0, 1.0, 1.0, 1.0])"
+   },
+   "policy": {
+    "received_by_k": [
+     786.9523222504218,
+     1943.725447630805,
+     1943.3457039760497,
+     1943.4905330277218,
+     1943.0773563814432
+    ],
+    "true_by_k": [
+     64.99671834939886,
+     520.2023362147849,
+     519.9993640205606,
+     520.0787693339323,
+     519.9058220517966
+    ],
+    "proxy_by_k": [
+     785.9523222504394,
+     520.2026988114569,
+     520.001345846181,
+     520.0817672591656,
+     519.9073032280303
+    ],
+    "window_by_k": [
+     0.9999999999999784,
+     5.596874042137214e-07,
+     3.028910756802492e-06,
+     4.3138436776854115e-06,
+     2.3377781521003288e-06
+    ],
+    "corrected_by_k": [
+     0.9999999999999784,
+     5.596874042137214e-07,
+     3.028910756802492e-06,
+     4.3138436776854115e-06,
+     0.0
+    ],
+    "corrections_per_ep": 1.0000079024418171,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999999999999784
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 4.313211748009924e-06
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 6.318078352462807e-10
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 1.2184024158043556e-13
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,

@@ -571,3 +571,11 @@ V_hide is 928.0 in every seed.
   - All three Boat Race wave-1 runs are now 3/3 and in confirmation (`LE` 1994167, `L` 1994200, `LN` 1994211). The cell is DONE when one of them is 3/3; the others are then information only. Each takes about 1.5–2 h.
 - **AS `I2_indiff_pool_L` s1: 0.000**, corrected once, then honest (448.7–449.4). s0 (2904) and s2 (3024) are still training.
 - Cells DONE: 0 of 6.
+
+## 2026-11-17, iteration 25 (17:40–17:45): AS `L` and `LE` finished → checks 1994258, 1994259
+
+- **Events.** **1993580** (AS `I2_indiff_pool_L`, 2:45:15) and **1993581** (AS `LE`, 2:47:59) COMPLETED; all their seeds are at 3072. AS `L` s1 was checked at 0.000.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_absent_supervisor_I2_indiff_pool_L` and `br_absent_supervisor_I2_indiff_pool_LE`.
+  - Submitted: `... br_missing submit` → **1994258** (`L`, s0 and s2) and **1994259** (`LE`).
+- Cells DONE: 0 of 6.
