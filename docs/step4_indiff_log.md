@@ -1645,3 +1645,9 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Rule 3.** `br_missing` (dry-run) listed indiff_pool Tomato `I2_indiff_pool_LN_confirm`, twin Boat Race `practice_LE`, and comp Boat Race `LN+LR`, `LN+RS` (both at 3072).
   - Submitted (dry-run line, verbatim): Tomato `LN_confirm` → **1995926**. This is the last open Tomato indiff_pool confirmation: `L` failed, and `LE` is extending for s21.
   - The other three wait for slots (110 jobs; a bonus resume took precedence under rule 1).
+
+## 2026-11-18, iteration 96 (13:00–13:10): twin checks for Boat Race pure `L` at 3072 (1995942: does the overpayment shrink?) and AS practice `L` (1995944)
+
+- **Events.** Boat Race pure `I4_indiff_twin_L` finished its extension to 3072 (1995638). AS practice `I4_indiff_twin_practice_L` has finished seeds.
+- **Rule 3.** Dry-run lines run verbatim: Boat Race pure `L` → **1995942**; AS practice `L` → **1995944**. The Boat Race practice `LE` check waits for a slot.
+- 110 jobs in all.

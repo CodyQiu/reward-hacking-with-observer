@@ -1675,3 +1675,16 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - `C1_comp_LN+AN` (1995477) COMPLETED (3:38:32). s0 and s1 were 0.021 (CONVERGED); s2 decides whether the run is 3/3. The dry-run line, run verbatim → **1995934**.
 - Still waiting for slots: the `LN+RS` check (at 3072) and the `LN+ENT3` extension.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 123 (13:00–13:10): **Boat Race wave 2 `LN+AN` 3/3 CONVERGED** → `confirm` (1995940); `LN+LR` finished 2/3 at 3072; tomato_large `L_confirm` s20 0.038 → extend 3072 (1995941); `LN+RS` check 1995939
+
+- **Check 1995934** (`C1_comp_LN+AN` s2): **0.000.** With s0 and s1 at 0.021, the run is **3/3 CONVERGED**.
+  - All three farm 4 corrections and are honest by the true reward (−94, then 50 ×4), like their best responses and the comp target ("the level farms; honest by the true reward").
+  - **Rule 4 → confirm.** Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm boat_race C1_comp_LN+AN` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN+AN_confirm --seeds 20 21 22 ... --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.5 anneal.floor=0.1 n_envs=64`. `... submit` → **1995940**.
+  - Its s20 is the seed that failed every earlier Boat Race confirmation, on its under-corrected target.
+- **Check 1995928** (`LN+LR` at 3072): **0.021, 0.022 (CONVERGED) / 0.037 (PLATEAU).** **Finished at 2/3** (rule 4).
+- **Check 1995655** (tomato_large `C1_comp_L_confirm`, all three at 1536): **s20 0.038 (IMPROVING); s21 0.015, s22 0.006 (CONVERGED).**
+  - **Rule 4 → extend 3072.** Dry-run printed `... --run-id C1_comp_L_confirm --seeds 20 21 22 ... --resume --extend-to 3072`. `... submit` → **1995941**.
+- **Rule 3.** `LN+RS` (at 3072) → **1995939**.
+- Still waiting for a slot: the `LN+ENT3` extension (6b).
+- comp 25 jobs (cap 30); 110 in all.

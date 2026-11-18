@@ -2752,3 +2752,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The resume dry-run (`CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume`) lists this run and the held Tomato `B1_P1eq1_LN_confirm` (NODE_FAIL, awaiting the user).
   - **I ran only this run's line, verbatim**: `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **1995924**. `resume submit` would also have resubmitted the held run; the permission check stopped that attempt, rightly. The held run stays held.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 235 (13:00): tomato_large base `B1_base_LN+ES10+N4` finished (1990471, 1-23:38) — check waits for a slot
+
+- `br_missing` (dry-run) lists `br_tomato_large_B1_base_LN+ES10+N4`. All 110 slots are in use; it goes in at the next free slot.
