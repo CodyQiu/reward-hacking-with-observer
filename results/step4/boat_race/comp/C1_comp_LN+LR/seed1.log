@@ -62,3 +62,8 @@
   [boat_race s1] 47,616,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     87.3  rounds 1951  (5355s)
   [boat_race s1] 48,384,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     87.4  rounds 1975  (5420s)
   [boat_race s1] 49,152,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     87.4  rounds 1999  (5485s)
+  [boat_race s1] resumed at episode 1536 -> 3072
+  [boat_race s1] 49,920,000  win0-3 0.25  off 0.22  corr/ep 1.00  winF 0.00  proxy0-3     79.3  rounds 2025  (75s)
+  [boat_race s1] 50,688,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3     85.3  rounds 2049  (142s)
+  [boat_race s1] 51,456,000  win0-3 0.25  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3     86.0  rounds 2073  (209s)
+  [boat_race s1] 52,224,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3     86.3  rounds 2098  (278s)

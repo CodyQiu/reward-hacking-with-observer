@@ -1619,3 +1619,8 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 
 - `C1_comp_LN+NET` (1995474) COMPLETED (2:45:08). `br_missing submit` → **1995756** (s0; s1 0.216 and s2 0.184 were PLATEAU).
 - 110 jobs in all.
+
+## 2026-11-18, iteration 115 (11:21): Boat Race 6b `LN+ES10` finished at 1536 → check 1995780 
+
+- `C1_comp_LN+ES10` (1995495) COMPLETED (1:35:03). `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995780 **.
+- 110 jobs in all.
