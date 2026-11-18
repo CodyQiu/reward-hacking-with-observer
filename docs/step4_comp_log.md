@@ -1412,3 +1412,14 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Submitted: `... submit` → **1994671**.
 - **Budget:** 9 comp jobs (limit 30).
 - Cells DONE: 3 of 6.
+
+## 2026-11-17, iteration 93 (20:37–20:43): Taxi `C1_comp_LN+ENT3` finished (s0 reached 768) → check 1994696; Taxi `C1_comp_LE` s1 at the cap → check 1994697
+
+- **Events.**
+  - **1991185** (Taxi `C1_comp_LN+ENT3`) COMPLETED (19:35:29). At 11:22, s0 was at 48 episodes, exploiting in view with about 3.5 PBRR rounds per episode. It then stopped exploiting in view, so PBRR rounds stopped and it sped up. Its final log line reads `24,576,000  win0-3 0.00  off 0.96  corr/ep 0.00 … proxy0-3 342.7  rounds 1606`: off-window exploit 0.96 with clean windows, i.e. it hides, like every other Taxi comp seed.
+  - Taxi `C1_comp_LE` (extension to 6144, 1993102): s1 has finished at the 6144 cap; s0 is at 5616 and s2 at 5352.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LE` and `br_taxi_C1_comp_LN+ENT3`.
+  - Submitted: `... br_missing submit` → **1994696** (`LE`, s1) and **1994697** (`LN+ENT3`, s0).
+- **Next.** `LN+ENT3` is an exploration run, so it will be extended to 1536 whatever its verdict (rule 6b) once s0's check is in. `LE` is at the cap; if no seed converges, the run is finished.
+- Cells DONE: 3 of 6.
