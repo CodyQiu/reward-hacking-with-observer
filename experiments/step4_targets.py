@@ -29,7 +29,9 @@ the deterministic optimum, and its own rollouts would carry no noise) and V_ref_
 rollouts' mean under proxy + the draw's new g, as the overseer computes it in training. With
 g.offset_rule=exact (exact indifference, docs/step4_indiff.md) the level instead rises by
 [M(r_old) - M(r_new)] / T per draw (dp.best_round_value, levels excluded), as the overseer computes it.
-With g.offset_rule=pool, M is estimated as in training from one pool of plays (``pool_level``); the agent's
+With g.offset_rule=twin, each correction's level is priced by the overseer's own one-round optimiser at
+convergence (the best round of the level's mean correction, valued under each draw): the theorem with random
+corrections. With g.offset_rule=pool, M is estimated as in training from one pool of plays (``pool_level``); the agent's
 final-round play is the previous iteration's optimum (iteration 0: reference and caught play only), and
 the exact M is recorded beside the estimate (m_before / m_after) for the validation.
 
@@ -230,9 +232,12 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         exact = gcfg.offset and gcfg.offset_rule == "exact"   # exact indifference (docs/step4_indiff.md)
         pool = gcfg.offset and gcfg.offset_rule == "pool"     # ... with M estimated from a pool of plays
         ens = gcfg.offset and gcfg.offset_rule == "exact_mean"   # ... priced on the mean of n fits per catch
+        twin = gcfg.offset and gcfg.offset_rule == "twin"     # ... priced by the overseer's one-round optimiser
+        if twin:   # the converged twin at the level before: the best round of the (deterministic) proxy
+            pol_tw_prev, R_nl_prev = solve_subepisode(tb, tb.proxy, T), [tb.proxy] * n_draws
         if ens:                                               # each draw = one catch's n_ensemble fits
             D = [[[] for _ in range(gcfg.n_ensemble)] for _ in range(n_draws)]
-        if exact or pool or ens:                              # each draw's M (best round, no level) and level
+        if exact or pool or ens or twin:                      # each draw's M (best round, no level) and level
             m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
         if pool:   # the reward tables in force (no level); the agent's final-round play: last iteration's optimum,
             # at the levels it reaches in the final round (training only ever stores those)
@@ -250,7 +255,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                 pol_c = solve_subepisode_caught(tb, Rbar[c - 1], T, W)
                 fn, exact_p = table_policy_fn(pol_c, A, eps), round_probs(pol_c, A)
                 behaviour.append({"correction": c, "from": "best caught policy (counterfactual)", "round": k})
-            acc, lv = np.zeros_like(tb.proxy), []
+            acc, lv, twin_R = np.zeros_like(tb.proxy), [], []
             for d in range(n_draws):
                 rng = np.random.default_rng([seed, d, c, 4])    # common random numbers across iterations
                 if ens:                                       # the average correction (GConfig "exact_mean")
@@ -274,6 +279,9 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                 else:
                     corr[d] = params
                     Rd = tb.proxy + g_table(params, task)
+                if twin:                                      # priced once every draw of this level is in
+                    twin_R.append(Rd)
+                    continue
                 if exact:                                     # the exact-indifference level
                     m_new = best_round_value(tb, Rd, T)
                     lv.append({"level": exact_level(lvl_prev[d], m_prev[d], m_new, T), "m_before": m_prev[d],
@@ -298,10 +306,23 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                 acc += Rd
                 if per_draw:
                     draws[d].append(Rd.astype(np.float32))
+            if twin:   # the twin at convergence: the best round of this level's mean correction (it cannot see the
+                # draw), valued under each draw's own correction; so is the twin of the level before
+                pol_tw = solve_subepisode(tb, np.mean(twin_R, axis=0), T)
+                for d, Rd in enumerate(twin_R):
+                    v_before, v_after = sub_value(tb, pol_tw_prev, R_nl_prev[d], T), sub_value(tb, pol_tw, Rd, T)
+                    lv.append({"level": exact_level(lvl_prev[d], v_before, v_after, T), "m_before": v_before,
+                               "m_after": v_after, "m_exact_after": best_round_value(tb, Rd, T)})
+                    lvl_prev[d], R_nl_prev[d] = lv[-1]["level"], Rd
+                    Rd = Rd + lv[-1]["level"]
+                    acc += Rd
+                    if per_draw:
+                        draws[d].append(Rd.astype(np.float32))
+                pol_tw_prev = pol_tw
             if lv:
                 behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
             Rbar.append(acc / n_draws)
-            if exact or pool or ens:  # the policy cannot see the draw: the best round of the mean table (no level)
+            if exact or pool or ens or twin:  # the policy cannot see the draw: the best round of the mean table
                 mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
                 behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         R_lv = np.stack(Rbar)

@@ -333,7 +333,9 @@ class Overseer(BaseCallback):
     """
 
     def __init__(self, task, proto, venv, ref_trajs, gcfg=GConfig(), k=19, beta=1.0, seed=0,
-                 verbose=False):
+                 verbose=False, twin=None):
+        assert not (gcfg.offset and gcfg.offset_rule == "twin") or twin is not None, \
+            "offset_rule=twin prices with a twin learner (src/step3/twin.py); train_run builds it"
         super().__init__()
         self.task, self.proto, self.venv = task, proto, venv
         self.ref_trajs, self.gcfg, self.k, self.beta = ref_trajs, gcfg, k, beta
@@ -349,7 +351,12 @@ class Overseer(BaseCallback):
         self.exact = gcfg.offset and gcfg.offset_rule == "exact"
         self.pool = gcfg.offset and gcfg.offset_rule == "pool"
         self.exact_mean = gcfg.offset and gcfg.offset_rule == "exact_mean"
-        assert gcfg.offset_rule in ("rollouts", "exact", "pool", "exact_mean"), gcfg.offset_rule
+        self.twin = twin                 # src/step3/twin.py: the overseer's one-round optimiser and its bank
+        self.twin_rule = gcfg.offset and gcfg.offset_rule == "twin"
+        self.chains = {}                 # (episode, history) -> the corrections in force along it (twin's bank)
+        self.prac_chain, self.prac_next = {}, {}     # practice copy -> its chain this episode, next index
+        self.n_practice_installs = 0
+        assert gcfg.offset_rule in ("rollouts", "exact", "pool", "exact_mean", "twin"), gcfg.offset_rule
         if self.exact or self.exact_mean:
             assert task.tables is not None, f"offset_rule={gcfg.offset_rule} needs a tabular task (dp.best_round_value)"
         if self.exact_mean:
@@ -365,8 +372,15 @@ class Overseer(BaseCallback):
     def _on_rollout_start(self):
         v, T = self.venv, self.proto.t_sub
         assert v.t % T == 0, f"rollout misaligned with sub-episodes: t = {v.t}"
-        n = v.num_envs
+        self._real = np.flatnonzero(~getattr(v, "practice", np.zeros(v.num_envs, bool)))   # logs: real copies only
+        n = len(self._real)
         self._k = v.t // T
+        if self.twin is not None and self._k == 0:          # a new episode: the twin's block, practice chains
+            ep = v.episode + 1 if v.t == 0 and v.episode < 0 else v.episode
+            self.twin.on_episode_start(self, max(ep, 0), ent_coef=float(self.model.ent_coef),
+                                       lr=float(self.model.lr_schedule(1.0)))
+            for j in np.flatnonzero(getattr(v, "practice", np.zeros(v.num_envs, bool))):
+                self.prac_chain[j], self.prac_next[j] = self.twin.bank.chain(self.rng), 0
         self._ncorr = v.n_corr.copy()
         self._rec, self._prx, self._tru = np.zeros(n), np.zeros(n), np.zeros(n)
         self._on = np.zeros((T, n), np.uint8)
@@ -379,15 +393,15 @@ class Overseer(BaseCallback):
             self._fk, self._ff, self._fp, self._ft = [], [], [], []
 
     def _on_step(self):
-        L = self.venv.last
-        self._rec += L["received"]
-        self._prx += L["proxy"]
-        self._tru += L["true"]
-        self._on[self._i] = L["exploit"]
-        self._det |= L["detected"].astype(np.uint8)
-        self._sr[self._i] = L["received"].mean()
-        self._sp[self._i] = L["proxy"].mean()
-        self._st[self._i] = L["true"].mean()
+        L, R = self.venv.last, self._real
+        self._rec += L["received"][R]
+        self._prx += L["proxy"][R]
+        self._tru += L["true"][R]
+        self._on[self._i] = L["exploit"][R]
+        self._det |= L["detected"][R].astype(np.uint8)
+        self._sr[self._i] = L["received"][R].mean()
+        self._sp[self._i] = L["proxy"][R].mean()
+        self._st[self._i] = L["true"][R].mean()
         self._i += 1
         if self._final:
             if L["key"] is not None:
@@ -425,10 +439,12 @@ class Overseer(BaseCallback):
         self.rows.append({"round": len(self.rows), "timesteps": int(self.num_timesteps), "k": self._k,
                           "received_return": float(self._rec.mean()), "proxy_return": float(self._prx.mean()),
                           "true_return": float(self._tru.mean()), "caught": float(self._det.mean()),
-                          "mean_n_corr": float(self._ncorr.mean())})
+                          "mean_n_corr": float(self._ncorr[self._real].mean())})
         if self._final:
             self._store_final_round()
         self.run_pending_rounds()
+        if self.twin is not None:
+            self.run_practice()
 
     def run_pending_rounds(self):
         v = self.venv
@@ -465,8 +481,28 @@ class Overseer(BaseCallback):
                       f"g(ref) {rec['g_ref']:+.2f} ({rec['seconds']:.1f}s)", flush=True)
         cur = v.episode
         self.cache = {key: d for key, d in self.cache.items() if key[0] == cur}
+        self.chains = {key: c for key, c in self.chains.items() if key[0] == cur}
         if self.track_m:
             self.m_cache = {key: m for key, m in self.m_cache.items() if key[0] == cur}
+
+    def run_practice(self):
+        """Practice copies (src/step3/twin.py): at a boundary inside the episode, with probability twin.force_p, the
+        next correction of the copy's chain is installed, priced by the twin as a real catch would be."""
+        v, T = self.venv, self.proto.t_sub
+        if not (0 < v.t < self.proto.t_ep) or v.t % T:
+            return
+        k = v.t // T - 1
+        for j in np.flatnonzero(v.practice):
+            chain, i = self.prac_chain.get(j, ()), self.prac_next.get(j, 0)
+            if i >= len(chain) or self.rng.random() >= float(self.twin.cfg["force_p"]):
+                continue
+            old_params, old_level, new = v.g_params[j], float(v.level[j]), chain[i]
+            v.n_corr[j] += 1
+            v.history[j] = v.history[j] + (k,)
+            vb, va = self.twin.price(int(v.n_corr[j]), old_params, new)
+            v.set_correction([j], new, old_level + (vb - va) / T)
+            self.prac_next[j] = i + 1
+            self.n_practice_installs += 1
 
     def _ensemble_round(self, episode, history, policy, old_params, old_level):
         """GConfig.offset_rule = "exact_mean": ``n_ensemble`` corrections, each fitted on its own fresh rollouts
@@ -522,8 +558,14 @@ class Overseer(BaseCallback):
             m_new = best_round_value(tb, tb.proxy + G, T)
             self.m_cache[(episode, history)] = (G, m_new)
             lv = {"level_m_before": m_old, "level_m_after": m_new}
+        if self.twin is not None:                    # the corrections in force along this history: the bank
+            self.chains[(episode, history)] = self.chains.get((episode, history[:-1]), ()) + (params,)
+            self.twin.bank.add(episode, history, self.chains[(episode, history)], "real")
         if self.exact:                               # exact indifference (docs/step4_indiff.md)
             lv["level"] = exact_level(old_level, m_old, m_new, T)
+        elif self.twin_rule:                         # priced by the frozen twin (src/step3/twin.py)
+            vb, va = self.twin.price(len(history), old_params, params)
+            lv = {"level": exact_level(old_level, vb, va, T), "level_twin_before": vb, "level_twin_after": va}
         elif self.pool:                              # ... with M estimated from one pool of plays
             groups = [self.ref_trajs, agent] + [g for _, _, g in self.final_pool]
             names = ["reference", "caught"] + [f"final ep{e} lvl{c}" for e, c, _ in self.final_pool]

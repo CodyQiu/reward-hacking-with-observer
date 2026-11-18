@@ -98,7 +98,27 @@ def ppo_probs_at(model, proto, phi_obs, n_levels, n_actions):
     return at
 
 
-def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
+def twin_occupancy(model, proto, tb, n_actions):
+    """The saved twin's expected visits (S*A, F) over one round at each correction level, read exactly from its
+    probabilities (observation: round 0, that correction count, flag 0, as it is trained). V(twin@c; R) is then
+    (occ[c] * R).sum() for any reward table R: the exact counterpart of the overseer's rollouts in training."""
+    state = model.policy.actor_state
+    S, A, T = tb.n_states, n_actions, proto.t_sub
+    out = []
+    for c in range(proto.n_levels):
+        d, occ = tb.mu0.copy(), np.zeros(tb.prob.shape)
+        for tau in range(T):
+            obs = encode_obs(proto, tb.phi_obs, tau, np.full(S, c), np.zeros(S, bool))
+            p = np.clip(np.asarray(state.apply_fn(state.params, obs).probs_parameter(), float)[:, :A], 0.0, None)
+            p /= p.sum(axis=1, keepdims=True)
+            m = (d[:, None] * p).reshape(-1)[:, None] * tb.prob                 # rows s * A + a, in order
+            occ += m
+            d = np.bincount(tb.nxt.ravel(), weights=m.ravel(), minlength=S)
+        out.append(occ)
+    return out
+
+
+def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print, twin_occ=None):
     """The paired check for one policy (``policy_fn`` samples it for the overseer's rollouts, ``probs_at``
     reads it exactly), in the game of ``cfg`` (a run's config.json). Returns a JSON-able dict."""
     seed = int(cfg["seed"])
@@ -119,6 +139,10 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
     rbar_d[:, 0] = (tb.prob * tb.proxy).sum(axis=1)
     corr = [None] * n_draws                                            # each draw's correction in force
     G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
+    twin_rule = gcfg.offset and gcfg.offset_rule == "twin"            # priced by the run's own twin (twin_occ)
+    assert not twin_rule or twin_occ is not None, "offset_rule=twin: pass the run's twin (twin_occupancy)"
+    if twin_rule:
+        R_nl_prev, lvl_tw = [tb.proxy] * n_draws, [0.0] * n_draws
     exact_rule = gcfg.offset and gcfg.offset_rule == "exact"          # exact indifference (docs/step4_indiff.md)
     pool_rule = gcfg.offset and gcfg.offset_rule == "pool"            # ... with M estimated from a pool of plays
     ens_rule = gcfg.offset and gcfg.offset_rule == "exact_mean"       # ... priced on the mean of n fits per catch
@@ -169,7 +193,12 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
             else:
                 corr[d] = params
                 Rd = tb.proxy + g_table(params, task)
-            if exact_rule:                                             # the exact-indifference level
+            if twin_rule:                                              # priced by the run's frozen twin
+                vb, va = float((twin_occ[c - 1] * R_nl_prev[d]).sum()), float((twin_occ[c] * Rd).sum())
+                lv.append({"level": exact_level(lvl_tw[d], vb, va, T), "m_before": vb, "m_after": va})
+                lvl_tw[d], R_nl_prev[d] = lv[-1]["level"], Rd
+                Rd = Rd + lv[-1]["level"]
+            elif exact_rule:                                           # the exact-indifference level
                 m_new = best_round_value(tb, Rd, T)
                 lv.append({"level": exact_level(lvl_prev[d], m_prev[d], m_new, T), "m_before": m_prev[d],
                            "m_after": m_new})
@@ -195,7 +224,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
         if lv:
             behaviour[-1]["level"] = {key: [x[key] for x in lv] for key in lv[0]}
         Rbar.append(acc / n_draws)
-        if exact_rule or pool_rule or ens_rule:  # the policy cannot see the draw: best round of the mean table
+        if exact_rule or pool_rule or ens_rule or twin_rule:  # the policy cannot see the draw: the mean table
             mean_lvl = float(np.mean(behaviour[-1]["level"]["level"]))
             behaviour[-1]["level"]["m_after_mean_table"] = best_round_value(tb, Rbar[-1] - mean_lvl, T)
         log(f"  correction {c}: fitted on {behaviour[-1]['from']} in round {k} ({time.time() - t0:.0f}s)")
@@ -238,9 +267,13 @@ def check_seed(seed_dir, n_draws=6, eps=0.05, log=print):
     task = get_task(cfg["env"], **cfg["task"])
     model = PPO.load(os.path.join(seed_dir, "model.zip"), device="cpu")
     n_ep = int(model.num_timesteps // (int(cfg["n_envs"]) * proto.t_ep))
+    twin_occ = None
+    if cfg["g"].get("offset") and cfg["g"].get("offset_rule") == "twin":   # the run's own pricing twin
+        twin = PPO.load(os.path.join(seed_dir, "twin_model.zip"), device="cpu")
+        twin_occ = twin_occupancy(twin, proto, task.tables, task.n_actions)
     res = best_response(cfg, policy_probs_fn(model, proto, task.n_actions),
                         ppo_probs_at(model, proto, task.tables.phi_obs, proto.n_sub, task.n_actions),
-                        n_draws=n_draws, eps=eps, log=log)
+                        n_draws=n_draws, eps=eps, log=log, twin_occ=twin_occ)
     res.update({"episodes": n_ep, "finished": finished(seed_dir)})
     return n_ep, res
 

@@ -1170,5 +1170,202 @@ def test_mean_rule_target_and_best_response_record_the_rule():
     assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9 and res["gap"] >= -1e-9
 
 
+def test_twin_rule_makes_every_level_worth_the_same():
+    """offset_rule=twin in the exact target (docs/step4_indiff.md, "The twin"; Absent Supervisor, cheap fit, two
+    draws, so corrections are random and imperfect). The converged twin is the best round of each level's mean
+    correction, valued under each draw. Then the best round of every level's mean reward, level included, equals
+    M(proxy) exactly: the theorem with random corrections. V0 = K x M(proxy), every correction's compensation equals
+    the drop the agent faces (level_errors err = 0), and the paid values average to the mean table's. The
+    best-response check and the training overseer refuse the rule until training has a twin learner."""
+    _experiments()
+    from step4_br import best_response
+    from step4_indiff_check import level_errors
+    from step4_targets import target
+    from src.pbrr_core import GConfig
+    import src.step3.pbrr as pbrr
+    from src.step3.dp import best_round_value, onehot_probs, solve_levels, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    g = {"offset": True, "offset_rule": "twin", "fine_only": True, "epochs": 20}
+    cfg = resolve_config("absent_supervisor", {"seed": 0, "g": g})
+    task, P = get_task(cfg["env"], **cfg["task"]), Protocol(**cfg["protocol"])
+    tb = task.tables
+    m0 = best_round_value(tb, tb.proxy, P.t_sub)
+    out = target(cfg, n_draws=2, max_iter=2, per_draw=False, log=lambda m: None)
+    for it in out["iterations"]:
+        for b in it["best_round_by_level"]:
+            assert abs(b["received"] - m0) < 1e-6 * m0, (b["received"], m0)
+        for b in it["behaviour"]:
+            x = b["level"]
+            assert abs(np.mean(x["m_after"]) - x["m_after_mean_table"]) < 1e-6 * m0
+    assert abs(out["target"]["V0"] - P.n_sub * m0) < 1e-6 * m0
+    errs = level_errors(out)
+    assert errs and all(abs(r["err"]) < 1e-6 * m0 for r in errs)
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))
+    for call in (lambda: best_response(cfg, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions),
+                                       n_draws=1, log=lambda m: None),
+                 lambda: pbrr.Overseer(task, P, AuditedVecEnv(task, P, n_envs=2, seed=0), [], GConfig(**cfg["g"]))):
+        refused = False
+        try:
+            call()
+        except AssertionError as e:
+            refused = "twin" in str(e)
+        assert refused
+
+
+def _grid_twin(cfg_twin, g_extra=None):
+    """A grid twin with a cheap fit (src/step3/twin.py), for the tests below."""
+    from src.pbrr_core import GConfig
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    from src.step3.twin import Twin
+    cfg = resolve_config("grid", {"g": {"offset": True, "offset_rule": "twin", "fine_only": True, "epochs": 20,
+                                        **(g_extra or {})}})
+    task, P = get_task("grid"), Protocol(**cfg["protocol"])
+    ppo = dict(cfg["ppo"])
+    net = ppo.pop("net_arch")
+    gcfg = GConfig(**cfg["g"])
+    return cfg, task, P, gcfg, Twin(task, P, ppo, net, cfg["reward_scale"], gcfg, seed=0, cfg=cfg_twin)
+
+
+def _small_net(task, seed):
+    import jax
+    from src.pbrr_core import mlp_init
+    dim = task.g_rows_from_keys(task.support_keys().ravel()[:2]).shape[1]
+    return mlp_init(jax.random.PRNGKey(seed), [dim, 8, 1], "torch_default")
+
+
+def test_twin_bank_and_env():
+    """src/step3/twin.py. The bank keeps recent chains, draws a correction at a level from chains that deep, and
+    draws practice chains only among maximal ones. The twin's env: every copy's reward is proxy + the correction
+    of its level (proxy alone at level 0), its observation carries that correction count, and every round of T
+    steps ends in done."""
+    from src.step3.pbrr import g_on_rows
+    from src.step3.protocol import MinCorrection, Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    from src.step3.twin import CorrectionBank, TwinVecEnv
+    task, P = get_task("grid"), Protocol(**resolve_config("grid")["protocol"])
+    a, b, c = (MinCorrection((_small_net(task, i),)) for i in range(3))
+    ab = MinCorrection(a.params + b.params)
+    bank = CorrectionBank(keep_episodes=4)
+    bank.add(0, (0,), (a,))
+    bank.add(0, (0, 1), (a, ab))
+    bank.add(1, (2,), (c,))
+    assert bank.depth() == 2 and bank.count(1) == 3 and bank.count(2) == 1
+    assert sorted(len(x) for x in bank.maximal()) == [1, 2] and (a,) not in bank.maximal()
+    rng = np.random.default_rng(0)
+    assert bank.at_level(0, rng) is None and bank.at_level(2, rng) is ab and bank.at_level(3, rng) is None
+    env = TwinVecEnv(task, P, bank, n_envs=6, reward_scale=1.0, seed=0)
+    env.reset()
+    for t in range(P.t_sub):
+        lev, corr = env.level.copy(), dict(env.corr)
+        _, rew, dones, _ = env.step(np.random.default_rng(t).integers(0, task.n_actions, 6))
+        L = env.last
+        want = np.asarray(L["proxy"], float).copy()
+        for c_, p_ in corr.items():
+            idx = np.flatnonzero(lev == c_)
+            if p_ is not None and len(idx):
+                want[idx] += g_on_rows(p_, L["feat"][idx])
+        assert np.allclose(rew, want, atol=1e-4)
+        assert bool(dones.all()) == bool(dones.any()) == (t == P.t_sub - 1)
+    bank.prune(9)
+    assert bank.depth() == 0
+
+
+def test_overseer_prices_with_the_twin_and_runs_practice():
+    """offset_rule=twin in training (grid, cheap fit). The real copy is an open exploiter, caught in rounds 0 and 1:
+    each correction's level is the previous one plus [V(twin@c-1; old) - V(twin@c; new)] / T, from the twin's frozen
+    rollouts, and its chain enters the bank. The practice copy (force_p = 1) is never corrected by its own catches;
+    the next correction of its chain is installed at each boundary instead, priced the same way, until the chain
+    ends."""
+    import src.step3.pbrr as pbrr
+    from src.step3.dp import solve_levels, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, MinCorrection
+    from src.step3.reference import build_reference
+    cfg, task, P, gcfg, twin = _grid_twin({"n_envs": 4, "rounds": 1, "eval": 8, "practice": 0.5, "force_p": 1.0})
+    tb, T = task.tables, P.t_sub
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))              # exploit in view every round
+    fn = table_policy_fn(pol, tb.n_actions)
+    ref, _ = build_reference(task, T, {**cfg["pbrr"], "seed": cfg["pbrr"]["ref_seed"]})
+    ref_trajs = pbrr.rollouts(task.make_batch(3, seed=1), ref, P, np.random.default_rng(1))
+    env = AuditedVecEnv(task, P, n_envs=2, seed=0)
+    env.practice[1] = True
+    env.reset()
+    over = pbrr.Overseer(task, P, env, ref_trajs, gcfg, k=3, twin=twin)
+    over.model = None
+    chain = (MinCorrection((_small_net(task, 7),)),)
+    over.prac_chain[1], over.prac_next[1] = chain, 0
+    real = pbrr.policy_probs_fn
+    pbrr.policy_probs_fn = lambda model, proto, n_actions: fn
+    seen = []
+    try:
+        for t in range(2 * T):
+            env.step_async(fn(env.batch, t, env.n_corr, env.flagged).argmax(axis=1))
+            env.step_wait()
+            if (t + 1) % T == 0:
+                over.run_pending_rounds()
+                over.run_practice()
+                seen.append((env.g_params[0], env.level.copy(), env.n_corr.copy()))
+    finally:
+        pbrr.policy_probs_fn = real
+    r1, r2 = over.rounds
+    assert r1["n_envs"] == 1 and r2["n_envs"] == 1                                # the real copy only
+    p1, p2 = seen[0][0], seen[1][0]
+    assert abs(r1["level_twin_before"] - twin.value(0, None)) < 1e-9
+    assert abs(r1["level_twin_after"] - twin.value(1, p1)) < 1e-9
+    assert abs(r1["level"] - (r1["level_twin_before"] - r1["level_twin_after"]) / T) < 1e-9
+    assert abs(r2["level_twin_before"] - twin.value(1, p1)) < 1e-9 and abs(r2["level_twin_after"] - twin.value(2, p2)) < 1e-9
+    assert abs(r2["level"] - r1["level"] - (r2["level_twin_before"] - r2["level_twin_after"]) / T) < 1e-9
+    assert twin.bank.count(1) >= 1 and twin.bank.count(2) >= 1
+    lvl1, nc1 = seen[0][1][1], seen[0][2][1]
+    assert nc1 == 1 and abs(lvl1 - (twin.value(0, None) - twin.value(1, chain[0])) / T) < 1e-9
+    assert seen[1][2][1] == 1 and over.n_practice_installs == 1                   # the chain had one correction
+
+
+def test_train_run_with_the_twin_and_practice_resumes():
+    """train_run with offset_rule=twin and one practice copy of four (grid, cheap fit, tiny twin): it trains, saves
+    the twin beside the model, logs the three real copies only, and resumes into a second episode."""
+    import tempfile
+    from src.step3.train import resolve_config, train_run
+    cfg = resolve_config("grid", {"seed": 0, "episodes": 1, "n_envs": 4,
+                                  "g": {"offset": True, "offset_rule": "twin", "fine_only": True, "epochs": 5},
+                                  "twin": {"n_envs": 4, "rounds": 1, "eval": 8, "practice": 0.25, "block": 1}})
+    run_dir = os.path.join(tempfile.mkdtemp(), "run")
+    train_run(run_dir, cfg, verbose=False)
+    assert os.path.exists(os.path.join(run_dir, "twin_model.zip"))
+    d = np.load(os.path.join(run_dir, "logs.npz"))
+    assert d["caught"].shape == (5, 3) and d["env_true"].shape == (5, 3)
+    train_run(run_dir, {**cfg, "episodes": 2}, verbose=False, resume=True)
+    d = np.load(os.path.join(run_dir, "logs.npz"))
+    assert d["caught"].shape == (10, 3)
+
+
+def test_best_response_prices_with_the_runs_twin():
+    """step4_br.best_response with offset_rule=twin and the run's own twin, read exactly (twin_occupancy): each
+    correction's level chains by [V(twin@c-1; before) - V(twin@c; after)] / T, the first V(twin@0) is the twin's
+    exact return under the proxy, and the paired gaps average to the mean-table gap."""
+    _experiments()
+    from step4_br import best_response, twin_occupancy
+    from src.step3.dp import onehot_probs, solve_levels, table_policy_fn
+    cfg, task, P, gcfg, twin = _grid_twin({"n_envs": 4, "rounds": 1, "eval": 8})
+    tb = task.tables
+    occ = twin_occupancy(twin.model, P, tb, tb.n_actions)
+    assert len(occ) == P.n_levels and all(abs(o.sum() - P.t_sub) < 1e-6 for o in occ)
+    _, pol = solve_levels(tb, P, np.stack([tb.proxy] * P.n_sub))
+    res = best_response(cfg | {"seed": 0}, table_policy_fn(pol, tb.n_actions), onehot_probs(pol, tb.n_actions),
+                        n_draws=2, log=lambda m: None, twin_occ=occ)
+    prev = np.zeros(2)
+    for i, b in enumerate(res["behaviour"]):
+        x = b["level"]
+        if i == 0:
+            assert np.allclose(x["m_before"], (occ[0] * tb.proxy).sum())
+        assert np.allclose(np.subtract(x["level"], prev), np.subtract(x["m_before"], x["m_after"]) / P.t_sub)
+        prev = np.asarray(x["level"])
+    assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

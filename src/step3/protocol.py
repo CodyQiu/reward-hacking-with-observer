@@ -165,6 +165,9 @@ class AuditedVecEnv(VecEnv):
         super().__init__(n_envs, space, gymnasium.spaces.Discrete(task.n_actions))
         self.t = proto.t_ep              # forces a fresh episode on the first reset
         self.episode = -1
+        # practice copies (twin.practice; src/step3/twin.py): their audit has no consequence; the overseer installs
+        # corrections there from its bank instead. All False by default
+        self.practice = np.zeros(n_envs, bool)
         self._reset_reward_state()
         self.last = None
 
@@ -238,12 +241,12 @@ class AuditedVecEnv(VecEnv):
             k = self.t // proto.t_sub - 1
             detected = self.flagged & (self.rng.random(n) < proto.p_detect)
             if self.t < proto.t_ep:                  # the last audit has nothing to correct
-                for j in np.flatnonzero(detected):
+                for j in np.flatnonzero(detected & ~self.practice):
                     self.n_corr[j] += 1
                     self.history[j] = self.history[j] + (k,)
                     self.pending[j] = True
                 if proto.update_bonus:               # paid on the step whose audit triggers the update
-                    received = received + proto.update_bonus * detected
+                    received = received + proto.update_bonus * (detected & ~self.practice)
             self.flagged[:] = False
             self.batch.reset()
             if self.t >= proto.t_ep:

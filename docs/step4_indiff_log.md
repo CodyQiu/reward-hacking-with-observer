@@ -8,6 +8,11 @@ Procedure: `docs/step4_indiff.md`. Two campaigns, one log:
 - **`indiff_pool`: PPO started 2026-11-17 14:36, on the user's instruction ("Start PPO for the indifference pool campaign now"). It runs under the same loop rules as the comp campaign (`docs/step4_optimal.md`): best-response checks, extensions, confirmations, resumes after the 48 h limit, rule 6b. Each seed's PPO behaviour (corrections per episode, true return by round) is reported next to its exact target.**
 - **`indiff` (the exact rule): still no PPO.** It is superseded by its pricing fix.
 - **`indiff_mean` (the exact rule priced on the average correction; docs/step4_indiff.md, "The average correction"): the user, 2026-11-17: "okay, make the fix".** Targets (23 jobs) and PPO wave 1 (18 runs) are submitted together, under the same loop rules as `indiff_pool`. Runs are `I3_indiff_mean_*` in `results/step4/<env>/indiff_mean/`. Targets are `results/step4/<env>/targets/indiff_mean/`, 3 draws per correction, each a 6-fit mean.
+- **`indiff_twin` (docs/step4_indiff.md, "The twin"): the user, 2026-11-18, on the twin: "why isn't that exact? could we get even closer to exactness?" Then: "let's do the twin pricing + agent's own RL practice without distillation for now".**
+  - The level is priced by the overseer's own one-round optimiser.
+  - 11 target jobs (the converged twin). The level error should be 0 everywhere, so any miss is the fit's.
+  - Two PPO arms in `results/step4/<env>/indiff_twin/`: `I4_indiff_twin_*` (the pure twin) and `I4_indiff_twin_practice_*` (plus practice, `twin.practice=0.25`). Both match the `indiff_twin` target.
+  - For every Taxi check, log the deliveries per round of PPO's own play after one correction (honest: 7.1).
 - Cell caps as in comp: grid, Tomato, tomato_large and Boat Race 12,288 episodes; AS 24,576; Taxi 6144.
 
 This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff`, `CAMPAIGN=indiff_pool` or `CAMPAIGN=indiff_mean`, and the jobs count toward the 110 total.

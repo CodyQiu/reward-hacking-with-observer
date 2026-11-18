@@ -170,6 +170,79 @@ The estimator is validated in an env when every seed passes A1–A3, as the exac
 
 The loop rules, caps, verdict and criteria are those of `indiff_pool`. The A1–A3 verdict per target is from `experiments/step4_indiff_check.py`, which reads the same fields. Log: `docs/step4_indiff_log.md`.
 
+## The twin (`g.offset_rule=twin`, `CAMPAIGN=indiff_twin`; 2026-11-18)
+
+**Where it comes from (the user, as stated).**
+- On the final round: "focusing on the last sub-episode seems to be a tad-bit cheating ... in real life...we can't really expect when that happens".
+- Then: "the idea of twin is to reproduce like...when nothing is at stake. i like that idea. but why isn't that exact? could we get even closer to exactness?"
+- And: "let's actually not do none and rounds". Those two pool variants were dropped before they ran (commit a161e392f, reverted).
+
+**How much the pool relied on the final round.** In the `indiff_pool` targets, the agent's final-round play sets M̂ after the first correction in nearly every draw: grid 36/36, AS 36/36, Tomato 36/36, Taxi 30/36, Boat Race 30/36, tomato_large 26/36. The reference alone would be well below the best round: AS 372 against 450, Taxi 112 against 125.
+
+**The rule.** At correction c, in draw d, the level rises by [V(π_{c−1}; r_{c−1,d}) − V(π_c; r_{c,d})] / T_sub.
+- π_c is the twin at level c: the overseer's own policy, trained to maximise one round of the reward in force, with nothing at stake. Like the agent, it sees the correction count but not the draw, so at convergence it is the best round of the *mean* correction r̄_c.
+- In targets, π_c = `solve_subepisode` on the mean over draws. That models the converged twin, just as targets model the agent at convergence.
+
+**Why it is exact: the theorem with random corrections.**
+- The agent cannot see the draw either, so at level c its best play is also π_c, worth V(π_c; r_{c,d}) in draw d.
+- Its per-round value after correction c, level included, is V(π_c; r_{c,d}) + T·L_{c,d} = V(π_{c−1}; r_{c−1,d}) + T·L_{c−1,d}. That is its value before the correction, in every draw.
+- So every level is worth exactly M(proxy): no hiding, no farming, and no correction shaping, whatever the draw.
+- The "exact" rule priced M(r_{c,d}), each draw's own best round. The agent cannot reach that, because it cannot tailor its play to a draw it cannot see. So the rule underpaid by the value of information, which is what made Taxi hide.
+- `exact_mean` shrinks that gap by averaging fits. The twin removes it.
+- Test: `test_twin_rule_makes_every_level_worth_the_same`. With random, imperfect corrections, the best round of every level's mean reward equals M(proxy), V0 = K·M(proxy), and the level error is 0.
+
+**A quick check (laptop, about 40 s; not a target).** Taxi seed 0, 100-epoch fit, 3 draws, 1 iteration:
+- the exact rule values level 1 at 189 against 380, and the optimum **hides**;
+- the twin keeps every level at 379.7, and the optimum is corrected in round 0, then true 124 per round (honest 125).
+
+**What stays inexact in training.** The targets have none of this: the twin must *learn* π_c.
+1. **Optimisation error:** it plays below π_c.
+2. **Rollout noise** in V.
+3. **Little data at levels the agent rarely reaches.**
+4. **Lag** behind the shifting distribution of corrections.
+
+**How to get closer.**
+- **Price on the twin alone.** A per-draw max with other candidates (a pool) brings the value-of-information error back.
+- **Value V(π; r) with many rollouts,** using common random numbers for the before and after values.
+- **Train the twin at every level, including levels the agent avoids.** The overseer can install corrections fitted on the agent's own exploiting rollouts in the twin's envs.
+- **Warm-start the twin from the agent's weights** and fine-tune it on its one-round objective. It is then at least as skilled as the agent, but stays a separate network the agent cannot sandbag.
+- **Watch the direction of the error.** A twin that underplays the corrected level overpays. That leads to farming, which brings data to that level, so it corrects itself. A twin that underplays the uncorrected level underpays. That leads to hiding, which starves the level of data.
+
+**Predictions, written before any target.**
+- The pricing errors are gone by construction.
+- Honest by the end in grid, AS, Tomato and tomato_large: 6/6.
+- Taxi and Boat Race are limited by the fit's under-correction (the pool's Taxi s21/s22 and Boat Race s20): at least the pool's 4/6 and 5/6.
+
+**The two PPO arms (the user, 2026-11-18, as stated).** "let's not do distillation for now. the hope is If ordinary practice works just as well, we have the cleaner result: independent pricing plus access to practice was enough". And: "we might test it later".
+
+| Variant | Settings | What the agent gets |
+|---|---|---|
+| `indiff_twin` (the pure twin) | `g.fine_only=True g.offset=True g.offset_rule=twin` | twin pricing; its training is otherwise untouched |
+| `indiff_twin_practice` | the same plus `twin.practice=0.25` | the same twin; also practice rounds at corrected levels |
+
+- Both arms share one exact target, `indiff_twin` (the converged twin): practice changes only how PPO learns, not the best behaviour.
+- Neither adds an observation, imitation, DP inside the mechanism, final-round play or the honest reference.
+
+**Training (`src/step3/twin.py`).**
+- **The twin** is a second PPO policy with the agent's network and PPO settings. It is trained on one-round problems: each of its 16 copies draws a level each round, plus a correction from the bank at that level. Its reward is proxy + correction, nothing is audited, and every round ends in `done`. It observes the agent's encoding at round 0 with that correction count.
+- **Blocks.** It trains one block (40 rounds × 16 copies, the agent's sample count per 8 episodes) at the first episode of every block of 8 episodes. It is then **frozen**: 256 rollouts per level, from common starts with common random numbers.
+- **Pricing.** A correction to level c, from r_old to r_new, is priced as [mean return of the level-(c−1) rollouts under r_old − mean return of the level-c rollouts under r_new] / T. The twin's actions depend only on what it observes, so one set of rollouts per level serves every correction of the block. The agent's play never moves its own price.
+- **The bank** holds the chains of corrections installed in the last 64 episodes, as applied (fines-only chains). When it holds fewer than 4 chains, the overseer adds one counterfactual chain per block: PBRR fitted on the agent's own rollouts at each level, as if it had been caught, stopping when those rollouts no longer use the bug. So levels the agent avoids still get data.
+- **Practice** (`twin.practice`). That fraction of the agent's env copies are practice copies; their audit has no consequence. At each boundary, with probability `twin.force_p` = 0.5, the overseer installs the next correction of a chain drawn from the bank, priced by the same twin. The agent cannot tell practice copies from real ones, and learns there by its own PPO, from the corrected reward. Logs, metrics and figures cover the real copies only.
+- **Saving.** `twin_model.zip` is saved at every checkpoint and loaded on resume. The best-response check (`experiments/step4_br.py`) prices with that saved twin, read exactly (`twin_occupancy`).
+- The twin's settings sit in the config group `twin`, outside the game key (`TWIN_DEFAULTS`).
+
+**PPO predictions, written before any run.**
+- In Taxi, the pure twin may still hide. The twin prices what a competent agent earns after a correction, and a PPO agent that cannot yet deliver earns far less. That is the skill deficit; see GPT's identity: the change at a correction is the agent's shortfall against the twin after it, minus its shortfall before.
+- The practice arm should not hide, because the practice rounds close that shortfall.
+- Elsewhere both arms should match their targets.
+- Fit-limited seeds (Boat Race s20-type under-correction) stay as their targets.
+
+**Run.**
+- Targets: `CAMPAIGN=indiff_twin bash scripts/farmshare/step4_optimal.sh targets submit`, 11 jobs. tomato_large runs one job per seed. Time limits: grid, AS and Boat Race 2 h, Tomato 6 h, Taxi 8 h, tomato_large 24 h.
+- PPO: `... wave1 submit`, 36 runs (L, LE and LN for both arms in all six envs, seeds 0–2), in `results/step4/<env>/indiff_twin/`.
+- Taxi is the decisive cell, so it goes first.
+
 ## Pipeline
 
 1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` (the exact rule) and `CAMPAIGN=indiff_pool … targets submit` (the estimator) each submit 11 jobs:
@@ -205,4 +278,5 @@ The loop rules, caps, verdict and criteria are those of `indiff_pool`. The A1–
   - the target and best-response chains, including single-draw V0 = 43,500;
   - the pool: in the Overseer, an earlier final round entering the pool, the chained levels, and M̂ ≤ M on the deterministic grid; in the target and best-response check, the same;
   - the verdict script's labels: under-correction, farming, tie, and the A2 shortfall kinds;
-  - `exact_mean`: `EnsembleCorrection` against mean_i min(prev, g_i); the Overseer fitting 3 data sets per catch and pricing M on the applied mean; the target and best-response chains; old game keys unchanged.
+  - `exact_mean`: `EnsembleCorrection` against mean_i min(prev, g_i); the Overseer fitting 3 data sets per catch and pricing M on the applied mean; the target and best-response chains; old game keys unchanged;
+  - `twin`: every level's mean reward worth exactly M(proxy) under random corrections, V0 = K·M(proxy), level error 0 (exact target); the bank, the twin's env, the Overseer pricing with the frozen twin and running practice, a train-and-resume run, and the check pricing with the run's own twin.

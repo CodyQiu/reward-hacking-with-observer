@@ -103,6 +103,12 @@ class GConfig:
     # ``n_ensemble`` corrections independently (own rollouts, labels, init), applies their mean
     # (protocol.EnsembleCorrection; fines only: mean_i min(prev, g_i)) and raises the level by
     # [M(r_old) - M(r_mean)] / T_sub on exactly the reward applied
+    # "twin" (docs/step4_indiff.md, "The twin"; 2026-11-18): the level rises by [V(pi_{c-1}; r_{c-1}) -
+    # V(pi_c; r_c)] / T_sub, where pi_c is the overseer's own optimiser at level c -- a policy trained to maximise
+    # one round of the reward in force with nothing at stake; like the agent it sees the correction count but
+    # not the draw, so it converges to the best round of the *mean* correction -- valued under the correction
+    # actually drawn. At convergence every level is then worth exactly the same to the agent, draw by draw:
+    # the theorem with random corrections. Exact targets only for now (the converged twin, by DP)
     offset_rule: str = "rollouts"
     pool_episodes: int = 8
     n_ensemble: int = 1               # offset_rule = "exact_mean" only: fits per catch, applied as their mean

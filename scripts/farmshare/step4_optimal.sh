@@ -43,6 +43,11 @@
 # level on exactly that reward; variant indiff_mean, runs I3_indiff_mean_<tag> in results/step4/<env>/indiff_mean.
 # Every fit is 6x, so targets use 3 draws (each a 6-fit mean) and one job per seed in Tomato, tomato_large and
 # Taxi; the best-response check uses 4 draws and 3x the hours.
+# CAMPAIGN=indiff_twin: the level priced by the overseer's own one-round optimiser, the twin (g.offset_rule=twin;
+# docs/step4_indiff.md, "The twin"; src/step3/twin.py). Two PPO arms in results/step4/<env>/indiff_twin:
+# indiff_twin (the pure twin) and indiff_twin_practice (the same twin, plus practice copies: twin.practice=0.25).
+# They share one exact target, indiff_twin (the converged twin), since practice changes only how PPO learns.
+# Target jobs have short time limits, so they start quickly.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -65,6 +70,9 @@ case $CAMPAIGN in
           HYP="Step 4 exact-indifference campaign, M estimated from a pool of plays (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only plus the level that pays the estimated drop in the best round's value" ;;
   indiff_mean) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race); VARIANTS=(indiff_mean); PFX=I3; EXTRA=""
           HYP="Step 4 exact-indifference campaign, priced on the average correction (docs/step4_indiff.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, each catch the mean of 6 fits, plus the level that pays exactly the drop in the best round's value of that mean" ;;
+  indiff_twin) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race)
+          VARIANTS=(indiff_twin indiff_twin_practice); PFX=I4; EXTRA=""
+          HYP="Step 4 twin campaign (docs/step4_indiff.md, The twin): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, each correction priced by the overseer's own one-round optimiser" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
@@ -80,6 +88,9 @@ finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && 
 BR_DRAWS=12                                                       # overseer draws of the best-response check
 br_hours() { case $1 in tomato_large) echo 12 ;; tomato|taxi) echo 6 ;; *) echo 2 ;; esac; }
 TARGET_DRAWS=6                                                    # overseer draws per correction of a target
+target_hours() { if [[ $CAMPAIGN == indiff_twin ]]; then             # short limits start sooner (backfill)
+                   case $1 in tomato_large) echo 24 ;; taxi) echo 8 ;; tomato) echo 6 ;; *) echo 2 ;; esac
+                 else echo 36; fi; }
 if [[ $CAMPAIGN == indiff_mean ]]; then                           # each draw is itself a 6-fit mean
   BR_DRAWS=4; TARGET_DRAWS=3
   br_hours() { case $1 in tomato_large) echo 36 ;; tomato|taxi) echo 18 ;; *) echo 6 ;; esac; }
@@ -99,6 +110,8 @@ gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fi
     indiff) echo "g.fine_only=True g.offset=True g.offset_rule=exact$ep$EXTRA" ;;  # fines only + the exact level
     indiff_pool) echo "g.fine_only=True g.offset=True g.offset_rule=pool$ep$EXTRA" ;;  # ... M estimated by the pool
     indiff_mean) echo "g.fine_only=True g.offset=True g.offset_rule=exact_mean g.n_ensemble=6$ep$EXTRA" ;;  # ... priced on the 6-fit mean
+    indiff_twin) echo "g.fine_only=True g.offset=True g.offset_rule=twin$ep$EXTRA" ;;  # ... priced by the twin
+    indiff_twin_practice) echo "g.fine_only=True g.offset=True g.offset_rule=twin$ep twin.practice=0.25$EXTRA" ;;  # + practice
     *) echo "unknown variant $v" >&2; exit 1 ;;
   esac
 }
@@ -149,18 +162,19 @@ case $CMD in
     done ;;
   targets)
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do
+      [[ $v == indiff_twin_practice ]] && continue                # shares indiff_twin's target (same game)
       dep=""; [[ $env == tomato_large && -n ${PHASEA_JOB:-} ]] && dep="afterok:$PHASEA_JOB"
       if [[ ( $CAMPAIGN == indiff* && $env == tomato_large ) || ( $CAMPAIGN == indiff_mean && ( $env == taxi || $env == tomato ) ) ]]; then
         for s in "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}"; do   # one job per seed (a seed takes hours)
           # shellcheck disable=SC2046
-          run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$(tname "$v")_s$s" .venv/bin/python -u \
+          run bash scripts/farmshare/run_cmd.sh "$(target_hours "$env")" 4 "targets_${env}_$(tname "$v")_s$s" .venv/bin/python -u \
             experiments/step4_targets.py --env "$env" --name "$(tname "$v")" --seeds "$s" --draws "$TARGET_DRAWS" \
             --set $(gsets "$env" "$v")
         done
         continue
       fi
       # shellcheck disable=SC2046
-      DEPENDENCY=$dep run bash scripts/farmshare/run_cmd.sh 36 4 "targets_${env}_$(tname "$v")" .venv/bin/python -u experiments/step4_targets.py \
+      DEPENDENCY=$dep run bash scripts/farmshare/run_cmd.sh "$(target_hours "$env")" 4 "targets_${env}_$(tname "$v")" .venv/bin/python -u experiments/step4_targets.py \
         --env "$env" --name "$(tname "$v")" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" --draws "$TARGET_DRAWS" \
         --set $(gsets "$env" "$v")
     done; done ;;

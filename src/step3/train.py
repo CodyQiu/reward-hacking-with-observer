@@ -141,6 +141,9 @@ def _save_logs(run_dir, overseer, model):
             os.replace(os.path.join(run_dir, name + ".tmp"), os.path.join(run_dir, name))
     model.save(os.path.join(run_dir, "model.tmp.zip"))
     os.replace(os.path.join(run_dir, "model.tmp.zip"), os.path.join(run_dir, "model.zip"))
+    if getattr(overseer, "twin", None) is not None:          # the pricing twin, for resumes and the check
+        overseer.twin.model.save(os.path.join(run_dir, "twin_model.tmp.zip"))
+        os.replace(os.path.join(run_dir, "twin_model.tmp.zip"), os.path.join(run_dir, "twin_model.zip"))
     return on, ca, px
 
 
@@ -250,8 +253,21 @@ def train_run(run_dir, config, verbose=True, resume=False):
     net_arch = ppo.pop("net_arch")
     ppo["n_steps"] = proto.t_sub
     assert ppo.get("gamma", 1.0) == 1.0, "gamma is fixed at 1 (CLAUDE.md 2)"
-    overseer = Overseer(task, proto, venv, ref_trajs, GConfig(**config["g"]), k=pb["k"], beta=pb["beta"],
-                        seed=seed + 7_000 * n_resume)
+    gcfg = GConfig(**config["g"])
+    twin = None
+    if gcfg.offset and gcfg.offset_rule == "twin":         # the overseer's one-round optimiser (src/step3/twin.py)
+        from .twin import Twin
+        twin = Twin(task, proto, ppo, net_arch, config["reward_scale"], gcfg, seed=seed + 7_000 * n_resume,
+                    cfg=config.get("twin", {}))
+        n_prac = int(round(float(twin.cfg["practice"]) * n_envs))
+        assert n_prac < n_envs, "practice copies must leave real ones"
+        if n_prac:
+            venv.practice[n_envs - n_prac:] = True
+        if resume and os.path.exists(os.path.join(run_dir, "twin_model.zip")):
+            twin.model = PPO.load(os.path.join(run_dir, "twin_model.zip"), env=twin.venv, device="cpu")
+            twin.freeze()
+    overseer = Overseer(task, proto, venv, ref_trajs, gcfg, k=pb["k"], beta=pb["beta"],
+                        seed=seed + 7_000 * n_resume, twin=twin)
     ep_steps = n_envs * proto.t_ep
     if resume:
         model = PPO.load(os.path.join(run_dir, "model.zip"), env=venv, device="cpu")

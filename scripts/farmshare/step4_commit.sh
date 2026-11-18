@@ -21,7 +21,7 @@ for p in docs/step4_optimal_log.md docs/step4_bonus_log.md docs/step4_noreg_fail
 for env in grid absent_supervisor tomato tomato_large taxi boat_race; do
   for d in results/step4/$env/targets results/step4/$env/phase_a; do [[ -d $d ]] && git add -A "$d"; done
   for o in results/step4/$env/optimal results/step4/$env/bonus results/step4/$env/noreg_fail results/step4/$env/comp \
-           results/step4/$env/indiff results/step4/$env/indiff_pool results/step4/$env/indiff_mean; do
+           results/step4/$env/indiff results/step4/$env/indiff_pool results/step4/$env/indiff_mean results/step4/$env/indiff_twin; do
   [[ -d $o ]] || continue
   [[ -f $o/runs.csv ]] && git add "$o/runs.csv"
   for r in "$o"/*/; do
