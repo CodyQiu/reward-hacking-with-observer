@@ -1028,3 +1028,19 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_N1_P1eq1_L … step4_br.py results/step4/taxi/noreg_fail/N1_P1eq1_L --finished-only --draws 12`. s2 has finished at 1536 (extension 1992348); s0 is at 1488 and s1 at 1512.
   - Submitted: `... br_missing submit` → **1993990**. It checks whichever seeds have finished when it starts.
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 97 (19:54–19:58): Taxi `N1_P1eq1_L` 2/3 at 1536 (s2 0.038 IMPROVING) → extend 3072 (1994622)
+
+- **The check.** **1993990** (Taxi `N1_P1eq1_L` at 1536) COMPLETED (1:19:32).
+
+  | Seed | BR gap 768 → 1536 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | → **0.015** | CONVERGED | −95.4, then −92 to −90 (corrected in round 0, then never again) | −88.2, then −80.6 ×4 (the same end state) |
+  | s1 | → **0.026** | CONVERGED | −89.2, then −94 to −90 | −88.2, then −68.2 ×4 |
+  | s2 | → **0.038** | IMPROVING | −95.0, then −82 to −81 | −88.2, then −74.5 ×4 |
+
+  - All three are corrected once, then take a new exploit (true about −81 to −92, against honest 125), as the noreg_fail targets do.
+- **Rule 4 (wave-1 run, one seed IMPROVING, below Taxi's 6144 cap): extend 2×.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi N1_P1eq1_L 3072` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_L --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1994622**.
+- Cells DONE: 0 of 2.
