@@ -1185,3 +1185,8 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - **Taxi `LN` s0 (indiff_pool):** true −90.0 in every round, never corrected (corrections 0.99 below the target). It hides, like the other Taxi seeds.
 - Deliveries for the two Taxi seeds: `experiments/step4_level_play.py` is running. They are logged with the checks.
 - `indiff_twin`: 20 of 36 runs submitted. The other 16 (AS `LE`/`LN`, Tomato, tomato_large) wait for slots: 110 jobs in all now.
+- **Addendum (03:55), Taxi deliveries** (`.venv/bin/python experiments/step4_level_play.py <run>/seed<s>`; honest play 7.1 per round, no repeat pickups):
+  - **indiff_pool `LN` s0:** round 0 at level 0: true −90.0, 0.0 deliveries, 41.3 repeat pickups (the bug, off-window). Level 1 (rounds 1 and 3): true −97.7, **0.0 deliveries**, 1.3 repeat pickups.
+  - **indiff_mean `L` s1:** round 0 at level 0: true −90.8, 0.0 deliveries, 0.0 repeat pickups. Level 1: true −125.8 (round 1) and −103.2 (round 3), **0.0 deliveries**, 0.0 repeat pickups.
+  - Neither seed can deliver after a correction. That is the skill deficit docs/step4_indiff.md predicts for Taxi.
+  - The indiff_mean report says "NO TARGET" for Taxi `L` s1 and Boat Race `L` s0: their indiff_mean targets (Taxi one job per seed, Boat Race one job) are still pending. The checks run regardless.
