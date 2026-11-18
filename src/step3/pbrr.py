@@ -354,8 +354,6 @@ class Overseer(BaseCallback):
             assert task.tables is not None, f"offset_rule={gcfg.offset_rule} needs a tabular task (dp.best_round_value)"
         if self.exact_mean:
             assert gcfg.n_ensemble >= 1, gcfg.n_ensemble
-        if self.pool:                    # other candidate sources exist in the exact targets and checks only
-            assert gcfg.pool_source == "final", f"pool_source={gcfg.pool_source} is not implemented in training"
         # exact M by DP: the exact rules' yardstick, and the pool estimate's validation where tables exist
         self.track_m = self.exact or self.exact_mean or (self.pool and task.tables is not None)
         if self.track_m:

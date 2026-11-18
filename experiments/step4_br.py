@@ -126,17 +126,11 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print):
         D = [[[] for _ in range(gcfg.n_ensemble)] for _ in range(n_draws)]
     if exact_rule or pool_rule or ens_rule:                            # each draw's M (best round, no level), level
         m_prev, lvl_prev = [best_round_value(tb, tb.proxy, T)] * n_draws, [0.0] * n_draws
-    if pool_rule:      # the pool's further candidates (GConfig.pool_source), from PPO's own probabilities
-        assert gcfg.pool_source in ("final", "none", "rounds"), \
-            f"pool_source={gcfg.pool_source}: the check needs PPO's own plays (a twin needs its own model)"
-        occ = np.asarray(ev_p["level_dist"])
-        rounds = {"final": [K - 1], "none": [], "rounds": list(range(K - 1))}[gcfg.pool_source]
+    if pool_rule:      # the agent's final-round play: PPO's own probabilities in round K-1, at the levels it reaches
         finals = []
-        for kk in rounds:
-            for c in np.flatnonzero(occ[kk] >= 0.05):
-                Pf = np.stack([np.asarray(probs_at(kk * T + tau), float)[:, c] for tau in range(T)])
-                name = f"final lvl{int(c)}" if gcfg.pool_source == "final" else f"round{kk} lvl{int(c)}"
-                finals.append((name, (lambda P, t0: (lambda t: P[t - t0]))(Pf, kk * T), kk))
+        for c in np.flatnonzero(np.asarray(ev_p["level_dist"])[K - 1] >= 0.05):
+            Pf = np.stack([np.asarray(probs_at((K - 1) * T + tau), float)[:, c] for tau in range(T)])
+            finals.append((int(c), (lambda P, t0: (lambda t: P[t - t0]))(Pf, (K - 1) * T)))
     for c in range(1, K):
         w = wbl[:K - 1, c - 1]
         if w.max() >= P_MIN:                                           # PPO's own caught round

@@ -106,13 +106,6 @@ class GConfig:
     offset_rule: str = "rollouts"
     pool_episodes: int = 8
     n_ensemble: int = 1               # offset_rule = "exact_mean" only: fits per catch, applied as their mean
-    # offset_rule = "pool" only: where the candidates for M_hat come from besides the reference and the caught
-    # play (docs/step4_indiff.md, "Estimating M without the final round"; 2026-11-18). "final": the agent's own
-    # final-round play (the original rule). "none": no further candidates. "rounds": the agent's own play in
-    # the ordinary (audited) rounds, at every level it reaches there. "twin": the overseer's own optimiser, a
-    # policy trained to maximise one round of the reward in force with nothing at stake (in exact targets: its
-    # converged policy, the best round of each level's mean reward). Exact targets and checks only for now
-    pool_source: str = "final"
     # Step 4 fines only (applied by the overseer, not the fit; docs/step4_comp.md): the correction in force
     # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
     # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)

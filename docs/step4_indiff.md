@@ -170,35 +170,6 @@ The estimator is validated in an env when every seed passes A1–A3, as the exac
 
 The loop rules, caps, verdict and criteria are those of `indiff_pool`. The A1–A3 verdict per target is from `experiments/step4_indiff_check.py`, which reads the same fields. Log: `docs/step4_indiff_log.md`.
 
-## Estimating M without the final round (`g.pool_source`, `CAMPAIGN=indiff_poolsrc`; 2026-11-18)
-
-**The user's concern, as stated:** "focusing on the last sub-episode seems to be a tad-bit cheating ... in our experiments we see that in the last episode since it is no longer corrected, it can just do what it wants. but in real life...we can't really expect when that happens". And: "could you come up with exact solves and see if it does as well? if it performs worse, could you think of a way to best estimate the exact solve without utilizing the final round".
-
-**How much the pool relies on the final round.** In the existing `indiff_pool` targets, the agent's final-round play is the candidate that sets M̂ after the first correction in nearly every draw: grid 36/36, AS 36/36, Tomato 36/36, Taxi 30/36, Boat Race 30/36, tomato_large 26/36. Without it, M̂ after the first correction falls back to the reference, which is below the best round: AS 372 against 450, Taxi 112 against 125, Boat Race 39 against 50, grid 19 against 22.
-
-**Three candidate sources besides the reference and the caught play** (exact targets; `experiments/step4_targets.pool_candidates`):
-
-| `g.pool_source` | Candidates | Fair? |
-|---|---|---|
-| `final` (the original) | the agent's final-round play at each level it reaches there | uses the protocol's free round |
-| `none` | nothing more | yes |
-| `rounds` | the agent's own play in the ordinary, audited rounds (k < K−1), at each level it reaches there | yes: the user's idea, "rollouts of the agent under its ... policy and taking the maximum" |
-| `twin` | the overseer's own optimiser: a policy trained to maximise one round of the reward in force, with nothing at stake (in targets, its converged policy: the best round of each level's mean reward) | yes: the overseer red-teams its own reward by RL, with no DP and no reliance on the agent |
-
-**Why the twin is the principled one.**
-- **It needs nothing from the agent and nothing from the protocol.** The final round supplied play with nothing at stake; the twin supplies it by construction.
-- **The agent cannot manipulate it.** The agent influences the twin only through which corrections happen. The agent's own plays, `final` and `rounds`, can be sandbagged in principle by an agent that understands the pricing: playing worse in the rounds that are candidates raises its future level. For `rounds` this pays when the level is also paid in a round that is not a candidate, which here is the final round. PPO cannot learn this, because the plays come from earlier episodes.
-- **It prices what the agent faces.** Like the agent, the twin sees the correction count but not the draw, so it converges to the best response to the mean correction. That is exactly the value-of-information point behind `exact_mean`.
-- **Its cost is one extra learner** in training, the same size as the agent. The PBRR fits, which dominate the cost in Taxi and tomato_large, are unchanged. Training support is not written yet; these are exact targets only.
-- **In exact targets, the twin's candidates contain the final-round ones.** The final round's optimal play at level c is the best round of that level's mean reward. So the free final round was acting as a twin, and `twin` measures whether that role can be filled fairly.
-
-**Predictions, written before any of these targets.** Criterion: honest by the end; the existing `final` targets are 6/6, 6/6, 6/6, 6/6, 4/6, 5/6.
-- `none`: **worse.** AS farms, as comp did, because the reference's 372 underestimates the best round's 450 and overpays the first correction by about 78 per round against δ = 50. Taxi and Boat Race overpay by about 13 and 11 per round against δ of 6 and 0, so extra corrections follow. The grid stays honest, because it overpays about 3 against δ = 122.
-- `rounds`: **about as good as `final`** in grid, AS and Tomato, where one correction makes honest the best round, so the ordinary rounds after it are already best rounds. Possibly different in Taxi, Boat Race and tomato_large, where play at intermediate levels can be distorted.
-- `twin`: **the same as `final`**, within the draws' noise.
-
-**Run.** `CAMPAIGN=indiff_poolsrc bash scripts/farmshare/step4_optimal.sh targets submit`: 27 jobs. Each variant is one job per env (6 seeds); tomato_large has one job per seed and no twin. Time limits are short so the jobs start sooner: grid, AS and Boat Race 2 h, Tomato 6 h, Taxi 8 h, tomato_large 24 h. Targets go to `results/step4/<env>/targets/indiff_pool_{none,rounds,twin}/`. Compare with `experiments/step4c_figures.py` and `experiments/step4_indiff_check.py`. The training overseer refuses any source but `final`, and the best-response check accepts `none` and `rounds` and refuses `twin`.
-
 ## Pipeline
 
 1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` (the exact rule) and `CAMPAIGN=indiff_pool … targets submit` (the estimator) each submit 11 jobs:
@@ -234,5 +205,4 @@ The loop rules, caps, verdict and criteria are those of `indiff_pool`. The A1–
   - the target and best-response chains, including single-draw V0 = 43,500;
   - the pool: in the Overseer, an earlier final round entering the pool, the chained levels, and M̂ ≤ M on the deterministic grid; in the target and best-response check, the same;
   - the verdict script's labels: under-correction, farming, tie, and the A2 shortfall kinds;
-  - `exact_mean`: `EnsembleCorrection` against mean_i min(prev, g_i); the Overseer fitting 3 data sets per catch and pricing M on the applied mean; the target and best-response chains; old game keys unchanged;
-  - `pool_source`: each source's target chain, its winning candidates and M̂ ≤ M; `final`'s game key and names unchanged; the check accepting `rounds` and refusing `twin`.
+  - `exact_mean`: `EnsembleCorrection` against mean_i min(prev, g_i); the Overseer fitting 3 data sets per catch and pricing M on the applied mean; the target and best-response chains; old game keys unchanged.
