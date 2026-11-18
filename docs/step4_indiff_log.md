@@ -364,6 +364,26 @@ V_hide is 928.0 in every seed.
 - **s20 is under-correction at every level, as under the exact rule** (the predicted failure).
 - **s1:** δ = 0 at the never-reached counterfactual levels 2 and 4 prints "TOO LARGE" with an error of 0.00. It does not affect the verdict.
 
+### indiff_mean (the average correction: the mean of 6 fits per catch, priced on M of that mean)
+
+Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/<env>/targets/indiff_mean/`. The leftover gap per level is the mean over draws of `m_after` (each draw's own best round after the correction) minus `m_after_mean_table` (the best round of the mean correction actually applied): the value of information the 6-fit average leaves.
+
+- **grid (1995152, 13 min): 6/6 PASS.** Every seed is corrected in round 0, then never again: true −100, then 22 ×4 (honest 22). V0 = 43,499.9–43,500.0 (K·M(proxy) = 43,500); hiding 39,500.
+  - Level errors (check): level 1 at most 0.01; levels 2–4 (counterfactual) at most 0.56, against a re-correction cost δ of 615–688 per round. No farming.
+  - **Leftover gap per level** (mean of m_after over draws − m_after_mean_table):
+
+    | seed | L1 | L2 | L3 | L4 |
+    |---|---|---|---|---|
+    | 0 | +0.00 | +0.56 | +0.01 | +0.11 |
+    | 1 | +0.01 | +0.18 | +0.37 | +0.44 |
+    | 2 | +0.00 | +0.07 | +0.00 | +0.00 |
+    | 20 | +0.01 | +0.19 | +0.11 | +0.15 |
+    | 21 | +0.01 | +0.02 | +0.11 | +0.05 |
+    | 22 | +0.00 | +0.04 | +0.24 | +0.20 |
+
+    Level 1 (the only real correction): the draws' m_after span 21.92–21.99 against mean-table 21.94–21.98. The fits nearly agree there, so the average leaves almost nothing.
+- Pending: AS, Tomato, Taxi, Boat Race (one job, or one per seed for Tomato and Taxi), tomato_large (one per seed).
+
 ### indiff_twin (the converged twin; both PPO arms share this target)
 
 Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/<env>/targets/indiff_twin/`. Prediction (docs/step4_indiff.md): honest by the end in grid, AS, Tomato and tomato_large, 6/6 each; Taxi and Boat Race at least the pool's 4/6 and 5/6. The level error should be 0.
@@ -1209,3 +1229,13 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Rule 4.** s2 is still training (168 of 768). Once the job ends, s0 IMPROVING means extend 2× (to 1536, within Taxi's 6144 cap). Nothing to submit now.
 - Taxi indiff_pool runs: `L` at 1008 of 1536 (extension), `LE` at 240 of 768, `LN` waiting on s2. The 6b exploration runs `L+ES10` and `L+ES10+N4` (user-requested, iteration 57) are training.
 - 106 jobs in all (limit 110).
+
+## 2026-11-18, iteration 64 (04:39–04:50): **indiff_mean grid targets 6/6 PASS** (leftover gap ≤ 0.01 at level 1); Tomato `L_confirm` finished → check 1995437; Taxi `L` s1 → check 1995438; AS `LE` twin runs (1995439, 1995440)
+
+- **Events.** `targets_grid_indiff_mean` (1995152) COMPLETED (13:28). Tomato `I2_indiff_pool_L_confirm` (1995101) COMPLETED (4:57:32): all three at 1536.
+- **indiff_mean grid targets.** `.venv/bin/python experiments/step4_indiff_check.py results/step4/grid/targets/indiff_mean/`: **6/6 PASS**, corrected in round 0, then honest. The leftover gap per level (m_after per draw against m_after_mean_table) is under "Exact predictions": at most 0.01 at level 1 and at most 0.56 at the counterfactual levels.
+- **Checks (rule 3).** `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed grid `LE+GL_confirm`, grid `LE+RS_confirm`, Tomato `L_confirm` and Taxi `L` (s1 finished at 1536; s0 1056, s2 960).
+  - Submitted, by running those lines verbatim: Tomato `L_confirm` → **1995437** (s20 and s22; s21 was 0.272) and Taxi `L` → **1995438** (s1).
+  - Still held back: the two grid information-only checks.
+- **indiff_twin.** Two more wave-1 runs from the dry-run lines: AS `I4_indiff_twin_LE` → **1995439** and AS `I4_indiff_twin_practice_LE` → **1995440** (`ppo.ent_coef=0.3`, the LE entropy, on the AS base config). 22 of 36 submitted. Still to submit: AS `LN` of both arms, Tomato 6, tomato_large 6.
+- **Budget:** 107 jobs in all (limit 110).
