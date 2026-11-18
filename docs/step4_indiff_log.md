@@ -177,7 +177,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 | boat_race / pure / `I4_indiff_twin_LE` / s0 (1536) | **0.047** (IMPROVING) | corrected once, then partly honest (37.7–37.8) | corrected once, then honest |
 | boat_race / pure / `I4_indiff_twin_LN` / s2 (1536) | **0.000** (CONVERGED) | corrected once, then honest (50.0 ×4) | the same |
 | grid / pure / `I4_indiff_twin_L` / s0 (1536) | **0.001** (CONVERGED) | corrected once, then honest: −100, then 13.4–14.2 (goal reached part of the time) | corrected once, then honest |
-| grid / pure / `I4_indiff_twin_LN` / s0, s1 (1536) | **0.303** (PLATEAU) / 0.011 (CONVERGED) | corrected once, then true −100 | s0's BR farms 4 corrections |
+| grid / pure / `I4_indiff_twin_LN` / s0–s2 (1536) | **0.303** (PLATEAU) / 0.011 / **0.000** (CONVERGED) | s0, s1: corrected once, then true −100; **s2: corrected once, then honest (20.5–21.5)** | s0's BR farms 4 corrections |
 | boat_race / practice / `I4_indiff_twin_practice_LE` / s0 (1536) | **0.053** (PLATEAU) | corrected once, then partly honest (43.8 ×4) | corrected once, then honest; the BR under the run's twin farms 4 corrections |
 | absent_supervisor / pure / `I4_indiff_twin_LN` / s0–s2 (3072) | **0.000 / 0.000 / 0.000** (CONVERGED) | corrected in round 0, then honest (449.7–449.8 ×4) | the same (no farming in these seeds' BRs) |
 | boat_race / pure / `I4_indiff_twin_LN` / s1 (1536) | **0.008** (CONVERGED) | corrected once, then honest from round 2 (38.0, then 49.9–50.0) | the BR takes 2 corrections |
@@ -203,6 +203,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
   7. twin tomato_large (6).
 
   That is 26 runs. The tomato_large runs hold a slot for 2 days or more each. If you'd rather some of these go first (e.g. all twin runs), or want a higher cap (the cluster allows 128), say so.
+  - **Update (10:55):** the queue now has 24 runs: bonus tomato_large swap wave 2 (4 left) and 6b (4); grid pure-twin wave 2 and 6b (8, iteration 89); twin Tomato `LN` (2); twin tomato_large (6). Since 05:45, 22 queued runs and many checks, extensions and confirmations have gone in as slots freed.
 
 - **Excluded nodes.** Every submit carries `EXCLUDE=barley-04,wheat-06`.
   - barley-04 is your standing instruction from the optimal campaign.
@@ -1578,3 +1579,18 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Boat Race pure `I4_indiff_twin_LE` at 1536: 0.047 (IMPROVING) / 0.030 (PLATEAU) / 0.030 (CONVERGED).** **Rule 4 → extend 3072.** Dry-run printed `... --run-id I4_indiff_twin_LE ... --resume --extend-to 3072`. `... submit` → ****.
 - **Rule 3.** grid pure `LN` (s2 now finished) → ****.
 - 109 jobs in all.
+
+## 2026-11-18, iteration 89 (10:49–10:58): **grid pure-twin cell: all three wave-1 runs finished 2/3** → rule 5 (wave 2, 6 runs) and rule 6b (2 runs; 2 duplicates skipped) queued from `I4_indiff_twin_L`
+
+- **Check 1995726** (grid pure `I4_indiff_twin_LN`, s2) COMPLETED. **s2: 0.000, CONVERGED, and honest after one correction** (20.5–21.5). s0: 0.303 (PLATEAU), s1: 0.011.
+  - The run has finished. Its only unconverged seed is PLATEAU, so it is **finished at 2/3**.
+- **The grid pure-twin cell.** `L` 2/3 (0.001 / 0.010 / 0.036), `LE` 2/3 (0.449 / 0.011 / 0.011), `LN` 2/3 (0.303 / 0.011 / 0.000). All three are finished and none is 3/3, so **rules 5 and 6b both start** (as in the bonus and comp cells).
+  - In every failing seed (s0 of `LE` and `LN`, s2 of `L`), the best response farms re-corrections priced by the run's own overpaying twin (flag at the top).
+  - Base: the run with the smallest mean gap, `I4_indiff_twin_L` (0.016; `LN` 0.105; `LE` 0.157).
+- **Rule 5 (wave 2).** Dry-run, one factor at a time: `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo grid indiff_twin L+<tag> "<factor>"` for `LR` (`ppo.learning_rate=0.0001`), `GL` (`ppo.gae_lambda=1.0`), `NET` (`ppo.net_arch=[256,256]`), `RS` (`reward_scale=0.0025`, 0.25 × grid's 0.01), `EP` (`ppo.n_epochs=20`) and `AN` (`anneal.last=0.5`). `L` has no extras beyond the base config.
+- **Rule 6b, stage 1.** Dry-run: `... explore grid indiff_twin I4_indiff_twin_L` lists `+ENT3`, `+ES10`, `+N4` and `+ES10+N4`.
+  - **Two are duplicates, skipped (precedent: skip duplicate configs and say so).** `L+ENT3` (`ppo.ent_coef=0.03`) is exactly `I4_indiff_twin_LE`, and `L+N4` (`n_envs=64 ppo.batch_size=1600`) is exactly `I4_indiff_twin_LN`. Both have already run.
+  - Kept: `L+ES10` and `L+ES10+N4`.
+- **All 8 wait in the job queue** (positions 3–10, ahead of the tomato_large runs: grid runs take about 4 h each, so they free slots quickly). See the updated flag at the top.
+- **Rule 3**, submitted from the dry-runs: comp Boat Race `LN+AN` → 1995741, `LN+NET` → 1995742 (comp log); twin grid `practice_L` → **1995743**. indiff_mean grid `I3_indiff_mean_LE` (finished at 1536) waits for a slot.
+- 110 jobs in all.

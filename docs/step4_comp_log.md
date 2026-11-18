@@ -1602,3 +1602,8 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 - **Check 1995671** (`C1_comp_LN+RS`): **0.021 (CONVERGED) / 0.173 (PLATEAU) / 0.185 (IMPROVING).** s0 farms and is honest by the true reward. s1 and s2 hide: never corrected, true −76 / −82 in rounds 0–3, then −94.
 - **Rule 4:** both have an IMPROVING seed, so extend 2× to 3072. Dry-runs printed `submit.sh 48 --env boat_race --run-id C1_comp_LN+LR … --resume --extend-to 3072` and the same for `LN+RS`. Submitted → **1995703** (`LN+LR`), **1995704** (`LN+RS`).
 - comp 22 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 112 (10:55): Boat Race wave-2 checks `LN+AN` (1995741) and `LN+NET` (1995742)
+
+- `br_missing` (dry-run) listed both: their seeds have finished at 1536. Lines run verbatim → **1995741**, **1995742**.
+- 110 jobs in all.
