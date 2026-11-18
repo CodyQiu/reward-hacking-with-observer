@@ -87,5 +87,19 @@
   ]
  },
  "git": "620727f7a",
- "started": "2026-11-16 13:19:54"
+ "started": "2026-11-16 13:19:54",
+ "resumes": [
+  {
+   "at_episodes": 288,
+   "episodes": 1536,
+   "anneal": {
+    "last": 0.25,
+    "floor": 0.1,
+    "ent_start": 10,
+    "ent_episodes": 768
+   },
+   "git": "3fde61fe3",
+   "time": "2026-11-18 13:48:45"
+  }
+ ]
 }

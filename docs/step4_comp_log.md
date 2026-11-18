@@ -1699,3 +1699,9 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 
 - **Check 1995953** (`C1_comp_LN+RS` s0 at 3072): **0.021, CONVERGED** (farms 4 corrections, honest by the true reward). s1 0.173 and s2 0.184 are PLATEAU (hide). **Rule 4:** finished at 1/3.
 - **Boat Race wave 2, final so far:** `LN+AN` 3/3 (confirming), `LN+LR` 2/3, `LN+NET` 1/3, `LN+RS` 1/3, `LN+GL` 0/3; `LN+EP` → 3072. 6b: `LN+ENT3` → 3072 (2/3 at 1536), `LN+ES10` → 3072 (0/3), `LN+N4` and `LN+ES10+N4` are training.
+
+## 2026-11-18, iteration 126 (13:50): Boat Race 6b `LN+ES10+N4` (finished at 1536) → check 1996052; `LN+ES10` at 3072 finished (check waits for a slot)
+
+- `C1_comp_LN+ES10+N4` (1995510) had finished at 1536. Its dry-run line, run verbatim → **1996052**.
+- `LN+ES10`'s extension to 3072 (1995878) COMPLETED (47:53). Its check goes in at the next free slot.
+- 110 jobs in all.
