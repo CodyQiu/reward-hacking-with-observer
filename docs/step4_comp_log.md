@@ -1657,3 +1657,8 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - `LN+AN`: s0 and s1 CONVERGED, s2 training.
   - 6b: `LN+ES10` → 3072 (all hide); `LN+ENT3`, `LN+N4` and `LN+ES10+N4` are training.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 120 (12:28): Boat Race 6b `LN+ENT3` finished at 1536 → check 1995918 
+
+- `C1_comp_LN+ENT3` (1995494) COMPLETED (2:47:19). `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995918 **.
+- 110 jobs in all.
