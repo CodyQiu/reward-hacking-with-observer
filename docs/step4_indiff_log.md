@@ -1688,3 +1688,13 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 
 - **Tick.** 109 jobs. No resumes are listed beyond the held bonus run. `br_missing` (dry-run) lists twin Tomato `I4_indiff_twin_L` (finished seeds), indiff_mean AS `I3_indiff_mean_LE`, and comp Boat Race `LN+ES10+N4`.
 - Submitted: `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995982**. The other two wait for slots.
+
+## 2026-11-18, iteration 100 (14:24–14:32): indiff_pool Taxi `L` at 3072 → check 1996124 (s0, s2); twin Boat Race pure `LE` at 3072 → check 1996126
+
+- **Events.** Taxi `I2_indiff_pool_L` finished its extension to 3072 (1995534; s1 was 1.231 at 3072). Twin Boat Race pure `I4_indiff_twin_LE` finished its extension to 3072 (1995725).
+- **Rule 3.** Dry-run lines run verbatim: Taxi `L` → **1996124**; twin Boat Race `LE` → **1996126**. indiff_mean AS `LE` and comp Boat Race `LN+ES10` (3072) wait for slots.
+- **Taxi `L` deliveries at 3072** (`step4_level_play.py`; honest 7.1):
+  - s0: level 0, true −90.1, 0.0 deliveries, 41.0 repeat pickups; level 1, **0.0 deliveries**.
+  - s2: level 0, true −82.3, 0.3 deliveries, 40.7 repeat pickups; level 1, **0.0 deliveries**.
+  - After 3072 episodes neither can deliver after a correction. Both still exploit off-window and hide.
+- 110 jobs in all.

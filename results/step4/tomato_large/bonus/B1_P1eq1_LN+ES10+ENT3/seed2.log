@@ -14,3 +14,4 @@
   [tomato_large s2] 10,752,000  win0-3 0.25  off 0.17  corr/ep 1.02  winF 0.01  proxy0-3    370.8  rounds 1863  (168436s)
   [tomato_large s2] 11,520,000  win0-3 0.25  off 0.16  corr/ep 1.02  winF 0.00  proxy0-3    366.9  rounds 1919  (172149s)
   [tomato_large s2] resumed at episode 360 -> 1536
+  [tomato_large s2] 12,288,000  win0-3 0.25  off 0.18  corr/ep 1.02  winF 0.00  proxy0-3    382.9  rounds 1970  (3308s)
