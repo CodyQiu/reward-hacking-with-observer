@@ -1544,3 +1544,8 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - `C1_comp_LN+N4` → **1995496**.
 - `C1_comp_LN+ES10+N4` is next in the queue (flag at the top of docs/step4_indiff_log.md).
 - comp 17 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 105 (07:00): Boat Race rule 6b stage 1 complete: `C1_comp_LN+ES10+N4` → 1995510
+
+- The fourth stage-1 run, from iteration 103's `explore boat_race comp C1_comp_LN` dry-run (line run verbatim). All four stage-1 runs are now in: 1995494–1995496 and 1995510.
+- comp 18 jobs (cap 30); 110 in all.

@@ -397,7 +397,9 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
     Level 1 (the only real correction): the draws' m_after span 21.92–21.99 against mean-table 21.94–21.98. The fits nearly agree there, so the average leaves almost nothing.
 - **Tomato s0 (1995154, 31 min): PASS.** Corrected in round 0, then never again: true 46.0, then 434.1 ×4 (honest 434.1). V0 2944.2; hiding 2759.5. Level 1 is paid 154.93 against 154.93 faced; levels 2–4 err by at most 0.08, against δ = 10.6–10.9.
   - Leftover gap per level: L1 +0.00 (draws 433.90–433.91 against mean-table 433.91); L2 +0.05; L3 +0.10; L4 +0.18.
-- Pending: AS, Tomato s1, s2, s20–s22, Taxi (one per seed), Boat Race, tomato_large (one per seed).
+- **Tomato s20 (1995157, 33 min): PASS.** Corrected in round 0, then never again: true 46.0, then 434.1 ×4. V0 2944.2; hiding 2759.5. Level 1 is paid 154.93 against 154.93 faced; level 2 errs by 0.02 (δ 12.6).
+  - Leftover gap per level: L1 +0.00 (draws 433.89–433.92 against mean-table 433.91); L2 +0.02; L3 +0.04; L4 +0.06.
+- Pending: AS, Tomato s1, s2, s21, s22, Taxi (one per seed), Boat Race, tomato_large (one per seed).
 
 ### indiff_twin (the converged twin; both PPO arms share this target)
 
@@ -1365,4 +1367,12 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
 - **Rule 3.** The dry-run's `br_taxi_I2_indiff_pool_LN` line, run verbatim → **1995502**.
 - **Rule 4.** s0 is IMPROVING, so the run extends to 1536 once s2's check has read its 768 checkpoint.
 - **s2 deliveries** (`step4_level_play.py`, at 768; honest 7.1): level 0, true −69.6, 0.8 deliveries, 40.4 repeat pickups; level 1, true −96.5 / −96.6, **0.0 deliveries**, 1.1–1.4 repeat pickups.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 75 (06:59–07:05): **indiff_mean Tomato s20 PASS**; grid `I3_indiff_mean_LN` finished → check 1995509 
+
+- **Events.** `targets_tomato_indiff_mean_s20` (1995157) COMPLETED (33:10). grid `I3_indiff_mean_LN` (1995175) COMPLETED (6:42:25).
+- **Tomato s20: PASS**, corrected once, then honest. Leftover gap at level 1: 0.00 (details under "Exact predictions").
+- **Rule 3.** `CAMPAIGN=indiff_mean EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_grid_I3_indiff_mean_LN`; `... submit` → **1995509 **.
+- The last free slot went to the queue's next item, comp Boat Race `C1_comp_LN+ES10+N4` → **1995510** (logged in docs/step4_comp_log.md).
 - 110 jobs in all.
