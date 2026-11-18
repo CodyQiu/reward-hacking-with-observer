@@ -834,3 +834,15 @@ V_hide is 928.0 in every seed.
   - s20 is at 2136 of 3072.
   - Rule 4 decides when s20 finishes; if any seed is IMPROVING, the run extends to 6144.
 - Cells DONE: 1 of 6.
+
+## 2026-11-17, iteration 44 (23:28–23:31): four checks (grid `LE+ES10`, grid `LE+LR_confirm`, Tomato `LN`, Boat Race `L_confirm`)
+
+- **Events.**
+  - Boat Race `L_confirm` (1994200, 4:55:29) has finished all three seeds, s20 included.
+  - Grid `LE+ES10` (1994529) has finished.
+  - Grid `LE+LR_confirm` and Tomato `LN` have finished seeds.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_grid_I2_indiff_pool_LE+ES10`, `br_grid_I2_indiff_pool_LE+LR_confirm`, `br_tomato_I2_indiff_pool_LN` and `br_boat_race_I2_indiff_pool_L_confirm`. Tomato `L` and `LE` were "check still queued/running".
+  - Submitted: `... br_missing submit` → **1995087 1995088 1995089 1995091 ** (in that order).
+  - Boat Race `L_confirm` s20 is the deciding seed for that confirmation (its target is under-corrected).
+- Cells DONE: 1 of 6.
