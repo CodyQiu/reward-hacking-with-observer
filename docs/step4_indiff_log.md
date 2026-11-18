@@ -15,7 +15,7 @@ Procedure: `docs/step4_indiff.md`. Two campaigns, one log:
   - For every Taxi check, log the deliveries per round of PPO's own play after one correction (honest: 7.1).
 - Cell caps as in comp: grid, Tomato, tomato_large and Boat Race 12,288 episodes; AS 24,576; Taxi 6144.
 
-This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff`, `CAMPAIGN=indiff_pool` or `CAMPAIGN=indiff_mean`, and the jobs count toward the 110 total.
+This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff`, `CAMPAIGN=indiff_pool`, `CAMPAIGN=indiff_mean` or `CAMPAIGN=indiff_twin`, and the jobs count toward the 110 total.
 
 ## Status
 
@@ -145,6 +145,17 @@ The columns are: BR gap and verdict; PPO's corrections per episode and true retu
 Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targets/indiff_mean/seed<s>.json` (3 draws per correction, each a 6-fit mean). For each target, the A1–A3 verdict comes from `experiments/step4_indiff_check.py`, which also records the leftover gap per level: `m_after` per draw against `m_after_mean_table`.
 
 | Env / run / seed | BR gap (verdict) | PPO: corrections, true by round | Target: corrections, true by round |
+|---|---|---|---|
+| (none yet) | | | |
+
+### indiff_twin PPO (both arms) against the `indiff_twin` target (updated as checks come in)
+
+**Submitted 2026-11-18 02:44 (iteration 59).** The two arms are separate cells that share one target: `I4_indiff_twin_*` (the pure twin) and `I4_indiff_twin_practice_*` (plus practice, `twin.practice=0.25`). Both run under the indiff_pool loop rules.
+- Targets: `results/step4/<env>/targets/indiff_twin/seed<s>.json` (6 draws, the converged twin). Each is checked with `experiments/step4_indiff_check.py`; the level error should be 0.
+- Taxi checks also record PPO's deliveries per round after one correction, from `experiments/step4_level_play.py "<run>/seed*"` (honest play: 7.1).
+- Cells DONE: 0 of 12 (6 envs × 2 arms).
+
+| Env / arm / run / seed | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | Target: corrections, true by round |
 |---|---|---|---|
 | (none yet) | | | |
 
@@ -1115,3 +1126,20 @@ V_hide is 928.0 in every seed.
 - **Rule 4.** s21 is at its final episode and PLATEAU, so **`L_confirm` cannot reach 3/3; it will fail** whatever s20 and s22 do. The job keeps running for them, as the run's seeds move together. Nothing to submit.
 - Tomato confirmations: `L` will fail (s21); `LE_confirm` (1995191) running; `LN_confirm` (1995197) pending. The Tomato cell needs one of these two to reach 3/3.
 - Nothing new from resume or br_missing (dry-runs at 01:38). indiff_mean: targets and wave 1 are still pending or running.
+
+## 2026-11-18, iteration 59 (02:38–02:50): **`indiff_twin` launched: 11 target jobs, then 18 of the 36 wave-1 runs (Taxi first, then grid and Boat Race)**
+
+- **The instruction.** Pull, `tests/test_step4.py` (must be 47/47), then start `CAMPAIGN=indiff_twin` (docs/step4_indiff.md, "The twin"; src/step3/twin.py). The user: "let's do the twin pricing + agent's own RL practice without distillation for now". Submit the targets and wave 1 together, Taxi's 6 runs first, the rest as jobs free up.
+- **Checks.**
+  - Pull: fast-forward to 72a63933e (the twin), which also reverts `indiff_poolsrc` (a06782f7c). None of that campaign's jobs had been submitted.
+  - `.venv/bin/python tests/test_step4.py`: **47 tests, 0 failed.**
+  - Dry-runs:
+    - `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh targets` lists **11 jobs**: grid, AS, Tomato, Taxi and Boat Race one each (seeds 0–2, 20–22); tomato_large one per seed. All with `g.fine_only=True g.offset=True g.offset_rule=twin --draws 6`, plus `g.epochs=1000` outside the grid and `task.obs=onehot` for Taxi. No separate practice target: it shares the game.
+    - `... wave1` lists **36 runs**, 6 per env (L, LE, LN × the two arms), seeds 0–2. Each run's settings are its env's `indiff_pool` run with `g.offset_rule=twin` in place of `pool`, plus `twin.practice=0.25` in the practice arm. For example, Taxi `I4_indiff_twin_L` = `ppo.ent_coef=0.03 task.obs=onehot g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 episodes=768 anneal.last=0.25 anneal.floor=0.1`, the same as `I2_indiff_pool_L`'s overrides.json with only the rule changed.
+- **Budget.** 77 jobs before (limit 110), so 33 free: not enough for all 47.
+  - Submitted: `CAMPAIGN=indiff_twin EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh targets submit` → **1995344–1995354** (grid 1995344, AS 1995345, Tomato 1995346, tomato_large s0/s1/s2/s20/s21/s22 1995347–1995352, Taxi 1995353, Boat Race 1995354).
+  - Then the Taxi lines of the wave-1 dry-run, run verbatim (the driver prints exactly what `submit` runs): **1995355–1995360** (`I4_indiff_twin_L`, `_LE`, `_LN`, `I4_indiff_twin_practice_L`, `_LE`, `_LN`).
+  - Then grid and Boat Race, the same way: grid **1995361–1995366**, Boat Race **1995367–1995372**, in the same order.
+  - **106 jobs** in all now. 4 are left for checks and resumes in the other campaigns.
+  - **Still to submit:** AS, Tomato and tomato_large, 18 runs. They go in as jobs free up, from the same dry-run lines.
+- Nothing else was touched. The indiff_pool, indiff_mean, comp, bonus and noreg_fail runs are unchanged.
