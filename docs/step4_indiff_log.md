@@ -434,3 +434,12 @@ V_hide is 928.0 in every seed.
   - Submitted: `... br_missing submit` → **1993883**.
 - **Queue:** all 18 wave-1 runs are running (started from 14:53); 46 jobs in all, 3 pending (the three newest checks).
 - No PPO for `indiff` (the user).
+
+## 2026-11-17, iteration 18 (16:19–16:25): indiff_pool PPO checks (grid `L` 3/3 finished, grid `LN` s2, Boat Race `LE` s0, s2)
+
+- **Events.** **1993577** (grid `I2_indiff_pool_L`) COMPLETED (1:24:15): all three seeds are at 1536. Grid `LN` s2 and Boat Race `LE` s0 and s2 have also finished at 1536; the others are at 1128–1200.
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=indiff_pool EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed three runs: `br_grid_I2_indiff_pool_L`, `br_grid_I2_indiff_pool_LN` and `br_boat_race_I2_indiff_pool_LE`. Taxi `L` was "check still queued/running" (1993883).
+  - Submitted: `... br_missing submit` → **1993991** (grid `L`), **1993992** (grid `LN`) and **1993993** (Boat Race `LE`).
+- **Queue:** the cluster is busy. The checks submitted at 14:40–15:30 are still pending (Priority).
+- Cells DONE: 0 of 6.

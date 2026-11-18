@@ -1021,3 +1021,10 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - The 0 → 768 leg needed one 48 h resume, so this leg will probably need one too.
 - **Budget:** 3 noreg_fail jobs before this one (limit 20).
 - Cells DONE: 0 of 2.
+
+## 2026-11-17, iteration 96 (16:19–16:24): Taxi `N1_P1eq1_L` s2 at 1536 → check 1993990
+
+- **Rule 3.**
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `run_cmd.sh 6 4 br_taxi_N1_P1eq1_L … step4_br.py results/step4/taxi/noreg_fail/N1_P1eq1_L --finished-only --draws 12`. s2 has finished at 1536 (extension 1992348); s0 is at 1488 and s1 at 1512.
+  - Submitted: `... br_missing submit` → **1993990**. It checks whichever seeds have finished when it starts.
+- Cells DONE: 0 of 2.
