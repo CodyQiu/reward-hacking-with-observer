@@ -4,6 +4,12 @@ Procedure: `docs/step4_noreg_fail.md` (with the criteria, rules and commands of 
 
 ## Flags for the user
 
+- **NEW (2026-11-21): the disk-quota incident of 2026-11-18 15:11 killed all 6 running noreg_fail runs. I have not resumed them, and am waiting for you.** The home directory hit its quota (about 50 GB; the old `.git` held 19 GB of checkpoint history), and every job that wrote after that failed (109 FAILED in sacct across all campaigns). Nothing ran from then until 2026-11-21. You re-cloned the repo shallow (`5fb1619`); home is at 42 GB of about 50 now, `.git` 12 GB. I check the space every iteration and stop submitting at 46 GB.
+  - Taxi: `N1_P1eq1_L` (2832 / 2832 / 2880 episodes done), `N1_P1eq1_LE` (1152 / 1176 / 1104), `N1_P1eq1_LN_confirm` (648 / 408 / 288).
+  - Boat Race stage 2: `N1_P1eq1_LE+ES10+ENT10` (624 ×3), `+ES30` (336 ×3), `+ES30+N4` (192 ×3).
+  - Their checkpoints are intact. `CAMPAIGN=noreg_fail ... resume submit` would continue all six.
+  - Until you decide, nothing else in this campaign has a rule that submits anything, so it is idle.
+
 - **NEW (2026-11-16): node wheat-06 is down** (`sinfo`: `down*`, "Not responding"). It killed the bonus campaign's Tomato no-reg `LN_confirm` (NODE_FAIL; flagged in docs/step4_bonus_log.md). None of this campaign's jobs were on it. Every submit now carries `EXCLUDE=barley-04,wheat-06` while it is down.
 
 - **barley-04.** Every submit still carries `EXCLUDE=barley-04` (your standing instruction from the optimal campaign). On 2026-11-14 at 11:42, `sinfo` shows barley-04 `allocated` with no reason set; say if I should drop the exclusion.
@@ -1096,3 +1102,11 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
 ## 2026-11-18, iteration 103 (10:12): Boat Race stage 2 `N1_P1eq1_LE+ES10+ES30+N4` → 1995721
 
 - The last stage-2 run from iteration 101's dry-run, line run verbatim. All three stage-2 runs are now in: 1995663 (`+ENT10`), 1995673 (`+ES30`), 1995721 (`+ES30+N4`).
+
+## 2026-11-21, iteration 104 (15:30–16:35): quota incident; all 6 runs killed and held for you
+
+- **The incident.** Every noreg_fail job running at 15:11 on 2026-11-18 failed (sacct FAILED): Taxi `N1_P1eq1_L` (1994622), `LE` (1992967) and `LN_confirm` (1992258); Boat Race stage 2 `+ENT10` (1995663), `+ES30` (1995673) and `+ES30+N4` (1995721). Flag at the top.
+- **Rule 1.** No run stopped at the 48 h limit. All six are incident kills, so none is resumed without you.
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run): nothing missing.
+- **Rules 4–6b.** Nothing new is due: every open run is one of the six.
+- Jobs: noreg_fail 0 (cap 20).

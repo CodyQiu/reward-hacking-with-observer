@@ -13,9 +13,13 @@ Procedure: `docs/step4_indiff.md`. Two campaigns, one log:
   - 11 target jobs (the converged twin). The level error should be 0 everywhere, so any miss is the fit's.
   - Two PPO arms in `results/step4/<env>/indiff_twin/`: `I4_indiff_twin_*` (the pure twin) and `I4_indiff_twin_practice_*` (plus practice, `twin.practice=0.25`). Both match the `indiff_twin` target.
   - For every Taxi check, log the deliveries per round of PPO's own play after one correction (honest: 7.1).
+- **`indiff_twin2` (docs/step4_indiff.md, "The twin at every level"; from 2026-11-21, the user's loop prompt): the twin trained and priced at every correction level (`twin.all_levels=True`).**
+  - Two arms, `I5_indiff_twin2_*` and `I5_indiff_twin2_practice_*`, in all six envs. They are separate cells that share the `indiff_twin` targets.
+  - Budget: at most 50 jobs. It has first claim on job slots.
+- **Superseded from 2026-11-21 (the user's loop prompt): `indiff_twin`, `indiff_pool`, `indiff_mean` and `indiff`.** Their running jobs finish, their finished seeds get best-response checks (`br_missing`), and indiff_twin's tomato_large targets are computed. Nothing else is submitted there: no new runs, extensions, confirmations or resumes.
 - Cell caps as in comp: grid, Tomato, tomato_large and Boat Race 12,288 episodes; AS 24,576; Taxi 6144.
 
-This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff`, `CAMPAIGN=indiff_pool`, `CAMPAIGN=indiff_mean` or `CAMPAIGN=indiff_twin`, and the jobs count toward the 110 total.
+This log is append-only below the three summary sections. Every driver command runs with `CAMPAIGN=indiff`, `CAMPAIGN=indiff_pool`, `CAMPAIGN=indiff_mean`, `CAMPAIGN=indiff_twin` or `CAMPAIGN=indiff_twin2`, and the jobs count toward the 110 total.
 
 ## Status
 
@@ -164,13 +168,18 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 | boat_race / `I3_indiff_mean_LE` / s0–s2 (1536) | **0.001 / 0.000 / 0.000** (CONVERGED) | corrected in round 0, then honest: −94.0, then 49.8–50.0 ×4 | (pending) |
 | boat_race / `I3_indiff_mean_LN` / s0–s2 (1536) | **0.000 / 0.000 / 0.000** (CONVERGED) | corrected in round 0, then honest: −94.0, then 50.0 ×4 | (pending) |
 | taxi / `I3_indiff_mean_L` / s1 (768) | **1.240** (not converged; no target yet) | never exploits and never corrected: true and received −90.8 every round; 0.0 deliveries at level 1 | (pending; best response: corrected in round 0, then honest, true −88.2 then 124.7 ×4, V_br 1897.5) |
+| absent_supervisor / `I3_indiff_mean_LE` / s1, s2 (3072) | **0.001 / 0.000** (CONVERGED) | corrected in round 0, then honest: true −113 / −112, then 449 ×4 | the best response is the same (−100, then 450 ×4). s0 was killed unfinished (quota incident) and is not resumed (superseded) |
 
 ### indiff_twin PPO (both arms) against the `indiff_twin` target (updated as checks come in)
 
 **Submitted 2026-11-18 02:44 (iteration 59).** The two arms are separate cells that share one target: `I4_indiff_twin_*` (the pure twin) and `I4_indiff_twin_practice_*` (plus practice, `twin.practice=0.25`). Both run under the indiff_pool loop rules.
 - Targets: `results/step4/<env>/targets/indiff_twin/seed<s>.json` (6 draws, the converged twin). Each is checked with `experiments/step4_indiff_check.py`; the level error should be 0.
 - Taxi checks also record PPO's deliveries per round after one correction, from `experiments/step4_level_play.py "<run>/seed*"` (honest play: 7.1).
-- Cells DONE: 0 of 12 (6 envs × 2 arms).
+- Cells DONE: **1 of 12** (6 envs × 2 arms).
+- **AS, pure twin: DONE (iteration 105, 2026-11-18 15:10).** Config `I4_indiff_twin_LN` (the env's frozen Step 3 config with `g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 n_envs=64 ppo.batch_size=1600`), 3072 episodes.
+  - Tuning seeds 0–2: 0.000 / 0.000 / 0.000.
+  - Confirmation seeds 20–22: 0.000 / 0.000 / 0.000.
+  - **Behaviour:** in all six seeds PPO is corrected once in round 0, then honest at 449.6–449.8 per round (honest 450). This matches the target (corrected once, then honest, level error 0) and the best response, which does not farm in these runs.
 
 | Env / arm / run / seed | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | Target: corrections, true by round |
 |---|---|---|---|
@@ -198,9 +207,29 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 | absent_supervisor / pure / `I4_indiff_twin_LE` / s0–s2 (3072) | **0.070** (IMPROVING) / 0.000 / 0.005 (CONVERGED) | corrected once, then honest (445.6–447.5) | s0's BR farms 3 corrections (true 400 in rounds 1–2); s2's farms 4, worth only 0.5% more |
 | boat_race / practice / `I4_indiff_twin_practice_LN` / s0–s2 (1536) | **0.000 / 0.005 / 0.000** (CONVERGED) | corrected once, then honest (49.9–50.0) | the same; s1's BR takes 3 corrections (worth 0.5% more) |
 | boat_race / pure / `I4_indiff_twin_LN_confirm` / s21, s22 (1536) | **0.000 / 0.000** (CONVERGED) | corrected once, then honest (49.9–50.0) | the same |
+| absent_supervisor / pure / `I4_indiff_twin_LN_confirm` / s20–s22 (3072) | **0.000 / 0.000 / 0.000** (CONVERGED) | corrected once, then honest (449.6–449.8) | the same |
 | boat_race / pure / `I4_indiff_twin_LN` / s0 (1536) | 0.013 (CONVERGED) | corrected once, then honest (49.9–50.0) | the same; the BR takes 2 corrections |
+| absent_supervisor / practice / `I4_indiff_twin_practice_LE` / s0–s2 (3072) | **0.000 / 0.000 / 0.000** (CONVERGED) | corrected once, then honest (449.1–449.8) | the same; no farming in these BRs. 3/3, but superseded: no confirmation |
+
+### indiff_twin2 PPO (both arms) against the `indiff_twin` target (updated as checks come in)
+
+**Wave 1 submitted 2026-11-21 (iteration 106):** 36 runs, `I5_indiff_twin2_{L,LE,LN}` and `I5_indiff_twin2_practice_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_twin2/`, Taxi first. Same targets as indiff_twin (`results/step4/<env>/targets/indiff_twin/`).
+- For each check, the table records the gap and verdict, PPO's corrections and true by round, and the best response's corrections.
+- It also notes whether the best response still takes extra corrections under the run's own twin (the flaw this campaign fixes), against the same env/arm/config row of indiff_twin above.
+- Taxi rows also give PPO's deliveries per round after one correction (`experiments/step4_level_play.py`; honest 7.1).
+- Each seed's `twin_state.json` should show `trained_top` = 4 after a few blocks; anything else is flagged.
+- Cells DONE: 0 of 12.
+
+| Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin's same row) | `trained_top` |
+|---|---|---|---|---|
 
 ## Flags for the user
+
+- **NEW (2026-11-21): the disk-quota incident of 2026-11-18 15:11 killed every running job; none of this log's campaigns is resumed.** The home directory filled (about 50 GB; `.git` alone was 19 GB) and every job that wrote after 15:11 failed (sacct FAILED, 109 jobs).
+  - Lost here: indiff_twin 24 runs, 2 checks and the 6 tomato_large targets; indiff_mean 19 runs and 13 targets; indiff_pool 8 runs and 3 checks.
+  - These campaigns are superseded (the loop prompt of 2026-11-21), so their unfinished seeds stay at their last checkpoint. `--resume` could continue them if you want.
+  - What the prompt asks for is resubmitted: the missing checks and indiff_twin's tomato_large targets (iteration 106).
+  - Home is at 42 GB of about 50 now. `.git` is 12 GB after your shallow re-clone. I check the space every iteration and stop submitting at 46 GB.
 
 - **NEW (2026-11-18 09:10): in Boat Race the trained twin overpays the level, so the best response farms re-corrections; PPO itself does not farm.** First twin PPO checks (Boat Race `I4_indiff_twin_L`, iteration 82):
   - PPO is corrected once, then honest (true 49.6–50.0, as the target).
@@ -1742,3 +1771,35 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - Still hiding and unable to deliver after a correction.
 - Waiting for slots: twin AS practice `LE`; indiff_pool Taxi `LE`; comp Boat Race `LN+ES10`, `LN+N4`. The grid information-only indiff_pool checks stay held.
 - 110 jobs in all.
+
+## 2026-11-18, iteration 105 (15:05–15:12): **indiff_twin: AS pure-twin cell DONE** (`LN_confirm` 0.000 / 0.000 / 0.000); checks for indiff_pool Taxi `LE` (1996225), twin AS practice `LE` (1996226)
+
+- **Check 1996187** (AS pure `I4_indiff_twin_LN_confirm`, all three at 3072; s20 finished just before the check ran): **0.000 / 0.000 / 0.000, 3/3 CONVERGED.** All three are corrected once, then honest at 449.6–449.8.
+  - With the tuning run's 0.000 ×3 (iteration 88), **the AS pure-twin cell is DONE**, the first indiff_twin cell. Status updated at the top.
+- **Events.** Twin Tomato pure `L` (1995487) and comp Taxi `LN+N4` (1995400) finished training. Their checks (1995982 and 1996189) are queued or running.
+- **Rule 3.** Dry-run lines run verbatim: indiff_pool Taxi `LE` (1536) → **1996225**; twin AS practice `LE` → **1996226**.
+- The next queue item (grid pure-twin wave 2) → **1996241**.
+- 110 jobs in all.
+
+## 2026-11-21, iteration 106 (15:30–16:20): new loop prompt; **indiff_twin2 wave 1 submitted (36 runs)**; the other campaigns here superseded; checks and twin tomato_large targets resubmitted after the quota incident
+
+- **What happened since iteration 105.** At 15:11 on 2026-11-18 the home directory hit its quota (about 50 GB; the old `.git` held 19 GB of checkpoint history).
+  - Every job that wrote after that failed: 109 FAILED in sacct, the last at 2026-11-19 22:51 (Taxi indiff_mean `L+ES10+N4`, which kept running until its next checkpoint write). Nothing ran from then until now. Nothing was resubmitted while waiting for you.
+  - You re-cloned the repo shallow (`5fb1619`). Home is at 42 GB now, `.git` 12 GB.
+  - The only jobs here that completed after iteration 105's notes: checks 1996142 (indiff_mean AS `LE`) and 1996226 (twin AS practice `LE`). Their rows are in the tables: indiff_mean `LE` s1, s2 0.001 / 0.000; twin practice `LE` 0.000 ×3, 3/3, but superseded, so no confirmation.
+- **The new loop prompt (2026-11-21)** makes `indiff_twin2` the top priority and supersedes `indiff_twin`, `indiff_pool`, `indiff_mean` and `indiff`. Header and flags updated.
+- **Tests.** `.venv/bin/python tests/test_step4.py` 50/50; `tests/test_step3.py` 13/13.
+- **indiff_twin2 wave 1.** `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh wave1` (dry-run, checked: 36 lines, each with `g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True`, practice arms with `twin.practice=0.25`, Taxi 768 episodes with `task.obs=onehot`, AS 3072, others 1536). With all 110 slots free I ran the lines verbatim, Taxi first. Job ids per env, in the order L, LE, LN, practice_L, practice_LE, practice_LN:
+  - Taxi: 2003889–2003894.
+  - Grid: 2003895–2003900.
+  - AS: 2003901–2003906.
+  - Tomato: 2003907–2003912.
+  - tomato_large: 2003913–2003918.
+  - Boat Race: 2003919–2003924.
+- **Superseded campaigns, as the prompt asks (dry-run first each time):**
+  - `CAMPAIGN=indiff_twin ... br_missing submit`: Tomato `I4_indiff_twin_L` → **2003942**, `I4_indiff_twin_practice_L` → **2003943** (their earlier checks died in the incident).
+  - `CAMPAIGN=indiff_pool ... br_missing submit`: grid `LE+EP_confirm`, `LE+GL_confirm`, `LE+N4_confirm` and `LE+RS_confirm` → **2003944–2003947**; Taxi `L`, `LE` and `LN` → **2003948–2003950**.
+  - `CAMPAIGN=indiff_mean ... br_missing`: nothing missing. `CAMPAIGN=indiff ... br_missing`: nothing.
+  - indiff_twin's tomato_large targets: none existed (the 6 jobs, 1995347–1995352, failed within a second in the incident). I ran the 6 tomato_large lines of the `CAMPAIGN=indiff_twin ... targets` dry-run verbatim → **2003954–2003959** (s0, s1, s2, s20, s21, s22).
+  - The killed runs are not resumed (superseded).
+- 71 jobs in all now (twin2 36, hideout 16, checks 13, twin targets 6).
