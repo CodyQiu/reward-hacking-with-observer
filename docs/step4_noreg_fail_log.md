@@ -1044,3 +1044,55 @@ Honest true return per round: **Taxi 125** (124.8), **Boat Race 50**.
   - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi N1_P1eq1_L 3072` printed `submit.sh 48 --env taxi --run-id N1_P1eq1_L --seeds 0 1 2 --results-dir results/step4/taxi/noreg_fail --resume --extend-to 3072`.
   - Submitted: `... submit` → **1994622**.
 - Cells DONE: 0 of 2.
+
+## 2026-11-18, iteration 98 (07:10–07:15): Boat Race `N1_P1eq1_LE+ENT3_confirm` s20 at the 12,288 cap → check 1995513
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_boat_race_N1_P1eq1_LE+ENT3_confirm`. s20 has finished at the 12,288 cap; s21 is at 10,272 and s22 at 10,704.
+- Submitted: `... br_missing submit` → **1995513**.
+- Resume: nothing. Taxi `L` → 3072, `LE` → 1536 and `LN_confirm` are still training.
+- 110 jobs in all (limit 110).
+
+## 2026-11-18, iteration 99 (07:51–08:00): Boat Race `N1_P1eq1_LE+ENT3_confirm` s20: 0.024, CONVERGED at the 12,288 cap
+
+- **Check 1995513** (s20 at 12,288) COMPLETED (1:40). **s20: 0.024 (s.e. 0.019), CONVERGED.**
+  - PPO: corrected in round 0, then never again; true −93.9, then −85.5 / −83.8 / −81.9 / −81.1.
+  - Best response: corrected in round 0, then never again; true −94.0, then −100 ×4. Its target is the same (a new exploit after the correction).
+  - The s.e. (0.019) is large next to the 0.03 bar.
+- s21 (11,184) and s22 (11,664) are still training to the cap. The confirmation is decided when they finish.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 100 (09:03–09:15): Boat Race `N1_P1eq1_LE+ENT3_confirm` s21, s22 at the cap → check 1995639
+
+- **Rule 3.** `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_boat_race_N1_P1eq1_LE+ENT3_confirm` (s21 and s22 now finished at 12,288; s20 was 0.024). `... submit` → **1995639**. This check decides the confirmation.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 101 (09:24–09:35): **Boat Race `LE+ENT3_confirm` failed at the cap (2/3: s22 0.043)** → rule 6b stage 2 from `LE+ES10` (`+ENT10` 1995663; `+ES30`, `+ES30+N4` queued)
+
+- **Check 1995639** (s21, s22 at 12,288) COMPLETED (1:55).
+  - **s21: 0.020, CONVERGED. s22: 0.043 (s.e. 0.016), IMPROVING at the cap.** s20 was 0.024.
+  - PPO s22: corrected once, then true −78.3 to −71.3 (a new exploit). The best response is corrected once, then −100 per round, a different new exploit.
+  - **Rule 4:** at the cap an unconverged seed cannot be extended, so **this confirmation failed (2/3).** That makes **seven Boat Race confirmations failed, all on s22** (`L` 0.034, `LN` 0.035, `LE` 0.042, `LE+N4` 0.045, `LE+ES10+N4` 0.044, `LE+ES10` 0.036, `LE+ENT3` 0.043).
+- **Rule 6b, stage 2.** All four stage-1 runs (`+ENT3`, `+ES10`, `+N4`, `+ES10+N4`) were 3/3 and all failed their confirmations, so stage 1 is over without the cell DONE.
+  - Base: the stage-1 run with the smallest mean best-response gap. Final checks:
+
+    | Run | Gaps | Mean |
+    |---|---|---|
+    | `LE+ES10` (6144) | 0.013 / 0.002 / 0.008 | **0.008** |
+    | `LE+ES10+N4` (1536) | 0.022 / 0.026 / 0.008 | 0.019 |
+    | `LE+N4` (3072) | 0.015 / 0.023 / 0.023 | 0.021 |
+    | `LE+ENT3` (12,288) | 0.018 / 0.023 / 0.020 | 0.021 |
+  - Dry-run: `CAMPAIGN=noreg_fail EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race P1eq1 N1_P1eq1_LE+ES10 stage2` lists:
+    - `+ENT10`: `ppo.ent_coef=0.9`, with the base's ES10 schedule;
+    - `+ES30`: `anneal.ent_start=30 anneal.ent_episodes=1536`;
+    - `+ES30+N4`: `n_envs=64 ppo.batch_size=1600`.
+  - Submitted (dry-run line, verbatim): `N1_P1eq1_LE+ES10+ENT10` → **1995663**. `+ES30` and `+ES30+N4` wait at the top of the job queue (110 jobs).
+- **Flag (update to the s22 flag above):** if stage 2 also ends without the cell DONE, the cell is flagged for you with each seed's failure mode, and its unconverged runs keep extending.
+- 110 jobs in all. Cells DONE: as before.
+
+## 2026-11-18, iteration 102 (09:50): Boat Race stage 2 `N1_P1eq1_LE+ES10+ES30` → 1995673
+
+- The next run from iteration 101's stage-2 dry-run, line run verbatim. `+ES30+N4` is now first in the job queue.
+
+## 2026-11-18, iteration 103 (10:12): Boat Race stage 2 `N1_P1eq1_LE+ES10+ES30+N4` → 1995721
+
+- The last stage-2 run from iteration 101's dry-run, line run verbatim. All three stage-2 runs are now in: 1995663 (`+ENT10`), 1995673 (`+ES30`), 1995721 (`+ES30+N4`).

@@ -2,15 +2,15 @@
  {
   "seed_dir": "results/step4/grid/indiff_pool/I2_indiff_pool_LE+RS_confirm/seed20",
   "target": "step4/grid/targets/indiff_pool/seed20.json",
-  "verdict": "RUNNING",
-  "finished": false,
-  "episodes": 1488,
+  "verdict": "NEEDS BR",
+  "finished": true,
+  "episodes": 1536,
   "of_episodes": 1536,
-  "last_episodes": 149,
+  "last_episodes": 154,
   "gaps": {
-   "value": 0.0012553930282592773,
-   "window": 0.001677852348993314,
-   "true": 0.02897389208684202,
+   "value": 0.0008152127265930176,
+   "window": 0.0012175324675324675,
+   "true": 0.012431473028464396,
    "corr": 0.0
   },
   "pass": {
@@ -25,25 +25,25 @@
   "br": null,
   "ppo": {
    "window_by_k": [
-    0.9983221476510067,
-    0.0016778523489932886,
+    0.9987824675324676,
+    0.0012175324675324675,
     0.0,
     0.0,
     0.0
    ],
    "true_by_k": [
-    -99.81166076660156,
-    18.465185165405273,
-    20.01677894592285,
-    19.559144973754883,
-    20.252517700195312
+    -99.85592651367188,
+    20.483360290527344,
+    21.01298713684082,
+    20.94236946105957,
+    21.232954025268555
    ],
    "received_by_k": [
-    8681.8994140625,
-    8687.7294921875,
-    8688.5380859375,
-    8693.1953125,
-    8694.025390625
+    8687.1572265625,
+    8692.578125,
+    8693.7431640625,
+    8695.3603515625,
+    8695.703125
    ],
    "corrections_per_ep": 1.0
   },
@@ -508,19 +508,33 @@
     "window": 0.0,
     "true": 0.0022626314006867956,
     "corr": 0.0
+   },
+   {
+    "episode": 1512,
+    "value": 0.0002224445343017578,
+    "window": 0.0,
+    "true": 0.0010245901639344263,
+    "corr": 0.0
+   },
+   {
+    "episode": 1536,
+    "value": 0.0002994537353515625,
+    "window": 0.0,
+    "true": 0.0007897830400310579,
+    "corr": 0.0
    }
   ]
  },
  {
   "seed_dir": "results/step4/grid/indiff_pool/I2_indiff_pool_LE+RS_confirm/seed21",
   "target": "step4/grid/targets/indiff_pool/seed21.json",
-  "verdict": "RUNNING",
-  "finished": false,
-  "episodes": 1512,
+  "verdict": "NEEDS BR",
+  "finished": true,
+  "episodes": 1536,
   "of_episodes": 1536,
-  "last_episodes": 151,
+  "last_episodes": 154,
   "gaps": {
-   "value": 0.011679232120513916,
+   "value": 0.011566638946533203,
    "window": 0.0,
    "true": 1.0,
    "corr": 0.0
@@ -551,11 +565,11 @@
     -100.0
    ],
    "received_by_k": [
-    8697.185546875,
-    8573.3125,
-    8572.94921875,
-    8573.865234375,
-    8574.6416015625
+    8697.3623046875,
+    8575.2587890625,
+    8573.9619140625,
+    8574.76953125,
+    8575.498046875
    ],
    "corrections_per_ep": 1.0
   },
@@ -1024,6 +1038,13 @@
    {
     "episode": 1512,
     "value": 0.011276781558990479,
+    "window": 0.0,
+    "true": 1.0,
+    "corr": 0.0
+   },
+   {
+    "episode": 1536,
+    "value": 0.010989665985107422,
     "window": 0.0,
     "true": 1.0,
     "corr": 0.0

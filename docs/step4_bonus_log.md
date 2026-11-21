@@ -2676,3 +2676,92 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `LN+ES10+ENT3` (1990239, still training).
   - Every checked seed takes 1 correction, then is near honest; the best responses take 3–4.
 - Cells DONE: 7 of 12.
+
+## 2026-11-18, iteration 225 (03:35–03:50): tomato_large swap `B1_P2swap_LE` s2 → check 1995410
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_tomato_large_B1_P2swap_LE`. All three seeds are at 1536; s0 and s1 already have checks, s2 does not.
+- Submitted: the dry-run's line, run verbatim → **1995410**.
+- Resume dry-run: only the held Tomato no-reg `B1_P1eq1_LN_confirm` (NODE_FAIL, awaiting the user; flagged at the top).
+- 110 jobs in all (limit 110).
+
+## 2026-11-18, iteration 226 (04:09–04:20): tomato_large base `B1_base_LN+N4` 0/3 at 1536 (best response hides; PPO corrected, then honest) → extend 3072 (rule 6b; 1995426)
+
+- **The check.** **1994780** (tomato_large `B1_base_LN+N4`, all three seeds at 1536) COMPLETED (6:34:59): **0.222 / 0.221 / 0.221, all PLATEAU.**
+  - PPO in every seed: corrected in round 0 (true 64.9–65.0), then honest at about 520.5 per round.
+  - **The best response hides**: true 84.2 in rounds 0–3, then 65.0 in round 4. The target is the same (standard PBRR with the bonus hides in tomato_large; see "Exact predictions").
+  - So PPO does the opposite of its optimum: it is corrected and honest, while the optimum hides.
+- **Rule 6b.** `LN+N4` is a stage-1 exploration run, which extends 2× whatever the verdict, up to the 12,288 cap.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large B1_base_LN+N4 3072` printed `submit.sh 48 --env tomato_large --run-id B1_base_LN+N4 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1995426**.
+- **Budget:** bonus 11 jobs (cap 60); 108 in all (limit 110).
+
+## 2026-11-18, iteration 227 (05:24–05:45): tomato_large swap `B1_P2swap_LE` finished 2/3 (s2 0.330, PLATEAU) → rule 5 (wave 2) and rule 6b, both waiting for job slots
+
+- **Check 1995410** (tomato_large `B1_P2swap_LE` s2 at 1536) COMPLETED (1:09:43).
+
+  | Seed | BR gap at 1536 | Verdict | PPO true by round | Best response true by round |
+  |---|---|---|---|---|
+  | s0 | 0.017 | CONVERGED | 64.9, then 455.8–459.5 | 65.0, then 487.6 ×4 |
+  | s1 | 0.019 | CONVERGED | 65.0, then 440.3–443.9 | 65.0, then 477.7 ×4 |
+  | s2 | **0.330** (s.e. 0.008) | **PLATEAU** | 64.3, 64.3, 64.2, 64.3, 65.1 (corrected in round 0, then never again) | 65.0, then 470.9 / 466.5 ×3 (1.80 corrections per episode) |
+
+  - s2 is corrected once, then keeps playing at true about 64 per round without another correction. Its best response is corrected once or twice and then takes the swap's new exploit at about 467–471.
+- **Rule 4.** The run's only unconverged seed is PLATEAU, so the run is finished at 2/3. It is the cell's one wave-1 run, so this cell's wave 1 is over.
+- **Rule 5 (wave 2) and rule 6b, both from `B1_P2swap_LE`** (its own overrides, minus `episodes=`: `ppo.ent_coef=0.1 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 protocol.update_bonus=1.0`). They start together, as in grid no-reg (iteration 102).
+  - Wave 2, dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo tomato_large P2swap LE+<tag> "<extras> <factor>"` for `LR`, `GL`, `NET`, `RS` (`reward_scale=0.0325`, 0.25 × tomato_large's 0.13), `EP` and `AN`, at 1536 episodes. Later duplicate keys win, so the frozen config's `ppo.ent_coef=0.03` gives way to 0.1.
+  - 6b stage 1, dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large P2swap B1_P2swap_LE` lists `+ENT3` (0.3), `+ES10`, `+N4` (`n_envs=64 ppo.batch_size=1600`) and `+ES10+N4`.
+  - **Not submitted yet: all 110 job slots are in use.** These 10 runs are queued behind the comp campaign's Boat Race wave 2 (submitted this iteration) and go in as slots free up. See the budget flag at the top of docs/step4_indiff_log.md.
+- Budget: bonus 11 jobs (cap 60); 110 in all (limit 110). Cells DONE: 7 of 12.
+
+## 2026-11-18, iteration 228 (08:05–08:15): tomato_large base `B1_base_LE` s2 finished at 1536 → check 1995567
+
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_tomato_large_B1_base_LE`. s2 has finished at 1536; s0 was checked; s1 is at 576 after its 48 h resume.
+- `... submit` → **1995567**.
+- The tomato_large swap wave 2 and 6b runs (iteration 227) are still queued for job slots.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 229 (08:30): tomato_large swap wave 2, first run: `B1_P2swap_LE+LR` → 1995599
+
+- A slot freed up. The first wave-2 run from iteration 227's dry-run (`... ppo tomato_large P2swap LE+LR "<extras> ppo.learning_rate=0.0001"`, line run verbatim) → **1995599**.
+- Still queued: `+GL`, `+NET`, `+RS`, `+EP`, `+AN` and the four 6b runs (flag at the top of docs/step4_indiff_log.md).
+- 110 jobs in all.
+
+## 2026-11-18, iteration 230 (09:37–09:50): tomato_large base `LE` s0, s2: 0.231 (IMPROVING; PPO honest, the best response hides); check 1995672 (`LN+ES10+N4`)
+
+- **Check 1995567** (tomato_large `B1_base_LE` s2; s0 was checked earlier) COMPLETED (1:08:26).
+  - **s0 and s2: 0.231, IMPROVING.** PPO is corrected in round 0, then honest at about 508 per round. The best response and the target hide (84.2 ×4, then 65.0).
+  - s1 is at 600 of 1536 after its 48 h resume. Rule 4 waits for it.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995672** (tomato_large `B1_base_LN+ES10+N4`).
+- 110 jobs in all.
+
+## 2026-11-18, iteration 231 (10:12): tomato_large swap wave 2 `B1_P2swap_LE+GL` → 1995722
+
+- The second wave-2 run from iteration 227's dry-run (`ppo.gae_lambda=1.0`), line run verbatim. Still queued: `+NET`, `+RS`, `+EP`, `+AN` and the four 6b runs.
+
+## 2026-11-18, iteration 232 (11:05): tomato_large swap wave 2 `B1_P2swap_LE+NET` → 1995752
+
+- The third wave-2 run from iteration 227's dry-run (`ppo.net_arch=[256,256]`), line run verbatim. Still queued: `+RS`, `+EP`, `+AN` and the four 6b runs.
+
+## 2026-11-18, iteration 233 (11:42): tomato_large swap wave 2 `B1_P2swap_LE+RS` → 1995870
+
+- The fourth wave-2 run from iteration 227's dry-run (`reward_scale=0.0325`), line run verbatim. Still queued: `+EP`, `+AN` and the four 6b runs.
+
+## 2026-11-18, iteration 234 (12:34–12:40): tomato_large no-reg `B1_P1eq1_LN+ES10+ENT3` stopped by the 48 h limit → resumed (1995924)
+
+- **Rule 1 (resume).** 1990239 (tomato_large `B1_P1eq1_LN+ES10+ENT3`) ended TIMEOUT at 2-00:00:26 (11:37), i.e. the 48 h limit. Seeds at 192 / 168 / 360 of 1536.
+  - The resume dry-run (`CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume`) lists this run and the held Tomato `B1_P1eq1_LN_confirm` (NODE_FAIL, awaiting the user).
+  - **I ran only this run's line, verbatim**: `submit.sh 48 --env tomato_large --run-id B1_P1eq1_LN+ES10+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **1995924**. `resume submit` would also have resubmitted the held run; the permission check stopped that attempt, rightly. The held run stays held.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 235 (13:00): tomato_large base `B1_base_LN+ES10+N4` finished (1990471, 1-23:38) — check waits for a slot
+
+- `br_missing` (dry-run) lists `br_tomato_large_B1_base_LN+ES10+N4`. All 110 slots are in use; it goes in at the next free slot.
+
+## 2026-11-18, iteration 236 (13:15): tomato_large base `B1_base_LN+ES10+N4` → check 1995957
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995957**.
+
+## 2026-11-18, iteration 237 (13:23–13:32): tomato_large base `B1_base_LN+ES10` stopped by the 48 h limit → resumed (1995965)
+
+- **Rule 1.** 1990469 (tomato_large `B1_base_LN+ES10`) ended TIMEOUT at 2-00:00:28: the 48 h limit. Seeds at 528 / 288 / 600 of 1536.
+- The resume dry-run lists it and the held Tomato `B1_P1eq1_LN_confirm`. I ran only this run's line, verbatim: `submit.sh 48 --env tomato_large --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **1995965**. The held run stays held.

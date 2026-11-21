@@ -1,0 +1,21 @@
+{
+ "ppo": {
+  "ent_coef": 0.03
+ },
+ "task": {
+  "obs": "onehot"
+ },
+ "g": {
+  "fine_only": true,
+  "offset": true,
+  "offset_rule": "pool",
+  "epochs": 1000
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "episodes": 768
+}

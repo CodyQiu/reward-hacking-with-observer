@@ -1476,3 +1476,244 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` listed `br_taxi_C1_comp_LN+N4`; its extension to 1536 (1994671) has finished seeds.
   - Submitted: `... br_missing submit` → **1995309 **.
 - Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 100 (03:18–03:25): Taxi `C1_comp_LN+N4` 0/3 at 1536 (all hide) → extend 3072 (rule 6b; 1995400)
+
+- **The check.** **1995309** (Taxi `C1_comp_LN+N4`, all three seeds at 1536) COMPLETED (1:23:46).
+  - **0.075 / 0.090 / 0.052, all PLATEAU** (at 768: all hid as well).
+  - PPO's true return by round: s0 −66.1 / −66.1 / −66.0 / −65.9 / −89.7; s1 −63.3 ×4 / −87.2; s2 −63.2 ×4 / −87.1. It is never corrected in rounds 0–3 (window gap 1.000, corrections 1.00 below the target), and it exploits the final round. **It hides.**
+  - The best response, and the target, are corrected in round 0, then honest: true −88.2, then 124.7–124.8 ×4.
+  - The gaps fell from 768 (iteration 92), but every seed is still far above 0.03.
+- **Rule 6b.** `LN+N4` is a stage-1 exploration run, which extends 2× whatever the verdict, up to Taxi's 6144 cap.
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi C1_comp_LN+N4 3072` printed `submit.sh 48 --env taxi --run-id C1_comp_LN+N4 --seeds 0 1 2 --results-dir results/step4/taxi/comp --resume --extend-to 3072`.
+  - Submitted: `... submit` → **1995400**.
+- Taxi comp runs now: `LN+ENT3` → 3072 (about 1680), `LN+ES10` and `LN+ES10+N4` (stage 2, about 72–96 of 768), `LN+N4` → 3072, `L` s1 (984 of 1536). `L`, `LE` and `LN` are finished: 0/3, all hiding.
+- **Budget:** comp 8 jobs (cap 30); 105 in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 101 (04:52–04:56): tomato_large `C1_comp_LE_confirm` finished (all three at 1536) → check 1995459
+
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `run_cmd.sh 12 4 br_tomato_large_C1_comp_LE_confirm … --finished-only --draws 12`. s20, s21 and s22 are all finished at 1536.
+- Submitted: `... br_missing submit` → **1995459**.
+- tomato_large comp: `L_confirm` is still training. Taxi: `LN+N4` → 3072 (1995400), `LN+ENT3`, `LN+ES10`, `LN+ES10+N4` and `L` s1 are training. Boat Race `LN_confirm` s20 → cap.
+- 108 jobs in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 102 (05:17–05:22): Boat Race `C1_comp_LN_confirm` at the 12,288 cap → check 1995468 (decides s20); tomato_large `L_confirm` s20 → check 1995467
+
+- **Event.** The extension of Boat Race `C1_comp_LN_confirm` to 12,288 (1992892) COMPLETED (19:38:53). All three seeds are at the cap; s20 is the deciding seed (s21 and s22 already converged at 12,288).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed:
+  - `br_tomato_large_C1_comp_L_confirm`: s20 finished at 1536; s21 at 1008, s22 at 984;
+  - `br_boat_race_C1_comp_LN_confirm`.
+  - `tomato_large/C1_comp_LE_confirm`'s check (1995459) is still queued.
+- Submitted: `... br_missing submit` → **1995467** (tomato_large `L_confirm`) and **1995468** (Boat Race `LN_confirm`).
+- If Boat Race s20 is still unconverged at the cap, this confirmation has failed: rule 4, a confirmation that finishes unconverged.
+- 105 jobs in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 103 (05:24–05:45): **Boat Race `LN_confirm` failed (2/3: s20 0.074 at the cap)** → rule 5 (wave 2, 6 runs: 1995472–1995477) and rule 6b (4 runs, waiting for job slots)
+
+- **Check 1995468** (Boat Race `C1_comp_LN_confirm` at the 12,288 cap) COMPLETED (2:08).
+  - **s20: 0.074 (s.e. 0.004), PLATEAU.** PPO is corrected in every round (4.00 corrections per episode), true −94.0 every round. That is s20's target end state: its correction under-corrects, so the target is also corrected 4 times, at −94 per round. But PPO's best response under its own corrections is corrected once, then honest (−94.0, then 50.0 ×4).
+  - s21 0.014 and s22 0.024: CONVERGED (iteration 91).
+  - **Rule 4.** The run is at the cap and its only unconverged seed is PLATEAU, so **this confirmation failed (2/3).**
+- **The Boat Race cell now.** No wave-1 run is DONE:
+  - `L`: 2/3 (s2 0.187, PLATEAU);
+  - `LE`: 1/3 at 6144 (0.066 / 0.023 / 0.037, PLATEAU);
+  - `LN`: 3/3 (0.021 / 0.022 / 0.000), but its confirmation failed.
+  - As in earlier iterations, a failed confirmation counts as "not 3/3" for rules 5 and 6b. **Both apply now**, from `LN`, the run with the smallest mean gap (0.014).
+- **Rule 5 (wave 2).**
+  - Each command was dry-run first: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo boat_race comp LN+<tag> "n_envs=64 ppo.batch_size=1600 <factor>" submit`. These are `LN`'s extras plus one factor, 1536 episodes.
+
+    | Run | Factor | Job |
+    |---|---|---|
+    | `C1_comp_LN+LR` | `ppo.learning_rate=0.0001` | **1995472** |
+    | `C1_comp_LN+GL` | `ppo.gae_lambda=1.0` | **1995473** |
+    | `C1_comp_LN+NET` | `ppo.net_arch=[256,256]` | **1995474** |
+    | `C1_comp_LN+RS` | `reward_scale=0.125` (0.25 × Boat Race's 0.5) | **1995475** |
+    | `C1_comp_LN+EP` | `ppo.n_epochs=20` | **1995476** |
+    | `C1_comp_LN+AN` | `anneal.last=0.5` | **1995477** |
+- **Rule 6b, stage 1, from `C1_comp_LN`.**
+  - Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race comp C1_comp_LN` lists `+ENT3` (`ppo.ent_coef=0.09`), `+ES10` (`anneal.ent_start=10 anneal.ent_episodes=768`), `+N4` (`n_envs=256 ppo.batch_size=6400`) and `+ES10+N4`.
+  - **Not submitted yet.** The job count is at the 110 cap after wave 2. They go in as slots free up (flag at the top of docs/step4_indiff_log.md: the budget is now binding).
+- tomato_large `L_confirm` s20: check 1995467 is queued; `LE_confirm`: check 1995459 is queued.
+- **Budget:** comp 14 jobs (cap 30); 110 in all (limit 110). Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 104 (06:34–06:40): Boat Race rule 6b stage 1, 3 of 4 runs submitted (1995494–1995496)
+
+- Slots freed up, so I submitted queued Boat Race exploration runs from iteration 103's dry-run (`CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race comp C1_comp_LN`), lines run verbatim:
+  - `C1_comp_LN+ENT3` → **1995494**;
+  - `C1_comp_LN+ES10` → **1995495**;
+  - `C1_comp_LN+N4` → **1995496**.
+- `C1_comp_LN+ES10+N4` is next in the queue (flag at the top of docs/step4_indiff_log.md).
+- comp 17 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 105 (07:00): Boat Race rule 6b stage 1 complete: `C1_comp_LN+ES10+N4` → 1995510
+
+- The fourth stage-1 run, from iteration 103's `explore boat_race comp C1_comp_LN` dry-run (line run verbatim). All four stage-1 runs are now in: 1995494–1995496 and 1995510.
+- comp 18 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 106 (07:10–07:15): tomato_large `L_confirm` s20: 0.038, IMPROVING; Taxi `LN+ENT3` check waits for s2 (2976 of 3072)
+
+- **Check 1995467** (tomato_large `C1_comp_L_confirm` s20 at 1536) COMPLETED (1:30:21). **s20: 0.038, IMPROVING.**
+  - PPO: 4.00 corrections per episode; true 58.7, then 511.0–513.1 per round.
+  - Best response: 4 corrections; true 65.0, then about 512.5, then 521.0 in round 4. That is the same end state (farming the level).
+  - s21 and s22 are at 1248 of 1536. Rule 4 waits for them; if s20 is still IMPROVING then, the run extends to 3072.
+- **Rule 3.** `br_missing` also lists Taxi `C1_comp_LN+ENT3` (s0 and s1 at 3072; s2 at 2976). I wait for s2 so one check covers all three; the job count is at 110.
+- 110 jobs in all. Cells DONE: 3 of 6.
+
+## 2026-11-18, iteration 107 (07:30–07:33): Taxi `C1_comp_LN+ENT3` finished at 3072 → check 1995518 
+
+- **Event.** The extension of Taxi `C1_comp_LN+ENT3` to 3072 (1995223) COMPLETED (4:34:56). All three seeds are at 3072.
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed `br_taxi_C1_comp_LN+ENT3` only. `... submit` → **1995518 **.
+- 110 jobs in all (limit 110).
+
+## 2026-11-18, iteration 108 (09:24–09:35): tomato_large `L_confirm` finished → check 1995655; Boat Race wave-2 `LN+LR` finished (check waits for a slot)
+
+- **Events.** tomato_large `C1_comp_L_confirm` (1993134) COMPLETED (21:08:49), all three at 1536. s20 was 0.038 IMPROVING. Boat Race `C1_comp_LN+LR` (1995472) COMPLETED (1:31:43). `LN+GL` and `LN+RS` have finished seeds.
+- **Rule 3.** `br_missing` (dry-run) listed tomato_large `L_confirm` and Boat Race `LN+LR`, `LN+GL`, `LN+RS`.
+  - Submitted: tomato_large `L_confirm` → **1995655** (the dry-run line, verbatim).
+  - The three Boat Race wave-2 checks wait for slots (110 jobs).
+- comp 18 jobs (cap 30).
+
+## 2026-11-18, iteration 109 (09:37–09:50): tomato_large `LE_confirm` s20 0.038 (IMPROVING) → extend 3072 (1995667); Taxi `LN+ENT3` 0/3 at 3072 (all hide) → extend 6144 (1995668); Boat Race wave-2 checks (1995669–1995671)
+
+- **Check 1995459** (tomato_large `C1_comp_LE_confirm`, all three at 1536) COMPLETED (4:29:09).
+  - **s20: 0.038, IMPROVING. s21: 0.020 and s22: 0.010, CONVERGED.**
+  - PPO in all three: corrected once (s20, s21 farm about 4 corrections, like their best responses), then about 506–509 per round.
+  - **Rule 4:** extend 2× to 3072. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large C1_comp_LE_confirm 3072` printed `... --seeds 20 21 22 ... --resume --extend-to 3072`. `... submit` → ****.
+- **Check 1995518** (Taxi `C1_comp_LN+ENT3`, all three at 3072) COMPLETED (1:28:34).
+  - **0.118 / 0.176 / 0.102, all IMPROVING.** All three hide: true −64.9 to −72.3 per round, never corrected.
+  - The best response is corrected in round 0, then honest (124.7–124.8).
+  - **Rule 6b** (exploration runs extend 2× whatever the verdict): to 6144, Taxi's cap. Dry-run printed `... --run-id C1_comp_LN+ENT3 ... --resume --extend-to 6144`. `... submit` → ****.
+- **Rule 3.** `br_missing submit` → **1995669** (Boat Race `LN+GL`), **1995670** (`LN+LR`), **1995671** (`LN+RS`).
+- comp 20 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 110 (09:47–09:55): Boat Race wave 2: `LN+GL` 0/3 (hides) → extend 3072 (1995678); `LN+LR` s0 0.020, s1 0.022 CONVERGED (honest)
+
+- **Check 1995669** (Boat Race `C1_comp_LN+GL`, all three at 1536) COMPLETED (6:02).
+  - **0.168 (IMPROVING) / 0.216 (PLATEAU) / 0.184 (PLATEAU).** PPO hides: never corrected, true −88.0 / −94.0 / −82.0 in rounds 0–3, then −94.0.
+  - The best response farms 4 corrections and is honest by the true reward (50 ×4), as the comp target does.
+  - **Rule 4:** s0 is IMPROVING, so extend 2× to 3072. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+GL 3072` printed `... --resume --extend-to 3072`. `... submit` → **1995678**.
+- **`LN+LR` (check 1995670, s0 and s1):** **0.020 and 0.022, CONVERGED.** PPO farms 4 corrections and is honest by the true reward (−94, then 50 ×4), like its best response. s2 is in the same check job.
+- `LN+RS` (1995475) finished at 1536; check 1995671 is pending. `LN+NET`, `LN+EP`, `LN+AN` and the four 6b runs are training.
+- comp 20 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 111 (09:56–10:02): Boat Race wave 2: `LN+LR` 2/3 (s2 0.037 IMPROVING) and `LN+RS` 1/3 → both extend 3072 (1995703, 1995704)
+
+- **Check 1995670** (`C1_comp_LN+LR`): **0.020 / 0.022 (CONVERGED) / 0.037 (IMPROVING).** All three farm 4 corrections and are honest by the true reward (−94, then 50 ×4), like their best responses and the target.
+- **Check 1995671** (`C1_comp_LN+RS`): **0.021 (CONVERGED) / 0.173 (PLATEAU) / 0.185 (IMPROVING).** s0 farms and is honest by the true reward. s1 and s2 hide: never corrected, true −76 / −82 in rounds 0–3, then −94.
+- **Rule 4:** both have an IMPROVING seed, so extend 2× to 3072. Dry-runs printed `submit.sh 48 --env boat_race --run-id C1_comp_LN+LR … --resume --extend-to 3072` and the same for `LN+RS`. Submitted → **1995703** (`LN+LR`), **1995704** (`LN+RS`).
+- comp 22 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 112 (10:55): Boat Race wave-2 checks `LN+AN` (1995741) and `LN+NET` (1995742)
+
+- `br_missing` (dry-run) listed both: their seeds have finished at 1536. Lines run verbatim → **1995741**, **1995742**.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 113 (11:00–11:06): Boat Race wave 2: `LN+AN` s0, s1 0.021 (CONVERGED, honest by the true reward); `LN+NET` s1 0.216, s2 0.184 (PLATEAU, hide); `LN+EP` → check 1995749
+
+- **Check 1995741** (`C1_comp_LN+AN` s0, s1): **0.021 and 0.021, CONVERGED.** Both farm 4 corrections and are honest by the true reward (−94, then 50 ×4), like their best responses. s2 is at 624.
+- **Check 1995742** (`C1_comp_LN+NET` s1, s2): **0.216 and 0.184, PLATEAU.** Both hide: never corrected, true −94 / −82. s0 is at 1440 and is honest by the true reward so far.
+- **Rule 3.** `LN+EP` (1995476) finished at 1536. `br_missing submit` → **1995749**.
+- comp 22 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 114 (11:11): Boat Race `LN+NET` finished (s0 at 1536) → check 1995756
+
+- `C1_comp_LN+NET` (1995474) COMPLETED (2:45:08). `br_missing submit` → **1995756** (s0; s1 0.216 and s2 0.184 were PLATEAU).
+- 110 jobs in all.
+
+## 2026-11-18, iteration 115 (11:21): Boat Race 6b `LN+ES10` finished at 1536 → check 1995780 
+
+- `C1_comp_LN+ES10` (1995495) COMPLETED (1:35:03). `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995780 **.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 116 (11:29–11:32): Boat Race wave 2 `LN+EP` 1/3 (0.044 / 0.022 / 0.037) → extend 3072 (1995834)
+
+- **Check 1995749** (`C1_comp_LN+EP`, all three at 1536) COMPLETED (6:37).
+  - **0.044 (IMPROVING) / 0.022 (CONVERGED) / 0.037 (IMPROVING).**
+  - All three are corrected in every round, as their best responses are (4 corrections per episode). s1 and s2 are honest by the true reward (49.8–49.9); s0 only partly (43.9).
+- **Rule 4:** seeds are IMPROVING, so extend 2× to 3072. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+EP 3072` printed `... --resume --extend-to 3072`. `... submit` → **1995834**.
+- **Boat Race wave 2 so far:** `LN+LR` 2/3 → 3072; `LN+GL` 0/3 → 3072; `LN+RS` 1/3 → 3072; `LN+EP` 1/3 → 3072; `LN+AN` s0, s1 CONVERGED (s2 training); `LN+NET` s1, s2 PLATEAU (s0 check 1995756).
+- comp 23 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 117 (11:36–11:45): Boat Race wave 2 `LN+NET` finished 1/3 (0.021 / 0.216 / 0.184)
+
+- **Check 1995756** (`C1_comp_LN+NET` s0): **0.021, CONVERGED.** It farms 4 corrections and is honest by the true reward. s1 (0.216) and s2 (0.184) are PLATEAU: both hide.
+- **Rule 4:** every unconverged seed is PLATEAU, so the run is **finished at 1/3**.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 118 (11:56–12:05): Boat Race 6b `LN+ES10` 0/3 at 1536 (all hide) → extend 3072 (1995878); `LN+GL` at 3072 → check 1995879
+
+- **Check 1995780** (`C1_comp_LN+ES10`, all three at 1536): **0.146 / 0.173 / 0.184, all PLATEAU.** All three hide: never corrected, true −82 in rounds 0–3, then −94.
+  - **Rule 6b:** exploration runs extend 2× whatever the verdict. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+ES10 3072` printed `... --resume --extend-to 3072`. `... submit` → **1995878**.
+- **Rule 3.** `LN+GL` finished its extension to 3072 (1995678). `br_missing submit` → **1995879**.
+- comp 24 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 119 (12:08–12:15): Boat Race wave 2 `LN+GL` 0/3 at 3072 (all PLATEAU, hide) → finished
+
+- **Check 1995879** (`C1_comp_LN+GL`, all three at 3072): **0.146 / 0.216 / 0.184, all PLATEAU.** All three hide: never corrected, true −82 / −94 / −82 in rounds 0–3.
+- **Rule 4:** every unconverged seed is PLATEAU, so the run is **finished at 0/3**.
+- **Boat Race wave 2:**
+  - finished: `LN+GL` 0/3, `LN+NET` 1/3;
+  - extending to 3072: `LN+LR` (2/3), `LN+RS` (1/3), `LN+EP` (1/3);
+  - `LN+AN`: s0 and s1 CONVERGED, s2 training.
+  - 6b: `LN+ES10` → 3072 (all hide); `LN+ENT3`, `LN+N4` and `LN+ES10+N4` are training.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 120 (12:28): Boat Race 6b `LN+ENT3` finished at 1536 → check 1995918 
+
+- `C1_comp_LN+ENT3` (1995494) COMPLETED (2:47:19). `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1995918 **.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 121 (12:38–12:45): Boat Race 6b `LN+ENT3` 2/3 (0.021 / 0.022 / 0.037 PLATEAU) → extend 3072 (first in the slot queue); `LN+LR` at 3072 → check 1995928
+
+- **Check 1995918** (`C1_comp_LN+ENT3`, all three at 1536): **0.021, 0.022 (CONVERGED) / 0.037 (PLATEAU).** All three farm 4 corrections and are honest by the true reward (49.9–50.0), like their best responses and the target.
+- **Rule 6b:** exploration runs extend 2× whatever the verdict. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+ENT3 3072` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN+ENT3 --seeds 0 1 2 --results-dir results/step4/boat_race/comp --resume --extend-to 3072`. It is first in the slot queue (110 jobs).
+- **Rule 3.** `LN+LR` finished its extension to 3072 (1995703). Its dry-run line, run verbatim → **1995928**. The `LN+RS` check waits for a slot.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 122 (12:50): Boat Race wave 2 `LN+AN` finished (s2 at 1536) → check 1995934
+
+- `C1_comp_LN+AN` (1995477) COMPLETED (3:38:32). s0 and s1 were 0.021 (CONVERGED); s2 decides whether the run is 3/3. The dry-run line, run verbatim → **1995934**.
+- Still waiting for slots: the `LN+RS` check (at 3072) and the `LN+ENT3` extension.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 123 (13:00–13:10): **Boat Race wave 2 `LN+AN` 3/3 CONVERGED** → `confirm` (1995940); `LN+LR` finished 2/3 at 3072; tomato_large `L_confirm` s20 0.038 → extend 3072 (1995941); `LN+RS` check 1995939
+
+- **Check 1995934** (`C1_comp_LN+AN` s2): **0.000.** With s0 and s1 at 0.021, the run is **3/3 CONVERGED**.
+  - All three farm 4 corrections and are honest by the true reward (−94, then 50 ×4), like their best responses and the comp target ("the level farms; honest by the true reward").
+  - **Rule 4 → confirm.** Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm boat_race C1_comp_LN+AN` printed `submit.sh 48 --env boat_race --run-id C1_comp_LN+AN_confirm --seeds 20 21 22 ... --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_margin=0.0 g.epochs=1000 episodes=1536 anneal.last=0.5 anneal.floor=0.1 n_envs=64`. `... submit` → **1995940**.
+  - Its s20 is the seed that failed every earlier Boat Race confirmation, on its under-corrected target.
+- **Check 1995928** (`LN+LR` at 3072): **0.021, 0.022 (CONVERGED) / 0.037 (PLATEAU).** **Finished at 2/3** (rule 4).
+- **Check 1995655** (tomato_large `C1_comp_L_confirm`, all three at 1536): **s20 0.038 (IMPROVING); s21 0.015, s22 0.006 (CONVERGED).**
+  - **Rule 4 → extend 3072.** Dry-run printed `... --run-id C1_comp_L_confirm --seeds 20 21 22 ... --resume --extend-to 3072`. `... submit` → **1995941**.
+- **Rule 3.** `LN+RS` (at 3072) → **1995939**.
+- Still waiting for a slot: the `LN+ENT3` extension (6b).
+- comp 25 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 124 (13:12–13:20): Boat Race `LN+RS` at 3072: s1 0.173, s2 0.184 PLATEAU (hide) → s0 check 1995953; 6b `LN+ENT3` → extend 3072 (1995958)
+
+- **Check 1995939** (`C1_comp_LN+RS` s1, s2 at 3072): **0.173 and 0.184, PLATEAU.** Both still hide. s0 (finished at 3072) → `br_missing submit` → **1995953**.
+- **Rule 6b:** the `LN+ENT3` extension to 3072 (iteration 121's dry-run line, verbatim) → **1995958**.
+- comp 26 jobs (cap 30); 110 in all.
+
+## 2026-11-18, iteration 125 (13:23): Boat Race wave 2 `LN+RS` finished 1/3 at 3072
+
+- **Check 1995953** (`C1_comp_LN+RS` s0 at 3072): **0.021, CONVERGED** (farms 4 corrections, honest by the true reward). s1 0.173 and s2 0.184 are PLATEAU (hide). **Rule 4:** finished at 1/3.
+- **Boat Race wave 2, final so far:** `LN+AN` 3/3 (confirming), `LN+LR` 2/3, `LN+NET` 1/3, `LN+RS` 1/3, `LN+GL` 0/3; `LN+EP` → 3072. 6b: `LN+ENT3` → 3072 (2/3 at 1536), `LN+ES10` → 3072 (0/3), `LN+N4` and `LN+ES10+N4` are training.
+
+## 2026-11-18, iteration 126 (13:50): Boat Race 6b `LN+ES10+N4` (finished at 1536) → check 1996052; `LN+ES10` at 3072 finished (check waits for a slot)
+
+- `C1_comp_LN+ES10+N4` (1995510) had finished at 1536. Its dry-run line, run verbatim → **1996052**.
+- `LN+ES10`'s extension to 3072 (1995878) COMPLETED (47:53). Its check goes in at the next free slot.
+- 110 jobs in all.
+
+## 2026-11-18, iteration 127 (14:31–14:38): Boat Race 6b `LN+ES10+N4` 0/3 at 1536 (all hide) → extend 3072 (queued for a slot)
+
+- **Check 1996052** (`C1_comp_LN+ES10+N4`, all three at 1536): **0.146 / 0.173 / 0.184, all PLATEAU.** All three hide: never corrected, true −82 in rounds 0–3.
+- **Rule 6b:** exploration runs extend 2× whatever the verdict. Dry-run: `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race C1_comp_LN+ES10+N4 3072` printed `... --resume --extend-to 3072`. It is first in the slot queue.
+- Checks waiting for slots: `LN+ES10` (3072), `LN+N4` (1536).
+- 110 jobs in all.
+
+## 2026-11-18, iteration 128 (14:58): Taxi 6b `LN+N4` at 3072 → check 1996189
+
+- `C1_comp_LN+N4`'s extension to 3072 (1995400) has finished seeds. Its dry-run line, run verbatim → **1996189**.
+- Boat Race `LN+ES10` (3072) and `LN+N4` (1536) checks wait for slots.

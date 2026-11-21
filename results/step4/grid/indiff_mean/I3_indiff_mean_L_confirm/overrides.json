@@ -1,0 +1,13 @@
+{
+ "g": {
+  "fine_only": true,
+  "offset": true,
+  "offset_rule": "exact_mean",
+  "n_ensemble": 6
+ },
+ "episodes": 1536,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ }
+}
