@@ -48,6 +48,13 @@
 # indiff_twin (the pure twin) and indiff_twin_practice (the same twin, plus practice copies: twin.practice=0.25).
 # They share one exact target, indiff_twin (the converged twin), since practice changes only how PPO learns.
 # Target jobs have short time limits, so they start quickly.
+# CAMPAIGN=indiff_twin2: the twin trained and priced at every correction level (twin.all_levels=True;
+# docs/step4_indiff.md, "The twin at every level"). Two arms in results/step4/<env>/indiff_twin2: indiff_twin2 and
+# indiff_twin2_practice. The same game as indiff_twin (the twin's settings are not part of it), so they share the
+# indiff_twin targets: its targets command submits nothing.
+# CAMPAIGN=hideout: the mentor's hideout grid (docs/step4_hideout.md; env grid_hideout, its default hideout START and
+# b = 100): variants base, P1eq1, P2swap and indiff_twin2, runs H1_<variant>_<tag> in results/step4/grid_hideout/hideout.
+# Its exact sweep (hideouts x bonuses) is scripts/farmshare/step4_hideout.sh, not this script's targets command.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 CMD=${1:-help}; shift || true
@@ -73,12 +80,17 @@ case $CAMPAIGN in
   indiff_twin) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race)
           VARIANTS=(indiff_twin indiff_twin_practice); PFX=I4; EXTRA=""
           HYP="Step 4 twin campaign (docs/step4_indiff.md, The twin): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, each correction priced by the overseer's own one-round optimiser" ;;
+  indiff_twin2) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race)
+          VARIANTS=(indiff_twin2 indiff_twin2_practice); PFX=I5; EXTRA=""
+          HYP="Step 4 twin at every level (docs/step4_indiff.md, The twin at every level): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, each correction priced by the overseer's own one-round optimiser, trained and priced at every correction level" ;;
+  hideout) ENVS=(grid_hideout); VARIANTS=(base P1eq1 P2swap indiff_twin2); PFX=H1; EXTRA=""
+          HYP="Step 4 hideout grid (docs/step4_hideout.md, the mentor's toy environment: every window step off the goal and the hideout is flagged): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under this PBRR variant" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
 # each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
 frozen() { case $1 in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomato_large|boat_race) echo "ppo.ent_coef=0.03" ;;
                       taxi) echo "ppo.ent_coef=0.03" ;; *) echo "" ;; esac; }
-ent3() { case $1 in grid) echo 0.03 ;; absent_supervisor) echo 0.3 ;; taxi|boat_race) echo 0.09 ;; *) echo 0.1 ;; esac; }  # 3x the frozen entropy
+ent3() { case $1 in grid|grid_hideout) echo 0.03 ;; absent_supervisor) echo 0.3 ;; taxi|boat_race) echo 0.09 ;; *) echo 0.1 ;; esac; }  # 3x the frozen entropy
 # 4x (2x for AS) Step 3's; Taxi 1x its frozen 768 (an exploiting seed took 47 h for 768 episodes: PBRR fits dominate)
 episodes() { case $1 in absent_supervisor) echo 3072 ;; taxi) echo 768 ;; *) echo 1536 ;; esac; }
 ANNEAL="anneal.last=0.25 anneal.floor=0.1"
@@ -100,7 +112,7 @@ CONFIRM_SEEDS=(20 21 22)
 
 gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fit, as in its Phase A and earlier runs)
   local env=$1 v=$2 ep=""   # plus, in the bonus campaign, the update bonus (part of the game, like the g fit)
-  [[ $env != grid ]] && ep=" g.epochs=1000"
+  [[ $env != grid && $env != grid_hideout ]] && ep=" g.epochs=1000"
   [[ $env == taxi ]] && printf 'task.obs=onehot '              # Taxi's frozen Step 3 observation: part of its game
   case $v in
     P2swap) echo "g.l_minus_on=dispreferred$ep$EXTRA" ;;
@@ -112,6 +124,8 @@ gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fi
     indiff_mean) echo "g.fine_only=True g.offset=True g.offset_rule=exact_mean g.n_ensemble=6$ep$EXTRA" ;;  # ... priced on the 6-fit mean
     indiff_twin) echo "g.fine_only=True g.offset=True g.offset_rule=twin$ep$EXTRA" ;;  # ... priced by the twin
     indiff_twin_practice) echo "g.fine_only=True g.offset=True g.offset_rule=twin$ep twin.practice=0.25$EXTRA" ;;  # + practice
+    indiff_twin2) echo "g.fine_only=True g.offset=True g.offset_rule=twin$ep twin.all_levels=True$EXTRA" ;;  # ... at every level
+    indiff_twin2_practice) echo "g.fine_only=True g.offset=True g.offset_rule=twin$ep twin.all_levels=True twin.practice=0.25$EXTRA" ;;
     *) echo "unknown variant $v" >&2; exit 1 ;;
   esac
 }
@@ -161,6 +175,10 @@ case $CMD in
         .venv/bin/python -u experiments/step3_check.py --env tomato_large --variant "${v%%:*}" --g-set ${v#*:}
     done ;;
   targets)
+    case $CAMPAIGN in
+      indiff_twin2) echo "# indiff_twin2 shares the indiff_twin targets (same game): nothing to submit"; exit 0 ;;
+      hideout) echo "# the hideout grid's targets are its sweep: bash scripts/farmshare/step4_hideout.sh submit_all"; exit 0 ;;
+    esac
     for env in "${ENVS[@]}"; do for v in "${VARIANTS[@]}"; do
       [[ $v == indiff_twin_practice ]] && continue                # shares indiff_twin's target (same game)
       dep=""; [[ $env == tomato_large && -n ${PHASEA_JOB:-} ]] && dep="afterok:$PHASEA_JOB"

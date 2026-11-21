@@ -20,6 +20,18 @@ correction of a chain drawn from the same bank, priced by the same twin. Practic
 others (no new observation), and the agent learns there by its own PPO, from the corrected reward. Training logs and
 metrics cover the real copies only.
 
+**Every level** (``twin.all_levels``, 2026-11-21; docs/step4_indiff.md, "The twin at every level"). Without it the
+twin trains only up to the deepest chain in the bank. An agent that is honest after one correction never makes a
+deeper chain, and the counterfactual chain stops there too, so the twin never plays levels 2-4. Yet a second
+correction is priced with its level-2 play: an untrained network that underplays, so the level overpays and a
+deliberate re-correction pays (Boat Race: 321-379 per round against 200). With ``all_levels``:
+- the counterfactual chain always runs to the deepest level. Where the agent's play at a level no longer uses the bug,
+  the next correction is fitted on fresh rollouts of its play at the last level where it did -- as if it were caught
+  doing that again, which is exactly the re-correction a farmer would trigger;
+- one is added per block while fewer than ``cf_min`` chains reach the deepest level (real chains are rarely deep);
+- a level the twin has never trained at is priced with its play at the deepest level it has trained at (a real
+  policy, so it cannot overstate the best round), saved with the model (``state`` / ``load_state``).
+
 Settings: config group ``twin`` (not part of the game key, ``TWIN_DEFAULTS``).
 """
 
@@ -44,6 +56,7 @@ TWIN_DEFAULTS = {
     "force_p": 0.5,        # practice: probability of installing the next correction at a boundary
     "bank_episodes": 64,   # the bank keeps corrections from this many recent episodes
     "cf_min": 4,           # fewer chains than this in the bank -> one counterfactual chain per block
+    "all_levels": False,   # train and price the twin at every level (module docstring, "Every level")
 }
 
 
@@ -200,7 +213,21 @@ class Twin:
         self.trajs = {}
         self.last_block = None
         self.n_counterfactual = 0
+        self.trained_top = 0              # the deepest level the twin has trained at (all_levels: the price backstop)
         self.freeze()
+
+    # -- state saved beside the model (all_levels) ------------------------------------------
+    def state(self):
+        return {"trained_top": int(self.trained_top), "all_levels": bool(self.cfg["all_levels"])}
+
+    def load_state(self, d):
+        self.trained_top = int(d.get("trained_top", 0))
+
+    def price_level(self, c):
+        """The level whose frozen play prices level ``c``: c itself, or with all_levels the deepest level the twin
+        has trained at, if it has never trained at c (its play there is an untrained network's)."""
+        c = int(min(c, self.proto.n_levels - 1))
+        return min(c, self.trained_top) if self.cfg["all_levels"] else c
 
     # -- training -----------------------------------------------------------------------
     def train_block(self, ent_coef=None, lr=None):
@@ -208,29 +235,46 @@ class Twin:
             self.model.ent_coef = ent_coef
         if lr is not None:
             self.model.lr_schedule = (lambda v: (lambda _: v))(lr)
+        self.trained_top = max(self.trained_top, min(self.bank.depth(), self.proto.n_levels - 1))
         n = int(self.cfg["rounds"]) * self.venv.num_envs * self.proto.t_sub
         self.model.learn(total_timesteps=n, reset_num_timesteps=False, progress_bar=False)
 
     def freeze(self):
         """Rollouts of the twin's current parameters at every level, from common starts with common random
-        numbers: the pricing of the next block."""
+        numbers: the pricing of the next block. With all_levels, a level the twin has never trained at is played
+        as the deepest level it has (``price_level``)."""
         fn = policy_probs_fn(self.model, self.proto, self.task.n_actions)      # a snapshot of the parameters
         s = int(self.rng.integers(2 ** 31))
         self.trajs = {}
         for c in range(self.proto.n_levels):
             self.eval_batch.seed(s)
-            self.trajs[c] = rollouts(self.eval_batch, fn, self.proto, np.random.default_rng(s), t0=0, n_corr=c)
+            self.trajs[c] = rollouts(self.eval_batch, fn, self.proto, np.random.default_rng(s), t0=0,
+                                     n_corr=self.price_level(c))
 
     def counterfactual(self, overseer, episode):
         """One chain fitted as if the agent had been caught at every boundary: correction c is PBRR (the run's own
-        fit, pairs accumulated as in an episode) on the agent's own rollouts at level c-1, in round c-1. Stops when
-        those rollouts never touch the bug (nothing to correct). Added to the bank as source "counterfactual"."""
+        fit, pairs accumulated as in an episode) on the agent's own rollouts at level c-1, in round c-1. Without
+        all_levels it stops when those rollouts never touch the bug (nothing to correct). With all_levels it goes on
+        to the deepest level: correction c is then fitted on fresh rollouts of the agent's play at the last level
+        where it did use the bug (caught doing that again). No chain if even level 0 never uses it. Added to the
+        bank as source "counterfactual"."""
         policy = policy_probs_fn(overseer.model, self.proto, self.task.n_actions)
-        T, D, chain, prev = self.proto.t_sub, [], (), None
+        T, D, chain, prev, last_bug = self.proto.t_sub, [], (), None, None
+
+        def uses_bug(trajs):
+            return any(np.any(a.proxy_steps != a.true_steps) for a in trajs)
+
         for c in range(1, self.proto.n_sub):
             agent = rollouts(overseer.batch, policy, self.proto, overseer.rng, t0=(c - 1) * T, n_corr=c - 1)
-            if not any(np.any(a.proxy_steps != a.true_steps) for a in agent):
+            if uses_bug(agent):
+                last_bug = (c - 1, agent)
+            elif not self.cfg["all_levels"] or last_bug is None:
                 break
+            else:                                     # caught again doing what it did at the last level it used the bug
+                j, old = last_bug
+                agent = rollouts(overseer.batch, policy, self.proto, overseer.rng, t0=j * T, n_corr=j)
+                if not uses_bug(agent):
+                    agent = old
             D = D + [(a, r, boltzmann_label(a, r, overseer.rng, overseer.beta)) for a in agent
                      for r in overseer.ref_trajs]
             p, _ = fit_correction_rows(D, self.task, self.gcfg, seed=int(overseer.rng.integers(2 ** 31)))
@@ -248,7 +292,8 @@ class Twin:
             return False
         self.last_block = episode
         self.bank.prune(episode)
-        if self.bank.count(1) < int(self.cfg["cf_min"]):
+        deep = self.proto.n_sub - 1 if self.cfg["all_levels"] else 1    # all_levels: chains to the deepest level
+        if self.bank.count(deep) < int(self.cfg["cf_min"]):
             self.counterfactual(overseer, episode)
         self.train_block(ent_coef, lr)
         self.freeze()
@@ -258,7 +303,7 @@ class Twin:
     def value(self, level, params):
         """V(twin@level; proxy + params): the frozen rollouts' mean return, rescored (level excluded)."""
         level = int(min(level, self.proto.n_levels - 1))
-        return float(rollout_returns(self.trajs[level], self.task, params).mean())
+        return float(rollout_returns(self.trajs[level], self.task, params).mean())   # trajs[c]: played at price_level(c)
 
     def price(self, level, old_params, new_params):
         """(V before, V after) of a correction to ``level``: the level rises by their difference / T."""

@@ -408,7 +408,13 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **The twin** (`g.offset_rule=twin`, `CAMPAIGN=indiff_twin`, `src/step3/twin.py`, 2026-11-18). The level is priced by the overseer's own one-round optimiser: the best round of the mean correction, valued under each draw. That is exact with random corrections, where `exact` underpays by the value of information. It replaces the pool's reliance on the final round, which the user finds "a tad-bit cheating".
     - Two PPO arms: the pure twin, and the twin plus the agent's own RL practice at corrected levels (`twin.practice=0.25`).
     - No distillation, per the user ("we might test it later").
+    - **Result (exact targets, 2026-11-18):** 27/30 honest by the end (grid, AS, Tomato 6/6; Taxi 4/6; Boat Race 5/6); no seed hides; level error 0 everywhere. The 3 misses are the fit's under-correction (Taxi s21/s22, Boat Race s20).
+  - **The twin at every level** (`twin.all_levels=True`, `CAMPAIGN=indiff_twin2`, runs `I5_*`, 2026-11-21; `docs/step4_indiff.md`). PPO is honest after one correction, so the first twin never trained beyond level 1, priced deeper corrections with an untrained network and overpaid them (Boat Race: 321–379 per round against 200), so best responses farmed. Now the counterfactual chain always runs to the deepest level (later corrections fitted on the agent's own play at the last level where it used the bug), and an untrained level is priced with the deepest trained one (`twin_state.json`). Same targets as `indiff_twin`, which is superseded.
   - **The average correction** (`g.offset_rule=exact_mean g.n_ensemble=6`, `CAMPAIGN=indiff_mean`, 2026-11-17). The exact rule underpaid by the value of information: the agent faces the mean of the overseer's possible fits, but each fit's own drop was paid (Taxi hid in 6/6). Now each catch fits 6 corrections, the overseer applies their mean (`protocol.EnsembleCorrection`), and the level is priced on M of exactly that reward. `exact` and `pool` are unchanged. Targets and PPO are submitted together.
+- **The mentor's hideout grid (from 2026-11-21; `docs/step4_hideout.md`, log `docs/step4_hideout_log.md`).** The mentor: environments "where an agent is always corrected when it does something bad, unless it goes to like a specific state where it can avoid being corrected", then "find configurations where the no-regularization method does poorly"; concretely, a grid where the reward "is always updated if the agent doesn't reach the goal state, unless the agent goes to one particular state an stays there for the last 10 steps". He frames the project as (a) toy environments showing the issue and (b) a new loss; a general detector of bad behaviour is (c), later.
+  - **`grid_hideout`** (`src/step3/tasks/grid_hideout.py`): the Step 1 grid, but the audit flags every window step that does not end at the goal or at the hideout H (`TabularTables.flag_table`; detection everywhere now uses `flag`, which is the exploit for every other task).
+  - **Exact sweep** (`scripts/farmshare/step4_hideout.sh`, map `experiments/step4_hideout_map.py`): H 1 / 7 / 13 steps from E × b {100, 400, 1600} × base, P1eq1, P2swap, indiff_twin, seeds 0–2. **PPO** (`CAMPAIGN=hideout`, runs `H1_*`): the default setting (H = START, b = 100), the four variants (the twin as indiff_twin2) × L/LE/LN.
+  - **Predicted before any target:** standard PBRR hides at H everywhere; no regulariser, the swap and the twin are corrected, then honest, everywhere (no setting where no regulariser does poorly).
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 
@@ -439,7 +445,7 @@ reward-hacking-with-observer/
 ├── src/plots_step2.py     # Step 2 dashboard
 ├── experiments/step2_pbrr_check.py, step2_ppo.py, step2_figures.py; tests/test_step2.py
 ├── src/step3/             # Step 3: task interface, protocol VecEnv, trajectory-level PBRR, generic DP, harness
-├── src/step3/tasks/       # grid (regression anchor), grid_routes, tomato, tomato_large, taxi, absent_supervisor, mountain_car, lunar_lander, boat_race
+├── src/step3/tasks/       # grid (regression anchor), grid_routes, grid_hideout, tomato, tomato_large, taxi, absent_supervisor, mountain_car, lunar_lander, boat_race
 ├── src/plots_step3.py     # Step 3 dashboard and suite figure
 ├── experiments/step3_check.py (Phase A), step3_ppo.py, step3_figures.py, step3_suite.py; tests/test_step3.py
 ├── docs/step3_tuning_log.md  # Step 3 tuning record: Phase A decisions per env, every run, procedure changes

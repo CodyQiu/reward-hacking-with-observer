@@ -38,7 +38,7 @@ def solve_levels(tb, proto, R_levels, keep_values=False):
     R = np.asarray(R_levels, float)
     L = R.shape[0]
     S = tb.n_states
-    ex = tb.exploit
+    ex = tb.flag                                                 # what the audit flags (the exploit by default)
     up = np.minimum(np.arange(L) + 1, L - 1)
     p = proto.p_detect
     V = np.zeros((S, L, 2))
@@ -74,7 +74,7 @@ def evaluate_levels(tb, proto, R_levels, policy):
     L = R.shape[0]
     S, A, F = tb.n_states, tb.n_actions, tb.nxt.shape[1]
     K, T = proto.n_sub, proto.t_sub
-    ex = tb.exploit
+    ex, fl = tb.exploit, tb.flag                                  # the bug; what the audit flags (the same by default)
     d = np.zeros((S, L, 2))
     d[:, 0, 0] = tb.mu0
     out = {k: np.zeros(K) for k in ("received", "proxy", "true", "window", "corrected")}
@@ -97,7 +97,7 @@ def evaluate_levels(tb, proto, R_levels, policy):
         out["true"][k] += (m * tb.true[r]).sum()
         e = ex[r]
         out["exploit_t"][t] = (m * e).sum()
-        f2 = fidx[..., None] | (e & bool(proto.in_window(t)))
+        f2 = fidx[..., None] | (fl[r] & bool(proto.in_window(t)))
         nd = np.zeros((S, L, 2))
         if tau < T - 1:
             flat = (tb.nxt[r] * L + lidx[..., None]) * 2 + f2.astype(np.int64)
@@ -130,7 +130,7 @@ def evaluate_levels_probs(tb, proto, R_levels, probs_at):
     L = R.shape[0]
     S, A, F = tb.n_states, tb.n_actions, tb.nxt.shape[1]
     K, T = proto.n_sub, proto.t_sub
-    ex = tb.exploit
+    ex, fl = tb.exploit, tb.flag                                  # the bug; what the audit flags (the same by default)
     d = np.zeros((S, L, 2))
     d[:, 0, 0] = tb.mu0
     out = {k: np.zeros(K) for k in ("received", "proxy", "true", "window", "corrected")}
@@ -162,7 +162,7 @@ def evaluate_levels_probs(tb, proto, R_levels, probs_at):
             out["true"][k] += (m * tb.true[r][:, None, None, :]).sum()
             e = ex[r][:, None, None, :]                                        # (S, 1, 1, F)
             out["exploit_t"][t] += (m * e).sum()
-            f2 = np.broadcast_to(fbit | (e & win), m.shape)
+            f2 = np.broadcast_to(fbit | (fl[r][:, None, None, :] & win), m.shape)
             if tau < T - 1:
                 flat = (tb.nxt[r][:, None, None, :] * L + lidx) * 2 + f2.astype(np.int64)
                 nd += np.bincount(flat.ravel(), weights=m.ravel(), minlength=S * L * 2).reshape(S, L, 2)
@@ -203,7 +203,7 @@ def solve_subepisode(tb, R, T, avoid_window=0):
     the best monitor-avoiding policy (Step 1's 7,700). Returns policy (T, S)."""
     V = np.zeros(tb.n_states)
     pol = np.zeros((T, tb.n_states), np.int64)
-    R_avoid = np.where(tb.exploit, -1e9, R)
+    R_avoid = np.where(tb.flag, -1e9, R)                         # flagged transitions (the exploit by default)
     for tau in range(T - 1, -1, -1):
         Q = _q(tb, R_avoid if tau >= T - avoid_window else R, V[tb.nxt])
         pol[tau] = Q.argmax(axis=1)
@@ -224,8 +224,9 @@ def best_round_value(tb, R, T):
 def solve_subepisode_caught(tb, R, T, window):
     """The best single sub-episode under R (S*A, F) among policies that exploit at least once in
     the last ``window`` steps, i.e. that get caught: what an agent at this correction level would
-    play if it sought the next correction. Returns policy (T, S, 2), indexed by the audit flag f."""
-    ex = tb.exploit
+    play if it sought the next correction. Returns policy (T, S, 2), indexed by the audit flag f.
+    "Exploit" here is whatever the audit flags (``tb.flag``; the exploit unless the task has its own rule)."""
+    ex = tb.flag
     V = np.stack([np.full(tb.n_states, -1e9), np.zeros(tb.n_states)], axis=1)   # end: unflagged = infeasible
     pol = np.zeros((T, tb.n_states, 2), np.int64)
     for tau in range(T - 1, -1, -1):
@@ -247,7 +248,7 @@ def round_value(tb, proto, rbar, probs_at, k):
     flag), under the expected reward ``rbar`` (S*A,) in force. This is what the overseer's rollouts of that
     policy in that round estimate: the compensated correction's V_before (docs/step4_comp.md)."""
     S, A, T = tb.n_states, tb.n_actions, proto.t_sub
-    ex, rbar = tb.exploit, np.asarray(rbar, float)
+    ex, rbar = tb.flag, np.asarray(rbar, float)                  # the audit flag's rule (the exploit by default)
     d = np.zeros((S, 2))
     d[:, 0] = tb.mu0
     fbit = np.arange(2).astype(bool)[None, :, None]

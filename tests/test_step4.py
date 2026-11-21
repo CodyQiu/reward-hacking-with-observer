@@ -4,6 +4,7 @@ g >= 0) and the exact tabular fit.
 Run as ``.venv/bin/python tests/test_step4.py`` (or under pytest).
 """
 
+import json
 import os
 import sys
 
@@ -1336,6 +1337,8 @@ def test_train_run_with_the_twin_and_practice_resumes():
     run_dir = os.path.join(tempfile.mkdtemp(), "run")
     train_run(run_dir, cfg, verbose=False)
     assert os.path.exists(os.path.join(run_dir, "twin_model.zip"))
+    with open(os.path.join(run_dir, "twin_state.json")) as fh:
+        assert json.load(fh)["all_levels"] is False                     # the default: the original twin
     d = np.load(os.path.join(run_dir, "logs.npz"))
     assert d["caught"].shape == (5, 3) and d["env_true"].shape == (5, 3)
     train_run(run_dir, {**cfg, "episodes": 2}, verbose=False, resume=True)
@@ -1365,6 +1368,114 @@ def test_best_response_prices_with_the_runs_twin():
         assert np.allclose(np.subtract(x["level"], prev), np.subtract(x["m_before"], x["m_after"]) / P.t_sub)
         prev = np.asarray(x["level"])
     assert abs(np.mean(res["gap_by_draw"]) - res["gap"]) < 1e-9
+
+
+def _level_policy(task, P):
+    """A level policy table (t_ep, S, L, 2): the proxy optimum (the bug in view) at level 0, honest at every
+    corrected level -- an agent that stops using the bug after one correction."""
+    from src.step3.dp import solve_subepisode
+    tb, T = task.tables, P.t_sub
+    px, gt = solve_subepisode(tb, tb.proxy, T), solve_subepisode(tb, tb.true, T)
+    pol = np.zeros((P.t_ep, tb.n_states, P.n_levels, 2), np.int64)
+    for t in range(P.t_ep):
+        pol[t, :, 0, :] = px[t % T][:, None]
+        pol[t, :, 1:, :] = gt[t % T][:, None, None]
+    return pol
+
+
+def test_twin_all_levels_trains_and_prices_every_level():
+    """twin.all_levels (src/step3/twin.py, "Every level"). An agent that uses the bug at level 0 and is honest after:
+    the original counterfactual chain stops after one correction (nothing left to correct), so the twin would never
+    train at levels 2-4. With all_levels the chain runs to the deepest level (later corrections fitted on the
+    agent's level-0 play again), one is added while fewer than cf_min chains are that deep, the twin trains at every
+    level, and until it has, a level it never trained at is priced with the deepest level it did train at."""
+    import types
+    import src.step3.twin as twin_mod
+    from src.step3.dp import table_policy_fn
+    small = {"n_envs": 4, "rounds": 1, "eval": 8, "block": 1}
+    _, task, P, _, plain = _grid_twin(small)
+    cfg, _, _, _, twin = _grid_twin({**small, "all_levels": True})
+    fn = table_policy_fn(_level_policy(task, P), task.n_actions)
+    from src.step3.reference import build_reference
+    import src.step3.pbrr as pbrr
+    ref, _ = build_reference(task, P.t_sub, {**cfg["pbrr"], "seed": cfg["pbrr"]["ref_seed"]})
+    over = types.SimpleNamespace(model=None, batch=task.make_batch(3, seed=2), rng=np.random.default_rng(3), beta=1.0,
+                                 ref_trajs=pbrr.rollouts(task.make_batch(3, seed=1), ref, P, np.random.default_rng(1)))
+    real = twin_mod.policy_probs_fn
+    twin_mod.policy_probs_fn = lambda model, proto, n_actions: fn
+    try:
+        assert plain.counterfactual(over, 0) == 1                       # stops: honest at level 1
+        assert twin.price_level(3) == 0 and plain.price_level(3) == 3   # never trained: the backstop
+        assert twin.on_episode_start(over, 0)
+        assert twin.bank.count(P.n_sub - 1) == 1                         # one chain to the deepest level
+        assert twin.trained_top == P.n_levels - 1 and all(twin.price_level(c) == c for c in range(P.n_levels))
+        assert twin.on_episode_start(over, 1) and twin.bank.count(P.n_sub - 1) == 2   # fewer than cf_min: another
+    finally:
+        twin_mod.policy_probs_fn = real
+    st = twin.state()
+    fresh = _grid_twin({**small, "all_levels": True})[4]
+    fresh.load_state(st)
+    assert st == {"trained_top": P.n_levels - 1, "all_levels": True} and fresh.trained_top == P.n_levels - 1
+
+
+def test_best_response_reads_the_twins_trained_levels():
+    """step4_br.twin_occupancy with the run's twin_state.json: under all_levels a level the twin never trained at is
+    read as the deepest level it did (as the overseer priced it); without the state every level is its own."""
+    _experiments()
+    from step4_br import twin_occupancy
+    _, task, P, _, twin = _grid_twin({"n_envs": 4, "rounds": 1, "eval": 8, "all_levels": True})
+    tb = task.tables
+    occ = twin_occupancy(twin.model, P, tb, tb.n_actions, {"all_levels": True, "trained_top": 1})
+    own = twin_occupancy(twin.model, P, tb, tb.n_actions)
+    assert np.allclose(occ[0], own[0]) and np.allclose(occ[1], own[1])
+    assert all(np.allclose(occ[c], own[1]) for c in range(2, P.n_levels))
+    assert twin_occupancy(twin.model, P, tb, tb.n_actions, {"all_levels": False, "trained_top": 0})[3].shape == own[3].shape
+    assert np.allclose(twin_occupancy(twin.model, P, tb, tb.n_actions, {"all_levels": False, "trained_top": 0})[3], own[3])
+
+
+def test_hideout_grid_flags_everything_but_the_goal_and_the_hideout():
+    """grid_hideout (the mentor's toy environment, docs/step4_hideout.md). The audit flags every window step that
+    does not end at the goal or at the hideout H; the bug is still only E. Every other task's flag is its exploit.
+    The env, the overseer's rollouts and the exact DP all use that flag: honest play (at the goal by step 28) and a
+    copy sitting at H are never caught, a copy sitting anywhere else is. Under an oracle patch the optimum exploits
+    until it must walk to H, sits there through the window in rounds 0-3 and exploits through the last window:
+    hiding costs 1,000 / 1,600 / 2,200 per round for H 1 / 7 / 13 steps from E (V0 = 4 x that round + 8,700)."""
+    from src.step3.dp import evaluate_levels, solve_levels, solve_subepisode, table_policy_fn
+    from src.step3.pbrr import rollouts
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.tasks import get_task
+    from src.step3.tasks.grid_hideout import HIDEOUTS
+    from src.step3.train import resolve_config
+    for env in ("grid", "boat_race"):
+        tb = get_task(env).tables
+        assert np.array_equal(tb.flag, tb.exploit)
+    want = {"near": 7700.0, "mid": 7100.0, "start": 6500.0}
+    for name, (r, c) in HIDEOUTS.items():
+        task = get_task("grid_hideout", h_row=r, h_col=c)
+        tb, P = task.tables, Protocol(t_sub=100, n_sub=5, window=10)
+        h = task.hideout
+        assert np.array_equal(tb.flag[:, 0], (tb.nxt[:, 0] != task.goal) & (tb.nxt[:, 0] != h))
+        assert np.array_equal(tb.exploit[:, 0], tb.nxt[:, 0] == task.exploit_tile)    # the bug is still only E
+        R = np.stack([tb.proxy] + [tb.true] * 4)
+        V, pol = solve_levels(tb, P, R)
+        ev = evaluate_levels(tb, P, R, pol)
+        assert np.allclose(ev["proxy"], [want[name]] * 4 + [8700.0]) and np.allclose(ev["window"], [0, 0, 0, 0, 1])
+        assert abs(float(tb.mu0 @ V[:, 0, 0]) - (4 * want[name] + 8700.0)) < 1e-6
+        S, A = tb.n_states, tb.n_actions
+        honest = solve_subepisode(tb, tb.true, P.t_sub)
+        stay = np.zeros((P.t_sub, S), np.int64)                         # action 0: stay where it starts (START)
+        for pol_, caught in ((honest, False), (stay, h != task.cfg.idx(task.cfg.start))):
+            fn = table_policy_fn(pol_, A)
+            tr = rollouts(task.make_batch(2, seed=0), fn, P, np.random.default_rng(0))
+            env = AuditedVecEnv(task, P, n_envs=2, seed=0)
+            env.reset()
+            for t in range(P.t_sub):
+                env.step_async(fn(env.batch, t, env.n_corr, env.flagged).argmax(axis=1))
+                env.step_wait()
+            assert np.array_equal(env.last["detected"], np.full(2, caught))
+            assert len(tr) == 2 and all(x.length == P.t_sub for x in tr)
+    cfg = resolve_config("grid_hideout")
+    assert cfg["refs"] is not None and cfg["task"] == {"exploit_bonus": 100.0, "h_row": 0, "h_col": 0}
 
 
 if __name__ == "__main__":

@@ -16,7 +16,10 @@ A batch exposes
     rule()         (n,) actions of the task's hand-written honest rule
 
 The exploit indicator is not task-specific: a step exploits the bug iff the proxy
-and the true reward differ there (the suite-wide detection rule, CLAUDE.md 4e).
+and the true reward differ there (the suite-wide detection rule, CLAUDE.md 4e). The audit
+flags a step in the window iff ``flag`` holds, which is that same indicator unless the task
+gives its own rule (``TabularTables.flag_table``; grid_hideout: anywhere but the goal or the
+hideout). Detection uses ``flag``; ``exploit`` stays the bug.
 
 Tabular tasks are given as padded transition tables -- for each (s, a) up to F
 successor states with probabilities -- which serve both the sampler below and the
@@ -42,10 +45,16 @@ class StepOut:
     true: np.ndarray             # (n,) ground-truth reward
     feat: np.ndarray             # (n, g_in_dim) float32 reward-model input row
     key: np.ndarray | None       # (n,) int64 exact transition id (tabular tasks only)
+    flag_mask: np.ndarray | None = None   # (n,) bool: the task's own audit rule (default: the exploit)
 
     @property
     def exploit(self):
         return exploit_mask(self.proxy, self.true)
+
+    @property
+    def flag(self):
+        """What the audit flags in its window: the task's own rule, or the exploit."""
+        return self.exploit if self.flag_mask is None else np.asarray(self.flag_mask, bool)
 
 
 @dataclass
@@ -62,6 +71,7 @@ class TabularTables:
     absorbing: np.ndarray        # (S,) bool
     n_actions: int
     phi_ref: np.ndarray | None = None   # (S, d) features the BC reference sees (default phi_obs)
+    flag_table: np.ndarray | None = None   # (S*A, F) bool: the task's own audit rule (default: the exploit)
 
     @property
     def n_states(self):
@@ -70,6 +80,11 @@ class TabularTables:
     @property
     def exploit(self):
         return exploit_mask(self.proxy, self.true) & (self.prob > 0)
+
+    @property
+    def flag(self):
+        """(S*A, F) what the audit flags in its window: the task's own rule, or the exploit."""
+        return self.exploit if self.flag_table is None else np.asarray(self.flag_table, bool) & (self.prob > 0)
 
     def check(self):
         S, A = self.n_states, self.n_actions
@@ -177,6 +192,7 @@ class TabularBatch:
             j = (u[:, None] >= tk._cum[r]).sum(axis=1)
         s2 = tb.nxt[r, j]
         out = StepOut(tb.proxy[r, j].astype(float), tb.true[r, j].astype(float),
-                      tk.g_rows(self.s, a, s2), tk.key(self.s, a, s2))
+                      tk.g_rows(self.s, a, s2), tk.key(self.s, a, s2),
+                      None if tb.flag_table is None else tb.flag_table[r, j])
         self.s = s2
         return out

@@ -105,7 +105,7 @@ def rollouts(batch, policy_fn, proto, rng, t0=0, n_corr=0):
         else:
             feats.append(out.feat)
         if proto.in_window(t):
-            flagged |= out.exploit
+            flagged |= out.flag
     K = np.stack(keys, axis=1) if keys else None
     X = np.stack(feats, axis=1) if feats else None
     return [Rollout(None if K is None else K[i], None if X is None else X[i], prx[i], tru[i])

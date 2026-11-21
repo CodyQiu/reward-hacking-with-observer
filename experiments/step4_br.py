@@ -98,17 +98,22 @@ def ppo_probs_at(model, proto, phi_obs, n_levels, n_actions):
     return at
 
 
-def twin_occupancy(model, proto, tb, n_actions):
+def twin_occupancy(model, proto, tb, n_actions, twin_state=None):
     """The saved twin's expected visits (S*A, F) over one round at each correction level, read exactly from its
     probabilities (observation: round 0, that correction count, flag 0, as it is trained). V(twin@c; R) is then
-    (occ[c] * R).sum() for any reward table R: the exact counterpart of the overseer's rollouts in training."""
+    (occ[c] * R).sum() for any reward table R: the exact counterpart of the overseer's rollouts in training.
+    ``twin_state`` (the run's twin_state.json; twin.all_levels): a level the twin never trained at is played as the
+    deepest level it did train at, as the overseer prices it (Twin.price_level)."""
     state = model.policy.actor_state
     S, A, T = tb.n_states, n_actions, proto.t_sub
+    top = proto.n_levels - 1
+    if twin_state and twin_state.get("all_levels"):
+        top = int(twin_state.get("trained_top", top))
     out = []
     for c in range(proto.n_levels):
         d, occ = tb.mu0.copy(), np.zeros(tb.prob.shape)
         for tau in range(T):
-            obs = encode_obs(proto, tb.phi_obs, tau, np.full(S, c), np.zeros(S, bool))
+            obs = encode_obs(proto, tb.phi_obs, tau, np.full(S, min(c, top)), np.zeros(S, bool))
             p = np.clip(np.asarray(state.apply_fn(state.params, obs).probs_parameter(), float)[:, :A], 0.0, None)
             p /= p.sum(axis=1, keepdims=True)
             m = (d[:, None] * p).reshape(-1)[:, None] * tb.prob                 # rows s * A + a, in order
@@ -270,7 +275,11 @@ def check_seed(seed_dir, n_draws=6, eps=0.05, log=print):
     twin_occ = None
     if cfg["g"].get("offset") and cfg["g"].get("offset_rule") == "twin":   # the run's own pricing twin
         twin = PPO.load(os.path.join(seed_dir, "twin_model.zip"), device="cpu")
-        twin_occ = twin_occupancy(twin, proto, task.tables, task.n_actions)
+        tstate = None
+        if os.path.exists(os.path.join(seed_dir, "twin_state.json")):
+            with open(os.path.join(seed_dir, "twin_state.json")) as fh:
+                tstate = json.load(fh)
+        twin_occ = twin_occupancy(twin, proto, task.tables, task.n_actions, tstate)
     res = best_response(cfg, policy_probs_fn(model, proto, task.n_actions),
                         ppo_probs_at(model, proto, task.tables.phi_obs, proto.n_sub, task.n_actions),
                         n_draws=n_draws, eps=eps, log=log, twin_occ=twin_occ)

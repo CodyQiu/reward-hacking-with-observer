@@ -232,7 +232,7 @@ class AuditedVecEnv(VecEnv):
         exploit = out.exploit
         received = out.proxy + self.correction(out.feat) + self.level
         if in_win:
-            self.flagged |= exploit
+            self.flagged |= out.flag             # the audit's rule (the exploit unless the task has its own)
         self.t += 1
         detected = np.zeros(n, bool)
         dones = np.zeros(n, bool)

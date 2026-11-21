@@ -243,6 +243,33 @@ The loop rules, caps, verdict and criteria are those of `indiff_pool`. The A1–
 - PPO: `... wave1 submit`, 36 runs (L, LE and LN for both arms in all six envs, seeds 0–2), in `results/step4/<env>/indiff_twin/`.
 - Taxi is the decisive cell, so it goes first.
 
+## The twin at every level (`twin.all_levels=True`, `CAMPAIGN=indiff_twin2`; 2026-11-21)
+
+**Why.** The first twin PPO checks (`docs/step4_indiff_log.md`, flags of 2026-11-18) found the twin's weak point, the one this doc listed as "little data at levels the agent rarely reaches":
+- PPO is corrected once, then honest. So every real chain in the bank is one correction deep, and the counterfactual chain stops there too: after one correction the agent no longer uses the bug, so "nothing to correct".
+- The twin therefore trains only at levels 0 and 1. But a second correction is priced with its play at level 2, where it is an untrained network. It underplays, V_after is too low, and the level overpays.
+- In Boat Race at 3072 episodes, level 1 is priced exactly (received 200 per round = M(proxy)), but a second correction pays 321–379 per round. The best response under the run's own twin farms 2–4 corrections, so the verdict fails seeds whose behaviour is exactly the target's (`L` s1 0.347, s2 0.224; `LE` s1, s2 0.118, 0.125). The same shows in AS (`L` s0 0.030) and the grid (`LE` s0 0.449, `LN` s0 0.303).
+- PPO itself does not farm, but a best-responding agent would. So this is a real hole for "never misses", not a PPO artefact. It is not a code bug: the code did what the design said.
+
+**The change** (`src/step3/twin.py`, "Every level"; only how the overseer's pricer is trained):
+1. **The counterfactual chain always runs to the deepest level.** Where the agent's play at a level no longer uses the bug, the next correction is PBRR fitted on fresh rollouts of its play at the last level where it did: the agent caught doing that again, which is exactly the re-correction a farmer would trigger. No DP, no final round, only the agent's own play and the run's own fit.
+2. **One is added per block while fewer than `cf_min` = 4 chains reach the deepest level** (before: while fewer than 4 chains existed at all; real one-deep chains always satisfied that).
+3. **Backstop:** a level the twin has never trained at is priced with its play at the deepest level it has trained at. That is a real policy, so it cannot overstate the best round. The level is saved beside the model (`twin_state.json`), and the best-response check reads it (`twin_occupancy`).
+
+Unchanged: the agent, the protocol, the PBRR fit, the pricing rule, the targets and the criteria. The twin's settings are not part of the game, so the `indiff_twin` targets are this campaign's targets too.
+
+**Tests:** `test_twin_all_levels_trains_and_prices_every_level` (an agent honest after one correction: the old chain stops at depth 1, the new one reaches depth 4, the twin then trains at every level, the backstop applies before that) and `test_best_response_reads_the_twins_trained_levels`.
+
+**The arms:** `indiff_twin2` (`g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True`) and `indiff_twin2_practice` (plus `twin.practice=0.25`). Runs `I5_*` in `results/step4/<env>/indiff_twin2/`. Wave 1: L, LE and LN for both arms in all six envs, seeds 0–2 (36 runs), Taxi first.
+
+**Predictions (written 2026-11-21, before any run).**
+- **Behaviour as in `indiff_twin`:** corrected once, then honest in AS, Boat Race, Tomato and tomato_large; the fit-limited seeds stay as their targets.
+- **The best responses no longer farm deeper levels** under the run's own twin. So the Boat Race, AS and grid seeds that plateaued only because of that pass the 3% verdict.
+- **Taxi** is still limited by the agent's skill after a correction (0.0–0.3 deliveries against 7.1 in every earlier arm). The practice arm is the one that might fix it.
+- **The grid's goal-skipping** (corrected once, then never reaches the goal, worth about 1% of V) is not affected by this change.
+
+**The original twin campaign (`indiff_twin`)** is superseded. Its running jobs finish and its finished seeds are checked, but nothing new is submitted there.
+
 ## Pipeline
 
 1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` (the exact rule) and `CAMPAIGN=indiff_pool … targets submit` (the estimator) each submit 11 jobs:

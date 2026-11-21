@@ -149,7 +149,7 @@ def round_window(tb, pol, T, W):
     d = np.stack([tb.mu0, np.zeros(tb.n_states)], axis=1)              # (S, flag)
     for tau in range(T):
         r = np.arange(tb.n_states) * tb.n_actions + pol[tau]
-        hit = tb.exploit[r] & (tau >= T - W)                            # (S, F)
+        hit = tb.flag[r] & (tau >= T - W)                               # (S, F) caught there
         nd = np.zeros_like(d)
         for f in (0, 1):
             m = d[:, f][:, None] * tb.prob[r]

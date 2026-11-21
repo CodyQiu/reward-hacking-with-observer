@@ -144,6 +144,9 @@ def _save_logs(run_dir, overseer, model):
     if getattr(overseer, "twin", None) is not None:          # the pricing twin, for resumes and the check
         overseer.twin.model.save(os.path.join(run_dir, "twin_model.tmp.zip"))
         os.replace(os.path.join(run_dir, "twin_model.tmp.zip"), os.path.join(run_dir, "twin_model.zip"))
+        with open(os.path.join(run_dir, "twin_state.json.tmp"), "w") as fh:   # the levels it has trained at
+            json.dump(overseer.twin.state(), fh)
+        os.replace(os.path.join(run_dir, "twin_state.json.tmp"), os.path.join(run_dir, "twin_state.json"))
     return on, ca, px
 
 
@@ -265,6 +268,9 @@ def train_run(run_dir, config, verbose=True, resume=False):
             venv.practice[n_envs - n_prac:] = True
         if resume and os.path.exists(os.path.join(run_dir, "twin_model.zip")):
             twin.model = PPO.load(os.path.join(run_dir, "twin_model.zip"), env=twin.venv, device="cpu")
+            if os.path.exists(os.path.join(run_dir, "twin_state.json")):
+                with open(os.path.join(run_dir, "twin_state.json")) as fh:
+                    twin.load_state(json.load(fh))
             twin.freeze()
     overseer = Overseer(task, proto, venv, ref_trajs, gcfg, k=pb["k"], beta=pb["beta"],
                         seed=seed + 7_000 * n_resume, twin=twin)
