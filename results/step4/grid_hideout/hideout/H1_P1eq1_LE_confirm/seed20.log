@@ -126,3 +126,7 @@
   [grid_hideout s20] 24,192,000  win0-3 0.25  off 0.29  corr/ep 1.00  winF 0.00  proxy0-3   2183.6  rounds 3381  (12978s)
   [grid_hideout s20] 24,384,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2191.2  rounds 3405  (13056s)
   [grid_hideout s20] 24,576,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2190.3  rounds 3429  (13123s)
+  [grid_hideout s20] resumed at episode 3072 -> 6144
+  [grid_hideout s20] 24,768,000  win0-3 0.25  off 0.29  corr/ep 1.00  winF 0.00  proxy0-3   2172.7  rounds 3454  (109s)
+  [grid_hideout s20] 24,960,000  win0-3 0.25  off 0.28  corr/ep 1.00  winF 0.00  proxy0-3   2081.2  rounds 3480  (208s)
+  [grid_hideout s20] 25,152,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   1958.0  rounds 3505  (297s)

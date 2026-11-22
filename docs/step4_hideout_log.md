@@ -282,3 +282,23 @@ No regulariser does poorly (a seed not honest by the end):
   - `... extend grid_hideout H1_P1eq1_L+ES10 6144` → **2008391**; `+N4 6144` → **2008392**; `+ES10+N4 6144` → **2008393**; `H1_base_LE+ES10 3072` → **2008394**; `H1_base_LE+N4 6144` → **2008395**;
   - `... br_missing submit` → **2008396–2008400** (`H1_P1eq1_LE_confirm`, `H1_base_L`, `H1_base_LE+ENT3`, `H1_base_LE+ES10+N4`, `H1_base_LE`).
 - Jobs: hideout 19 (cap 24).
+
+## 2026-11-22, iteration 10 (05:30–06:25): `H1_base_LE+ES10+N4` 3/3 → confirm (the standard-PBRR cell's first 3/3 run); `H1_P1eq1_LE_confirm` → extend 6144; more checks
+
+- **Checks 2008396–2008400.**
+
+  | run (episodes) | s0 | s1 | s2 | decision |
+  |---|---|---|---|---|
+  | `H1_P1eq1_LE_confirm` (3072; seeds 20–22) | 0.001 | **0.084 IMPR** | **0.045 IMPR** | extend 6144 (rule 4: a confirmation may be extended) |
+  | `H1_base_LE+ES10+N4` (1536) | 0.017 | 0.017 | 0.017 | **3/3 → confirm** |
+  | `H1_base_L` (12,288 = cap) | 0.098 IMPR | (no check yet) | 0.051 PLAT | at the cap: no further extension; s1 check below |
+  | `H1_base_LE` (6144) | 0.074 PLAT | 0.040 IMPR | (no check yet) | wait for s2 |
+  | `H1_base_LE+ENT3` (1536) | 0.026 | (running) | (no check yet) | wait |
+
+  - `H1_P1eq1_LE_confirm`: every seed is corrected once, then honest; s21 and s22 receive less than their BRs after the correction.
+  - `H1_base_LE+ES10+N4`: PPO hides (never corrected, final round exploited), at 98% of its BR in every seed.
+- **Commands.** With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_base_LE+ES10+N4 submit` → **2008635** (dry-run: `--run-id H1_base_LE+ES10+N4_confirm --seeds 20 21 22 --set anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 ppo.ent_coef=0.03 ppo.batch_size=1600 n_envs=64 episodes=1536`);
+  - `... extend grid_hideout H1_P1eq1_LE_confirm 6144 submit` → **2008636**;
+  - `... br_missing submit` → **2008637–2008641** (`H1_P2swap_L` at 6144, `H1_base_L` s1, `H1_base_LE+ENT3`, `H1_base_LE` s2, `H1_indiff_twin2_LN`).
+- Jobs: hideout 17 (cap 24).
