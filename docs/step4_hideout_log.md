@@ -21,6 +21,8 @@ This log is append-only below the three summary sections.
 
 ## Flags for the user
 
+- **NEW (2026-11-22 12:40): home disk at the stop point, so no new runs, extensions or confirmations are being submitted.** `du -s` 46,143 MiB (45.1 GiB; `du -h` shows 46G): `.git` 13.6G, `results/` 15.6G, the rest outside this repo. The 2026-11-18 quota incident killed every job at about 50 GB. Usage grows about 1 GiB per 8 h (checkpoints of running jobs, plus `step4_commit.sh` committing finished seeds' `logs.npz` / `model.zip` into `.git`). Best-response checks (small JSON files) continue; every decision that needs a new job is logged as **held for disk**. Your call: stop committing large files, move `results/` to /scratch, or free space elsewhere in home.
+
 - **NEW (2026-11-22 01:50): in one swap confirmation seed the best response farms corrections.** `H1_P2swap_LN_confirm` s20 (1536 episodes) has gap 0.881. PPO is in a broken state: corrected in round 0 or 1 (0.48 / 0.51), received 1,232 / 3,015 / 301 / 349 / 274 per round. Its best response, under corrections refitted on that play, is corrected in every round 0–3 while exploiting (true −100 ×5), receiving 8,629–8,681 per round. So the swap's correction, fitted on this policy's caught play, makes being caught pay as much as the exploit. The sweep's target for that seed (`hstart_b100_P2swap/seed20.json`) is "corrected once, then honest". The swap cell is DONE through `H1_P2swap_LE_confirm`, so per rule 6b nothing more is run for it; this is information. s21 0.125 (corrected once, then honest, 13% below its BR); s22 0.000.
 
 - **NEW (2026-11-21 16:55): the exact sweep answers the mentor's question: no setting where no regulariser does poorly.** In all 9 settings (hideout near / mid / start × b 100 / 400 / 1600), every no-regulariser seed is honest by the end.
@@ -379,3 +381,10 @@ No regulariser does poorly (a seed not honest by the end):
   - `... extend grid_hideout H1_P1eq1_L+ES10+N4 12288 submit` → **2009717**.
 - **Standard-PBRR cell status:** `H1_base_L` and `H1_base_LE` ended at the cap (0/3, 1/3), `H1_base_LN` plateaued. The `H1_base_LE+ES10+N4` confirmation (2008635) is its open path; `+N4`, `+ES10` and `+ENT3` keep extending under 6b.
 - Jobs: hideout 12 (cap 24).
+
+## 2026-11-22, iteration 18 (12:05–12:45): disk at the stop point; `H1_P1eq1_L_confirm` 2/3 at 6144; `H1_base_LE+ES10` still 0.76; both extensions **held for disk**
+
+- **Disk:** 46,143 MiB in home (flag at the top). No new jobs until you decide.
+- **Checks 2009931 / 2009932** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`):
+  - `H1_P1eq1_L_confirm` (6144; seeds 20–22): **0.000 / 0.001 / 0.047 (IMPROVING)**. All three are corrected once, then honest. Rule 4 would extend it to 12,288: **held for disk**.
+  - `H1_base_LE+ES10` (3072): **0.760 / 0.761 / 0.761 (PLATEAU)**, unchanged since 1536. It exploits openly in round 0, is corrected, and is corrected again in every later round because it never reaches the goal or the hideout. Rule 6b would extend it to 6144: **held for disk**.
