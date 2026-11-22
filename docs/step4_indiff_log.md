@@ -507,7 +507,11 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - **s20: FAIL A2.** It is corrected in every round (4.00 per episode) at true −94.0 per round, and round 4 still uses the original bug. Every extra correction is under-correction: the best round at that level is caught, with probability 1.00. Level 1 pays only 32.7, against 154.9 for a full Tomato correction.
   - This is the same seed that fails under the exact rule, the pool and comp (its correction does not remove the bug). The doc predicted it: "Fit-limited seeds (Boat Race s20-type under-correction) stay as their targets".
 - **Twin targets so far (grid, AS, Tomato, Taxi, Boat Race): 27/30 PASS** (grid 6, AS 6, Tomato 6, Taxi 4, Boat Race 5). **No hiding in any seed. Level error 0.00 at every level of every seed.** The three failures (Taxi s21, s22; Boat Race s20) are under-corrections by the fit, not pricing errors.
-- Pending: tomato_large (1995347–1995352).
+- **tomato_large (resubmitted after the quota incident as 2003954–2003959; s2 2003956 and s21 2003958 finished 2026-11-21 in 4:54 / 4:50): 2/2 PASS so far.** V0 = 3929.8 in both = 5 × M(proxy) 786.0; hiding is worth 3686.8. Level error 0.00 at every level.
+  - **s2:** 3.08 corrections per episode (by round 1.0 / 0.70 / 0.69 / 0.69); true 65.0, then 502–505 ×4 (honest 522.6). **s21:** 2.05 per episode (1.0 / 0.39 / 0.35 / 0.32); true 65.0, then 516–517 ×4.
+  - Every extra correction is under-correction (the best round at that level is caught, window 0.27–0.70). Level 1 is paid 261.5 / 262.9; levels 2–4 2.1–7.8 per step, each under its farming margin.
+  - Unlike Tomato (corrected once, then never again), tomato_large's twin targets take 2–3 corrections; still honest by the end within A2's tolerance.
+- Pending: tomato_large s0, s1, s20, s22 (2003954, 2003955, 2003957, 2003959).
 
 ## 2026-11-17, iteration 0 (01:35–01:42): both campaigns' targets submitted
 
@@ -1852,3 +1856,10 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - Checks: 2003948 (`L`), 2003950 (`LN`).
 - In every seed the best response is corrected once in round 0, then honest at 125. PPO's own play after one correction is 0.0–0.3 deliveries, the Taxi skill gap seen in every arm.
 - Superseded: no extension, no new runs.
+
+## 2026-11-21, iteration 110 (18:57–19:55): indiff_twin2 all training; twin tomato_large targets s2, s21 PASS (superseded)
+
+- **indiff_twin2.** `CAMPAIGN=indiff_twin2 bash scripts/farmshare/step4_optimal.sh report`: 90 seeds RUNNING, none finished, so no check yet. Its table stays empty.
+  - **`trained_top`.** Every seed that has written more than one checkpoint has `twin_state.json` with `trained_top` = 4. Three Taxi seeds still have one checkpoint (episode 24): `I5_indiff_twin2_LE` s0 (top 1), `I5_indiff_twin2_practice_LE` s0 (top 0) and `I5_indiff_twin2_practice_LN` s0 (top 1). Not flagged yet: the prompt asks for 4 "once it has trained a few blocks". Recheck at their next checkpoints.
+  - **Taxi is slow.** After 5 h the six Taxi jobs (2003889–2003894) are at episode 24–72 of 768. Some seeds have not checkpointed for 4–5 h. They are alive: `sstat` shows about 30 CPU-hours per job (3 seeds × 2 CPUs, fully busy). The cost is the twin, trained at every level after each catch: `I5_indiff_twin2_L` s0 ran 72 episodes in 55 min, then slowed to 0 checkpoints in 4 h once catches rose (28 PBRR rounds in its third block). At this pace each Taxi run needs several 48 h rule-1 resumes. That is allowed for this campaign.
+- **indiff_twin (superseded): tomato_large targets s2 (2003956) and s21 (2003958) COMPLETED.** `.venv/bin/python experiments/step4_indiff_check.py results/step4/tomato_large/targets/indiff_twin/`: **2/2 PASS**, level error 0.00. s2 takes 3.08 corrections per episode, s21 2.05 (under-correction), then honest: true 502–517 against honest 522.6. Added to the targets table above. s0, s1, s20, s22 are still running.
