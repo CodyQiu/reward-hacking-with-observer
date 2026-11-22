@@ -332,3 +332,11 @@ No regulariser does poorly (a seed not honest by the end):
   - `... extend grid_hideout H1_base_LE+ENT3 3072 submit` → **2008847** (rule 6b).
 - **The no-regulariser cell** now has three confirmations in progress: `H1_P1eq1_L_confirm` (2/3, extending), `H1_P1eq1_LE_confirm` (1/3, extending, 2008636) and `H1_P1eq1_L+ENT3_confirm` (2008389, training).
 - Jobs: hideout 19 (cap 24).
+
+## 2026-11-22, iteration 13 (08:05–08:25): `H1_indiff_twin2_LE` s0, s1 checked (s2 running)
+
+- **Check 2008873** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`; finished seeds only):
+  - s0 **0.176 (IMPROVING)**: corrected once, then honest (true 20–21), but receives 6,881 per round after the correction against its BR's 8,819.
+  - s1 **0.048 (IMPROVING)**: corrected in every round (4.00 per episode), never reaches the goal (true −100), and receives 7,683–8,669 per round. Its BR is corrected once, then honest (8,817).
+  - s2 is at 1176/1536. Rule 4 waits for it.
+- Jobs: hideout 19 (cap 24).
