@@ -257,3 +257,28 @@ No regulariser does poorly (a seed not honest by the end):
   - `H1_indiff_twin2_LN` s0 **0.000** (corrected once, then honest, received 8,699). s1, s2 are at 1248 and 1272.
   - As the sweep's twin targets predicted: corrected in round 0, then honest; no seed hides. No best response takes an extra correction.
 - No decision until each run's seeds have all finished.
+
+## 2026-11-22, iteration 9 (04:59–05:30): `H1_indiff_twin2_L` 3/3 → confirm; `H1_P1eq1_L+ENT3` 3/3 at 3072 → confirm; exploration runs extended
+
+- **Events.** COMPLETED: `H1_indiff_twin2_L` (2003938, 13:05); extensions to 3072 of `H1_P1eq1_L+ENT3` / `+ES10` / `+N4` / `+ES10+N4` (2007052–2007055) and `H1_base_LE+N4` (2007056); `H1_base_LE+ES10` (2005375, 1536).
+- **Rule 3.** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: 8 lines). With `submit` → **2008372–2008379**.
+- **Results** (`step4_convergence.py`):
+
+  | run (episodes) | s0 | s1 | s2 | PPO | best response | decision |
+  |---|---|---|---|---|---|---|
+  | `H1_indiff_twin2_L` (1536) | 0.000 | 0.011 | 0.011 | corrected in round 0; s0 then honest; s1, s2 then skip the goal (true −100) | corrected once, then honest | **3/3 → confirm** |
+  | `H1_P1eq1_L+ENT3` (3072) | 0.000 | 0.003 | 0.007 | corrected once, then honest | s0, s1 once; s2 twice | **3/3 → confirm** (6b) |
+  | `H1_P1eq1_L+ES10` (3072) | 0.114 IMPR | 0.001 | 0.017 | corrected once, then honest | s2 twice | 6b: extend 6144 |
+  | `H1_P1eq1_L+N4` (3072) | 0.117 PLAT | 0.000 | 0.022 | the same | s2 twice | 6b: extend 6144 |
+  | `H1_P1eq1_L+ES10+N4` (3072) | 0.081 IMPR | 0.000 | 0.001 | the same | s2 twice | 6b: extend 6144 |
+  | `H1_base_LE+N4` (3072) | 0.017 | 0.017 | 0.051 PLAT | hides | hides | 6b: extend 6144 |
+  | `H1_base_LE+ES10` (1536) | **0.761** | **0.761** | **0.761** | exploits openly in round 0 (8,699), is corrected, then wanders: never reaches the goal or the hideout, so it is flagged and corrected in every round (4.00 per episode, true and received −100) | hides (6,500 per round) | 6b: extend 3072 |
+  | `H1_base_LE+ES10+N4` (1536) | 0.017 | (no check yet) | 0.017 | hides | hides | check s1 |
+
+  - `H1_base_LE+ES10` is a bad local optimum, the opposite of hiding: it is corrected four times per episode because, after the first correction, it never reaches a state that passes the audit. Extended under rule 6b; nothing changed.
+- **Commands.** Dry-runs as before (`confirm`: `--run-id <run>_confirm --seeds 20 21 22 --set <the run's settings>`; `extend`: `--resume --extend-to <N>`). With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin2_L submit` → **2008390**;
+  - `... confirm grid_hideout H1_P1eq1_L+ENT3 submit` → **2008389**;
+  - `... extend grid_hideout H1_P1eq1_L+ES10 6144` → **2008391**; `+N4 6144` → **2008392**; `+ES10+N4 6144` → **2008393**; `H1_base_LE+ES10 3072` → **2008394**; `H1_base_LE+N4 6144` → **2008395**;
+  - `... br_missing submit` → **2008396–2008400** (`H1_P1eq1_LE_confirm`, `H1_base_L`, `H1_base_LE+ENT3`, `H1_base_LE+ES10+N4`, `H1_base_LE`).
+- Jobs: hideout 19 (cap 24).
