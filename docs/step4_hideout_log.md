@@ -302,3 +302,22 @@ No regulariser does poorly (a seed not honest by the end):
   - `... extend grid_hideout H1_P1eq1_LE_confirm 6144 submit` → **2008636**;
   - `... br_missing submit` → **2008637–2008641** (`H1_P2swap_L` at 6144, `H1_base_L` s1, `H1_base_LE+ENT3`, `H1_base_LE` s2, `H1_indiff_twin2_LN`).
 - Jobs: hideout 17 (cap 24).
+
+## 2026-11-22, iteration 11 (06:20–06:30): `H1_indiff_twin2_LN` 3/3 → confirm; `H1_base_LE` → 12,288 (cap); `H1_base_L` at its cap
+
+- **Checks 2008637–2008641.**
+
+  | run (episodes) | s0 | s1 | s2 | decision |
+  |---|---|---|---|---|
+  | `H1_indiff_twin2_LN` (1536) | 0.000 | 0.011 | 0.011 | **3/3 → confirm** |
+  | `H1_P2swap_L` (6144) | 0.000 | 0.065 IMPR | 0.090 IMPR | none: the swap cell is DONE (rule 6b: start nothing new for it) |
+  | `H1_base_L` (12,288, the cap) | 0.098 IMPR | 0.051 IMPR | 0.051 PLAT | at the cap: finished, 0/3 |
+  | `H1_base_LE` (6144) | 0.074 PLAT | 0.040 IMPR | 0.019 | extend 12,288 (cap) |
+  | `H1_base_LE+ENT3` (1536) | 0.026 | (running) | 0.032 IMPR | wait for s1 |
+
+  - **`H1_indiff_twin2_LN`:** s0 is corrected in round 0, then honest. s1 and s2 are corrected 2 and 4 times per episode and never reach the goal (true −100), yet receive 8,693–8,700 per round ≈ M(proxy) = 8,700. Under the twin a re-correction costs the agent nothing (the indifference), so wandering after the correction is only about 1% below the honest BR. The verdict passes it, as in the grid cells of indiff_twin2. Every BR is corrected once, then honest.
+  - **`H1_base_L` ends at the cap without converging.** It hides, as its target and BR do, but it walks to the hideout too early: 5,660–6,080 per round in rounds 0–3 against the BR's 6,500. Its gaps have not changed since 1536 episodes.
+- **Commands.**
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin2_LN` (dry-run: `--run-id H1_indiff_twin2_LN_confirm --seeds 20 21 22 --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`). With `submit` → **2008810**.
+  - `... extend grid_hideout H1_base_LE 12288` (dry-run: `--resume --extend-to 12288`). With `submit` → **2008811**.
+- Jobs: hideout 19 (cap 24).
