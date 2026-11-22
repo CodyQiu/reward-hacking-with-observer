@@ -1,0 +1,172 @@
+[
+ {
+  "seed_dir": "results/step4/tomato/indiff_twin2/I5_indiff_twin2_practice_LE/seed1",
+  "target": "step4/tomato/targets/indiff_twin/seed1.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.1191626787185669,
+   "window": 0.4895833333333333,
+   "true": 0.6469083896542696,
+   "corr": 1.0798611111111138
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9375,
+    0.2638888888888889,
+    0.4895833333333333,
+    0.3888888888888889,
+    0.3993055555555556
+   ],
+   "true_by_k": [
+    74.12152862548828,
+    218.45138549804688,
+    183.01736450195312,
+    202.40972900390625,
+    206.90972900390625
+   ],
+   "received_by_k": [
+    498.4270935058594,
+    511.85107421875,
+    510.6623229980469,
+    542.9932861328125,
+    529.4161987304688
+   ],
+   "corrections_per_ep": 2.079861111111111
+  },
+  "target_summary": {
+   "V0": 2944.1873000000933,
+   "received_by_k": [
+    588.8374600000009,
+    588.8374600000008,
+    588.8374600000128,
+    588.837460000025,
+    588.8374600000373
+   ],
+   "true_by_k": [
+    45.99877817565126,
+    434.0527130180933,
+    434.05271301810245,
+    434.0527130181113,
+    434.0527130181203
+   ],
+   "window_by_k": [
+    0.9999999999999973,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.9999999999999973,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 2759.4880542326496,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.1191626787185669,
+    "window": 0.4895833333333333,
+    "true": 0.6469083896542696,
+    "corr": 1.0798611111111138
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato/indiff_twin2/I5_indiff_twin2_practice_LE/seed2",
+  "target": "step4/tomato/targets/indiff_twin/seed2.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.2698866128921509,
+   "window": 0.6840277777777778,
+   "true": 0.7239465188243852,
+   "corr": 1.3611111111111138
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.8368055555555556,
+    0.6840277777777778,
+    0.5381944444444444,
+    0.3020833333333333,
+    0.2013888888888889
+   ],
+   "true_by_k": [
+    120.73958587646484,
+    153.12152099609375,
+    184.25694274902344,
+    224.33680725097656,
+    233.26388549804688
+   ],
+   "received_by_k": [
+    436.2742919921875,
+    417.564697265625,
+    423.8515930175781,
+    430.9945983886719,
+    440.9053649902344
+   ],
+   "corrections_per_ep": 2.361111111111111
+  },
+  "target_summary": {
+   "V0": 2944.187300000085,
+   "received_by_k": [
+    588.8374600000009,
+    588.837460000001,
+    588.8374600000126,
+    588.8374600000244,
+    588.8374600000366
+   ],
+   "true_by_k": [
+    45.99877817565126,
+    434.0518189587755,
+    434.05181895878434,
+    434.05181895879275,
+    434.051818958802
+   ],
+   "window_by_k": [
+    0.9999999999999973,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.9999999999999973,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 2759.4880542326496,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.2698866128921509,
+    "window": 0.6840277777777778,
+    "true": 0.7239465188243852,
+    "corr": 1.3611111111111138
+   }
+  ]
+ }
+]

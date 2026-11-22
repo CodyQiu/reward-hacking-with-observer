@@ -1,0 +1,327 @@
+[
+ {
+  "seed_dir": "results/step4/boat_race/indiff_twin2/I5_indiff_twin2_practice_LN/seed0",
+  "target": "step4/boat_race/targets/indiff_twin/seed0.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 120,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.06404668092727661,
+   "window": 0.04340277777777779,
+   "true": 0.09566696484883626,
+   "corr": 0.0008680555555555802
+  },
+  "pass": {
+   "value": false,
+   "window": true,
+   "true": false,
+   "corr": true
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9565972222222222,
+    0.0078125,
+    0.035590277777777776,
+    0.0008680555555555555,
+    0.0
+   ],
+   "true_by_k": [
+    -93.36458587646484,
+    36.22395706176758,
+    42.77083206176758,
+    49.14583206176758,
+    49.765625
+   ],
+   "received_by_k": [
+    180.59375,
+    180.7576446533203,
+    190.619873046875,
+    191.61386108398438,
+    192.3682098388672
+   ],
+   "corrections_per_ep": 1.0008680555555556
+  },
+  "target_summary": {
+   "V0": 999.9999999999998,
+   "received_by_k": [
+    200.0,
+    199.99999999999991,
+    199.99999999999991,
+    199.99999999999991,
+    199.99999999999991
+   ],
+   "true_by_k": [
+    -94.0,
+    50.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 928.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": -0.1398015022277832,
+    "window": 0.4305555555555556,
+    "true": 0.7434534231821696,
+    "corr": 1.0755208333333335
+   },
+   {
+    "episode": 48,
+    "value": -0.1303614377975464,
+    "window": 0.1597222222222222,
+    "true": 0.24808304177390206,
+    "corr": 0.01475694444444442
+   },
+   {
+    "episode": 72,
+    "value": 0.15397131443023682,
+    "window": 0.04079861111111116,
+    "true": 0.07537616623772515,
+    "corr": 0.0
+   },
+   {
+    "episode": 96,
+    "value": 0.07953393459320068,
+    "window": 0.0703125,
+    "true": 0.0881799856821696,
+    "corr": 0.0
+   },
+   {
+    "episode": 120,
+    "value": 0.06404668092727661,
+    "window": 0.04340277777777779,
+    "true": 0.09566696484883626,
+    "corr": 0.0008680555555555802
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/boat_race/indiff_twin2/I5_indiff_twin2_practice_LN/seed1",
+  "target": "step4/boat_race/targets/indiff_twin/seed1.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 96,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": -0.06215214729309082,
+   "window": 0.04600694444444442,
+   "true": 0.1074942217932807,
+   "corr": 0.0
+  },
+  "pass": {
+   "value": false,
+   "window": true,
+   "true": false,
+   "corr": true
+  },
+  "matches_target": false,
+  "above_target": true,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9539930555555556,
+    0.027777777777777776,
+    0.006944444444444444,
+    0.011284722222222222,
+    0.0008680555555555555
+   ],
+   "true_by_k": [
+    -92.03646087646484,
+    35.28125,
+    34.52083206176758,
+    45.22395706176758,
+    46.72916793823242
+   ],
+   "received_by_k": [
+    147.5260467529297,
+    223.69949340820312,
+    222.18218994140625,
+    233.95993041992188,
+    234.78445434570312
+   ],
+   "corrections_per_ep": 1.0
+  },
+  "target_summary": {
+   "V0": 1000.0000000000013,
+   "received_by_k": [
+    200.0,
+    200.00000000000003,
+    200.00000000000003,
+    200.00000000000003,
+    200.00000000000003
+   ],
+   "true_by_k": [
+    -94.0,
+    50.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 928.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.17535722255706787,
+    "window": 0.84375,
+    "true": 0.9917896588643392,
+    "corr": 2.1961805555555554
+   },
+   {
+    "episode": 48,
+    "value": -0.1662006378173828,
+    "window": 0.1987847222222222,
+    "true": 0.5215205483966403,
+    "corr": 0.09809027777777768
+   },
+   {
+    "episode": 72,
+    "value": -0.07035505771636963,
+    "window": 0.06770833333333337,
+    "true": 0.13505497243669298,
+    "corr": 0.00868055555555558
+   },
+   {
+    "episode": 96,
+    "value": -0.06215214729309082,
+    "window": 0.04600694444444442,
+    "true": 0.1074942217932807,
+    "corr": 0.0
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/boat_race/indiff_twin2/I5_indiff_twin2_practice_LN/seed2",
+  "target": "step4/boat_race/targets/indiff_twin/seed2.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 96,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.07483875751495361,
+   "window": 0.07204861111111116,
+   "true": 0.10662616623772515,
+   "corr": 0.0008680555555555802
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": true
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9279513888888888,
+    0.042534722222222224,
+    0.020833333333333332,
+    0.009548611111111112,
+    0.0008680555555555555
+   ],
+   "true_by_k": [
+    -91.19271087646484,
+    34.64583206176758,
+    38.84375,
+    42.59895706176758,
+    44.36458206176758
+   ],
+   "received_by_k": [
+    171.5625,
+    183.93072509765625,
+    186.66195678710938,
+    191.11419677734375,
+    191.89193725585938
+   ],
+   "corrections_per_ep": 1.0008680555555556
+  },
+  "target_summary": {
+   "V0": 999.9999999999999,
+   "received_by_k": [
+    200.0,
+    199.99999999999997,
+    199.99999999999997,
+    199.99999999999997,
+    199.99999999999997
+   ],
+   "true_by_k": [
+    -94.0,
+    50.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 928.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.13482719659805298,
+    "window": 0.9748263888888888,
+    "true": 0.9988064236111112,
+    "corr": 2.8428819444444446
+   },
+   {
+    "episode": 48,
+    "value": 0.024088501930236816,
+    "window": 0.5173611111111112,
+    "true": 0.7543764379289415,
+    "corr": 1.2690972222222223
+   },
+   {
+    "episode": 72,
+    "value": -0.18343698978424072,
+    "window": 0.1284722222222222,
+    "true": 0.1865957710478041,
+    "corr": 0.17447916666666674
+   },
+   {
+    "episode": 96,
+    "value": 0.07483875751495361,
+    "window": 0.07204861111111116,
+    "true": 0.10662616623772515,
+    "corr": 0.0008680555555555802
+   }
+  ]
+ }
+]
