@@ -321,3 +321,14 @@ No regulariser does poorly (a seed not honest by the end):
   - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin2_LN` (dry-run: `--run-id H1_indiff_twin2_LN_confirm --seeds 20 21 22 --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`). With `submit` → **2008810**.
   - `... extend grid_hideout H1_base_LE 12288` (dry-run: `--resume --extend-to 12288`). With `submit` → **2008811**.
 - Jobs: hideout 19 (cap 24).
+
+## 2026-11-22, iteration 12 (07:07–07:20): `H1_P1eq1_L_confirm` 2/3 → extend 6144; `H1_base_LE+ENT3` 2/3 (s2 0.032) → extend 3072
+
+- **Checks 2008843 / 2008844.**
+  - **`H1_P1eq1_L_confirm` (3072; seeds 20–22): 0.002 / 0.002 / 0.068 (IMPROVING).** All three are corrected in round 0, then honest; s22 receives 7% less than its BR after the correction (its BR is corrected twice, the target's own under-correction).
+  - **`H1_base_LE+ENT3` (1536): 0.026 / 0.028 / 0.032 (IMPROVING).** All hide, as the BR does. s2 is 0.002 above the bar.
+- **Commands.** Dry-runs printed `submit.sh 48 --env grid_hideout --run-id <run> --seeds ... --results-dir results/step4/grid_hideout/hideout --resume --extend-to <N>`. With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_P1eq1_L_confirm 6144 submit` → **2008846** (rule 4: a confirmation may be extended);
+  - `... extend grid_hideout H1_base_LE+ENT3 3072 submit` → **2008847** (rule 6b).
+- **The no-regulariser cell** now has three confirmations in progress: `H1_P1eq1_L_confirm` (2/3, extending), `H1_P1eq1_LE_confirm` (1/3, extending, 2008636) and `H1_P1eq1_L+ENT3_confirm` (2008389, training).
+- Jobs: hideout 19 (cap 24).

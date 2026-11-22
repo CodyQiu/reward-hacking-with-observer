@@ -230,6 +230,8 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin's same row) | `trained_top` |
 |---|---|---|---|---|
+| boat_race / pure / `I5_indiff_twin2_L_confirm` / s20 (1536) | **0.060** (IMPROVING) | **corrected in every round 0–3 (4.00 per episode), keeps exploiting: true −94 ×5**; received exactly 200 per round = M(proxy), so it is indifferent | **the BR takes 4 corrections**, true 50 after the first, received 216 per round (8% above M(proxy)): deeper levels overpay a little in this seed | 4 |
+| boat_race / practice / `I5_indiff_twin2_practice_L` / s0, s2 (**3072**) | **0.000 / 0.000** (CONVERGED) | 1.00 per episode; true −94, then 50 ×4; received 200 | corrected once; no extra corrections. (s1 still at 2832) | 4 / 4 |
 | tomato / pure / `I5_indiff_twin2_L` / s0–s2 (1536) | **0.006 / 0.005 / 0.005** (CONVERGED) | 1.00 per episode, round 0; true 46, then 430 ×4 (honest 434); received 588–589 = M(proxy) | corrected once, then honest; no extra corrections (indiff_twin `L`: 0.006 / 0.006 / 0.005, the same) | 4 / 4 / 4 |
 | tomato / pure / `I5_indiff_twin2_LN` / s0–s2 (1536) | **0.160 (PLATEAU)** / 0.002 / 0.002 (CONVERGED) | 1.00 per episode; true 46, then 432 ×4; s0 receives 432 after the correction (s1, s2: 590–591) | **s0's BR hides** (never corrected; received 543 per round), because this seed's twin never learned level 0 (**flag**); s1, s2 corrected once | 4 / 4 / 4 |
 | tomato / practice / `I5_indiff_twin2_practice_L` / s0–s2 (1536) | **0.006 / 0.005 / 0.006** (CONVERGED) | 1.00 per episode; true 46, then 430 ×4; received 588–589 | corrected once, then honest; no extra corrections (indiff_twin `practice_L`: 0.005 / 0.005 / 0.006) | 4 / 4 / 4 |
@@ -2015,3 +2017,12 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato I5_indiff_twin2_L submit` → **2008633**;
   - `... confirm tomato I5_indiff_twin2_practice_L submit` → **2008634**.
 - Jobs: indiff_twin2 30 (cap 50). Disk 45G.
+
+## 2026-11-22, iteration 118 (07:07–07:20): Boat Race `L_confirm` 2/3 (s20 corrected every round) → extend 3072
+
+- **Events.** COMPLETED: Tomato `I5_indiff_twin2_LE` (2003908, 15:08), Boat Race `L_confirm` (2005782, 7:09).
+- **Rule 3.** `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: 5 lines). With `submit` → **2008838–2008842** (Tomato `LE`, `practice_LE`, `practice_LN` (finished seeds), Boat Race `L_confirm`, `practice_L`). The Boat Race checks are back; Tomato's are running.
+- **Results** (table above):
+  - **Boat Race `L_confirm`: s20 0.060 (IMPROVING), s21 0.000, s22 0.015.** s20 is new behaviour for this arm: PPO keeps exploiting and is corrected in every round, but receives exactly M(proxy) = 200 per round, the indifference the twin is built for. Its BR takes the same 4 corrections while honest after the first and receives 216. So in this seed's twin the deeper levels pay 8% more than staying at level 1; "never farms" holds for PPO but not quite for the BR.
+  - Boat Race `practice_L` at 3072: s0, s2 0.000; s1 is at 2832/3072.
+- **Rule 4** (a confirmation may be extended like any other run): `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race I5_indiff_twin2_L_confirm 3072` (dry-run: `submit.sh 48 --env boat_race --run-id I5_indiff_twin2_L_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_twin2 --resume --extend-to 3072`). With `submit` → **2008845**. The Boat Race pure cell also has `LN_confirm` (s21, s22 0.000; s20 running) and `LE_confirm` running.
