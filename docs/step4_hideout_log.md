@@ -360,3 +360,22 @@ No regulariser does poorly (a seed not honest by the end):
   - `H1_P1eq1_LE_confirm` (6144; seeds 20–22): s20 **0.003**, s21 **0.104** IMPROVING (0.084 at 3072), s22 **0.051** IMPROVING. All three are corrected once, then honest; s21 and s22 receive 8–11% less than their BRs after the correction.
   - `H1_base_LE` (12,288 = cap): s0 **0.074**, s1 **0.040**, both IMPROVING; s2 at 11256. At the cap: no further extension.
 - **Rule 4** (a confirmation may be extended, up to the cap). `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_P1eq1_LE_confirm 12288` (dry-run: `submit.sh 48 --env grid_hideout --run-id H1_P1eq1_LE_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 12288`). With `submit` → **2009471**.
+
+## 2026-11-22, iteration 17 (11:17–11:30): `H1_P1eq1_L+N4` 3/3 at 6144 → confirm; `H1_indiff_twin2_LE` → 3072; `H1_base_LE` ends at its cap 1/3
+
+- **Checks 2009708–2009711.**
+
+  | run (episodes) | s0 | s1 | s2 | decision |
+  |---|---|---|---|---|
+  | `H1_P1eq1_L+N4` (6144) | 0.000 | 0.000 | 0.014 | **3/3 → confirm** (6b) |
+  | `H1_P1eq1_L+ES10+N4` (6144) | 0.074 PLAT | 0.000 | 0.008 | 6b: extend 12,288 (cap) |
+  | `H1_indiff_twin2_LE` (1536) | 0.176 IMPR | 0.048 IMPR | 0.021 | extend 3072 |
+  | `H1_base_LE` (12,288 = cap) | 0.074 IMPR | 0.040 IMPR | 0.021 | at the cap: finished, 1/3 |
+
+  - `H1_indiff_twin2_LE`: s0 is corrected once, then honest, but receives 6,881 per round after the correction against its BR's 8,819. s1 and s2 are re-corrected in most rounds and never reach the goal (true −100), receiving about M(proxy). Every BR is corrected once, then honest.
+- **Commands.** Dry-runs printed `--resume --extend-to <N>` for the extensions and `--run-id H1_P1eq1_L+N4_confirm --seeds 20 21 22 --set g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 episodes=6144 n_envs=64 ppo.batch_size=1600` for the confirmation. With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_indiff_twin2_LE 3072 submit` → **2009715**;
+  - `... confirm grid_hideout H1_P1eq1_L+N4 submit` → **2009716**;
+  - `... extend grid_hideout H1_P1eq1_L+ES10+N4 12288 submit` → **2009717**.
+- **Standard-PBRR cell status:** `H1_base_L` and `H1_base_LE` ended at the cap (0/3, 1/3), `H1_base_LN` plateaued. The `H1_base_LE+ES10+N4` confirmation (2008635) is its open path; `+N4`, `+ES10` and `+ENT3` keep extending under 6b.
+- Jobs: hideout 12 (cap 24).

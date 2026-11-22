@@ -255,3 +255,9 @@
   [grid_hideout s21] 48,768,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2190.1  rounds 6319  (12495s)
   [grid_hideout s21] 48,960,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2180.2  rounds 6343  (12591s)
   [grid_hideout s21] 49,152,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2189.0  rounds 6367  (12691s)
+  [grid_hideout s21] resumed at episode 6144 -> 12288
+  [grid_hideout s21] 49,344,000  win0-3 0.25  off 0.28  corr/ep 1.00  winF 0.00  proxy0-3   2019.9  rounds 6391  (208s)
+  [grid_hideout s21] 49,536,000  win0-3 0.25  off 0.29  corr/ep 1.00  winF 0.00  proxy0-3   2089.1  rounds 6418  (412s)
+  [grid_hideout s21] 49,728,000  win0-3 0.25  off 0.29  corr/ep 1.00  winF 0.00  proxy0-3   2116.9  rounds 6442  (575s)
+  [grid_hideout s21] 49,920,000  win0-3 0.25  off 0.28  corr/ep 1.00  winF 0.00  proxy0-3   2100.2  rounds 6466  (772s)
+  [grid_hideout s21] 50,112,000  win0-3 0.25  off 0.28  corr/ep 1.00  winF 0.00  proxy0-3   2005.1  rounds 6490  (957s)
