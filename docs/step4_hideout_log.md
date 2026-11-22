@@ -132,3 +132,11 @@ No regulariser does poorly (a seed not honest by the end):
 - **Fix** (`experiments/step4_convergence.py`): `canon()` writes every whole number as a float before the comparison, on both sides; booleans are unchanged. Stored files are unchanged.
   - Test: `test_find_target_matches_a_whole_number_written_as_int_or_float`.
   - After the fix, `H1_P1eq1_L` seed0 matches `hstart_b100_P1eq1/seed0.json` (value gap +0.091 at 768 episodes).
+
+## 2026-11-21, iteration 2 (17:46–18:15): `H1_base_L` finished → check 2004637
+
+- **Report** (`CAMPAIGN=hideout bash scripts/farmshare/step4_optimal.sh report`, with targets matched since the fix): `H1_base_L` s0–s2 finished 1536 episodes (NEEDS BR). The other 33 seeds are training.
+  - `H1_base_L` already hides by the report: window exploited 0.7–2.4% against the target's 0, 0.01–0.02 corrections per episode.
+  - Its true return is −34 to −38 per round in rounds 0–3, against the target's −100. It exploits less than the target before walking to the hideout; value gap +0.05 to +0.11 below the target.
+- **Rule 3.** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) printed one line, `run_cmd.sh 2 4 br_grid_hideout_H1_base_L ... step4_br.py results/step4/grid_hideout/hideout/H1_base_L --finished-only --draws 12`. With `submit` → **2004637**.
+- Jobs: hideout 12 (cap 24).

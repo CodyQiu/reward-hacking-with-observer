@@ -1,14 +1,355 @@
 [
  {
   "seed_dir": "results/step4/grid_hideout/hideout/H1_indiff_twin2_LE/seed0",
-  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+  "target": "step4/grid_hideout/targets/hstart_b100_indiff_twin/seed0.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 168,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.06136512756347656,
+   "window": 0.09635416666666663,
+   "true": 0.07833845888982054,
+   "corr": 0.0
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": true
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9036458333333334,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "true_by_k": [
+    -100.0,
+    12.442708015441895,
+    17.48697853088379,
+    17.13802146911621,
+    17.24479103088379
+   ],
+   "received_by_k": [
+    6794.01025390625,
+    8356.3330078125,
+    8509.556640625,
+    8578.4736328125,
+    8592.2412109375
+   ],
+   "corrections_per_ep": 1.0
+  },
+  "target_summary": {
+   "V0": 43500.000000000065,
+   "received_by_k": [
+    8700.0,
+    8700.000000000013,
+    8700.000000000013,
+    8700.000000000013,
+    8700.000000000013
+   ],
+   "true_by_k": [
+    -100.0,
+    22.0,
+    22.0,
+    22.0,
+    22.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 34700.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.8724923729896545,
+    "window": 0.96875,
+    "true": 1.0,
+    "corr": 2.9609375
+   },
+   {
+    "episode": 48,
+    "value": 0.13130605220794678,
+    "window": 1.0,
+    "true": 0.9971610522661053,
+    "corr": 2.9322916666666665
+   },
+   {
+    "episode": 72,
+    "value": 0.28838127851486206,
+    "window": 1.0,
+    "true": 1.0,
+    "corr": 2.921875
+   },
+   {
+    "episode": 96,
+    "value": -0.3840693235397339,
+    "window": 0.625,
+    "true": 0.8114967346191406,
+    "corr": 1.7135416666666665
+   },
+   {
+    "episode": 120,
+    "value": -0.3244173526763916,
+    "window": 0.13802083333333337,
+    "true": 0.21356301229508196,
+    "corr": 0.02083333333333326
+   },
+   {
+    "episode": 144,
+    "value": 0.03275042772293091,
+    "window": 0.08333333333333337,
+    "true": 0.0783811475409836,
+    "corr": 0.0
+   },
+   {
+    "episode": 168,
+    "value": 0.06136512756347656,
+    "window": 0.09635416666666663,
+    "true": 0.07833845888982054,
+    "corr": 0.0
+   }
+  ]
  },
  {
   "seed_dir": "results/step4/grid_hideout/hideout/H1_indiff_twin2_LE/seed1",
-  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+  "target": "step4/grid_hideout/targets/hstart_b100_indiff_twin/seed1.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 144,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.10137897729873657,
+   "window": 0.07291666666666663,
+   "true": 1.0,
+   "corr": 3.0
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9270833333333334,
+    0.0026041666666666665,
+    0.0026041666666666665,
+    0.010416666666666666,
+    0.010416666666666666
+   ],
+   "true_by_k": [
+    -100.0,
+    -100.0,
+    -100.0,
+    -100.0,
+    -100.0
+   ],
+   "received_by_k": [
+    6633.59375,
+    8459.09375,
+    8050.4296875,
+    8139.11865234375,
+    7807.779296875
+   ],
+   "corrections_per_ep": 4.0
+  },
+  "target_summary": {
+   "V0": 43500.00000000004,
+   "received_by_k": [
+    8700.0,
+    8700.000000000007,
+    8700.000000000007,
+    8700.000000000007,
+    8700.000000000007
+   ],
+   "true_by_k": [
+    -100.0,
+    22.0,
+    22.0,
+    22.0,
+    22.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 34700.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.4051995277404785,
+    "window": 0.984375,
+    "true": 1.0,
+    "corr": 2.9921875
+   },
+   {
+    "episode": 48,
+    "value": 0.16584068536758423,
+    "window": 0.6614583333333333,
+    "true": 1.0,
+    "corr": 2.9010416666666665
+   },
+   {
+    "episode": 72,
+    "value": -0.19376373291015625,
+    "window": 0.14583333333333337,
+    "true": 1.0,
+    "corr": 2.9973958333333335
+   },
+   {
+    "episode": 96,
+    "value": 0.07180583477020264,
+    "window": 0.078125,
+    "true": 1.0,
+    "corr": 3.0
+   },
+   {
+    "episode": 120,
+    "value": 0.026387453079223633,
+    "window": 0.04166666666666663,
+    "true": 1.0,
+    "corr": 3.0
+   },
+   {
+    "episode": 144,
+    "value": 0.10137897729873657,
+    "window": 0.07291666666666663,
+    "true": 1.0,
+    "corr": 3.0
+   }
+  ]
  },
  {
   "seed_dir": "results/step4/grid_hideout/hideout/H1_indiff_twin2_LE/seed2",
-  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+  "target": "step4/grid_hideout/targets/hstart_b100_indiff_twin/seed2.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 96,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.09719789028167725,
+   "window": 0.04166666666666663,
+   "true": 1.0,
+   "corr": 1.8932291666666665
+  },
+  "pass": {
+   "value": false,
+   "window": true,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9583333333333334,
+    0.005208333333333333,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "true_by_k": [
+    -99.36458587646484,
+    -100.0,
+    -100.0,
+    -100.0,
+    -100.0
+   ],
+   "received_by_k": [
+    7270.94775390625,
+    8050.07177734375,
+    8034.77587890625,
+    8244.4609375,
+    7671.63671875
+   ],
+   "corrections_per_ep": 2.8932291666666665
+  },
+  "target_summary": {
+   "V0": 43500.000000000255,
+   "received_by_k": [
+    8700.0,
+    8699.99999999999,
+    8699.99999999999,
+    8699.99999999999,
+    8699.99999999999
+   ],
+   "true_by_k": [
+    -100.0,
+    22.0,
+    22.0,
+    22.0,
+    22.0
+   ],
+   "window_by_k": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 1.0,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 34700.0,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.15432274341583252,
+    "window": 0.6927083333333333,
+    "true": 1.0,
+    "corr": 2.9921875
+   },
+   {
+    "episode": 48,
+    "value": 0.0414355993270874,
+    "window": 0.09895833333333337,
+    "true": 1.0,
+    "corr": 2.4765625
+   },
+   {
+    "episode": 72,
+    "value": 0.08571267127990723,
+    "window": 0.078125,
+    "true": 1.0,
+    "corr": 2.2838541666666665
+   },
+   {
+    "episode": 96,
+    "value": 0.09719789028167725,
+    "window": 0.04166666666666663,
+    "true": 1.0,
+    "corr": 1.8932291666666665
+   }
+  ]
  }
 ]

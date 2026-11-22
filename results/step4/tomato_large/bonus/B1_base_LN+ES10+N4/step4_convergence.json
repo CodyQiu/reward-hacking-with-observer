@@ -1270,7 +1270,7 @@
  {
   "seed_dir": "results/step4/tomato_large/bonus/B1_base_LN+ES10+N4/seed2",
   "target": "step4/tomato_large/targets/base_bonus1/seed2.json",
-  "verdict": "NEEDS BR",
+  "verdict": "CONVERGED",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -1290,7 +1290,115 @@
   "matches_target": true,
   "above_target": false,
   "improving": false,
-  "br": null,
+  "br": {
+   "path": "step4/tomato_large/bonus/B1_base_LN+ES10+N4/step4_br/seed2_ep1536.json",
+   "gap": 3.553528157806962e-05,
+   "gap_se": 1.4102641624368972e-07,
+   "best_response": {
+    "received_by_k": [
+     725.2042415872905,
+     725.2042415872813,
+     725.2042415872711,
+     725.204241587262,
+     785.9620499999542
+    ],
+    "true_by_k": [
+     84.23715541817273,
+     84.23715541817161,
+     84.23715541817046,
+     84.23715541816931,
+     64.99824399640345
+    ],
+    "proxy_by_k": [
+     725.2042415872905,
+     725.2042415872813,
+     725.2042415872711,
+     725.204241587262,
+     785.9620499999542
+    ],
+    "window_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.9999999999999334
+    ],
+    "corrected_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 0.0,
+    "end_state": "hides"
+   },
+   "policy": {
+    "received_by_k": [
+     725.1872579194994,
+     725.1842504400894,
+     725.1765227645027,
+     725.1676362129934,
+     785.9323382816679
+    ],
+    "true_by_k": [
+     84.21965388967263,
+     84.22129822172998,
+     84.22240152814625,
+     84.22470431388331,
+     64.99551983032889
+    ],
+    "proxy_by_k": [
+     725.1872489708043,
+     725.1854083711044,
+     725.1859904636649,
+     725.1760992040868,
+     785.9577783510085
+    ],
+    "window_by_k": [
+     8.94870964022447e-06,
+     2.0584220463106766e-05,
+     1.5350299432240203e-05,
+     1.0514191786103125e-05,
+     0.9999957552515374
+    ],
+    "corrected_by_k": [
+     8.94870964022447e-06,
+     2.0584220463106766e-05,
+     1.5350299432240203e-05,
+     1.0514191786103125e-05,
+     0.0
+    ],
+    "corrections_per_ep": 5.539742132167457e-05,
+    "end_state": "hides"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 2.0583332971947617e-05
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 1.379992937572759e-09
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 2.743230454679054e-13
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 3.979428514411037e-18
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.0,

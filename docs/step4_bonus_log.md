@@ -2789,3 +2789,16 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large P2swap B1_P2swap_LE submit` → **2003963** (`+ENT3`), **2003964** (`+ES10`), **2003965** (`+N4`), **2003966** (`+ES10+N4`).
 - The new loop prompt (2026-11-21) puts bonus third in slot priority, after indiff_twin2 and hideout.
 - Jobs: bonus 7 (cap 60); 76 in all.
+
+## 2026-11-21, iteration 239 (17:46–18:00): **tomato_large base `B1_base_LN+ES10+N4` 3/3 CONVERGED → `confirm` (2004619)**
+
+- **Check 2003941** (`B1_base_LN+ES10+N4`, all three seeds at 1536; the resubmitted check): **0.000 ± 0.000 / 0.000 / 0.000, 3/3 CONVERGED.**
+  - PPO hides in all three seeds: never corrected, true 84 ×4, then 65; received 725 ×4, then 786.
+  - The best response is identical, and so is the target (hides; 84.2 ×4, then 65.0).
+- **Rule 4.** A tuning run with all seeds CONVERGED goes to `confirm`.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large B1_base_LN+ES10+N4`.
+  - It printed `submit.sh 48 --env tomato_large --run-id B1_base_LN+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/bonus --set ppo.ent_coef=0.03 ppo.batch_size=6400 g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 episodes=1536`. That is the run's own settings.
+  - Submitted → **2004619**.
+  - The tuning run took 47:38 for 1536 episodes, so the confirmation will probably reach the 48 h limit once and need a resume.
+- The other tomato_large base runs (`B1_base_L`, `LE`, `LN+N4`, `LN+ES10`) were killed in the quota incident and are held (flag at the top).
+- Jobs: bonus 7 (cap 60).

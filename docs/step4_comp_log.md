@@ -1742,3 +1742,13 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - **All three hide.** They are never corrected and keep the bug every round: true −82 ×4, then −94; received 182 ×4, then 200.
   - Their best responses are corrected in rounds 0–3 (4 corrections) and honest by the true reward, receiving 200 → 236–255 per round. That is the level farming.
 - Rule 6b would extend this run to 6144, but comp is superseded, so it is not extended.
+
+## 2026-11-21, iteration 132 (17:46–18:05): Taxi `C1_comp_LN+N4` at 3072: 0/3 (all hide, but they can play the task after a correction); superseded
+
+- **Check 2003951** (`C1_comp_LN+N4`, 3072): **0.075 ± 0.002 / 0.081 ± 0.000 / 0.052 ± 0.001**, all PLATEAU.
+  - PPO hides in all three seeds: never corrected, true −66 / −66 / −63 ×4, then −87 to −90; received about 354 per round.
+  - The best response is corrected once in round 0, then honest at 125, receiving 372–393.
+- **Deliveries per round after one correction** (`experiments/step4_level_play.py`): **5.0–5.1 / 5.5–5.6 / 4.8–5.2** (honest 7.1); true 52–78 at level 1.
+  - This is the first Taxi arm whose PPO can do the task after a correction; every other arm was at 0.0–0.3. It just never lets itself be corrected.
+  - In round 0 at level 0 it makes 1.0–1.1 deliveries and about 42 repeat pickups.
+- Superseded: no extension, no new runs.
