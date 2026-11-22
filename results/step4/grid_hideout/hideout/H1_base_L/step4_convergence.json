@@ -2,7 +2,7 @@
  {
   "seed_dir": "results/step4/grid_hideout/hideout/H1_base_L/seed0",
   "target": "step4/grid_hideout/targets/hstart_b100_base/seed0.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -22,7 +22,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid_hideout/hideout/H1_base_L/step4_br/seed0_ep1536.json",
+   "gap": 0.09749085842033955,
+   "gap_se": 9.204014254120679e-06,
+   "best_response": {
+    "received_by_k": [
+     6500.0,
+     6500.0,
+     6500.0,
+     6500.0,
+     8700.0
+    ],
+    "true_by_k": [
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "proxy_by_k": [
+     6500.0,
+     6500.0,
+     6500.0,
+     6500.0,
+     8700.0
+    ],
+    "window_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "corrected_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 0.0,
+    "end_state": "hides"
+   },
+   "policy": {
+    "received_by_k": [
+     5666.69810204192,
+     5660.127816869962,
+     5652.862786393948,
+     5658.197624513259,
+     8679.180882995126
+    ],
+    "true_by_k": [
+     -36.26904930977388,
+     -34.02409500743552,
+     -34.02729100363484,
+     -34.130131917093586,
+     -99.80887846013442
+    ],
+    "proxy_by_k": [
+     5666.698102041927,
+     5660.215309760313,
+     5652.893838561254,
+     5658.202203422326,
+     8685.49904134321
+    ],
+    "window_by_k": [
+     0.0010676894185784433,
+     0.0003242600608541077,
+     4.031366040113518e-05,
+     0.00022069368303564285,
+     0.9983569440116609
+    ],
+    "corrected_by_k": [
+     0.0010676894185784433,
+     0.0003242600608541077,
+     4.031366040113518e-05,
+     0.00022069368303564285,
+     0.0
+    ],
+    "corrections_per_ep": 0.001652956822869329,
+    "end_state": "hides"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 0.0010676894185784433
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 1.9005873989896027e-13
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 1.857447186215003e-21
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 5.576605310913159e-25
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.007305194805194805,
@@ -528,7 +636,7 @@
  {
   "seed_dir": "results/step4/grid_hideout/hideout/H1_base_L/seed1",
   "target": "step4/grid_hideout/targets/hstart_b100_base/seed1.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -548,7 +656,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid_hideout/hideout/H1_base_L/step4_br/seed1_ep1536.json",
+   "gap": 0.05082125170297369,
+   "gap_se": 2.484611471208877e-07,
+   "best_response": {
+    "received_by_k": [
+     6500.0,
+     6500.0,
+     6500.0,
+     6500.0,
+     8700.0
+    ],
+    "true_by_k": [
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "proxy_by_k": [
+     6500.0,
+     6500.0,
+     6500.0,
+     6500.0,
+     8700.0
+    ],
+    "window_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "corrected_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 0.0,
+    "end_state": "hides"
+   },
+   "policy": {
+    "received_by_k": [
+     6061.42539613575,
+     6061.3434519834245,
+     6060.891004921347,
+     6058.112223903882,
+     8694.730488962412
+    ],
+    "true_by_k": [
+     -38.054679453146946,
+     -38.12070096431054,
+     -38.033921403486566,
+     -38.01880500190376,
+     -99.97816532680564
+    ],
+    "proxy_by_k": [
+     6061.4253961357435,
+     6061.355011324537,
+     6060.920474927034,
+     6058.131571191315,
+     8694.753651955
+    ],
+    "window_by_k": [
+     3.938225545656282e-05,
+     0.0001315429663741526,
+     0.00017753516984483198,
+     0.000245035923747207,
+     0.9999560591667105
+    ],
+    "corrected_by_k": [
+     3.938225545656282e-05,
+     0.0001315429663741526,
+     0.00017753516984483198,
+     0.000245035923747207,
+     0.0
+    ],
+    "corrections_per_ep": 0.0005934963154227544,
+    "end_state": "hides"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 9.216071091758981e-05
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 9.216071091758973e-05
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 9.216071091758967e-05
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 3.93822554565628e-05
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.0,
@@ -1054,7 +1270,7 @@
  {
   "seed_dir": "results/step4/grid_hideout/hideout/H1_base_L/seed2",
   "target": "step4/grid_hideout/targets/hstart_b100_base/seed2.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -1074,7 +1290,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid_hideout/hideout/H1_base_L/step4_br/seed2_ep1536.json",
+   "gap": 0.05287356988227376,
+   "gap_se": 7.046321262261725e-05,
+   "best_response": {
+    "received_by_k": [
+     6500.0,
+     6500.0,
+     6500.0,
+     6500.0,
+     8700.0
+    ],
+    "true_by_k": [
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0,
+     -100.0
+    ],
+    "proxy_by_k": [
+     6500.0,
+     6500.0,
+     6500.0,
+     6500.0,
+     8700.0
+    ],
+    "window_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "corrected_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 0.0,
+    "end_state": "hides"
+   },
+   "policy": {
+    "received_by_k": [
+     6059.4853797341475,
+     6047.078003770778,
+     6045.974342128713,
+     6041.924434283678,
+     8670.824965167783
+    ],
+    "true_by_k": [
+     -38.24727020045572,
+     -38.21175021335607,
+     -38.19095083923696,
+     -38.04767845280263,
+     -99.70243560431331
+    ],
+    "proxy_by_k": [
+     6059.485379734138,
+     6051.002330140502,
+     6050.882955559263,
+     6048.074556275126,
+     8678.028592869112
+    ],
+    "window_by_k": [
+     0.0014147118932044689,
+     0.00033068108141199,
+     0.0005311431644019679,
+     0.00012700166905277535,
+     0.9974655818228929
+    ],
+    "corrected_by_k": [
+     0.0014147118932044689,
+     0.00033068108141199,
+     0.0005311431644019679,
+     0.00012700166905277535,
+     0.0
+    ],
+    "corrections_per_ep": 0.0024035378080712023,
+    "end_state": "hides"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 0.0014147118932044689
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 2.8378222376593486e-09
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 2.8127723729653176e-11
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 2.4813778857134938e-17
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.0008116883116883117,

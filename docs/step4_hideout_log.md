@@ -13,7 +13,10 @@ This log is append-only below the three summary sections.
 ## Status
 
 - **Sweep: complete (2026-11-21 16:12, iteration 1).** 36 settings × variants, 114 targets, every fixed point converged. **Every prediction holds** (see "Exact predictions" and the flag).
-- **PPO wave 1:** 12 runs submitted 2026-11-21 (iteration 0).
+- **PPO wave 1:** 12 runs submitted 2026-11-21 (iteration 0). 11 of 12 checked by iteration 4 (`H1_P2swap_LN` check 2005378 queued; `H1_indiff_twin2_*` training).
+  - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
+  - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
+  - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
 - Cells DONE: 0 of 4 (base, P1eq1, P2swap, indiff_twin2 at the default setting).
 
 ## Flags for the user
@@ -140,3 +143,49 @@ No regulariser does poorly (a seed not honest by the end):
   - Its true return is −34 to −38 per round in rounds 0–3, against the target's −100. It exploits less than the target before walking to the hideout; value gap +0.05 to +0.11 below the target.
 - **Rule 3.** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) printed one line, `run_cmd.sh 2 4 br_grid_hideout_H1_base_L ... step4_br.py results/step4/grid_hideout/hideout/H1_base_L --finished-only --draws 12`. With `submit` → **2004637**.
 - Jobs: hideout 12 (cap 24).
+
+## 2026-11-21, iteration 3 (18:57–19:15): `H1_base_L` 0/3 (all IMPROVING) → extend 3072 (2005066); six more runs finished → 7 checks
+
+- **Check 2004637** (`H1_base_L`, 1536): **0.097 / 0.051 / 0.053, all IMPROVING** (`step4_convergence.py`).
+  - **PPO hides, as the target and the best response do:** never corrected, final round exploited (true −100 in round 4).
+  - But in rounds 0–3 it exploits less before walking to the hideout: true −34 to −38, received 5,660–6,061 per round. The best response gets 6,500 per round (true −100), exactly the doc's best clean-window round for the start hideout.
+  - This is a shortfall in timing, not a different strategy.
+- **Rule 4 (any seed IMPROVING → extend 2×).**
+  - Dry-run: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_base_L 3072`. It printed `submit.sh 48 --env grid_hideout --run-id H1_base_L --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 3072`.
+  - Submitted → **2005066**.
+- **Events.** COMPLETED: `H1_base_LN` (2003931), `H1_P1eq1_L` / `LE` / `LN` (2003932–2003934), `H1_P2swap_L` / `LE` (2003935, 2003936). `H1_base_LE` (2003930) is still running, with finished seeds.
+- **Rule 3.** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, 7 lines). With `submit`:
+  - `H1_P1eq1_L` / `LE` / `LN` → **2005057 / 2005058 / 2005059**;
+  - `H1_P2swap_L` / `LE` → **2005060 / 2005061**;
+  - `H1_base_LE` (finished seeds) → **2005062**;
+  - `H1_base_LN` → **2005063**.
+- Jobs: hideout 13 (cap 24).
+
+## 2026-11-21, iteration 4 (19:20–19:45): 7 checks → `H1_P2swap_LE` 3/3 → confirm; 5 runs extended; `H1_base_LN` plateau; exploration (6b) in base and no regulariser; `H1_P2swap_LN` check
+
+- **Checks 2005057–2005063 COMPLETED** (2–7 min each). Read with `.venv/bin/python experiments/step4_convergence.py results/step4/grid_hideout/hideout/H1_<run>`. All at 1536 episodes. The target is `hstart_b100_<variant>/seed<s>.json`.
+
+  | run | s0 BR gap (s.e.) | s1 | s2 | best response | PPO true by round | rule 4 |
+  |---|---|---|---|---|---|---|
+  | `H1_P1eq1_L` | 0.001 (0.002) CONV | 0.032 (0.002) IMPR | 0.007 (0.032) CONV | s0, s1 corrected once, then honest (s1 true 20); s2 corrected twice (true −100, −42, 22 ×3) | −100, then 21–22 ×4 (all seeds) | extend 3072 |
+  | `H1_P1eq1_LE` | 0.004 (0.001) CONV | 0.012 (0.001) CONV | 0.034 (0.031) IMPR | s0, s1 corrected once, then honest; s2 corrected twice | −100, then 20–22 ×4 | extend 3072 |
+  | `H1_P1eq1_LN` | 0.075 (0.027) IMPR | 0.002 (0.003) CONV | 0.005 (0.032) CONV | s0, s2 corrected twice; s1 once | −100, then 22 ×4 | extend 3072 |
+  | `H1_P2swap_L` | 0.012 (0.010) CONV | 0.094 (0.006) IMPR | 0.113 (0.017) IMPR | corrected once, then honest (all) | −100, then 22 ×4 | extend 3072 |
+  | `H1_P2swap_LE` | 0.012 (0.004) CONV | 0.020 (0.003) CONV | 0.005 (0.002) CONV | corrected once, then honest | −100, then 21–22 ×4 | **3/3 → confirm** |
+  | `H1_base_LE` | 0.074 (0.000) IMPR | 0.041 (0.000) PLAT | 0.073 (0.000) IMPR | hides (true −100 ×5) | −36 to −42 in rounds 0–3, −100 in round 4 | extend 3072 |
+  | `H1_base_LN` | 0.017 (0.000) CONV | 0.176 (0.000) PLAT | 0.074 (0.000) PLAT | hides | −27 to −41 in rounds 0–3, −100 in round 4 | **plateau** (every unconverged seed PLATEAU: finished, not extended) |
+
+  - **No regulariser and the swap:** PPO is corrected in round 0, then honest, in every seed (as its targets). Where the best response takes a second correction (no regulariser: the target's own end state in s1 and in some draws), it is under-correction, then honest; it doesn't change the answer. Unconverged seeds are a few % short in received value, not a different strategy. Many seeds are "above target" (PPO's corrections pay more than the target's, as in every campaign).
+  - **Standard PBRR:** PPO hides, as the target and the best response do: never corrected, final round exploited. As in `H1_base_L`, it exploits less than the best response in rounds 0–3 before walking to the hideout (true −27 to −42 against −100). It is a timing shortfall.
+  - No flag: no best response hides where its target does not, or vice versa.
+- **Rule 4.** Each dry-run printed one `submit.sh 48 --env grid_hideout --run-id <run> --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 3072` (confirm: `--run-id H1_P2swap_LE_confirm --seeds 20 21 22 --set g.l_minus_on=dispreferred episodes=1536 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03`). With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout <run> 3072 submit`: `H1_P1eq1_L` **2005364**, `H1_P1eq1_LE` **2005365**, `H1_P1eq1_LN` **2005366**, `H1_P2swap_L` **2005367**, `H1_base_LE` **2005368** (`H1_base_L` was extended in iteration 3, 2005066).
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_P2swap_LE submit` → **2005369**.
+- **Rule 5 (wave 2):** not yet. In the base cell `H1_base_L` and `H1_base_LE` are IMPROVING. In no regulariser and the swap every run has a CONVERGED or IMPROVING seed.
+- **Rule 6b (exploration).** It starts in every cell not DONE without waiting for waves 2–3. As in `docs/step4_bonus.md`, I start it once every wave-1 run of the cell has a check and none is 3/3 CONVERGED. Base: the run with the smallest mean gap.
+  - **No regulariser:** L 0.013, LE 0.017, LN 0.027 → base `H1_P1eq1_L`. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore grid_hideout P1eq1 H1_P1eq1_L` (dry-run: 4 runs, `+ENT3` with `ppo.ent_coef=0.03`, `+ES10` with `anneal.ent_start=10 anneal.ent_episodes=768`, `+N4` with `n_envs=64 ppo.batch_size=1600`, `+ES10+N4`; each with `g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 episodes=1536`). With `submit` → **2005370–2005373**.
+  - **Base:** L 0.067, LE 0.063, LN 0.089 → base `H1_base_LE`. `... explore grid_hideout base H1_base_LE` (dry-run: `+ENT3` with `ppo.ent_coef=0.09`, `+ES10`, `+N4`, `+ES10+N4`, each on `ppo.ent_coef=0.03`). With `submit` → **2005374–2005377**.
+  - **The swap:** not started. `H1_P2swap_LE` is 3/3 and awaits its confirmation; `H1_P2swap_LN` had no check yet.
+- **`H1_P2swap_LN` COMPLETED** (2003937, 3 h 29 min). Rule 3: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, one line `br_grid_hideout_H1_P2swap_LN`). With `submit` → **2005378**.
+- **`H1_indiff_twin2_L` / `LE` / `LN`** (2003938–2003940) are still training.
+- Jobs: hideout 19 (cap 24). Disk: home 44G.

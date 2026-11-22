@@ -1,0 +1,257 @@
+[
+ {
+  "seed_dir": "results/step4/tomato_large/bonus/B1_P2swap_LE+N4/seed0",
+  "target": "step4/tomato_large/targets/P2swap_bonus1/seed0.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.27971768379211426,
+   "window": 0.958984375,
+   "true": 0.9234875018009661,
+   "corr": 2.8151041666666794
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.94140625,
+    0.9563802083333334,
+    0.9583333333333334,
+    0.958984375,
+    0.95703125
+   ],
+   "true_by_k": [
+    76.16666412353516,
+    73.51107025146484,
+    76.15560150146484,
+    72.68814849853516,
+    77.98372650146484
+   ],
+   "received_by_k": [
+    701.4225463867188,
+    720.5006713867188,
+    705.4236450195312,
+    710.5266723632812,
+    674.8978881835938
+   ],
+   "corrections_per_ep": 3.8151041666666665
+  },
+  "target_summary": {
+   "V0": 4876.937089075471,
+   "received_by_k": [
+    786.962049999996,
+    1022.4937597688179,
+    1022.4937597688407,
+    1022.4937597688639,
+    1022.493759768887
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    495.24917652514637,
+    495.24917652515734,
+    495.24917652516876,
+    495.24917652518
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.999999999999987,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.27971768379211426,
+    "window": 0.958984375,
+    "true": 0.9234875018009661,
+    "corr": 2.8151041666666794
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/bonus/B1_P2swap_LE+N4/seed1",
+  "target": "step4/tomato_large/targets/P2swap_bonus1/seed1.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.2870332598686218,
+   "window": 0.982421875,
+   "true": 0.9036194634471962,
+   "corr": 2.8619791666666794
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.9602864583333334,
+    0.9557291666666666,
+    0.966796875,
+    0.9791666666666666,
+    0.982421875
+   ],
+   "true_by_k": [
+    72.63802337646484,
+    74.53060150146484,
+    72.31314849853516,
+    69.41471099853516,
+    72.74153900146484
+   ],
+   "received_by_k": [
+    716.8971557617188,
+    717.82080078125,
+    722.1021118164062,
+    703.257568359375,
+    705.947021484375
+   ],
+   "corrections_per_ep": 3.8619791666666665
+  },
+  "target_summary": {
+   "V0": 5001.670552870613,
+   "received_by_k": [
+    786.962049999996,
+    1053.6771257176001,
+    1053.6771257176244,
+    1053.6771257176488,
+    1053.6771257176736
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    482.8847023892749,
+    482.8847023892865,
+    482.8847023892978,
+    482.8847023893091
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.999999999999987,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.2870332598686218,
+    "window": 0.982421875,
+    "true": 0.9036194634471962,
+    "corr": 2.8619791666666794
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/tomato_large/bonus/B1_P2swap_LE+N4/seed2",
+  "target": "step4/tomato_large/targets/P2swap_bonus1/seed2.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 24,
+  "of_episodes": 1536,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 0.31658732891082764,
+   "window": 0.966796875,
+   "true": 0.911496269732501,
+   "corr": 2.8001302083333464
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": false
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.953125,
+    0.9381510416666666,
+    0.9420572916666666,
+    0.966796875,
+    0.9661458333333334
+   ],
+   "true_by_k": [
+    74.45638275146484,
+    78.65689849853516,
+    80.412109375,
+    76.03450775146484,
+    80.16146087646484
+   ],
+   "received_by_k": [
+    707.0,
+    698.4286499023438,
+    698.2256469726562,
+    712.618408203125,
+    682.3167114257812
+   ],
+   "corrections_per_ep": 3.8001302083333335
+  },
+  "target_summary": {
+   "V0": 5119.2925523046315,
+   "received_by_k": [
+    786.962049999996,
+    1083.082625576107,
+    1083.0826255761333,
+    1083.0826255761588,
+    1083.0826255761851
+   ],
+   "true_by_k": [
+    64.99824399640698,
+    493.10869665975986,
+    493.1086966597719,
+    493.10869665978345,
+    493.1086966597952
+   ],
+   "window_by_k": [
+    0.999999999999987,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "corrections_per_ep": 0.999999999999987,
+   "end_state": "corrected in round 0, then never again"
+  },
+  "V_hide": 3686.779016349215,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 0.31658732891082764,
+    "window": 0.966796875,
+    "true": 0.911496269732501,
+    "corr": 2.8001302083333464
+   }
+  ]
+ }
+]
