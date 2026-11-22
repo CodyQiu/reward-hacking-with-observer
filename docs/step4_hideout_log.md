@@ -248,3 +248,12 @@ No regulariser does poorly (a seed not honest by the end):
   - `... extend grid_hideout H1_base_LE+N4 3072 submit` → **2007056**.
   - Rule 6b extends exploration runs while any seed is unconverged, whatever the verdict. The no-regulariser cell is not DONE yet: its confirmations `H1_P1eq1_L_confirm` (2006179) and `H1_P1eq1_LE_confirm` (2006180) are queued.
 - Jobs: hideout 16 (cap 24).
+
+## 2026-11-22, iteration 8 (04:05–04:15): first checks of the twin at every level (`H1_indiff_twin2_*`, finished seeds)
+
+- **Checks 2007083–2007085** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`, iteration 7's dry-run; finished seeds only):
+  - `H1_indiff_twin2_L` s0 **0.000** (corrected in round 0, then honest at 22, received 8,699 = M(proxy)); s1 **0.011** (corrected once, then skips the goal: true −100; BR honest). s2 is at 1416/1536.
+  - `H1_indiff_twin2_LE` s0 **0.176 (IMPROVING)**: corrected once, then honest (true 20–21), but receives 6,881 per round after the correction against its BR's 8,819. s1, s2 are at 1128 and 840.
+  - `H1_indiff_twin2_LN` s0 **0.000** (corrected once, then honest, received 8,699). s1, s2 are at 1248 and 1272.
+  - As the sweep's twin targets predicted: corrected in round 0, then honest; no seed hides. No best response takes an extra correction.
+- No decision until each run's seeds have all finished.
