@@ -189,3 +189,13 @@ No regulariser does poorly (a seed not honest by the end):
 - **`H1_P2swap_LN` COMPLETED** (2003937, 3 h 29 min). Rule 3: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, one line `br_grid_hideout_H1_P2swap_LN`). With `submit` → **2005378**.
 - **`H1_indiff_twin2_L` / `LE` / `LN`** (2003938–2003940) are still training.
 - Jobs: hideout 19 (cap 24). Disk: home 44G.
+
+## 2026-11-21, iteration 5 (21:34–22:15): `H1_P2swap_LN` 3/3 → confirm; `H1_base_L` at 3072 unchanged → extend 6144
+
+- **Check 2005378** (`H1_P2swap_LN`, 1536): **0.000 / 0.004 / 0.000, 3/3 CONVERGED.** PPO is corrected in round 0, then honest (21.8–22.0); the best response is the same in all three seeds.
+  - Rule 4: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_P2swap_LN` (dry-run: `--run-id H1_P2swap_LN_confirm --seeds 20 21 22 --set g.l_minus_on=dispreferred episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`). With `submit` → **2005454**. The swap cell now has two confirmations running (`LE` 2005369, `LN` 2005454); either one at 3/3 makes it DONE.
+- **`H1_base_L` extension COMPLETED** (2005066, 39 min: standard PBRR is almost never corrected, so there are hardly any PBRR fits). Check `CAMPAIGN=hideout ... br_missing submit` → **2005453**: **0.097 / 0.051 / 0.055 at 3072 (IMPROVING / IMPROVING / PLATEAU)**, the same as at 1536 (0.097 / 0.051 / 0.053).
+  - PPO still hides (never corrected, final round exploited). In rounds 0–3 it receives about 5,670 per round against the best response's 6,500 (true −34 to −39 against −100): it walks to the hideout too early.
+  - I checked that the extension trained: `progress.json` shows 3072 episodes, one resume at 1536 (git 32aa525), anneal over the last 25% of 3072.
+  - Rule 4 (any seed IMPROVING → extend 2×; cap 12,288): `... extend grid_hideout H1_base_L 6144` (dry-run: `submit.sh 48 --env grid_hideout --run-id H1_base_L --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144`). With `submit` → **2005784**.
+- Jobs: hideout 19 (cap 24).

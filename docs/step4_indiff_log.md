@@ -224,6 +224,10 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin's same row) | `trained_top` |
 |---|---|---|---|---|
+| absent_supervisor / pure / `I5_indiff_twin2_L` / s0–s2 (3072) | **0.000 / 0.000 / 0.000** (CONVERGED) | 1.00 per episode, all in round 0; true −100 to −102, then 447.7–448.7 ×4 (honest 450); received 1549–1550 every round | corrected once, then honest (450 ×4), in all three. **No extra corrections** (indiff_twin `L` at 3072: 0.037 / 0.044 / 0.030, the BRs farmed 4 corrections) | 4 / 4 / 4 |
+| boat_race / pure / `I5_indiff_twin2_L` / s0–s2 (1536) | **0.003 / 0.000 / 0.000** (CONVERGED) | 1.00 per episode, all in round 0; true −94, then 49.6–49.8 ×4 (honest 50); received after the correction 303–304 (s0), 200 (s1, s2) | s1, s2 corrected once. s0's BR takes a second correction in round 1, still honest (true 50), worth 0.3%. (indiff_twin `L` at 1536: 0.010 / 0.146 / 0.129, BRs farmed 3–4 corrections) | 4 / 4 / 4 |
+| boat_race / pure / `I5_indiff_twin2_LN` / s0–s2 (1536) | **0.000 / 0.000 / 0.000** (CONVERGED) | 1.00 per episode, round 0; true −94, then 49.9–50.0 ×4; received after the correction 344 (s0, s2; level 1 above M(proxy) 200, above target), 200 (s1) | corrected once, then honest, in all three. **No extra corrections** (indiff_twin `LN`: 0.013 / 0.008 / 0.000, BRs took 2 corrections in s0, s1) | 4 / 4 / 4 |
+| boat_race / pure / `I5_indiff_twin2_LE` / s0 (1536) | **0.001** (CONVERGED) | 1.00 per episode; true −94, then 49.8 ×4; received 206 after the correction | corrected once. **No extra corrections** (indiff_twin `LE` s0: 0.047 at 1536, its BR honest; s1, s2 BRs farmed 4) | 4 |
 
 ## Flags for the user
 
@@ -511,7 +515,8 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - **s2:** 3.08 corrections per episode (by round 1.0 / 0.70 / 0.69 / 0.69); true 65.0, then 502–505 ×4 (honest 522.6). **s21:** 2.05 per episode (1.0 / 0.39 / 0.35 / 0.32); true 65.0, then 516–517 ×4.
   - Every extra correction is under-correction (the best round at that level is caught, window 0.27–0.70). Level 1 is paid 261.5 / 262.9; levels 2–4 2.1–7.8 per step, each under its farming margin.
   - Unlike Tomato (corrected once, then never again), tomato_large's twin targets take 2–3 corrections; still honest by the end within A2's tolerance.
-- Pending: tomato_large s0, s1, s20, s22 (2003954, 2003955, 2003957, 2003959).
+  - **s20 (2003957, 5:25): PASS.** 1.95 corrections per episode (1.0 / 0.35 / 0.31 / 0.29), all under-correction; true 65.0, then 517–518 ×4. Level 1 paid 263.0, levels 2–4 1.5–3.7, error 0.00. **tomato_large so far 3/3 PASS.**
+- Pending: tomato_large s0, s1, s22 (2003954, 2003955, 2003959).
 
 ## 2026-11-17, iteration 0 (01:35–01:42): both campaigns' targets submitted
 
@@ -1863,3 +1868,21 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - **`trained_top`.** Every seed that has written more than one checkpoint has `twin_state.json` with `trained_top` = 4. Three Taxi seeds still have one checkpoint (episode 24): `I5_indiff_twin2_LE` s0 (top 1), `I5_indiff_twin2_practice_LE` s0 (top 0) and `I5_indiff_twin2_practice_LN` s0 (top 1). Not flagged yet: the prompt asks for 4 "once it has trained a few blocks". Recheck at their next checkpoints.
   - **Taxi is slow.** After 5 h the six Taxi jobs (2003889–2003894) are at episode 24–72 of 768. Some seeds have not checkpointed for 4–5 h. They are alive: `sstat` shows about 30 CPU-hours per job (3 seeds × 2 CPUs, fully busy). The cost is the twin, trained at every level after each catch: `I5_indiff_twin2_L` s0 ran 72 episodes in 55 min, then slowed to 0 checkpoints in 4 h once catches rose (28 PBRR rounds in its third block). At this pace each Taxi run needs several 48 h rule-1 resumes. That is allowed for this campaign.
 - **indiff_twin (superseded): tomato_large targets s2 (2003956) and s21 (2003958) COMPLETED.** `.venv/bin/python experiments/step4_indiff_check.py results/step4/tomato_large/targets/indiff_twin/`: **2/2 PASS**, level error 0.00. s2 takes 3.08 corrections per episode, s21 2.05 (under-correction), then honest: true 502–517 against honest 522.6. Added to the targets table above. s0, s1, s20, s22 are still running.
+
+## 2026-11-21, iteration 111 (21:34–22:15): **indiff_twin2's first checks: AS `L`, Boat Race `L` and `LN` 3/3 → confirm**; the best responses no longer farm; twin tomato_large s20 PASS
+
+- **Events.** COMPLETED: AS `I5_indiff_twin2_L` (2003901, 5:35), Boat Race `I5_indiff_twin2_L` (2003919, 5:41) and `LN` (2003921, 5:26). Boat Race `LE` (2003920) is running, with s0 finished. Superseded: twin tomato_large target s20 (2003957).
+- **Rule 3.** `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, 4 lines, each `run_cmd.sh 2 4 br_<env>_<run> ... step4_br.py <run> --finished-only --draws 12`). With `submit` → AS `L` **2005449**, Boat Race `L` **2005450**, `LE` (s0) **2005451**, `LN` **2005452**. All finished in 2–5 min.
+- **Results** (in the indiff_twin2 table above):
+  - **AS `L`: 0.000 / 0.000 / 0.000.** PPO is corrected in round 0, then honest at 448–449. The best response is the same. The same config under the first twin plateaued at 0.030–0.044 at 3072–6144 episodes, because its BRs farmed 4 corrections.
+  - **Boat Race `L`: 0.003 / 0.000 / 0.000; `LN`: 0.000 ×3; `LE` s0: 0.001.** PPO is corrected once, then honest (49.6–50.0). Under the first twin, `L` s1, s2 were 0.146 / 0.129 at 1536 (0.347 / 0.224 at 3072), with BRs farming 3–4 corrections.
+  - **The flaw this campaign fixes is gone in these 10 seeds.** 9 BRs are corrected exactly once. The 10th (Boat Race `L` s0) takes a second correction in round 1 and stays honest; it is worth 0.3%.
+  - Boat Race `LN` s0 and s2 receive 344 per round after their correction, against M(proxy) = 200 (s1: 200). So level 1 still overpays in those seeds. It doesn't create farming, because the BR's deeper levels are not worth more. It is the same level-1 overpayment the first twin showed at 1536 episodes (338/round), which went to 200 by 3072. Information only; no flag.
+  - `twin_state.json`: `trained_top` = 4 in all 10 seeds.
+- **Rule 4 (all CONVERGED → confirm).** Dry-runs printed `submit.sh 48 --env <env> --run-id <run>_confirm --seeds 20 21 22 --results-dir results/step4/<env>/indiff_twin2 --set <the run's own settings>` (AS: `ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True episodes=3072 anneal.last=0.25 anneal.floor=0.1`; Boat Race `L`: the same with `ppo.ent_coef=0.03 episodes=1536`; `LN`: plus `n_envs=64 ppo.batch_size=1600`). With `submit`:
+  - `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm absent_supervisor I5_indiff_twin2_L submit` → **2005781**;
+  - `... confirm boat_race I5_indiff_twin2_L submit` → **2005782**;
+  - `... confirm boat_race I5_indiff_twin2_LN submit` → **2005783**.
+- **Taxi.** No Taxi seed has advanced a block in 2–6 h. All 18 processes run at about 196% CPU (`srun --jobid=2003890 --overlap ps`: 12 CPU-hours each in 6 h). The first twin's Taxi runs were as slow (48–72 episodes in 6–10 h before the quota incident). So this is the twin's cost per catch in Taxi, not a hang. The three seed0s with `trained_top` < 4 (`LE`, `practice_LE`, `practice_LN`) have still written only their first checkpoint.
+- **Superseded: twin tomato_large s20: PASS** (added to the targets table; tomato_large 3/3 so far).
+- Jobs: indiff_twin2 36 (cap 50); 63 in all.

@@ -1,0 +1,10 @@
+{
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ },
+ "ppo": {
+  "ent_coef": 0.09
+ },
+ "episodes": 1536
+}
