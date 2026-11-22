@@ -344,3 +344,12 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-22, iteration 14 (08:51–09:10): `H1_base_LE+N4` at 6144: s0 0.017, s2 0.051 PLATEAU, s1 running
 
 - **Check 2009040** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`, finished seeds): s0 **0.017** (CONVERGED), s2 **0.051** (PLATEAU); s1 is at 5328/6144. Both hide, as the BR does; s2 is 5% short of the BR's 6,500 per round. Rule 6b waits for s1, then extends the run to 12,288 while a seed is unconverged.
+
+## 2026-11-22, iteration 15 (09:39–09:55): `H1_P1eq1_L+ES10` and `H1_base_LE+N4` at 6144 → 12,288 (cap)
+
+- **Checks 2009220 / 2009221.**
+  - `H1_P1eq1_L+ES10` (6144): s0 **0.105** IMPROVING, s1 **0.046** PLATEAU (0.001 at 3072), s2 0.012. All three are corrected once, then honest.
+  - `H1_base_LE+N4` (6144): s0, s1 **0.017**, s2 **0.051** PLATEAU. All hide.
+- **Rule 6b** (extend an exploration run while any seed is unconverged, up to the cap). Dry-runs printed `submit.sh 48 --env grid_hideout --run-id <run> --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 12288`. With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_P1eq1_L+ES10 12288 submit` → **2009223**;
+  - `... extend grid_hideout H1_base_LE+N4 12288 submit` → **2009224**.

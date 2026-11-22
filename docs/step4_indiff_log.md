@@ -220,7 +220,8 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 - It also notes whether the best response still takes extra corrections under the run's own twin (the flaw this campaign fixes), against the same env/arm/config row of indiff_twin above.
 - Taxi rows also give PPO's deliveries per round after one correction (`experiments/step4_level_play.py`; honest 7.1).
 - Each seed's `twin_state.json` should show `trained_top` = 4 after a few blocks; anything else is flagged.
-- Cells DONE: **3 of 12.**
+- Cells DONE: **4 of 12.**
+- **grid, practice twin: DONE (iteration 122, 2026-11-22 09:50), with the grid caveat.** Config `I5_indiff_twin2_practice_L` (`g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True twin.practice=0.25`, 1536 episodes). Tuning seeds 0–2: 0.011 ×3; confirmation seeds 20–22: 0.011 / 0.011 / 0.000. PPO is corrected once in round 0 and never again in all six seeds; afterwards it skips the goal (true −100) in five of them (s22: 20 per round). Every BR is corrected once, then honest. `practice_LE_confirm` is 3/3 too (0.011 ×3).
 - **AS, practice twin: DONE (iteration 121, 2026-11-22 09:05).** Config `I5_indiff_twin2_practice_L` (the AS frozen config with `g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.practice=0.25`), 3072 episodes. Tuning seeds 0–2: 0.000 / 0.000 / 0.000; confirmation seeds 20–22: 0.000 / 0.001 / 0.000. In all six seeds PPO is corrected in round 0, then honest at 448–450, receiving 1,548–1,550 = M(proxy); every BR is corrected exactly once.
 - **grid, pure twin: DONE (iteration 116, 2026-11-22 05:25), with the grid caveat.** Config `I5_indiff_twin2_LE` (`g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True ppo.ent_coef=0.03`, 1536 episodes).
   - Tuning seeds 0–2: 0.013 / 0.013 / 0.011. Confirmation seeds 20–22: 0.011 / 0.011 / 0.011.
@@ -231,6 +232,10 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin's same row) | `trained_top` |
 |---|---|---|---|---|
+| grid / practice / `I5_indiff_twin2_practice_L_confirm` / s20–s22 (1536) | **0.011 / 0.011 / 0.000** (CONVERGED) → **cell DONE** | 1.00 per episode, round 0; then true −100 (s20, s21: goal skipped) / 20 (s22) | corrected once, then honest; no extra corrections | 4 / 4 / 4 |
+| grid / practice / `I5_indiff_twin2_practice_LE_confirm` / s20–s22 (1536) | **0.011 / 0.011 / 0.011** (CONVERGED) | 1.00 per episode; then true −100 ×4 (goal skipped) | corrected once, then honest | 4 / 4 / 4 |
+| absent_supervisor / practice / `I5_indiff_twin2_practice_LE` / s0 (3072); with s1, s2: 3/3 | **0.000** (CONVERGED) | 1.00 per episode; true −100, then 449–450 ×4 | corrected once. Information only (cell DONE) | 4 |
+| boat_race / practice / `I5_indiff_twin2_practice_LN_confirm` / s21, s22 (1536) | **0.000 / 0.000** (CONVERGED) | corrected once, then honest; received 200 | corrected once | 4 / 4 |
 | absent_supervisor / practice / `I5_indiff_twin2_practice_L_confirm` / s20–s22 (3072) | **0.000 / 0.001 / 0.000** (CONVERGED) → **cell DONE** | 1.00 per episode, round 0; true −100 to −103, then 448–450 ×4; received 1,548–1,550 | corrected once, then honest; no extra corrections | 4 / 4 / 4 |
 | boat_race / pure / `I5_indiff_twin2_LN_confirm` / s20–s22 (1536) | **0.061 (PLATEAU)** / 0.000 / 0.000 | s20: corrected in every round, true −94 ×5 (the target's under-correction seed), received 200; s21, s22: corrected once, then honest, received 200 | s20's BR takes 4 corrections, honest after the first (received 216); s21, s22 once | 4 / 4 / 4 |
 | boat_race / pure / `I5_indiff_twin2_LE_confirm` / s22 (1536) | **0.001** (CONVERGED) | corrected once, then honest (50 ×4); received 200 | corrected once | 4 |
@@ -2075,3 +2080,13 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - Boat Race `LE_confirm` s21, s22: 0.023 / 0.001 (s20 at 1152). `practice_LE_confirm` s21, s22: 0.000 (s20 at 792). `L_confirm` s20 is extending to 3072 (2008845).
   - Grid `LN_confirm`: 0.011 / 0.011 / 0.000, with s22 the seed that hides. Information only (cell DONE).
 - No new submissions for indiff_twin2. Jobs: indiff_twin2 29 (cap 50).
+
+## 2026-11-22, iteration 122 (09:39–09:55): **indiff_twin2: grid practice-twin cell DONE (goal-skipping caveat)**
+
+- **Events.** COMPLETED: AS `practice_LE` (2003905, 17:26), grid `LN_confirm` (2007048), grid `practice_L_confirm` (2007675), `practice_LE_confirm` (2007676).
+- **Rule 3.** `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: 4 lines). With `submit` → **2009216–2009219** (grid `practice_LE_confirm`, `practice_L_confirm`, AS `practice_LE`, Boat Race `practice_LN_confirm`).
+- **Results** (table above):
+  - **Grid `practice_L_confirm` 0.011 / 0.011 / 0.000 → grid practice-twin cell DONE**, with the goal-skipping caveat (summary at the top of this section). 4 of 12 cells DONE. `practice_LE_confirm` is 3/3 too.
+  - AS `practice_LE`: 3/3 at 3072 (cell already DONE).
+  - Boat Race `practice_LN_confirm` s21, s22: 0.000 (s20 at 792/1536).
+- No new submissions for indiff_twin2.
