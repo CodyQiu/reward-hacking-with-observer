@@ -17,9 +17,11 @@ This log is append-only below the three summary sections.
   - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
   - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
   - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
-- Cells DONE: 0 of 4 (base, P1eq1, P2swap, indiff_twin2 at the default setting).
+- Cells DONE: **1 of 4: the swap (2026-11-22 01:50)**, `H1_P2swap_LE` 0.012 / 0.020 / 0.005 at 1536 and `H1_P2swap_LE_confirm` 0.006 / 0.005 / 0.004 (seeds 20–22). PPO is corrected in round 0, then honest, in all six seeds. Open: base, P1eq1 (two confirmations running), indiff_twin2.
 
 ## Flags for the user
+
+- **NEW (2026-11-22 01:50): in one swap confirmation seed the best response farms corrections.** `H1_P2swap_LN_confirm` s20 (1536 episodes) has gap 0.881. PPO is in a broken state: corrected in round 0 or 1 (0.48 / 0.51), received 1,232 / 3,015 / 301 / 349 / 274 per round. Its best response, under corrections refitted on that play, is corrected in every round 0–3 while exploiting (true −100 ×5), receiving 8,629–8,681 per round. So the swap's correction, fitted on this policy's caught play, makes being caught pay as much as the exploit. The sweep's target for that seed (`hstart_b100_P2swap/seed20.json`) is "corrected once, then honest". The swap cell is DONE through `H1_P2swap_LE_confirm`, so per rule 6b nothing more is run for it; this is information. s21 0.125 (corrected once, then honest, 13% below its BR); s22 0.000.
 
 - **NEW (2026-11-21 16:55): the exact sweep answers the mentor's question: no setting where no regulariser does poorly.** In all 9 settings (hideout near / mid / start × b 100 / 400 / 1600), every no-regulariser seed is honest by the end.
   - Standard PBRR hides in every seed of every setting (30/30; V0 = V_hide exactly). This is the (a) result with costly hiding: it walks to the hideout before every audit window in rounds 0–3.
@@ -219,3 +221,30 @@ No regulariser does poorly (a seed not honest by the end):
   - `... extend grid_hideout H1_P2swap_L 6144 submit` → **2006181**; `... extend grid_hideout H1_base_LE 6144 submit` → **2006182**.
 - **Rule 6b.** No new exploration: the no-regulariser cell now has 3/3 runs awaiting confirmation; its exploration runs (2005370–2005373) continue.
 - Jobs: hideout 18 (cap 24).
+
+## 2026-11-22, iteration 7 (00:23–01:55): **the swap cell is DONE**; no regulariser `LN` plateau; `H1_base_L` → 12,288 (cap); five exploration runs → 3072
+
+- **Events.** COMPLETED: `H1_P1eq1_L+ENT3` / `+ES10` / `+N4` / `+ES10+N4` (2005370–2005373), `H1_P2swap_LE_confirm` (2005369), `H1_P2swap_LN_confirm`, `H1_P1eq1_LN` (3072), `H1_base_L` (6144, 2005784). `H1_base_LE+N4` has finished seeds.
+- **Rule 3.** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run: 9 lines). With `submit` → **2006738–2006746**. They waited about an hour on priority.
+- **Results** (verdicts from `step4_convergence.py`):
+
+  | run (episodes) | s0 | s1 | s2 | PPO | best response | decision |
+  |---|---|---|---|---|---|---|
+  | `H1_P2swap_LE_confirm` (1536; seeds 20–22) | 0.006 | 0.005 | 0.004 | corrected in round 0, then honest | the same | **3/3 → swap cell DONE** |
+  | `H1_P2swap_LN_confirm` (1536; 20–22) | **0.881** | 0.125 | 0.000 | s20 broken (see flag); s21, s22 corrected once, then honest | s20 farms 4 corrections; s21, s22 corrected once | information (cell DONE) |
+  | `H1_P1eq1_LN` (3072) | 0.117 PLATEAU | 0.000 | 0.022 | corrected once, then honest | s0, s1 once; s2 twice | plateau: config finished |
+  | `H1_P1eq1_L+ENT3` (1536) | 0.004 | 0.012 | 0.034 | corrected once, then honest | s2 twice | 6b: extend 3072 |
+  | `H1_P1eq1_L+ES10` (1536) | 0.075 | 0.006 | 0.019 | the same | s2 twice | 6b: extend 3072 |
+  | `H1_P1eq1_L+N4` (1536) | 0.075 | 0.002 | 0.005 | the same | s0, s2 twice | 6b: extend 3072 |
+  | `H1_P1eq1_L+ES10+N4` (1536) | 0.115 | 0.009 | 0.013 | the same | s0, s2 twice | 6b: extend 3072 |
+  | `H1_base_L` (6144) | 0.097 IMPR | 0.055 PLAT | 0.051 IMPR | hides; 5,660–6,080 per round in rounds 0–3 | hides (6,500) | extend 12,288 (cap) |
+  | `H1_base_LE+N4` (1536) | 0.024 | 0.017 | 0.051 PLAT | hides; 6,060–6,360 | hides | 6b: extend 3072 |
+
+  - **No regulariser:** PPO is corrected once, then honest, in every seed of every run. Every unconverged seed falls short only in received value after its correction (42,000–48,000 against its BR's 45,000–49,000).
+  - **Standard PBRR:** `H1_base_L`'s gaps have not moved since 1536 episodes (0.097 / 0.051 / 0.053 → 0.097 / 0.055 / 0.051 at 6144). Rule 4 still extends it while a seed is IMPROVING, now to the cap.
+- **Commands.** Each dry-run printed `submit.sh 48 --env grid_hideout --run-id <run> --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to <N>`. With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_base_L 12288 submit` → **2007051**;
+  - `... extend grid_hideout H1_P1eq1_L+ENT3 3072 submit` → **2007052**; `+ES10` → **2007053**; `+N4` → **2007054**; `+ES10+N4` → **2007055**;
+  - `... extend grid_hideout H1_base_LE+N4 3072 submit` → **2007056**.
+  - Rule 6b extends exploration runs while any seed is unconverged, whatever the verdict. The no-regulariser cell is not DONE yet: its confirmations `H1_P1eq1_L_confirm` (2006179) and `H1_P1eq1_LE_confirm` (2006180) are queued.
+- Jobs: hideout 16 (cap 24).
