@@ -199,3 +199,23 @@ No regulariser does poorly (a seed not honest by the end):
   - I checked that the extension trained: `progress.json` shows 3072 episodes, one resume at 1536 (git 32aa525), anneal over the last 25% of 3072.
   - Rule 4 (any seed IMPROVING → extend 2×; cap 12,288): `... extend grid_hideout H1_base_L 6144` (dry-run: `submit.sh 48 --env grid_hideout --run-id H1_base_L --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144`). With `submit` → **2005784**.
 - Jobs: hideout 19 (cap 24).
+
+## 2026-11-21, iteration 6 (23:07–23:45): `H1_P1eq1_L` and `LE` 3/3 at 3072 → confirm; `H1_P2swap_L`, `H1_base_LE` → extend 6144
+
+- **Events.** Extensions to 3072 COMPLETED: `H1_P1eq1_L` (2005364), `H1_P1eq1_LE` (2005365), `H1_P2swap_L` (2005367), `H1_base_LE` (2005368), each in about 2 h. `H1_P1eq1_LN` (2005366) is still running.
+- **Rule 3.** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run, 4 lines). With `submit` → **2006154–2006157**.
+- **Results at 3072.**
+
+  | run | s0 | s1 | s2 | PPO | best response | rule 4 |
+  |---|---|---|---|---|---|---|
+  | `H1_P1eq1_L` | 0.005 | 0.023 | 0.016 | corrected in round 0, then honest (22 ×4) | s0, s1 once, then honest (true 20); s2 twice (−100, −42, 22 ×3) | **3/3 → confirm** |
+  | `H1_P1eq1_LE` | 0.000 | 0.003 | 0.007 | the same | s0, s1 once; s2 twice | **3/3 → confirm** |
+  | `H1_P2swap_L` | 0.007 CONV | 0.068 IMPR | 0.095 IMPR | corrected once, then honest; receives 42,900–48,600 per round after it, against the BR's 46,200–53,800 | corrected once, then honest | extend 6144 |
+  | `H1_base_LE` | 0.074 IMPR | 0.040 PLAT | 0.024 CONV | hides; 5,860–6,360 per round in rounds 0–3 against the BR's 6,500 | hides | extend 6144 |
+
+  - No regulariser: PPO is honest after one correction in all 6 seeds. Where the BR takes a second correction, it is the target's own under-correction (s2 of every setting, `docs/step4_hideout.md`).
+- **Rule 4.** The dry-runs printed `submit.sh 48 --env grid_hideout --run-id H1_P1eq1_L_confirm --seeds 20 21 22 ... --set g.use_regularization=False episodes=3072 anneal.last=0.25 anneal.floor=0.1` (and `_LE` with `ppo.ent_coef=0.03`), and `... --run-id H1_P2swap_L --resume --extend-to 6144`, `... --run-id H1_base_LE --resume --extend-to 6144`. With `submit`:
+  - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_P1eq1_L submit` → **2006179**; `... confirm grid_hideout H1_P1eq1_LE submit` → **2006180**;
+  - `... extend grid_hideout H1_P2swap_L 6144 submit` → **2006181**; `... extend grid_hideout H1_base_LE 6144 submit` → **2006182**.
+- **Rule 6b.** No new exploration: the no-regulariser cell now has 3/3 runs awaiting confirmation; its exploration runs (2005370–2005373) continue.
+- Jobs: hideout 18 (cap 24).
