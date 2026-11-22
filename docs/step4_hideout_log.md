@@ -395,3 +395,10 @@ No regulariser does poorly (a seed not honest by the end):
   - `H1_P1eq1_L+ENT3_confirm` (3072; seeds 20–22): **0.001 / 0.084 (IMPROVING) / 0.045 (IMPROVING)**. All three are corrected once, then honest; s21 and s22 receive 8–9% less than their BRs after the correction. Rule 4 would extend it to 6144: **held for disk**.
   - `H1_base_LE+N4` (12,288 = cap): s0 0.018, s2 0.051 PLATEAU; s1 at 10176.
 - **A pattern in the no-regulariser cell's confirmations:** seeds 21 and 22 fall short in all three (`L_confirm` 0.002 / 0.047 at 6144 for s21 / s22; `LE_confirm` 0.104 / 0.051 at 6144; `L+ENT3_confirm` 0.084 / 0.045 at 3072). Every seed is corrected once, then honest; the shortfall is in how much they receive after the correction. s22's BR takes a second correction, the target's own under-correction for that seed (`docs/step4_hideout.md`). Information; no change.
+
+## 2026-11-22, iteration 20 (14:21–14:55): the standard-PBRR cell's confirmation (`H1_base_LE+ES10+N4_confirm`) is failing: s20, s22 fall into the stuck state
+
+- **Checks 2010357 / 2010358** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`):
+  - **`H1_base_LE+ES10+N4_confirm` (1536; seeds 20–22): s20 0.761, s22 0.760 (PLATEAU); s21 at 1104/1536.** Both seeds behave like `H1_base_LE+ES10`: they exploit openly in round 0, are corrected, then never reach the goal or the hideout, so they are corrected in every round (3.94–4.00 per episode, received about −100 per round). The tuning run's three seeds hid at 0.017. The same config lands in two different behaviours depending on the seed.
+  - `H1_base_LE+ENT3`: s0 **0.026** at 3072 (hides); s1, s2 are still training to 3072.
+- **Standard-PBRR cell status:** no config has converged in tuning and confirmation. `H1_base_L` / `H1_base_LE` ended at their caps (0/3, 1/3), `H1_base_LN` plateaued, and the `+ES10+N4` confirmation is failing. Open: `H1_base_LE+ENT3` (3072), `H1_base_LE+N4` (s1 to 12,288), and `H1_base_LE+ES10` (stuck at 0.76; extension held for disk). New jobs are held for disk.
