@@ -21,6 +21,8 @@ This log is append-only below the three summary sections.
 
 ## Flags for the user
 
+- **NEW (2026-11-22 15:20): the twin's level-0 failure (`docs/step4_indiff_log.md`, flag of 2026-11-21 23:40) also hits this grid: in `H1_indiff_twin2_LN_confirm` s21 PPO and its best response hide at the hideout.** The seed's twin values level 0 at 20 instead of 8,700, so the first correction pays 0.002 per step (correctly about 88). Hiding (6,500 per round) then beats being corrected, and both PPO and its BR hide (gap 0.019, so CONVERGED). Every other hideout twin seed prices level 0 at 8,400–8,700, except `H1_indiff_twin2_LE` s0 (6,342; it receives 22% less after its correction than its BR). As in indiff_twin2, the failure is confined to `LN` (64-env) configs. I am not changing anything.
+
 - **NEW (2026-11-22 12:40): home disk at the stop point, so no new runs, extensions or confirmations are being submitted.** `du -s` 46,143 MiB (45.1 GiB; `du -h` shows 46G): `.git` 13.6G, `results/` 15.6G, the rest outside this repo. The 2026-11-18 quota incident killed every job at about 50 GB. Usage grows about 1 GiB per 8 h (checkpoints of running jobs, plus `step4_commit.sh` committing finished seeds' `logs.npz` / `model.zip` into `.git`). Best-response checks (small JSON files) continue; every decision that needs a new job is logged as **held for disk**. Your call: stop committing large files, move `results/` to /scratch, or free space elsewhere in home.
 
 - **NEW (2026-11-22 01:50): in one swap confirmation seed the best response farms corrections.** `H1_P2swap_LN_confirm` s20 (1536 episodes) has gap 0.881. PPO is in a broken state: corrected in round 0 or 1 (0.48 / 0.51), received 1,232 / 3,015 / 301 / 349 / 274 per round. Its best response, under corrections refitted on that play, is corrected in every round 0–3 while exploiting (true −100 ×5), receiving 8,629–8,681 per round. So the swap's correction, fitted on this policy's caught play, makes being caught pay as much as the exploit. The sweep's target for that seed (`hstart_b100_P2swap/seed20.json`) is "corrected once, then honest". The swap cell is DONE through `H1_P2swap_LE_confirm`, so per rule 6b nothing more is run for it; this is information. s21 0.125 (corrected once, then honest, 13% below its BR); s22 0.000.
@@ -402,3 +404,20 @@ No regulariser does poorly (a seed not honest by the end):
   - **`H1_base_LE+ES10+N4_confirm` (1536; seeds 20–22): s20 0.761, s22 0.760 (PLATEAU); s21 at 1104/1536.** Both seeds behave like `H1_base_LE+ES10`: they exploit openly in round 0, are corrected, then never reach the goal or the hideout, so they are corrected in every round (3.94–4.00 per episode, received about −100 per round). The tuning run's three seeds hid at 0.017. The same config lands in two different behaviours depending on the seed.
   - `H1_base_LE+ENT3`: s0 **0.026** at 3072 (hides); s1, s2 are still training to 3072.
 - **Standard-PBRR cell status:** no config has converged in tuning and confirmation. `H1_base_L` / `H1_base_LE` ended at their caps (0/3, 1/3), `H1_base_LN` plateaued, and the `+ES10+N4` confirmation is failing. Open: `H1_base_LE+ENT3` (3072), `H1_base_LE+N4` (s1 to 12,288), and `H1_base_LE+ES10` (stuck at 0.76; extension held for disk). New jobs are held for disk.
+
+## 2026-11-22, iteration 21 (15:10–15:25): the standard-PBRR confirmation fails 1/3; `H1_indiff_twin2_LN_confirm` s21 hides (level-0 twin failure, flag); `H1_base_LE+ENT3` extension held for disk
+
+- **Events.** COMPLETED: `H1_base_LE+ES10+N4_confirm` (2008635), `H1_base_LE+ENT3` (3072, 2008847), `H1_base_LE+N4` (12,288, 2009224).
+- **Checks 2010564–2010568** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`):
+
+  | run (episodes) | s0 / s20 | s1 / s21 | s2 / s22 | decision |
+  |---|---|---|---|---|
+  | `H1_base_LE+ES10+N4_confirm` (1536) | 0.761 PLAT | 0.018 | 0.760 PLAT | **confirmation failed (1/3)**: s20, s22 stuck (corrected every round), s21 hides |
+  | `H1_base_LE+ENT3` (3072) | 0.026 | 0.022 | 0.031 IMPR | 6b: extend 6144, **held for disk** |
+  | `H1_base_LE+N4` (12,288 = cap) | 0.018 | 0.017 | 0.051 PLAT | at the cap: finished, 2/3 |
+  | `H1_indiff_twin2_L_confirm` (1536) | (running) | (running) | 0.000 | wait |
+  | `H1_indiff_twin2_LN_confirm` (1536) | (running) | **0.019, hides** | (running) | wait; **flag** |
+
+  - `H1_indiff_twin2_L_confirm` s22: corrected once, then honest (true 20). It receives 8,000 per round after the correction (M = 8,700), as does its BR. The twin values level 0 at 8,405 in this run.
+  - **`H1_indiff_twin2_LN_confirm` s21 hides** (never corrected; 6,348–6,359 per round in rounds 0–3), and so does its BR (6,500). Its twin values level 0 at 20. Flag at the top.
+- **Standard-PBRR cell:** no config passes tuning and confirmation. `+ENT3` is the nearest (0.026 / 0.022 / 0.031, all hiding), and its extension is held for disk.
