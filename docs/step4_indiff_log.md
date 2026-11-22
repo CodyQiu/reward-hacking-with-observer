@@ -230,6 +230,8 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin's same row) | `trained_top` |
 |---|---|---|---|---|
+| tomato / pure / `I5_indiff_twin2_LE` / s0–s2 (1536) | **0.009 / 0.009 / 0.009** (CONVERGED) | 1.00 per episode, round 0; true 46, then 427–428 ×4 (honest 434); received 587–588 | corrected once, then honest; no extra corrections | 4 / 4 / 4 |
+| tomato / practice / `I5_indiff_twin2_practice_LE` / s0–s2 (1536) | **0.008 / 0.010 / 0.009** (CONVERGED) | 1.00 per episode; true 46, then 426–428 ×4; received 586–589 | corrected once, then honest; no extra corrections | 4 / 4 / 4 |
 | boat_race / pure / `I5_indiff_twin2_L_confirm` / s20 (1536) | **0.060** (IMPROVING) | **corrected in every round 0–3 (4.00 per episode), keeps exploiting: true −94 ×5**; received exactly 200 per round = M(proxy), so it is indifferent | **the BR takes 4 corrections**, true 50 after the first, received 216 per round (8% above M(proxy)): deeper levels overpay a little in this seed | 4 |
 | boat_race / practice / `I5_indiff_twin2_practice_L` / s0, s2 (**3072**) | **0.000 / 0.000** (CONVERGED) | 1.00 per episode; true −94, then 50 ×4; received 200 | corrected once; no extra corrections. (s1 still at 2832) | 4 / 4 |
 | tomato / pure / `I5_indiff_twin2_L` / s0–s2 (1536) | **0.006 / 0.005 / 0.005** (CONVERGED) | 1.00 per episode, round 0; true 46, then 430 ×4 (honest 434); received 588–589 = M(proxy) | corrected once, then honest; no extra corrections (indiff_twin `L`: 0.006 / 0.006 / 0.005, the same) | 4 / 4 / 4 |
@@ -2026,3 +2028,13 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - **Boat Race `L_confirm`: s20 0.060 (IMPROVING), s21 0.000, s22 0.015.** s20 is new behaviour for this arm: PPO keeps exploiting and is corrected in every round, but receives exactly M(proxy) = 200 per round, the indifference the twin is built for. Its BR takes the same 4 corrections while honest after the first and receives 216. So in this seed's twin the deeper levels pay 8% more than staying at level 1; "never farms" holds for PPO but not quite for the BR.
   - Boat Race `practice_L` at 3072: s0, s2 0.000; s1 is at 2832/3072.
 - **Rule 4** (a confirmation may be extended like any other run): `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend boat_race I5_indiff_twin2_L_confirm 3072` (dry-run: `submit.sh 48 --env boat_race --run-id I5_indiff_twin2_L_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_twin2 --resume --extend-to 3072`). With `submit` → **2008845**. The Boat Race pure cell also has `LN_confirm` (s21, s22 0.000; s20 running) and `LE_confirm` running.
+
+## 2026-11-22, iteration 119 (07:56–08:05): Tomato `LE` and `practice_LE` 3/3 → confirm
+
+- **Checks 2008838 / 2008839** (Tomato `LE`, `practice_LE`; about 45 min each): `LE` 0.009 ×3; `practice_LE` 0.008 / 0.010 / 0.009. PPO is corrected in round 0, then honest (true 426–428 against 434). Every BR is corrected exactly once. Rows in the table.
+- Tomato `practice_LN` (2003912) COMPLETED 07:18; its check (2008840) is still running.
+- **Rule 4.** Dry-runs printed `submit.sh 48 --env tomato --run-id I5_indiff_twin2_[practice_]LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato/indiff_twin2 --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True [twin.practice=0.25] episodes=1536 anneal.last=0.25 anneal.floor=0.1`. With `submit`:
+  - `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato I5_indiff_twin2_LE submit` → **2008867**;
+  - `... confirm tomato I5_indiff_twin2_practice_LE submit` → **2008868**.
+- Both Tomato cells now have two confirmations each: pure `L_confirm` (2008633) and `LE_confirm`; practice `practice_L_confirm` (2008634) and `practice_LE_confirm`.
+- Jobs: indiff_twin2 32 (cap 50). Disk 45G.

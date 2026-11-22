@@ -63,3 +63,7 @@
   [boat_race s20] 12,096,000  win0-3 1.00  off 1.00  corr/ep 4.00  winF 1.00  proxy0-3    199.8  rounds 6588  (25361s)
   [boat_race s20] 12,288,000  win0-3 1.00  off 1.00  corr/ep 4.00  winF 1.00  proxy0-3    200.0  rounds 6684  (25683s)
   [boat_race s20] resumed at episode 1536 -> 3072
+  [boat_race s20] 12,480,000  win0-3 0.90  off 0.97  corr/ep 3.61  winF 1.00  proxy0-3    188.2  rounds 6794  (617s)
+  [boat_race s20] 12,672,000  win0-3 0.80  off 0.98  corr/ep 3.21  winF 1.00  proxy0-3    189.8  rounds 6876  (1078s)
+  [boat_race s20] 12,864,000  win0-3 0.77  off 0.99  corr/ep 3.10  winF 1.00  proxy0-3    190.2  rounds 6992  (1623s)
+  [boat_race s20] 13,056,000  win0-3 0.93  off 1.00  corr/ep 3.72  winF 1.00  proxy0-3    196.5  rounds 7103  (2228s)
