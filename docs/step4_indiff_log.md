@@ -1803,3 +1803,17 @@ Verdicts from `.venv/bin/python experiments/step4_indiff_check.py results/step4/
   - indiff_twin's tomato_large targets: none existed (the 6 jobs, 1995347–1995352, failed within a second in the incident). I ran the 6 tomato_large lines of the `CAMPAIGN=indiff_twin ... targets` dry-run verbatim → **2003954–2003959** (s0, s1, s2, s20, s21, s22).
   - The killed runs are not resumed (superseded).
 - 71 jobs in all now (twin2 36, hideout 16, checks 13, twin targets 6).
+
+## 2026-11-21, iteration 107 (16:40): indiff_pool grid confirmation checks (information only; superseded)
+
+The grid cell was already DONE by the verdict (iteration 55). These four extra confirmations are information only.
+
+| Run (1536 episodes) | s20 | s21 | s22 | Result |
+|---|---|---|---|---|
+| `I2_indiff_pool_LE+EP_confirm` (2003944) | 0.011 | 0.000 | **0.093** | 2/3. s22 hides: never corrected, true −100, received 7,700/round. Its BR is corrected once, then honest |
+| `I2_indiff_pool_LE+GL_confirm` (2003945) | **0.093** | 0.000 | 0.001 | 2/3. s20 hides the same way |
+| `I2_indiff_pool_LE+N4_confirm` (2003946) | 0.011 | 0.011 | 0.011 | 3/3, all with the grid caveat (corrected once, then true −100) |
+| `I2_indiff_pool_LE+RS_confirm` (2003947) | 0.000 | 0.011 | 0.011 | 3/3. s20 is corrected once, then honest (true 22); s21 and s22 have the grid caveat |
+
+- The convergence report still labels `LE+GL_confirm` s20 "NEEDS BR". That label predates this check; the check itself is 0.093, unconverged.
+- Nothing is submitted (superseded).

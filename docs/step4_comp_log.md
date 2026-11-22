@@ -1735,3 +1735,10 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
   - PPO is corrected once, then honest: true −94, then 50 ×4; received 200, then 211 ×4.
   - The best response takes 4 corrections (rounds 0–3) and is honest by the true reward, receiving 200 / 206 / 212 / 218 / 229. That is the level farming the comp flags describe, worth 2.1% here.
   - s1 and s2 were killed unfinished. They are not resumed, so this run stays 1/1 finished.
+
+## 2026-11-21, iteration 131 (16:40): Boat Race 6b `LN+ES10` at 3072: 0/3 (all hide); superseded, so not extended
+
+- **Check 2003952** (`C1_comp_LN+ES10`, 3072): **0.146 ± 0.004 / 0.173 ± 0.003 / 0.184 ± 0.004**, all PLATEAU.
+  - **All three hide.** They are never corrected and keep the bug every round: true −82 ×4, then −94; received 182 ×4, then 200.
+  - Their best responses are corrected in rounds 0–3 (4 corrections) and honest by the true reward, receiving 200 → 236–255 per round. That is the level farming.
+- Rule 6b would extend this run to 6144, but comp is superseded, so it is not extended.
