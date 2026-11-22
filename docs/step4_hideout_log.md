@@ -340,3 +340,7 @@ No regulariser does poorly (a seed not honest by the end):
   - s1 **0.048 (IMPROVING)**: corrected in every round (4.00 per episode), never reaches the goal (true −100), and receives 7,683–8,669 per round. Its BR is corrected once, then honest (8,817).
   - s2 is at 1176/1536. Rule 4 waits for it.
 - Jobs: hideout 19 (cap 24).
+
+## 2026-11-22, iteration 14 (08:51–09:10): `H1_base_LE+N4` at 6144: s0 0.017, s2 0.051 PLATEAU, s1 running
+
+- **Check 2009040** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`, finished seeds): s0 **0.017** (CONVERGED), s2 **0.051** (PLATEAU); s1 is at 5328/6144. Both hide, as the BR does; s2 is 5% short of the BR's 6,500 per round. Rule 6b waits for s1, then extends the run to 12,288 while a seed is unconverged.
