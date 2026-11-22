@@ -122,3 +122,13 @@ No regulariser does poorly (a seed not honest by the end):
 - **Wave 2 (automatic):** it would run no-regulariser PPO at each setting where some no-regulariser seed is not honest by the end. There is no such setting (0 of 9), so nothing is submitted.
 - **PPO wave 1:** all 12 runs are training, at 48–144 episodes of 1536. No checks yet. `H1_indiff_twin2_*` seeds all have `twin_state.json` with `trained_top` = 4.
 - Jobs: hideout 12 (cap 24).
+
+## 2026-11-21, iteration 1b (17:20–17:40): bug fixed: the PPO runs did not find their sweep targets ("NO TARGET")
+
+- **What broke.** `CAMPAIGN=hideout bash scripts/farmshare/step4_optimal.sh report` printed, for all 36 seeds of wave 1: `results/step4/grid_hideout/hideout/H1_P1eq1_L seed0: NO TARGET (run experiments/step4_targets.py for this game and seed)`.
+- **Cause.** The sweep passes `--set task.exploit_bonus=100`, which is stored as the int 100. The runs carry the task default, the float 100.0. `step4_convergence.find_target` compares the game keys as JSON text, so `100` ≠ `100.0`. Everything else in the key was identical.
+  - `docs/step4_hideout.md` says the default setting's sweep targets serve these runs, so this is a bug, not a design choice.
+  - It only affects the report's target gaps and its IMPROVING/PLATEAU curve. The best-response check (the verdict) needs no target.
+- **Fix** (`experiments/step4_convergence.py`): `canon()` writes every whole number as a float before the comparison, on both sides; booleans are unchanged. Stored files are unchanged.
+  - Test: `test_find_target_matches_a_whole_number_written_as_int_or_float`.
+  - After the fix, `H1_P1eq1_L` seed0 matches `hstart_b100_P1eq1/seed0.json` (value gap +0.091 at 768 episodes).

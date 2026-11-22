@@ -49,12 +49,25 @@ BLOCK = 24
 TOL = {"value": 0.03, "window": 0.05, "true": 0.05, "corr": 0.10}
 
 
+def canon(x):
+    """A game key in canonical JSON form: a whole number is the same game whether its config wrote it as an int or
+    a float. The hideout sweep's `--set task.exploit_bonus=100` stores 100, the task default is 100.0, and the
+    two did not match (2026-11-21, docs/step4_hideout_log.md). Booleans stay booleans."""
+    if isinstance(x, dict):
+        return {k: canon(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [canon(v) for v in x]
+    if isinstance(x, int) and not isinstance(x, bool):
+        return float(x)
+    return x
+
+
 def find_target(cfg):
-    key = json.dumps(game_key(cfg), sort_keys=True)
+    key = json.dumps(canon(game_key(cfg)), sort_keys=True)
     for path in sorted(glob.glob(os.path.join(OUT, cfg["env"], "targets", "*", f"seed{cfg['seed']}.json"))):
         with open(path) as fh:
             t = json.load(fh)
-        if json.dumps(game_key(t["game"]), sort_keys=True) == key:
+        if json.dumps(canon(game_key(t["game"])), sort_keys=True) == key:
             return path, t
     return None, None
 
