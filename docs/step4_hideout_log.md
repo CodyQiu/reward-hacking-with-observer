@@ -388,3 +388,10 @@ No regulariser does poorly (a seed not honest by the end):
 - **Checks 2009931 / 2009932** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`):
   - `H1_P1eq1_L_confirm` (6144; seeds 20–22): **0.000 / 0.001 / 0.047 (IMPROVING)**. All three are corrected once, then honest. Rule 4 would extend it to 12,288: **held for disk**.
   - `H1_base_LE+ES10` (3072): **0.760 / 0.761 / 0.761 (PLATEAU)**, unchanged since 1536. It exploits openly in round 0, is corrected, and is corrected again in every later round because it never reaches the goal or the hideout. Rule 6b would extend it to 6144: **held for disk**.
+
+## 2026-11-22, iteration 19 (13:33–13:45): `H1_P1eq1_L+ENT3_confirm` 1/3 → extension **held for disk**
+
+- **Checks 2010152 / 2010153** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`):
+  - `H1_P1eq1_L+ENT3_confirm` (3072; seeds 20–22): **0.001 / 0.084 (IMPROVING) / 0.045 (IMPROVING)**. All three are corrected once, then honest; s21 and s22 receive 8–9% less than their BRs after the correction. Rule 4 would extend it to 6144: **held for disk**.
+  - `H1_base_LE+N4` (12,288 = cap): s0 0.018, s2 0.051 PLATEAU; s1 at 10176.
+- **A pattern in the no-regulariser cell's confirmations:** seeds 21 and 22 fall short in all three (`L_confirm` 0.002 / 0.047 at 6144 for s21 / s22; `LE_confirm` 0.104 / 0.051 at 6144; `L+ENT3_confirm` 0.084 / 0.045 at 3072). Every seed is corrected once, then honest; the shortfall is in how much they receive after the correction. s22's BR takes a second correction, the target's own under-correction for that seed (`docs/step4_hideout.md`). Information; no change.
