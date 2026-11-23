@@ -595,3 +595,11 @@ No regulariser does poorly (a seed not honest by the end):
 - `H1_base_LE+ENT3` (2013780, 12:17) has finished all three seeds at 6144 (s0 0.021, CONVERGED, hides). `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2015798** (s1, s2). Rule 4 decides the run when it is in. If 3/3, it goes to `confirm`; that would be the base cell's first config to pass tuning since `+ES10+N4`.
 - Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 38 (13:14–13:35): **standard PBRR: `H1_base_LE+ENT3` 3/3 at 6144 → `confirm`**
+
+- **Check 2015798:** `H1_base_LE+ENT3` at 6144: **0.021 / 0.019 / 0.022, 3/3 CONVERGED.** All three hide at the hideout before every audit window in rounds 0–3 (0.01–0.02 corrections per episode; true −41), receiving 6,310–6,359 per round against their BRs' 6,500, and 8,608–8,654 in round 4 (8,700). This is the target's strategy for standard PBRR (hides; V0 = V_hide).
+- **Rule 4 (tuning run, all CONVERGED → `confirm`).**
+  - Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_base_LE+ENT3` printed `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ENT3_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --set anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.09 episodes=6144`. That is the run's settings at its final length (6144, as for `H1_P1eq1_L+N4_confirm`).
+  - Submitted → **2016007**. If 3/3, the standard-PBRR cell is DONE.
+- Cells DONE: 2 of 5. Jobs: hideout 8 (cap 24).
+
