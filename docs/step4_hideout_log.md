@@ -590,3 +590,8 @@ No regulariser does poorly (a seed not honest by the end):
 - **`H1_indiff_twin2_LE` → 6144** (rule 4, due since iteration 30). The 06:15 submit was blocked by Claude Code's permission check when sent together with a check. The standalone extension above passed, so this one was re-sent alone, unchanged (dry-run printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_LE --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144`) → **2015429**. Flag marked resolved.
 - Running: `H1_indiff_twin3_*` (2014062–64), `H1_indiff_twin2_L_confirm` (s21 → 3072, 2013782), `H1_base_LE+ENT3` → 6144 (2013780), and the two extensions. Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 37 (12:24–12:45): `H1_base_LE+ENT3` finished at 6144, check submitted
+
+- `H1_base_LE+ENT3` (2013780, 12:17) has finished all three seeds at 6144 (s0 0.021, CONVERGED, hides). `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2015798** (s1, s2). Rule 4 decides the run when it is in. If 3/3, it goes to `confirm`; that would be the base cell's first config to pass tuning since `+ES10+N4`.
+- Cells DONE: 2 of 5.
+

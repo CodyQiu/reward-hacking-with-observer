@@ -1,1 +1,6 @@
   [boat_race s21]    192,000  win0-3 0.75  off 0.65  corr/ep 3.00  winF 0.50  proxy0-3     95.6  rounds 128  (1007s)
+  [boat_race s21]    384,000  win0-3 0.35  off 0.25  corr/ep 1.40  winF 0.16  proxy0-3     46.2  rounds 223  (1788s)
+  [boat_race s21]    576,000  win0-3 0.28  off 0.23  corr/ep 1.11  winF 0.06  proxy0-3     66.4  rounds 290  (2409s)
+  [boat_race s21]    768,000  win0-3 0.25  off 0.20  corr/ep 0.99  winF 0.01  proxy0-3     59.0  rounds 343  (3012s)
+  [boat_race s21]    960,000  win0-3 0.25  off 0.17  corr/ep 1.00  winF 0.00  proxy0-3     56.5  rounds 375  (3498s)
+  [boat_race s21]  1,152,000  win0-3 0.26  off 0.21  corr/ep 1.06  winF 0.02  proxy0-3     65.0  rounds 411  (3986s)
