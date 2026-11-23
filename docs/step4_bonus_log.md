@@ -2802,3 +2802,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
   - The tuning run took 47:38 for 1536 episodes, so the confirmation will probably reach the 48 h limit once and need a resume.
 - The other tomato_large base runs (`B1_base_L`, `LE`, `LN+N4`, `LN+ES10`) were killed in the quota incident and are held (flag at the top).
 - Jobs: bonus 7 (cap 60).
+
+## 2026-11-23, iteration 240 (05:06–05:15): tomato_large `B1_P2swap_LE+N4` s2 finished, check submitted
+
+- `B1_P2swap_LE+N4` s2 finished (`metrics.json`); job 2003965 is still running s0 and s1 at 37 h.
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014166** (a tomato_large check, 12 h limit).
+- The other tomato_large runs (2003961–2003966 and `B1_base_LN+ES10+N4_confirm` 2004619) reach the 48 h limit at about 15:40–17:45 today. Rule 1 resumes them.
+- Jobs: bonus 7 + 1 check (cap 60).
+

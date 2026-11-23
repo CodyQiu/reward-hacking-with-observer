@@ -2278,3 +2278,10 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - `CAMPAIGN=indiff_twin3 ... br_missing` (dry-run): nothing yet. bonus, noreg_fail: nothing missing, nothing due.
 - Jobs: 62 in total, all running. Home 34.4 GB.
 
+## 2026-11-23, iteration 136 (05:06–05:15): nothing new for indiff_twin3 / indiff_twin2
+
+- No twin2 or twin3 run finished. `br_missing` (dry-run) is empty for both.
+- twin3: 36 runs running since 04:02–04:14 (Taxi `L` since 03:22).
+- twin2: the Taxi runs and the tomato_large runs reach the 48 h limit at about 15:40 and are resumed then.
+- Jobs: 63 in total, all running: twin3 36, twin2 12, hideout 6, bonus 7, and 2 checks. Home 34.6 GB.
+

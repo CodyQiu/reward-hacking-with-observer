@@ -522,3 +522,14 @@ No regulariser does poorly (a seed not honest by the end):
 - Running: `H1_indiff_twin2_L_confirm` → 3072 (2013782), `H1_base_LE+ENT3` / `+ES10` → 6144 (2013780 / 2013781).
 - Cells DONE: 2 of 5. Jobs: hideout 7 (cap 24).
 
+## 2026-11-23, iteration 29 (05:06–05:15): `H1_indiff_twin2_LE` finished at 3072; s1 0.050; s2's check submitted
+
+- **Events.** COMPLETED: `H1_indiff_twin2_LE` (2009715, 04:47, 17.4 h; extension to 3072); check 2014108.
+- **Check 2014108** (seeds finished by 04:31):
+  - s0 at 3072: **0.180 (IMPROVING)**, unchanged. Corrected once, then honest (true 21–22), but it receives 6,842–6,848 per round after the correction against its BR's 8,821.
+  - **s1 at 3072: 0.050.** Corrected in every round 0–3 and never reaches the goal (true −100 ×5), receiving 8,639–8,656 against its BR's 8,821. Its BR is corrected once, then honest.
+  - s2 was still training (0.021 at 1536: re-corrected 3.6 times per episode, true −100).
+- **Check submitted** for s2 at 3072: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014165**. Rule 4 decides the run when it is in.
+- Twin level-0 values: 8,686–8,700 in all three seeds, so this is not a level-0 failure.
+- Running: `H1_indiff_twin3_*` (2014062–64), `H1_indiff_twin2_L_confirm` → 3072 (2013782), `H1_base_LE+ENT3` / `+ES10` → 6144 (2013780 / 2013781). Cells DONE: 2 of 5.
+
