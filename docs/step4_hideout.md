@@ -53,5 +53,6 @@ The Step 1 grid, unchanged: 15×15, START (0,0), GOAL (14,14) absorbing, the exp
 - **The verdict** is the paired best-response check (`experiments/step4_br.py`, CONVERGED iff gap ≤ 0.03), under the rules of `docs/step4_optimal.md`, as in every Step 4 campaign. Targets are matched by game, so the default setting's sweep targets serve these runs.
 - **Wave 2 (automatic):** for each setting where no regulariser does poorly (above), at most 3 settings, no-regulariser PPO at that setting: `CAMPAIGN=hideout bash scripts/farmshare/step4_optimal.sh ppo grid_hideout P1eq1 h<hideout>_b<b>_L "task.h_row=R task.h_col=C task.exploit_bonus=B"`, and the same with tag `_LE` plus `ppo.ent_coef=0.03` and `_LN` plus `n_envs=64 ppo.batch_size=1600`.
 - **Budget:** at most 24 jobs for this campaign.
+- **Twin cell, level-0 twin failure (the user, 2026-11-23):** a seed whose pricing twin never learned uncorrected play does not count toward the cell's 3/3, and a seed whose agent hides fails, whatever the 3% verdict says. Such a seed is marked "level-0 twin failure", its cell stays open, and its run is not extended or re-run just to replace it (`docs/step4_indiff.md`, "Level-0 twin failure").
 
 **Never** change the environment, the settings, criteria or targets to get a hoped-for result. Log: `docs/step4_hideout_log.md`.

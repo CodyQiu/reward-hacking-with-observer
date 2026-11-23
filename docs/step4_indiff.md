@@ -268,6 +268,13 @@ Unchanged: the agent, the protocol, the PBRR fit, the pricing rule, the targets 
 - **Taxi** is still limited by the agent's skill after a correction (0.0–0.3 deliveries against 7.1 in every earlier arm). The practice arm is the one that might fix it.
 - **The grid's goal-skipping** (corrected once, then never reaches the goal, worth about 1% of V) is not affected by this change.
 
+**Level-0 twin failure (the user, 2026-11-23).** In some seeds the pricing twin never learns uncorrected play: at level 0 it values only honest play, or less (grid and hideout grid 20–22 against M = 8,700; Tomato 432 against 588.8; tomato_large about 372 against 786; Taxi about −100 against 379.7). Its first correction then pays about 0, and the agent may hide.
+- **Such a seed does not count toward a cell's 3/3.** A seed whose agent hides fails, whatever the 3% verdict says.
+- The seed is marked "level-0 twin failure" in the tables, and its cell stays open.
+- Its run is not extended or re-run just to replace that seed. The cell is closed by another config under the usual rules.
+- How a seed is identified: the twin's own level-0 value (`level_twin_before` at the run's first corrections in `pbrr_rounds.csv`) is near honest or below it, rather than near M(proxy).
+- The Taxi twin is untrained at level 0 in almost every seed. Per the user, nothing in the running runs changes, and they are resumed as usual. A fix to the twin (a guaranteed share of level-0 training, more twin training) will come from the user as a new campaign.
+
 **The original twin campaign (`indiff_twin`)** is superseded. Its running jobs finish and its finished seeds are checked, but nothing new is submitted there.
 
 ## Pipeline
