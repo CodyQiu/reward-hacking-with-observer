@@ -8,6 +8,15 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
 
 ## Flags for the user
 
+- **NEW (2026-11-21): the disk-quota incident of 2026-11-18 15:11 killed 13 bonus runs and one check. I have not resumed the runs, and am waiting for you.** The home directory hit its quota (about 50 GB; the old `.git` held 19 GB of checkpoint history), and every job that wrote after that failed (109 FAILED in sacct across all campaigns). Nothing ran from then until 2026-11-21. You re-cloned the repo shallow (`5fb1619`); home is at 42 GB of about 50 now, `.git` 12 GB. I check the space every iteration and stop submitting at 46 GB.
+  - Killed runs, with episodes done per seed at their last checkpoint (all intact on disk; `CAMPAIGN=bonus ... resume submit` would continue them, together with the held Tomato `B1_P1eq1_LN_confirm`):
+    - tomato_large base: `B1_base_L` (5784 / 5808 / 5712 of its extension), `B1_base_LE` (s1 at 1032 of 1536; s0, s2 finished), `B1_base_LN+N4` (2184 ×3), `B1_base_LN+ES10` (720 / 312 / 1032).
+    - tomato_large no-reg: `B1_P1eq1_LN+ES10` (5112 / 5136 / 5136), `B1_P1eq1_LN+ES10+N4` (2976 ×3), `B1_P1eq1_LN+ES10+ENT3` (216 / 168 / 384).
+    - tomato_large swap wave 2: `B1_P2swap_LE+LR` (72 ×3), `+GL` (24 / 24; s2 had no checkpoint yet), `+NET` (24 ×3), `+RS` (24 ×3).
+    - Tomato base stage 2: `B1_base_LN+ES10+N4+ENT10` (264 ×3), `+ES30` (336 ×3).
+  - The killed check (tomato_large base `LN+ES10+N4`, 1995957) is resubmitted as 2003941: the prompt asks for missing checks, and a check only reads the run.
+  - Until you decide, these cells progress only through new runs the rules call for.
+
 - **NEW (2026-11-17, iterations 208 and 216): `logs.npz` files too large for GitHub stay uncommitted on FarmShare.** Iteration 216: Tomato base `B1_base_LN+N4` s0 finished at 12,288 with a 116,682,337-byte `logs.npz`, and its s1/s2 (112.4 / 112.7 MB at about 11,850 episodes) will cross the limit too. The repo keeps their 6144-episode `logs.npz`. Iteration 208, the first case: `results/step4/tomato/bonus/B1_base_LN+ES10+N4/seed2/logs.npz` is 120,573,945 bytes (115 MiB) after the run reached 12,288 episodes, and GitHub rejects any file over 100 MiB. The repo keeps that seed's 6144-episode `logs.npz` (62 MB), next to its 12,288-episode `metrics.json`, round CSVs and model. The full file is only on FarmShare. `step4_commit.sh` now leaves out any file over 99 MiB and prints a warning (fix and test committed). Say if you want the file kept another way (for example Git LFS, or a copy off the cluster).
 
 - **NEW (2026-11-16, iteration 193): Tomato no-reg `B1_P1eq1_LN_confirm` (job 1988344) was killed by a node failure. I have not resubmitted it, and am waiting for you.**
@@ -2765,3 +2774,31 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Rule 1.** 1990469 (tomato_large `B1_base_LN+ES10`) ended TIMEOUT at 2-00:00:28: the 48 h limit. Seeds at 528 / 288 / 600 of 1536.
 - The resume dry-run lists it and the held Tomato `B1_P1eq1_LN_confirm`. I ran only this run's line, verbatim: `submit.sh 48 --env tomato_large --run-id B1_base_LN+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **1995965**. The held run stays held.
+
+## 2026-11-21, iteration 238 (15:30–16:35): quota incident (13 runs and a check killed; held for you); check resubmitted; tomato_large swap wave 2 (`+EP`, `+AN`) and rule 6b (4 runs) submitted
+
+- **The incident.** Every bonus job running at 15:11 on 2026-11-18 failed: the 13 runs listed in the new flag at the top, and check 1995957. Nothing was resubmitted while waiting.
+- **Rule 1 (resume).** No bonus run stopped at the 48 h limit since iteration 237. The two 48 h stops (1990239, 1990469) were resumed then (1995924, 1995965), and those resumes died in the incident.
+  - So every unfinished bonus run was killed by the incident, and I resume none of them without you.
+  - Not run: `resume submit` would resubmit all of them, plus the held Tomato `B1_P1eq1_LN_confirm`.
+- **Rule 3.** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed only `br_tomato_large_B1_base_LN+ES10+N4`, whose check died. With `submit` → **2003941**.
+- **tomato_large swap, rule 5 (wave 2) and rule 6b: the runs that were queued for slots on 2026-11-18.** These are new runs, not resubmissions. Dry-runs re-made and compared line by line with the 2026-11-18 queue: identical.
+  - Extras = `run_sets.py results/step4/tomato_large/bonus/B1_P2swap_LE` minus `episodes=`.
+  - `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo tomato_large P2swap LE+EP "<extras> ppo.n_epochs=20" submit` → **2003961**.
+  - `... ppo tomato_large P2swap LE+AN "<extras> anneal.last=0.5" submit` → **2003962**.
+  - `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore tomato_large P2swap B1_P2swap_LE submit` → **2003963** (`+ENT3`), **2003964** (`+ES10`), **2003965** (`+N4`), **2003966** (`+ES10+N4`).
+- The new loop prompt (2026-11-21) puts bonus third in slot priority, after indiff_twin2 and hideout.
+- Jobs: bonus 7 (cap 60); 76 in all.
+
+## 2026-11-21, iteration 239 (17:46–18:00): **tomato_large base `B1_base_LN+ES10+N4` 3/3 CONVERGED → `confirm` (2004619)**
+
+- **Check 2003941** (`B1_base_LN+ES10+N4`, all three seeds at 1536; the resubmitted check): **0.000 ± 0.000 / 0.000 / 0.000, 3/3 CONVERGED.**
+  - PPO hides in all three seeds: never corrected, true 84 ×4, then 65; received 725 ×4, then 786.
+  - The best response is identical, and so is the target (hides; 84.2 ×4, then 65.0).
+- **Rule 4.** A tuning run with all seeds CONVERGED goes to `confirm`.
+  - Dry-run: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large B1_base_LN+ES10+N4`.
+  - It printed `submit.sh 48 --env tomato_large --run-id B1_base_LN+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/bonus --set ppo.ent_coef=0.03 ppo.batch_size=6400 g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 episodes=1536`. That is the run's own settings.
+  - Submitted → **2004619**.
+  - The tuning run took 47:38 for 1536 episodes, so the confirmation will probably reach the 48 h limit once and need a resume.
+- The other tomato_large base runs (`B1_base_L`, `LE`, `LN+N4`, `LN+ES10`) were killed in the quota incident and are held (flag at the top).
+- Jobs: bonus 7 (cap 60).

@@ -1,0 +1,19 @@
+{
+ "ppo": {
+  "ent_coef": 0.1
+ },
+ "g": {
+  "l_minus_on": "dispreferred",
+  "epochs": 1000
+ },
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1,
+  "ent_start": 10,
+  "ent_episodes": 768
+ },
+ "protocol": {
+  "update_bonus": 1.0
+ },
+ "episodes": 1536
+}

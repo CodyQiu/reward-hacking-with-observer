@@ -249,6 +249,35 @@ def test_game_key_leaves_out_an_update_bonus_that_is_off():
     assert "update_bonus" not in old["protocol"]                         # game_key does not modify its input
 
 
+def test_find_target_matches_a_whole_number_written_as_int_or_float():
+    """The hideout sweep's targets (`--set task.exploit_bonus=100`, stored as 100) serve the PPO runs at the task
+    default (100.0): the same game (docs/step4_hideout.md). Before 2026-11-21 they did not match ("NO TARGET")."""
+    import tempfile
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "experiments"))
+    import step4_convergence as conv
+    from step4_targets import game_key
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid_hideout", {"seed": 0})
+    assert cfg["task"]["exploit_bonus"] == 100.0 and isinstance(cfg["task"]["exploit_bonus"], float)
+    swept = resolve_config("grid_hideout", {"seed": 0, "task": {"exploit_bonus": 100, "h_row": 0, "h_col": 0}})
+    other = resolve_config("grid_hideout", {"seed": 0, "task": {"exploit_bonus": 400, "h_row": 0, "h_col": 0}})
+    assert json.dumps(game_key(swept), sort_keys=True) != json.dumps(game_key(cfg), sort_keys=True)  # the old miss
+    old_out = conv.OUT
+    with tempfile.TemporaryDirectory() as d:
+        try:
+            conv.OUT = d
+            for name, c in (("hstart_b400_x", other), ("hstart_b100_x", swept)):
+                os.makedirs(os.path.join(d, "grid_hideout", "targets", name))
+                with open(os.path.join(d, "grid_hideout", "targets", name, "seed0.json"), "w") as fh:
+                    json.dump({"game": game_key(c)}, fh)
+            path, t = conv.find_target(cfg)
+            assert path is not None and "hstart_b100_x" in path
+            assert conv.find_target({**cfg, "seed": 1}) == (None, None)
+        finally:
+            conv.OUT = old_out
+    assert conv.canon({"a": True, "b": [1, 2.5], "c": "x"}) == {"a": True, "b": [1.0, 2.5], "c": "x"}
+
+
 def test_best_response_check_on_an_open_exploiter():
     """experiments/step4_br.py on Absent Supervisor with a cheap g fit: the best response to the open
     exploiter's own corrections is at least as good as the exploiter (gap >= 0), and the paired per-draw

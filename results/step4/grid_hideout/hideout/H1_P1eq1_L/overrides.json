@@ -1,0 +1,10 @@
+{
+ "g": {
+  "use_regularization": false
+ },
+ "episodes": 1536,
+ "anneal": {
+  "last": 0.25,
+  "floor": 0.1
+ }
+}

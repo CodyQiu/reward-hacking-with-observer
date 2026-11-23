@@ -38,6 +38,8 @@ Procedure: `docs/step4_comp.md` (with the criteria, rules and commands of `docs/
 
 ## Flags for the user
 
+- **NEW (2026-11-21): the disk-quota incident of 2026-11-18 15:11 killed this campaign's 11 running runs and 3 checks. The campaign is now superseded (the loop prompt of 2026-11-21), so nothing is resumed.** The home directory hit its quota (about 50 GB; the old `.git` held 19 GB of checkpoint history), and every job that wrote after that failed (109 FAILED in sacct across all campaigns). Nothing ran from then until 2026-11-21. You re-cloned the repo shallow (`5fb1619`); home is at 42 GB of about 50 now, `.git` 12 GB. I check the space every iteration and stop submitting at 46 GB. Only the missing checks are resubmitted, as the prompt asks (iteration 130). The unfinished seeds stay at their last checkpoint; `--resume` could continue them if you want.
+
 - **NEW (2026-11-16): node wheat-06 is down** (`sinfo`: `down*`, "Not responding"). It killed the bonus campaign's Tomato no-reg `LN_confirm` (NODE_FAIL; flagged in docs/step4_bonus_log.md). None of this campaign's jobs were on it. Every submit now carries `EXCLUDE=barley-04,wheat-06` while it is down.
 
 - **barley-04.** Every submit carries `EXCLUDE=barley-04`, your standing instruction from the optimal campaign, kept in the bonus and noreg_fail campaigns too. On 2026-11-14 `sinfo` showed barley-04 `allocated` with no reason set. Say if I should drop the exclusion.
@@ -1717,3 +1719,36 @@ All comparison targets that were not cancelled are in (the Boat Race swap target
 
 - `C1_comp_LN+N4`'s extension to 3072 (1995400) has finished seeds. Its dry-run line, run verbatim → **1996189**.
 - Boat Race `LN+ES10` (3072) and `LN+N4` (1536) checks wait for slots.
+
+## 2026-11-18, iteration 129 (15:08): Boat Race checks `LN+ES10` (3072; 1996237), `LN+N4` (1536; 1996238); 6b `LN+ES10+N4` → extend 3072 (1996239)
+
+- `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **1996237** (`LN+ES10`), **1996238** (`LN+N4`).
+- **Rule 6b.** The `LN+ES10+N4` extension to 3072 (iteration 127's dry-run line, verbatim) → **1996239**.
+- comp 26 jobs (cap 30).
+
+## 2026-11-21, iteration 130 (15:30–16:30): quota incident; comp superseded; three checks resubmitted
+
+- **The incident.** All comp jobs that were running at 15:11 on 2026-11-18 failed: 11 runs and the checks 1996189 (Taxi `LN+N4`), 1996237 (Boat Race `LN+ES10`) and 1996238 (Boat Race `LN+N4`). Flag at the top.
+- **The new loop prompt (2026-11-21) supersedes comp.** Running jobs finish, finished seeds are checked, nothing else is submitted (no runs, extensions, confirmations or resumes).
+- **Rule 3.** `CAMPAIGN=comp EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` (dry-run) listed Taxi `C1_comp_LN+N4`, Boat Race `C1_comp_LN+ES10` and `C1_comp_LN+N4`. The same with `submit` → **2003951**, **2003952**, **2003953**.
+- **Check 2003953** (Boat Race `C1_comp_LN+N4`, only s0 finished, at 1536): **0.021 ± 0.006, CONVERGED**.
+  - PPO is corrected once, then honest: true −94, then 50 ×4; received 200, then 211 ×4.
+  - The best response takes 4 corrections (rounds 0–3) and is honest by the true reward, receiving 200 / 206 / 212 / 218 / 229. That is the level farming the comp flags describe, worth 2.1% here.
+  - s1 and s2 were killed unfinished. They are not resumed, so this run stays 1/1 finished.
+
+## 2026-11-21, iteration 131 (16:40): Boat Race 6b `LN+ES10` at 3072: 0/3 (all hide); superseded, so not extended
+
+- **Check 2003952** (`C1_comp_LN+ES10`, 3072): **0.146 ± 0.004 / 0.173 ± 0.003 / 0.184 ± 0.004**, all PLATEAU.
+  - **All three hide.** They are never corrected and keep the bug every round: true −82 ×4, then −94; received 182 ×4, then 200.
+  - Their best responses are corrected in rounds 0–3 (4 corrections) and honest by the true reward, receiving 200 → 236–255 per round. That is the level farming.
+- Rule 6b would extend this run to 6144, but comp is superseded, so it is not extended.
+
+## 2026-11-21, iteration 132 (17:46–18:05): Taxi `C1_comp_LN+N4` at 3072: 0/3 (all hide, but they can play the task after a correction); superseded
+
+- **Check 2003951** (`C1_comp_LN+N4`, 3072): **0.075 ± 0.002 / 0.081 ± 0.000 / 0.052 ± 0.001**, all PLATEAU.
+  - PPO hides in all three seeds: never corrected, true −66 / −66 / −63 ×4, then −87 to −90; received about 354 per round.
+  - The best response is corrected once in round 0, then honest at 125, receiving 372–393.
+- **Deliveries per round after one correction** (`experiments/step4_level_play.py`): **5.0–5.1 / 5.5–5.6 / 4.8–5.2** (honest 7.1); true 52–78 at level 1.
+  - This is the first Taxi arm whose PPO can do the task after a correction; every other arm was at 0.0–0.3. It just never lets itself be corrected.
+  - In round 0 at level 0 it makes 1.0–1.1 deliveries and about 42 repeat pickups.
+- Superseded: no extension, no new runs.
