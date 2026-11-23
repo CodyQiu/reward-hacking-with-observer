@@ -1478,5 +1478,24 @@ def test_hideout_grid_flags_everything_but_the_goal_and_the_hideout():
     assert cfg["refs"] is not None and cfg["task"] == {"exploit_bonus": 100.0, "h_row": 0, "h_col": 0}
 
 
+def test_twin_minibatches_do_not_follow_the_agents_batch():
+    """twin.minibatches (src/step3/twin.py, "Enough training"). By default the twin keeps the agent's PPO batch size,
+    capped at its own rollout (16 copies x 100 steps = 1,600): with a 64-env agent's batch of 1,600 that is one
+    minibatch, i.e. one gradient step per epoch. With minibatches = 4 it has four in every config."""
+    from src.pbrr_core import GConfig
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    from src.step3.twin import Twin
+    cfg = resolve_config("grid", {"g": {"offset": True, "offset_rule": "twin", "fine_only": True, "epochs": 5}})
+    task, P, gcfg = get_task("grid"), Protocol(**cfg["protocol"]), GConfig(**cfg["g"])
+    ppo = dict(cfg["ppo"])
+    net = ppo.pop("net_arch")
+    for agent_batch, mb, want in ((400, 0, 400), (1600, 0, 1600), (1600, 4, 400), (400, 4, 400)):
+        tw = Twin(task, P, {**ppo, "batch_size": agent_batch}, net, cfg["reward_scale"], gcfg, seed=0,
+                  cfg={"n_envs": 16, "eval": 4, "minibatches": mb})
+        assert tw.model.batch_size == want, (agent_batch, mb, tw.model.batch_size)
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

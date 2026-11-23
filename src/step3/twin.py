@@ -32,6 +32,12 @@ deliberate re-correction pays (Boat Race: 321-379 per round against 200). With `
 - a level the twin has never trained at is priced with its play at the deepest level it has trained at (a real
   policy, so it cannot overstate the best round), saved with the model (``state`` / ``load_state``).
 
+**Enough training** (``twin.minibatches``, with ``twin.rounds``; 2026-11-23, docs/step4_indiff.md, "The twin, trained
+enough"). The twin used the agent's PPO minibatch size, capped at its own rollout (16 copies x T). In the 64-env
+configs (agent batch 1,600) that cap is the whole rollout: one gradient step per epoch instead of four. With
+``all_levels`` each level also gets a fifth of the twin's rounds instead of a half. ``minibatches`` = 4 gives the twin
+its own four minibatches in every config; ``rounds`` = 100 (from 40) gives every level the rounds level 0 had before.
+
 Settings: config group ``twin`` (not part of the game key, ``TWIN_DEFAULTS``).
 """
 
@@ -57,6 +63,7 @@ TWIN_DEFAULTS = {
     "bank_episodes": 64,   # the bank keeps corrections from this many recent episodes
     "cf_min": 4,           # fewer chains than this in the bank -> one counterfactual chain per block
     "all_levels": False,   # train and price the twin at every level (module docstring, "Every level")
+    "minibatches": 0,      # > 0: the twin's PPO minibatch = its own rollout / this (0: the agent's batch_size, capped)
 }
 
 
@@ -205,7 +212,11 @@ class Twin:
         self.venv = TwinVecEnv(task, proto, self.bank, int(self.cfg["n_envs"]), reward_scale, seed=seed * 1000 + 577)
         ppo = dict(ppo_kwargs)
         ppo["n_steps"] = proto.t_sub
-        ppo["batch_size"] = min(int(ppo.get("batch_size", 64)), int(self.cfg["n_envs"]) * proto.t_sub)
+        rollout = int(self.cfg["n_envs"]) * proto.t_sub
+        if int(self.cfg["minibatches"]) > 0:      # its own minibatches, whatever the agent's batch size ("Enough")
+            ppo["batch_size"] = max(1, rollout // int(self.cfg["minibatches"]))
+        else:                                     # the agent's batch size, capped at the twin's rollout
+            ppo["batch_size"] = min(int(ppo.get("batch_size", 64)), rollout)
         self.model = PPO("MlpPolicy", self.venv, seed=seed + 11, policy_kwargs=dict(net_arch=list(net_arch)),
                          verbose=0, **ppo)
         self.rng = np.random.default_rng(seed + 4_242)

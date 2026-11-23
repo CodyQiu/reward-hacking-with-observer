@@ -270,6 +270,32 @@ Unchanged: the agent, the protocol, the PBRR fit, the pricing rule, the targets 
 
 **The original twin campaign (`indiff_twin`)** is superseded. Its running jobs finish and its finished seeds are checked, but nothing new is submitted there.
 
+## The twin, trained enough (`twin.minibatches=4 twin.rounds=100`, `CAMPAIGN=indiff_twin3`; 2026-11-23)
+
+**Why** (`docs/step4_indiff_log.md`, flags of 2026-11-21 to 11-22).
+- In 8 twin2 seeds, all in `LN` (64-env) configs, the twin never learned to use the bug at level 0. It valued an uncorrected round at about honest play's return (grid 22 against M(proxy) = 8,700), so the first correction was priced at about 0, and in the grid PPO and its best response hide. The 3% verdict passed them.
+- Taxi's twin never learned the round at all (level 0 valued at −97 against 380), so its prices were wrong at every level.
+
+**The cause, read from the code (a hypothesis until this campaign runs).**
+1. **The twin copied the agent's PPO minibatch size,** capped at its own rollout (16 copies × 100 steps = 1,600). In `L`/`LE` (batch 400) that is 4 minibatches per epoch. In `LN` (batch 1,600, sized for 64 envs) it is the whole rollout: **one gradient step per epoch, 4× fewer updates.**
+2. **`all_levels` spread the same rounds over 5 levels** (levels 0–4) instead of 2, so level 0 got a fifth of the twin's training instead of a half. In `LN` the two compound: level 0 got about 10× fewer updates than under the first twin.
+
+**The change: the twin's training only.**
+- `twin.minibatches=4`: four minibatches per update in every config.
+- `twin.rounds=100` (from 40): every level gets the rounds level 0 had under the first twin (2.5×).
+- Nothing else. The agent, its PPO settings, the protocol, the PBRR fit, the pricing rule, the targets and the criteria are unchanged. The other methods have no twin, so the comparison with them is unaffected. The one cost is overseer compute: the twin now trains on 2.5× the agent's samples per block in the 16-env configs, to be reported with the results.
+- `twin.minibatches` defaults to 0 (the old behaviour), so earlier runs resume unchanged. Test: `test_twin_minibatches_do_not_follow_the_agents_batch`.
+
+**The user (2026-11-23):** "okay, b is fine, let's do it then". Agreed beforehand: this is done once, the predictions are written first, and **after it there are no more twin changes, whatever the result.**
+
+**The arms:** `indiff_twin3` and `indiff_twin3_practice` (plus `twin.practice=0.25`). Runs `I6_*` in `results/step4/<env>/indiff_twin3/`. Wave 1: L, LE and LN for both arms in all six envs, seeds 0–2 (36 runs), Taxi first. The same targets as `indiff_twin`. In the hideout grid, `indiff_twin3` is a new variant (`H1_indiff_twin3_{L,LE,LN}`).
+
+**Predictions (written 2026-11-23, before any run).**
+- **The level-0 failures disappear:** in every seed the twin's level-0 value (`level_twin_before` at the first correction, `pbrr_rounds.csv`) ends within 2% of M(proxy) (grid 8,700, AS 1,550, Tomato 589, Boat Race 200), and no grid or hideout seed hides.
+- **Elsewhere, behaviour as in twin2:** corrected once, then honest, in AS, Tomato and Boat Race; Boat Race s20 stays as its target (the fit's under-correction); the grid's goal-skipping is not affected.
+- **Taxi: no confident prediction.** The twin should value level 0 well above honest play (125), and better pricing should reduce hiding. But PPO itself made 0.0–0.3 deliveries after a correction in every earlier arm (honest: 7.1), so it may still hide. That is reported either way.
+- **The twin's settings are not changed again** after this campaign.
+
 ## Pipeline
 
 1. **Targets only.** `CAMPAIGN=indiff bash scripts/farmshare/step4_optimal.sh targets submit` (the exact rule) and `CAMPAIGN=indiff_pool … targets submit` (the estimator) each submit 11 jobs:
