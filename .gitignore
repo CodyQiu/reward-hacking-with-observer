@@ -6,3 +6,6 @@ figures/
 results/step1_ppo/quick/
 logs/
 videos/
+results/step4/**/logs.npz
+results/step4/**/model.zip
+results/step4/**/twin_model.zip
