@@ -564,3 +564,9 @@ No regulariser does poorly (a seed not honest by the end):
 - With s2 at 0.120 (IMPROVING; hides, 5,466 per round), only s1 is still training (5,520/6,144; at 3072 it was 0.761, exploiting openly and re-corrected). Rule 4 decides the run when s1 finishes.
 - `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag). Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 34 (09:51–10:10): checks for `H1_base_LE+ENT3` and `H1_indiff_twin2_L_confirm` submitted
+
+- `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2015023** (`H1_base_LE+ENT3`, finished seeds at 6144) and **2015024** (`H1_indiff_twin2_L_confirm`, finished seeds at 3072).
+- `H1_indiff_twin3_*` twin level 0 so far: 8,606–8,700 (M 8,700) in all 9 seeds; P1 holds so far.
+- `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag). Cells DONE: 2 of 5.
+

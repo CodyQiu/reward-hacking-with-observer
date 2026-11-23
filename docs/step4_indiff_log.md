@@ -327,6 +327,14 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 ## Flags for the user
 
+- **NEW (2026-11-23 10:05): indiff_twin3, first Taxi seeds. The twin still values level 0 at about −100, and now the agent stops exploiting altogether.** P3 (Taxi) is not met so far.
+  - `I6_indiff_twin3_L` s0 and s1 finished 768 episodes in about 5–6 h; the twin2 Taxi runs took 28–40 h, because they were corrected often. Both seeds end with 0 corrections and nothing exploited off the window.
+  - s0 is honest but weak: 2.4 deliveries per round at every level, 0 repeat pickups, true about −20 (honest 125). s1 does nothing: 0 deliveries, true −93.
+  - Their twins priced level 0 at only a few early corrections (s0: 29 rounds, the last at episode 691, at −95.3; s1: 3 rounds, at −100). Each correction's level was 0.00, so being caught was a pure fine.
+  - All 18 Taxi twin3 seeds so far value level 0 at −90 to −100 (at 1–33 first corrections each).
+  - **My reading (not tested):** the twin starts untrained, so an early correction is a pure fine. The agent learns not to exploit at all, and with no more corrections the twin's level-0 price is never updated. That is a level-0 twin failure in every Taxi seed; its agents are deterred rather than hiding. Per the user, no twin change follows; the runs continue and their checks are recorded (`L` → 2015020).
+  - Elsewhere P1 holds so far: Boat Race 195–200 of 200, Tomato 587–589 of 588.8, the hideout grid 8,606–8,700. The grid's `LN` seeds, which failed under twin2, are at 8,682–8,700. One exception so far: grid `L` s2 at 5,775 (34% below M, still training).
+
 - **NEW (2026-11-23 02:35): a plain `git pull` on FarmShare started to re-download the whole old history (about 14 GB). I stopped it at 4 GB and pulled with `--depth=3` instead.**
   - The cause: FarmShare's repo is shallow since the checkpoint cleanup. The laptop then merged our work into a laptop line based on an older commit (merge 11bdbe22; laptop parent b3a7aad5 → 81528bd1 → 5fb16199, which is below our shallow boundary). A normal fetch must then send everything behind 5fb16199.
   - The fetch's pack grew at about 18 MB/s, with home at 36 GB on its way to about 48–50 GB. That is past the 46 GB stop rule and at the level of the 2026-11-18 quota incident, so I killed my own fetch and deleted its partial pack.
@@ -2323,4 +2331,18 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - These confirmations test P2's "Boat Race s20 stays as its target": under twin2 and the first twin, s20 was corrected in every round, at true −94.
 - **Check 2014559:** Taxi `I5_indiff_twin2_L` s0 (768), **0.536 (IMPROVING)**, a **level-0 twin failure** (twin level 0 at −68), so it fails. PPO hides (0.02 corrections per episode, true about −61); its BR takes 4 corrections, received 380 / 113 / 787 / 973 / 1,334. Taxi `L` has finished: all three seeds are level-0 failures, and twin2 is superseded, so nothing more is run for it. (Row not repeated: the same as s1 and s2.)
 - Jobs: 61 in total, all running. Home 34.8 GB.
+
+## 2026-11-23, iteration 141 (09:51–10:10): Taxi twin3 `L` s0, s1 finished: never exploit, twin untrained (flag); checks submitted
+
+- **Events.** COMPLETED: Boat Race `I6_indiff_twin3_practice_L` (2014059, 09:05); tomato_large `I5_indiff_twin2_L` (2003913, 09:33, 41.8 h). Finished seeds: Taxi `I6_indiff_twin3_L` s0, s1 (s2 at 48/768); Tomato `I6_indiff_twin3_L` s1.
+- **Checks submitted.**
+  - `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2015019** (Tomato `L`), **2015020** (Taxi `L`), **2015021** (Boat Race `practice_L`).
+  - `CAMPAIGN=indiff_twin2 ... br_missing submit` → **2015022** (Boat Race `I5_indiff_twin2_L_confirm`: s20 finished at 6144). tomato_large `I5_indiff_twin2_L`'s check (2014558) is still running.
+- **Taxi twin3 `L` s0, s1 (flag at the top).** Never exploits (0 corrections, off-window 0). Deliveries (`.venv/bin/python experiments/step4_level_play.py "results/step4/taxi/indiff_twin3/I6_indiff_twin3_L/seed0" ".../seed1"`): s0 2.4 at levels 0 and 1, 0 repeat pickups; s1 0.0. Twin level 0: −95.3 / −100.0, a level-0 twin failure.
+- **Twin level 0 in every twin3 seed so far** (`level_twin_before`, last 20 first corrections):
+  - Tomato 587.1–588.9 (M 588.8) in all 18 seeds.
+  - Grid 8,573–8,700 except `L` s2 at 5,775 (M 8,700), in 18 seeds.
+  - Boat Race 195–200 (M 200).
+  - Taxi −90 to −100 in all 18 seeds.
+- Jobs: 65 in total, all running. Home 34.9 GB.
 
