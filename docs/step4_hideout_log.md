@@ -570,3 +570,13 @@ No regulariser does poorly (a seed not honest by the end):
 - `H1_indiff_twin3_*` twin level 0 so far: 8,606–8,700 (M 8,700) in all 9 seeds; P1 holds so far.
 - `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag). Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 35 (10:42–11:00): `H1_base_LE+ENT3` s0 converged at 6144 (hides); `H1_indiff_twin2_L_confirm` s20, s22 converged at 3072; `H1_base_LE+ES10` finished
+
+- **Check 2015023:** `H1_base_LE+ENT3` s0 at 6144, **0.021 (CONVERGED)**. It hides at the hideout (0.02 corrections per episode; true −41 in rounds 0–3), receiving 6,317–6,358 against its BR's 6,500. s1 and s2 are still training (5,088 and 4,824 of 6,144; at 3072 they were 0.022 / 0.031).
+- **Check 2015024:** `H1_indiff_twin2_L_confirm` at 3072, **s20 0.011, s22 0.000 (CONVERGED).**
+  - s20 is corrected once, then skips the goal (true −100; the grid caveat, about 1% below). s22 is corrected once, then honest (true 20–21).
+  - s21 is still training (2,472/3,072; 0.137 at 1536). Twin level 0: 8,659 / 8,690 / 8,405, so no level-0 failure.
+  - If s21 converges, `L_confirm` is 3/3 and, with `H1_indiff_twin2_L` 3/3 in tuning, the twin2 cell is DONE (by the verdict, with the grid caveat).
+- **`H1_base_LE+ES10`** (2013781, 10:24) has finished all three seeds at 6144. s1's check was submitted: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2015053**. Rule 4 decides the run when it is in (s0 0.026, s2 0.120 IMPROVING).
+- `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag). Cells DONE: 2 of 5.
+
