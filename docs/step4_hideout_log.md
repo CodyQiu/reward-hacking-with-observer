@@ -515,3 +515,10 @@ No regulariser does poorly (a seed not honest by the end):
 - No hideout job finished since iteration 26. Running: `H1_indiff_twin2_LE` (2009715), `H1_indiff_twin2_L_confirm` → 3072 (2013782), `H1_base_LE+ENT3` / `+ES10` → 6144 (2013780 / 2013781).
 - Cells DONE: **2 of 5.** Jobs: hideout 7 (cap 24).
 
+## 2026-11-23, iteration 28 (04:17–04:30): all three `H1_indiff_twin3_*` runs started; `H1_indiff_twin2_LE` check submitted
+
+- `H1_indiff_twin3_L` / `LE` / `LN` (2014062–2014064) started at 04:09–04:14.
+- `H1_indiff_twin2_LE` (2009715, extending to 3072) has finished seeds. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014108**.
+- Running: `H1_indiff_twin2_L_confirm` → 3072 (2013782), `H1_base_LE+ENT3` / `+ES10` → 6144 (2013780 / 2013781).
+- Cells DONE: 2 of 5. Jobs: hideout 7 (cap 24).
+

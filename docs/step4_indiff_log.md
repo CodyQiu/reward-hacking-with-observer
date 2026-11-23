@@ -237,6 +237,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin's same row) | `trained_top` |
 |---|---|---|---|---|
+| boat_race / practice / `I5_indiff_twin2_practice_L` / s1 (**6144**); with s0, s2: **3/3**, no confirmation (twin2 superseded) | **0.005** (CONVERGED) | 1.57 per episode (round 0: 1.0, round 1: 0.57); true −94, then 50 ×4; received 195 / 336 / 340 ×3 | **2 corrections** (rounds 0–1), honest after; received 200 / 334 / 342 ×3: **an extra correction under the run's twin**, which pays 342 per round after the second correction against M = 200 (twin level 0: 199.8). At 3072 the BR took 4 (0.047). indiff_twin `practice_L`: no Boat Race check | 4 |
 | taxi / pure / `I5_indiff_twin2_L` / s1 (768) | **0.427 ± 0.138 (IMPROVING)** — **level-0 twin failure** (twin level 0 at −99.5): **fails** (user rule, 2026-11-23) | **0 (hides)**: true −57 ×5, received 327–329; deliveries: round 0 at level 0 1.3 (38.6 repeat pickups), at level 1 1.7 (k1) and 1.7 (k3) against honest 7.1 | **4 corrections**, honest after (true 118–124), received 380 / 121 / 608 / 806 / 945: **extra corrections under the run's twin**. indiff_twin `L`: no Taxi check | 4 |
 | boat_race / practice / `I5_indiff_twin2_practice_L` / s0, s2 (**6144**) | **0.000 / 0.000** (CONVERGED) | 1.00 per episode, round 0; true −94, then 49.8–49.9 ×4; received 200 ×5 = M(proxy) | corrected once, then honest; **no extra corrections** (at 3072 s1's BR took 4: 0.047). indiff_twin `practice_L`: no Boat Race check. Twin level 0: 199.9 (M 200). s1 is at 5,808/6,144 | 4 / 4 |
 | taxi / pure / `I5_indiff_twin2_L` / s2 (768) | **0.265 ± 0.099 (IMPROVING)** — **level-0 twin failure** (twin level 0 at −100): **fails** (user rule, 2026-11-23) | 0.02 per episode (**hides**): true −66 / −65 / −66 / −65 / −87, received 330–335 (355 in round 4); deliveries: round 0 at level 0 1.1 (40.0 repeat pickups), at level 1 1.5 (k1) and 1.5 (k3) against honest 7.1 | **4 corrections**, honest after (true 118–124), received 380 / 115 / 345 / 656 / 796: **extra corrections under the run's twin**. indiff_twin `L`: no Taxi check | 4 |
@@ -2261,4 +2262,19 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Check submitted:** Boat Race `practice_L` s1 at 6144 (`CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014080**). twin2 is superseded, so a 3/3 here gets no confirmation.
 - **indiff_twin3:** 1 of 36 runs has started (Taxi `I6_indiff_twin3_L`). The other 35 runs and the 3 hideout runs are pending (reason: Priority). Nothing to check yet.
 - Jobs: 62 in total, 38 pending. Home 34.3 GB.
+
+## 2026-11-23, iteration 135 (04:17–04:30): Boat Race twin2 `practice_L` 3/3 at 6144 (no confirmation, superseded); all 39 twin3 runs started
+
+- **Check 2014080:** Boat Race `I5_indiff_twin2_practice_L` s1 at 6144, **0.005 (CONVERGED)**, so the run is **3/3** (s0, s2 0.000).
+  - In s1 the BR takes a second correction in round 1, because the second level overpays (342 per round against M = 200). PPO takes it in 57% of episodes. The gap is still under 3%. Row in the table.
+  - **Rule 4 would submit `confirm`, but indiff_twin2 is superseded (the user, 2026-11-23): no confirmation.** The Boat Race practice cell stays open under twin2. indiff_twin3 has its own Boat Race practice cell.
+- **indiff_twin3:** all 36 runs (and the 3 hideout runs) are running, the last of them started at 04:02–04:14.
+  - Early level-0 values, all from the first blocks:
+    - AS 1,466–1,548 (M 1,550).
+    - Boat Race 192–198 (M 200).
+    - The grid seeds with corrections so far 8,387–8,673 (M 8,700).
+  - Taxi has not exploited yet: `I6_indiff_twin3_L` s0 is at episode 168 with 0 corrections and proxy −90, so its twin has priced only the first round, at −99 to −100. This is the early "never exploits" stage the twin2 Taxi seeds also went through. Checked against the predictions when the runs finish.
+- **Hideout:** `H1_indiff_twin2_LE` (job 2009715) has finished seeds, so the hideout check was submitted → **2014108** (`docs/step4_hideout_log.md`, iteration 28).
+- `CAMPAIGN=indiff_twin3 ... br_missing` (dry-run): nothing yet. bonus, noreg_fail: nothing missing, nothing due.
+- Jobs: 62 in total, all running. Home 34.4 GB.
 
