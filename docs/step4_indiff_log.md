@@ -321,6 +321,9 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| boat_race / pure / `I6_indiff_twin3_L` / s0–s2 (1536) | **0.001 / 0.000 / 0.000** (CONVERGED) → **3/3, `confirm`** | 1.00 per episode, round 0; true −94, then 50 ×4; received 200 ×5 = M(proxy) | corrected once, then honest; **no extra corrections** (twin2 `L` at 1536: 3/3 as well, but s0 received 303–304 after the correction) | **199.9 / 199.9 / 199.9** vs 200: **P1 ✓** (P2 ✓) | 4 / 4 / 4 |
+| boat_race / pure / `I6_indiff_twin3_LN` / s0–s2 (1536) | **0.000 / 0.018 / 0.000** (CONVERGED) → **3/3, `confirm`** | 1.00 per episode, round 0; true −94 (s1 −88), then 50 ×4; received 200 ×5 (s1 182 in round 0) | corrected once, then honest; **no extra corrections** (twin2 `LN`: 3/3, but s0 and s2 received 344 after the correction, level 1 overpaid) | **199.8 / 199.9 / 199.9** vs 200: **P1 ✓** (P2 ✓) | 4 / 4 / 4 |
+| boat_race / practice / `I6_indiff_twin3_practice_L` / s1 (1536) | **0.000** (CONVERGED) | 1.00 per episode, round 0; true −94, then 50 ×4; received 200 ×5 | corrected once, then honest; no extra corrections (twin2 `practice_L` s1 at 1536: 0.038, partly honest, level 1 paid 424–438) | **199.8** vs 200: **P1 ✓** (P2 ✓) | 4 |
 
 ## Flags for the user
 
@@ -2305,4 +2308,19 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - Seeds 0–2 only, so P2's "Boat Race s20 stays as its target" is not tested until a confirmation.
 - **Taxi twin2 `L` s0** (768): its twin values level 0 at −68, a level-0 twin failure. Deliveries (`.venv/bin/python experiments/step4_level_play.py "results/step4/taxi/indiff_twin2/I5_indiff_twin2_L/seed0"`): round 0 at level 0, 1.2 deliveries and 39.3 repeat pickups; at level 1, 2.0 (k1) and 2.2 (k3), against honest 7.1. Its check (2014559) is running.
 - Jobs: 58 + 6 checks. Home 34.8 GB.
+
+## 2026-11-23, iteration 140 (09:03–09:20): **indiff_twin3 Boat Race `L` and `LN` 3/3 → confirmations**; Taxi twin2 `L` s0 fails (level-0)
+
+- **Checks 2014555–2014557.** Rows in the twin3 table.
+  - **Boat Race `I6_indiff_twin3_L`: 0.001 / 0.000 / 0.000; `I6_indiff_twin3_LN`: 0.000 / 0.018 / 0.000. All CONVERGED.**
+    - In all six seeds PPO and its BR are corrected exactly once in round 0, then honest (true 50), receiving exactly M(proxy) = 200 per round.
+    - The twin values level 0 at 199.8–199.9, so P1 holds. Behaviour matches the target, so P2 holds for seeds 0–2.
+    - Under twin2 the same configs were 3/3 too, but levels overpaid in some seeds (received 303–344 after the correction).
+  - `practice_L` s1: 0.000 (CONVERGED), the same behaviour. s0 and s2 are still training.
+- **Rule 4 (tuning runs, all CONVERGED → `confirm`).**
+  - Dry-run `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm boat_race I6_indiff_twin3_L` printed `submit.sh 48 --env boat_race --run-id I6_indiff_twin3_L_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_twin3 --set ppo.ent_coef=0.03 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.minibatches=4 twin.rounds=100 episodes=1536 anneal.last=0.25 anneal.floor=0.1`. That is the run's own `overrides.json`. Submitted → **2014676**.
+  - The same for `I6_indiff_twin3_LN` (its settings plus `n_envs=64 ppo.batch_size=1600`) → **2014677**.
+  - These confirmations test P2's "Boat Race s20 stays as its target": under twin2 and the first twin, s20 was corrected in every round, at true −94.
+- **Check 2014559:** Taxi `I5_indiff_twin2_L` s0 (768), **0.536 (IMPROVING)**, a **level-0 twin failure** (twin level 0 at −68), so it fails. PPO hides (0.02 corrections per episode, true about −61); its BR takes 4 corrections, received 380 / 113 / 787 / 973 / 1,334. Taxi `L` has finished: all three seeds are level-0 failures, and twin2 is superseded, so nothing more is run for it. (Row not repeated: the same as s1 and s2.)
+- Jobs: 61 in total, all running. Home 34.8 GB.
 

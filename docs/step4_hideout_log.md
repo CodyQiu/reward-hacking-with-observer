@@ -558,3 +558,9 @@ No regulariser does poorly (a seed not honest by the end):
 - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014560** (`H1_base_LE+ES10`, a seed newly finished at 6144).
 - `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag at the top). Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 33 (09:03–09:20): `H1_base_LE+ES10` s0 hides and converged at 6144 (0.026)
+
+- **Check 2014560:** `H1_base_LE+ES10` s0 at 6144, **0.026 (CONVERGED)**. It hides at the hideout (0.04 corrections per episode; true −41 to −42 in rounds 0–3, −100 in round 4), receiving 6,289–6,361 per round against its BR's 6,500 (hiding, the target), and 8,564 in round 4.
+- With s2 at 0.120 (IMPROVING; hides, 5,466 per round), only s1 is still training (5,520/6,144; at 3072 it was 0.761, exploiting openly and re-corrected). Rule 4 decides the run when s1 finishes.
+- `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag). Cells DONE: 2 of 5.
+
