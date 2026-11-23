@@ -17,15 +17,19 @@ This log is append-only below the three summary sections.
   - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
   - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
   - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
-- Cells DONE: **2 of 4.**
+- Cells DONE: **3 of 4.** Open: standard PBRR (base) only.
+  - **No regulariser (2026-11-22 23:20):** config `H1_P1eq1_L+N4` (`g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`; an exploration run, rule 6b), 6144 episodes. Tuning seeds 0–2: 0.000 / 0.000 / 0.014; confirmation `H1_P1eq1_L+N4_confirm` seeds 20–22: 0.000 / 0.000 / 0.025.
+    - **Behaviour:** in all six seeds PPO is corrected once in round 0 (true −100), then honest (true 22 ×4), receiving 48,500–51,100 per round after the correction (no regulariser raises the honest transitions, so the corrected round pays about 5.7× the exploit). This is the exact prediction for this setting (corrected, then honest; `docs/step4_hideout.md`). In s2 and s22 the BR would take a second correction in round 1 (true −42 in that round), because the second fit raises honest play further; PPO does not, at 1.4–2.5% below.
+    - It took 6144 episodes and 64 envs: `L`, `LE`, `LN` and four other exploration configs did not converge 3/3 in both tuning and confirmation (details below).
   - **indiff_twin2 (2026-11-22 19:45), by the verdict, with caveats:** `H1_indiff_twin2_LN` 0.000 / 0.011 / 0.011 at 1536, `H1_indiff_twin2_LN_confirm` 0.011 / 0.019 / 0.011 (seeds 20–22). Every BR is corrected once, then honest, except s21's, which hides with PPO (the twin's level-0 failure, flag below). PPO is honest after its correction only in s0; s1, s2, s20 are re-corrected 2–4 times per episode and s20, s22 skip the goal (true −100), at about 1% below their BRs: under the twin a re-correction costs nothing, so the verdict passes it (the grid caveat of `docs/step4_indiff_log.md`).
-  - **The swap (2026-11-22 01:50)**, `H1_P2swap_LE` 0.012 / 0.020 / 0.005 at 1536 and `H1_P2swap_LE_confirm` 0.006 / 0.005 / 0.004 (seeds 20–22). PPO is corrected in round 0, then honest, in all six seeds. Open: base, P1eq1.
+  - **The swap (2026-11-22 01:50)**, `H1_P2swap_LE` 0.012 / 0.020 / 0.005 at 1536 and `H1_P2swap_LE_confirm` 0.006 / 0.005 / 0.004 (seeds 20–22). PPO is corrected in round 0, then honest, in all six seeds. 
 
 ## Flags for the user
 
 - **NEW (2026-11-22 15:20): the twin's level-0 failure (`docs/step4_indiff_log.md`, flag of 2026-11-21 23:40) also hits this grid: in `H1_indiff_twin2_LN_confirm` s21 PPO and its best response hide at the hideout.** The seed's twin values level 0 at 20 instead of 8,700, so the first correction pays 0.002 per step (correctly about 88). Hiding (6,500 per round) then beats being corrected, and both PPO and its BR hide (gap 0.019, so CONVERGED). Every other hideout twin seed prices level 0 at 8,400–8,700, except `H1_indiff_twin2_LE` s0 (6,342; it receives 22% less after its correction than its BR). As in indiff_twin2, the failure is confined to `LN` (64-env) configs. I am not changing anything.
 
 - **NEW (2026-11-22 12:40): home disk at the stop point, so no new runs, extensions or confirmations are being submitted.** `du -s` 46,143 MiB (45.1 GiB; `du -h` shows 46G): `.git` 13.6G, `results/` 15.6G, the rest outside this repo. The 2026-11-18 quota incident killed every job at about 50 GB. Usage grows about 1 GiB per 8 h (checkpoints of running jobs, plus `step4_commit.sh` committing finished seeds' `logs.npz` / `model.zip` into `.git`). Best-response checks (small JSON files) continue; every decision that needs a new job is logged as **held for disk**. Your call: stop committing large files, move `results/` to /scratch, or free space elsewhere in home.
+  - **Update (2026-11-22 23:30): 46,639 MiB. With three cells DONE, the hideout campaign now waits only on this:** the standard-PBRR cell has no running job, and its two next steps (`H1_base_LE+ENT3` → 6144, `H1_base_LE+ES10` → 6144) are held.
 
 - **NEW (2026-11-22 01:50): in one swap confirmation seed the best response farms corrections.** `H1_P2swap_LN_confirm` s20 (1536 episodes) has gap 0.881. PPO is in a broken state: corrected in round 0 or 1 (0.48 / 0.51), received 1,232 / 3,015 / 301 / 349 / 274 per round. Its best response, under corrections refitted on that play, is corrected in every round 0–3 while exploiting (true −100 ×5), receiving 8,629–8,681 per round. So the swap's correction, fitted on this policy's caught play, makes being caught pay as much as the exploit. The sweep's target for that seed (`hstart_b100_P2swap/seed20.json`) is "corrected once, then honest". The swap cell is DONE through `H1_P2swap_LE_confirm`, so per rule 6b nothing more is run for it; this is information. s21 0.125 (corrected once, then honest, 13% below its BR); s22 0.000.
 
@@ -454,3 +458,24 @@ No regulariser does poorly (a seed not honest by the end):
 - **The twin cell is DONE by rule 4,** as the grid twin cells were. Two things the verdict lets through, both written in the status: s21's hiding (the level-0 failure, flagged) and PPO wandering or being re-corrected after its first correction at about 1% cost. `H1_indiff_twin2_LE` (2009715) and `L_confirm` (2008390) keep running as information; nothing new is started for the cell.
 - **Cells:** swap and twin DONE; no regulariser has three confirmations in progress; standard PBRR has no passing config (its extensions are held for disk).
 - No new submissions (disk 46,548 MiB).
+
+## 2026-11-22, iteration 25 (20:33–23:30): **no-regulariser cell DONE** (`H1_P1eq1_L+N4_confirm` 3/3); 3 of 4 cells DONE
+
+- **Events.** COMPLETED: `H1_P1eq1_L+ES10` (12,288, 2009223, 19:50), `H1_P1eq1_LE_confirm` (12,288, 2009471, 21:10), `H1_P1eq1_L+N4_confirm` (6144, 2009716, 21:11), `H1_indiff_twin2_L_confirm` (2008390, 21:23), `H1_P1eq1_L+ES10+N4` (12,288, 2009717, 23:06).
+- **Checks** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2012540, 2012541**, then **2013127–2013130** for the seeds that finished later):
+
+  | run (episodes) | s0 / s20 | s1 / s21 | s2 / s22 | decision |
+  |---|---|---|---|---|
+  | `H1_P1eq1_L+N4_confirm` (6144) | 0.000 | 0.000 | 0.025 | **3/3 CONVERGED → no-regulariser cell DONE** |
+  | `H1_P1eq1_LE_confirm` (12,288 = cap) | 0.001 | 0.000 | 0.038 IMPR | at the cap: finished, 2/3 |
+  | `H1_P1eq1_L+ES10` (12,288 = cap) | 0.111 IMPR | 0.008 | 0.020 | at the cap: finished, 2/3 |
+  | `H1_P1eq1_L+ES10+N4` (12,288 = cap) | 0.071 IMPR | 0.006 | 0.022 | at the cap: finished, 2/3 |
+  | `H1_indiff_twin2_L_confirm` (1536) | 0.011 | 0.137 IMPR | 0.000 | information only (cell DONE) |
+
+  - Every no-regulariser seed above is corrected once in round 0, then honest. The unconverged ones receive 3–11% less than their BR after the correction (the BR takes a second correction in round 1 in about half of them, worth more under the second fit).
+  - `H1_indiff_twin2_L_confirm` s21: corrected in every round 0–3 and never reaches the goal, receiving 8,215–8,233 against its BR's 8,696, and 5,093 in round 4.
+- **Decisions.**
+  - **No-regulariser cell DONE** (rule 4: `H1_P1eq1_L+N4` 3/3 in tuning, `_confirm` 3/3). Summary in the status. Rule 6b: nothing new for it; the extensions held for disk (`H1_P1eq1_L_confirm` → 12,288, `H1_P1eq1_L+ENT3_confirm` → 6144) are dropped, not held.
+  - **Standard-PBRR cell** (the last open one): no job of it is running. Its next steps are the two extensions held for disk: `H1_base_LE+ENT3` → 6144 (0.026 / 0.022 / 0.031 at 3072, s2 IMPROVING) and `H1_base_LE+ES10` → 6144. **The hideout campaign is now blocked on the disk decision** (flag).
+- Disk 46,639 MiB. No new submissions.
+
