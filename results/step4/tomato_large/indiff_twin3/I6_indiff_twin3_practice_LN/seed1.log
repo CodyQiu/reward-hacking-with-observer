@@ -3,3 +3,5 @@
   [tomato_large s1]  2,304,000  win0-3 0.25  off 0.25  corr/ep 1.02  winF 0.01  proxy0-3    533.2  rounds 291  (19335s)
   [tomato_large s1]  3,072,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.01  proxy0-3    543.1  rounds 323  (21504s)
   [tomato_large s1]  3,840,000  win0-3 0.25  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    550.4  rounds 355  (23549s)
+  [tomato_large s1]  4,608,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.01  proxy0-3    554.4  rounds 382  (25005s)
+  [tomato_large s1]  5,376,000  win0-3 0.25  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3    558.6  rounds 408  (26811s)

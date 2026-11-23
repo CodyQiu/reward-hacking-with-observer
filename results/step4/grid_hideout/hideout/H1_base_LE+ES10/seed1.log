@@ -256,3 +256,5 @@
   [grid_hideout s1] 48,768,000  win0-3 0.25  off 0.29  corr/ep 4.00  winF 0.00  proxy0-3   2094.0  rounds 25672  (31569s)
   [grid_hideout s1] 48,960,000  win0-3 0.25  off 0.30  corr/ep 4.00  winF 0.00  proxy0-3   2097.9  rounds 25768  (31749s)
   [grid_hideout s1] 49,152,000  win0-3 0.25  off 0.30  corr/ep 4.00  winF 0.00  proxy0-3   2098.5  rounds 25867  (31936s)
+  [grid_hideout s1] resumed at episode 6144 -> 12288
+  [grid_hideout s1] 49,344,000  win0-3 0.24  off 0.29  corr/ep 4.00  winF 0.00  proxy0-3   2083.7  rounds 25966  (333s)
