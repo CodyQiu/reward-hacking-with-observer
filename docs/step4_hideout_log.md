@@ -17,7 +17,7 @@ This log is append-only below the three summary sections.
   - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
   - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
   - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
-- Cells DONE: **2 of 4** (swap, no regulariser). Open: standard PBRR (base), and indiff_twin2, which reopened on 2026-11-23 under the user's level-0 rule (below).
+- Cells DONE: **2 of 5** (swap, no regulariser). Open: standard PBRR (base); indiff_twin2, reopened on 2026-11-23 under the user's level-0 rule (below); and **indiff_twin3** (new on 2026-11-23: the twin trained enough, `docs/step4_indiff.md`). Its runs are `H1_indiff_twin3_L` / `LE` / `LN` → 2014062 / 2014063 / 2014064, and the level-0 rule applies to it too.
   - **No regulariser (2026-11-22 23:20):** config `H1_P1eq1_L+N4` (`g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`; an exploration run, rule 6b), 6144 episodes. Tuning seeds 0–2: 0.000 / 0.000 / 0.014; confirmation `H1_P1eq1_L+N4_confirm` seeds 20–22: 0.000 / 0.000 / 0.025.
     - **Behaviour:** in all six seeds PPO is corrected once in round 0 (true −100), then honest (true 22 ×4), receiving 48,500–51,100 per round after the correction (no regulariser raises the honest transitions, so the corrected round pays about 5.7× the exploit). This is the exact prediction for this setting (corrected, then honest; `docs/step4_hideout.md`). In s2 and s22 the BR would take a second correction in round 1 (true −42 in that round), because the second fit raises honest play further; PPO does not, at 1.4–2.5% below.
     - It took 6144 episodes and 64 envs: `L`, `LE`, `LN` and four other exploration configs did not converge 3/3 in both tuning and confirmation (details below).
@@ -503,4 +503,15 @@ No regulariser does poorly (a seed not honest by the end):
   - Commands: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout <run> 6144 submit`.
 - The no-regulariser holds (`H1_P1eq1_L_confirm` → 12,288, `H1_P1eq1_L+ENT3_confirm` → 6144) stay dropped: that cell is DONE (rule 6b).
 - Cells DONE: **2 of 4** (swap, no regulariser). Open: standard PBRR and the twin. Jobs: hideout 4 (cap 24).
+
+## 2026-11-23, iteration 27 (02:50–03:00): new cell `indiff_twin3` (the twin trained enough), 3 runs submitted
+
+- **The user's new campaign (2026-11-23):** the twin trained enough (`twin.minibatches=4 twin.rounds=100`; `docs/step4_indiff.md`, "The twin, trained enough"). In this grid it is a new variant and a cell of its own (`docs/step4_hideout.md`); the `indiff_twin2` cell stays as it is.
+- **Dry-runs:** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh ppo grid_hideout indiff_twin3 L ""`, then the same with tag `LE` and `"ppo.ent_coef=0.03"`, and with tag `LN` and `"n_envs=64 ppo.batch_size=1600"`.
+  - They printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin3_<tag> --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True twin.minibatches=4 twin.rounds=100 episodes=1536 anneal.last=0.25 anneal.floor=0.1 [extra]`.
+  - That is `H1_indiff_twin2_<tag>`'s settings plus the two twin settings.
+- **Submitted:** `H1_indiff_twin3_L` → **2014062**, `LE` → **2014063**, `LN` → **2014064**.
+- **Predictions under test (`docs/step4_indiff.md`, written before any run):** the twin's level-0 value ends within 2% of M(proxy) = 8,700 in every seed, and no seed hides at the hideout.
+- No hideout job finished since iteration 26. Running: `H1_indiff_twin2_LE` (2009715), `H1_indiff_twin2_L_confirm` → 3072 (2013782), `H1_base_LE+ENT3` / `+ES10` → 6144 (2013780 / 2013781).
+- Cells DONE: **2 of 5.** Jobs: hideout 7 (cap 24).
 

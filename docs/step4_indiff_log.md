@@ -215,6 +215,8 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 ### indiff_twin2 PPO (both arms) against the `indiff_twin` target (updated as checks come in)
 
+**Superseded by indiff_twin3 from 2026-11-23 (the user).** Its finished seeds are still checked and its Taxi runs resumed at the 48 h limit, but nothing new is submitted: no runs, extensions or confirmations. The Boat Race `L_confirm` extension (2013779), submitted before this, keeps running.
+
 **Wave 1 submitted 2026-11-21 (iteration 106):** 36 runs, `I5_indiff_twin2_{L,LE,LN}` and `I5_indiff_twin2_practice_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_twin2/`, Taxi first. Same targets as indiff_twin (`results/step4/<env>/targets/indiff_twin/`).
 - For each check, the table records the gap and verdict, PPO's corrections and true by round, and the best response's corrections.
 - It also notes whether the best response still takes extra corrections under the run's own twin (the flaw this campaign fixes), against the same env/arm/config row of indiff_twin above.
@@ -303,7 +305,28 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 | boat_race / pure / `I5_indiff_twin2_LN` / s0–s2 (1536) | **0.000 / 0.000 / 0.000** (CONVERGED) | 1.00 per episode, round 0; true −94, then 49.9–50.0 ×4; received after the correction 344 (s0, s2; level 1 above M(proxy) 200, above target), 200 (s1) | corrected once, then honest, in all three. **No extra corrections** (indiff_twin `LN`: 0.013 / 0.008 / 0.000, BRs took 2 corrections in s0, s1) | 4 / 4 / 4 |
 | boat_race / pure / `I5_indiff_twin2_LE` / s0 (1536) | **0.001** (CONVERGED) | 1.00 per episode; true −94, then 49.8 ×4; received 206 after the correction | corrected once. **No extra corrections** (indiff_twin `LE` s0: 0.047 at 1536, its BR honest; s1, s2 BRs farmed 4) | 4 |
 
+### indiff_twin3 PPO (both arms) against the `indiff_twin` target (from 2026-11-23; updated as checks come in)
+
+**The twin, trained enough** (`docs/step4_indiff.md`, "The twin, trained enough"): twin2's settings plus `twin.minibatches=4 twin.rounds=100`, nothing else. Per the user, this is the last change to the twin, whatever the result. Wave 1: 36 runs, `I6_indiff_twin3_{L,LE,LN}` and `I6_indiff_twin3_practice_{L,LE,LN}`, seeds 0–2, in `results/step4/<env>/indiff_twin3/`, Taxi first. Same targets as indiff_twin. The hideout grid's `H1_indiff_twin3_*` runs are logged in `docs/step4_hideout_log.md`.
+- Columns as in indiff_twin2's table, plus the twin's level-0 value: the mean `level_twin_before` over the seed's last 20 first corrections (`pbrr_rounds.csv`, rows with `n_round` = 1), against M(proxy) (grid 8,700, AS 1,550, Tomato 588.8, tomato_large 786, Taxi 379.7, Boat Race 200).
+- **The pre-registered test** (the doc's predictions, written before any run), checked for every seed:
+  - **P1:** the twin's level-0 value ends within 2% of M(proxy), and no grid seed hides.
+  - **P2:** corrected once, then honest, in AS, Tomato and Boat Race; Boat Race s20 stays as its target; the grid's goal-skipping is unaffected.
+  - **P3 (Taxi, no confident prediction):** the twin's level-0 value is well above honest play (125). Deliveries after a correction are reported either way.
+- **The level-0 rule applies:** a seed whose twin never learned uncorrected play does not count, and a seed whose agent hides fails, whatever the 3% verdict says.
+- Rules as for indiff_twin2 (`docs/step4_optimal.md`): both arms are separate cells, budget ≤ 50 jobs. Cells DONE: **0 of 12.**
+- **Wave 1 submitted 2026-11-23 02:50 (iteration 133):** Taxi first, **2014026–2014031**; then grid 2014032–37, AS 2014038–43, Tomato 2014044–49, tomato_large 2014050–55, Boat Race 2014056–61. Each is the dry-run's own line. Before submitting, each was checked against twin2's same run (`overrides.json`): all 36 differ only in `twin.minibatches=4 twin.rounds=100`.
+
+| Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
+|---|---|---|---|---|---|
+
 ## Flags for the user
+
+- **NEW (2026-11-23 02:35): a plain `git pull` on FarmShare started to re-download the whole old history (about 14 GB). I stopped it at 4 GB and pulled with `--depth=3` instead.**
+  - The cause: FarmShare's repo is shallow since the checkpoint cleanup. The laptop then merged our work into a laptop line based on an older commit (merge 11bdbe22; laptop parent b3a7aad5 → 81528bd1 → 5fb16199, which is below our shallow boundary). A normal fetch must then send everything behind 5fb16199.
+  - The fetch's pack grew at about 18 MB/s, with home at 36 GB on its way to about 48–50 GB. That is past the 46 GB stop rule and at the level of the 2026-11-18 quota incident, so I killed my own fetch and deleted its partial pack.
+  - `git pull --depth=3 --no-rebase --no-edit --ff origin main` then fast-forwarded to aec07c82 with a 0.3 GB fetch (`.git` 1.6 GB, home 34.3 GB). It ran with a watchdog that would kill it above 3 GB.
+  - **To avoid a repeat:** on the laptop, pull before committing, so new laptop commits sit on top of FarmShare's last push. Now that the laptop has merged, its `main` is at aec07c82, so this should not recur unless the laptop commits on an older base. If a pull's fetch grows past about 1 GB again, I will stop it and flag it.
 
 - **ANSWERED (2026-11-23, the user): change nothing in the running Taxi runs, and resume them as usual. A fix to the twin (a guaranteed share of level-0 training, more twin training) will come from the user as a new campaign.** The Taxi seeds are level-0 twin failures under the rule below: twin level 0 is −97 to −124 in 16 of 18 seeds, 74 in `LE` s1, and only `practice_LE` s2 is partly trained at 276 (M 379.7, honest 125). The original flag follows.
   **NEW (2026-11-22 19:40; updated 23:15): Taxi's twin is still untrained at the end of 768-episode runs, and the best response farms corrections under it.** Update: all three `I5_indiff_twin2_LN` seeds and `practice_L` s1 show it (twin's level-0 value −97 to −101 in every Taxi seed checked; `LN` 0.520 / 0.589 / 0.774, all PLATEAU, BRs paid up to 1,364 / 1,396 / 3,087 per round; `practice_L` s1 0.291, BR takes 3 corrections). The first seed, in detail: Taxi `I5_indiff_twin2_LN` s1 (768 episodes, the first finished Taxi twin2 seed): gap **0.589 (PLATEAU)**.
@@ -2216,4 +2239,17 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - Submitted → **2013779**.
 - No other twin2 decision was waiting. Taxi and tomato_large runs are still training; Boat Race `practice_L` s1 is still training.
 - Jobs: 24 in total: indiff_twin2 13 (cap 50), hideout 4, bonus 7, noreg_fail 0.
+
+## 2026-11-23, iteration 133 (02:10–03:00): **indiff_twin3 submitted** (the twin trained enough, 36 runs + 3 hideout); indiff_twin2 superseded; pull incident (flag)
+
+- **02:10.** Taxi `I5_indiff_twin2_L` s1 finished (768). Its check was submitted (`CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014013**, still running). Deliveries (`.venv/bin/python experiments/step4_level_play.py "results/step4/taxi/indiff_twin2/I5_indiff_twin2_L/seed1"`): at level 0, 1.3 deliveries and 38.6 repeat pickups; at level 1, 1.7 (k1) and 1.7 (k3), against honest 7.1. Its twin values level 0 at −99.5, a level-0 twin failure.
+- **The user's new campaign (2026-11-23):** `CAMPAIGN=indiff_twin3`, the twin trained enough (`docs/step4_indiff.md`, "The twin, trained enough"). It comes first in priority and supersedes indiff_twin2. `docs/step4_loop_prompt.md` was updated to match.
+- **Pull.** The plain pull began re-downloading the whole history and was stopped at 4 GB; the shallow pull (`--depth=3`) fast-forwarded to aec07c82 (flag at the top). `.venv/bin/python tests/test_step4.py`: **52 tests, 0 failed** (new: `test_twin_minibatches_do_not_follow_the_agents_batch`).
+- **Wave 1.**
+  - Dry-run `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh wave1` printed 36 `submit.sh` lines: L, LE and LN for both arms in all six envs, seeds 0–2.
+  - Checked against twin2's same runs (flattened `overrides.json`): all 36 differ only in `twin.minibatches=4 twin.rounds=100`.
+  - Submitted line by line from the dry-run, Taxi first: **2014026–2014031** (Taxi), **2014032–2014061** (grid, AS, Tomato, tomato_large, Boat Race). `wave1 submit` only runs those lines.
+- **Hideout cell `indiff_twin3`** (`docs/step4_hideout_log.md`, iteration 27): `H1_indiff_twin3_L` / `LE` / `LN` → **2014062 / 2014063 / 2014064**.
+- The indiff_twin3 table is above (columns as twin2's, plus the twin's level-0 value against M(proxy) for P1).
+- Jobs: 64 in total, 39 of them pending. indiff_twin3 36 + 3 hideout (cap 50), indiff_twin2 13 plus 1 check, hideout 7 (cap 24), bonus 7. Home 34.3 GB.
 
