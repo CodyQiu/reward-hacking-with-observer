@@ -421,3 +421,11 @@ No regulariser does poorly (a seed not honest by the end):
   - `H1_indiff_twin2_L_confirm` s22: corrected once, then honest (true 20). It receives 8,000 per round after the correction (M = 8,700), as does its BR. The twin values level 0 at 8,405 in this run.
   - **`H1_indiff_twin2_LN_confirm` s21 hides** (never corrected; 6,348–6,359 per round in rounds 0–3), and so does its BR (6,500). Its twin values level 0 at 20. Flag at the top.
 - **Standard-PBRR cell:** no config passes tuning and confirmation. `+ENT3` is the nearest (0.026 / 0.022 / 0.031, all hiding), and its extension is held for disk.
+
+## 2026-11-22, iteration 22 (17:00–17:20): `H1_indiff_twin2_LN_confirm` s22 converged
+
+- **Events.** `H1_indiff_twin2_LN_confirm` s22 finished at 16:02 (job 2008810 still running s20, 1344/1536).
+- **Check 2011320** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`): s22 **0.011** (CONVERGED). PPO is corrected once in round 0 and never again, then skips the goal (true −100 per round, the grid caveat), receiving 8,693 per round; its BR is corrected once, then honest (8,815). The twin values level 0 at 8,688 (s21: 20, the flagged failure; s20: 8,600).
+- **`H1_indiff_twin2_LN_confirm` so far:** s21 0.019 (hides, BR hides too), s22 0.011. If s20 also converges, the run is 3/3 by the verdict, and the twin cell is DONE by rule 4. The flag about s21 stays at the top: the verdict counts a seed whose twin never learned level 0.
+- **Progress** (episodes): `H1_P1eq1_L+ES10` 10,296–10,800 / 12,288; `+ES10+N4` 8,616–10,104 / 12,288; `L+N4_confirm` 3,408–3,576 / 6,144; `LE_confirm` 9,456 / 12,288; `H1_indiff_twin2_LE` 1,944–2,928 / 3,072; `L_confirm` s20 1,272, s21 1,008 / 1,536.
+- No new submissions (disk 46,459 MiB, above the stop point).
