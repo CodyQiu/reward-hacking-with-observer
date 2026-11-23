@@ -429,3 +429,9 @@ No regulariser does poorly (a seed not honest by the end):
 - **`H1_indiff_twin2_LN_confirm` so far:** s21 0.019 (hides, BR hides too), s22 0.011. If s20 also converges, the run is 3/3 by the verdict, and the twin cell is DONE by rule 4. The flag about s21 stays at the top: the verdict counts a seed whose twin never learned level 0.
 - **Progress** (episodes): `H1_P1eq1_L+ES10` 10,296–10,800 / 12,288; `+ES10+N4` 8,616–10,104 / 12,288; `L+N4_confirm` 3,408–3,576 / 6,144; `LE_confirm` 9,456 / 12,288; `H1_indiff_twin2_LE` 1,944–2,928 / 3,072; `L_confirm` s20 1,272, s21 1,008 / 1,536.
 - No new submissions (disk 46,459 MiB, above the stop point).
+
+## 2026-11-22, iteration 23 (17:59–18:15): `H1_indiff_twin2_LE` s0 at 3072 still short (0.180, IMPROVING)
+
+- **Check 2011442** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`): `H1_indiff_twin2_LE` s0 at 3072: **0.180 ± 0.017 (IMPROVING)**. PPO is corrected once in round 0, then honest (true 19.6–20.2 against 22), but receives 6,842–6,848 per round after the correction against its BR's 8,821 on the same tables: its route after the correction is fined by about 1,970 per round. That is unchanged from 1536 (6,881). The twin values level 0 at 8,700 (s1 8,686, s2 8,699), so this is not the level-0 failure; `trained_top` = 4 in all three seeds.
+- s1, s2 are at 2,160 / 2,040 of 3,072 (job 2009715). In training they are still re-corrected in most rounds (2–3 corrections per episode, true −100). Rule 4 applies when the run finishes: with s0 IMPROVING, it would extend to 6144, which is **held for disk** while home stays above 46 GB.
+- No new submissions (disk 46,503 MiB).
