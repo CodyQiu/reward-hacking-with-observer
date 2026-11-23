@@ -323,6 +323,10 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| boat_race / pure / `I6_indiff_twin3_LN_confirm` / s21, s22 (1536) | **0.000 / 0.000** (CONVERGED) | 1.00 per episode, round 0; true −94, then 50 ×4; received 200 | corrected once, then honest. **s20** (1,224/1,536) is corrected in every round at true −94, **exactly its target's end state** (P2's "s20 stays as its target"); its check decides the confirmation (under twin2: 0.060) | **199.6 / 199.8** vs 200 (s20 200.0): **P1 ✓** | 4 / 4 |
+| boat_race / pure / `I6_indiff_twin3_LE` / s1 (1536) | **0.024** (CONVERGED) | 1.00 per episode, round 0; true −94, then **partly honest, 44 ×4**; received 194 | corrected once, then honest (received 200) | **199.2** vs 200: **P1 ✓** | 4 |
+| boat_race / practice / `I6_indiff_twin3_practice_LE` / s2 (1536) | **0.001** (CONVERGED) | 1.00 per episode, round 0; true −94, then 50 ×4 | corrected once, then honest | **199.4** vs 200: **P1 ✓** | 4 |
+| tomato / practice / `I6_indiff_twin3_practice_LE` / s0 (1536); with s1, s2: **3/3, `confirm`** | **0.009** (CONVERGED) | 1.00 per episode, round 0; true 46, then 427 ×4 | corrected once, then honest | **587.7** vs 588.8: **P1 ✓** | 4 |
 | tomato / pure / `I6_indiff_twin3_LE` / s0–s2 (1536) | **0.009 ×3** (CONVERGED) → **3/3, `confirm`** | 1.00 per episode, round 0; true 46, then 427–428 ×4; received 585–587 | corrected once, then honest; no extra corrections (twin2 `LE`: 3/3, the same) | **588.7 / 588.6 / 588.8** vs 588.8: **P1 ✓** (P2 ✓) | 4 / 4 / 4 |
 | tomato / pure / `I6_indiff_twin3_LN` / s0 (1536) | **0.003** (CONVERGED) | 1.00 per episode, round 0; true 46, then 432 ×4 | corrected once, then honest. **twin2 `LN` s0 was a level-0 failure** (twin level 0 at 432 = honest; its BR hid): fixed here | **588.7** vs 588.8: **P1 ✓** | 4 |
 | tomato / practice / `I6_indiff_twin3_practice_LE` / s1, s2 (1536) | **0.009 / 0.009** (CONVERGED) | 1.00 per episode, round 0; true 46, then 427–428 ×4 | corrected once, then honest | **588.5 / 588.7** vs 588.8: **P1 ✓** | 4 / 4 |
@@ -2422,4 +2426,14 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Checks submitted:** `CAMPAIGN=indiff_twin3 ... br_missing submit` → **2016000** (Tomato `practice_LE` s0), **2016001** (Boat Race `LE` s1), **2016002** (Boat Race `LN_confirm`, finished seeds), **2016003** (Boat Race `practice_LE` s2). `CAMPAIGN=indiff_twin2 ...` → **2016004** (tomato_large `I5_indiff_twin2_LN`).
 - **twin3 confirmations running (8):** Boat Race `L`, `LN`, `practice_L`; AS `L`; Tomato `L`, `LE`, `practice_L`; grid `practice_LE`.
 - Jobs: 63 in total. Home 35.1 GB.
+
+## 2026-11-23, iteration 146 (14:05–14:20): twin3 Tomato `practice_LE` 3/3 → `confirm`; Boat Race `LN_confirm` s21, s22 converged, s20 as its target
+
+- **Checks 2016000–2016003.** Rows in the twin3 table.
+  - Tomato `I6_indiff_twin3_practice_LE` s0 0.009, so **3/3**. Dry-run `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato I6_indiff_twin3_practice_LE` printed `submit.sh 48 --env tomato --run-id I6_indiff_twin3_practice_LE_confirm --seeds 20 21 22 --results-dir results/step4/tomato/indiff_twin3 --set ppo.ent_coef=0.1 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.minibatches=4 twin.rounds=100 twin.practice=0.25 episodes=1536 anneal.last=0.25 anneal.floor=0.1` (its `overrides.json`). Submitted → **2016426**.
+  - **Boat Race `I6_indiff_twin3_LN_confirm` s21, s22: 0.000 / 0.000.** s20 is still training (1,224/1,536). In training it is corrected in every round at true −94, receiving M(proxy), which is its target's end state (the fit's under-correction), as P2 predicted. `L_confirm` s20 (624/1,536) is the same. Their checks decide the Boat Race pure cell.
+  - Boat Race `LE` s1 0.024 (partly honest at 44); `practice_LE` s2 0.001.
+- **Checks submitted:** `CAMPAIGN=indiff_twin3 ... br_missing submit` → **2016413** (grid `L`), **2016414** (grid `LE`), **2016415** (Tomato `LN` s2). `CAMPAIGN=indiff_twin2 ...` → **2016423** (tomato_large `I5_indiff_twin2_practice_L`).
+- **48 h limit, next.** The twin2 Taxi runs (2003890, 2003892–2003894) and the tomato_large twin2 and bonus runs reach it at about 15:40–17:45. Rule 1 resumes the Taxi twin2 runs (the user: Taxi resumes only) and the bonus runs. **Not the tomato_large twin2 runs**: twin2 is superseded, and only its Taxi runs are resumed.
+- twin3 confirmations running (9). Jobs: 61 in total. Home 35.1 GB.
 
