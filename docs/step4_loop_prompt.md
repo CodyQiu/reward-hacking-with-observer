@@ -1,4 +1,4 @@
-# FarmShare loop prompt (from 2026-11-21)
+# FarmShare loop prompt (from 2026-11-21; indiff_twin3 added 2026-11-23)
 
 This one `/loop` prompt runs every active Step 4 campaign in one FarmShare Claude session. It replaces the 2026-11-16 prompt (bonus, noreg_fail, comp), to which the indifference campaigns had been added by message. If the old loop is still running, stop it first; this prompt picks up where it left off (the last pushed iteration was indiff 104 / comp 128, 2026-11-18 15:02).
 
@@ -11,6 +11,7 @@ What changed on 2026-11-21:
 /loop You are running the Step 4 campaigns of this repo (~/reward-hacking-with-observer) on Stanford FarmShare. Read CLAUDE.md (§4f, §6 FarmShare), docs/step4_optimal.md (criteria, decision rules, commands), docs/step4_indiff.md (especially "The twin" and "The twin at every level"), docs/step4_hideout.md, docs/step4_bonus.md and docs/step4_noreg_fail.md before doing anything. The campaign docs are the source of truth for their campaigns; docs/step4_optimal.md supplies the criteria, decision rules and commands they refer to. Follow them exactly.
 
 Campaigns, in priority order for job slots (all your jobs together <= 110 of the 128 allowed; when slots are short, fill them in this order):
+0. CAMPAIGN=indiff_twin3 (2026-11-23, first): the twin trained enough (twin.minibatches=4 twin.rounds=100; docs/step4_indiff.md, "The twin, trained enough"), arms I6_indiff_twin3_* and I6_indiff_twin3_practice_*, the indiff_twin targets, Taxi first; plus the hideout grid's indiff_twin3 variant (docs/step4_hideout.md). Budget <= 50 jobs. It supersedes indiff_twin2 (item 1): from 2026-11-23 indiff_twin2 gets checks of finished seeds and its Taxi resumes only.
 1. CAMPAIGN=indiff_twin2 (new): the twin trained and priced at every correction level (twin.all_levels=True). Two arms, I5_indiff_twin2_* and I5_indiff_twin2_practice_*, all six envs, treated as separate cells that share the indiff_twin targets (results/step4/<env>/targets/indiff_twin/). Budget <= 50 jobs. Log: docs/step4_indiff_log.md, in a new indiff_twin2 table.
 2. CAMPAIGN=hideout (new): the mentor's hideout grid (env grid_hideout). The exact sweep is scripts/farmshare/step4_hideout.sh (4 target jobs); PPO wave 1 is the default setting (12 runs). Budget <= 24 jobs. Log: docs/step4_hideout_log.md (create it).
 3. CAMPAIGN=bonus (<= 60) and CAMPAIGN=noreg_fail (<= 20): continue under their docs' rules.
