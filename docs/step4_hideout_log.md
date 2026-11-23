@@ -603,3 +603,8 @@ No regulariser does poorly (a seed not honest by the end):
   - Submitted → **2016007**. If 3/3, the standard-PBRR cell is DONE.
 - Cells DONE: 2 of 5. Jobs: hideout 8 (cap 24).
 
+## 2026-11-23, iteration 39 (14:51–15:10): `H1_indiff_twin2_L_confirm` finished at 3072, s21's check submitted
+
+- `H1_indiff_twin2_L_confirm` (2013782, 14:26) has finished at 3072. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2016719** (s21). s20 0.011 and s22 0.000 are already in. If s21 is CONVERGED, the twin2 cell is DONE (with `H1_indiff_twin2_L` 3/3 in tuning).
+- Running: `H1_base_LE+ENT3_confirm` (2016007), `H1_base_LE+ES10` → 12288 (2015428), `H1_indiff_twin2_LE` → 6144 (2015429), `H1_indiff_twin3_*` (2014062–64). Cells DONE: 2 of 5.
+
