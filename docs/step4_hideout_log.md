@@ -544,3 +544,12 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check submitted:** `H1_base_LE+ES10` s2 finished 6144. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014280**; s0 and s1 are still training (job 2013781).
 - Running: `H1_indiff_twin3_*` (2014062–64), `H1_indiff_twin2_L_confirm` → 3072 (2013782), `H1_base_LE+ENT3` / `+ES10` → 6144 (2013780 / 2013781). Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 31 (07:11–07:20): `H1_base_LE+ES10` s2 at 6144 now hides (0.120, IMPROVING); twin2 `LE` extension still waiting for permission
+
+- **Check 2014280:** `H1_base_LE+ES10` s2 at 6144: **0.120 (IMPROVING)**, down from 0.761 at 3072.
+  - PPO now hides: never corrected; true −32 in rounds 0–3 and −100 in round 4. It receives 5,462–5,469 per round against its BR's 6,500 (hiding at the hideout, the target's strategy), and 8,687 in round 4 (8,700).
+  - So it found the hideout but walks there with about 1,000 per round to spare.
+  - s0 (5,568/6,144; training-time value gap to the target 0.036) and s1 (4,704/6,144) are still training. Rule 4 decides the run when they finish.
+- **`H1_indiff_twin2_LE` → 6144** (rule 4, due since iteration 30) is still not submitted: the permission check blocked it, and you have not answered yet (flag at the top).
+- `br_missing` (dry-run): nothing else. Cells DONE: 2 of 5.
+
