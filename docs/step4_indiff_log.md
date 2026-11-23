@@ -2293,3 +2293,16 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - No twin2 or twin3 run finished; `br_missing` (dry-run) is empty for both. Home 34.7 GB.
 
+## 2026-11-23, iteration 139 (08:13–08:30): first indiff_twin3 runs finished (Boat Race `L`, `LN`); twin2 Taxi `L` finished
+
+- **Events.** COMPLETED: Boat Race `I6_indiff_twin3_L` (2014056, 07:18, 3.2 h) and `I6_indiff_twin3_LN` (2014058, 07:36, 3.5 h); `practice_L` s1 (job 2014059 still running s0 at 1,464 and s2 at 1,200). Taxi `I5_indiff_twin2_L` (2003889, 08:02, 40.3 h; s0 finished 768).
+- **Checks submitted.**
+  - `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014555** (Boat Race `L`), **2014556** (`LN`), **2014557** (`practice_L`, finished seeds).
+  - `CAMPAIGN=indiff_twin2 ... br_missing submit` → **2014558** (tomato_large `I5_indiff_twin2_L`, finished seeds), **2014559** (Taxi `L` s0).
+- **First read of twin3 Boat Race, against the predictions** (training logs; the checks give the verdicts):
+  - **P1 holds in every Boat Race seed so far.** The twin's level-0 value is 199.8–199.9 in `L`, `LN`, `practice_L` s0/s1 and `practice_LN`, against M = 200. The lowest is `LE` s2 at 195.2 (2.4% below; still training), and `practice_L` s2 is at 198.9.
+  - **P2 (behaviour), so far:** `L` s0–s2 and `LN` s0–s2 are corrected in round 0, then honest at 49.8–50.0 (honest 50; `LN` s1's round 0 is −88). `practice_L` s1 is the same (49.7–49.8). s2 is still partly honest at 1,200 episodes (32.6–38.4).
+  - Seeds 0–2 only, so P2's "Boat Race s20 stays as its target" is not tested until a confirmation.
+- **Taxi twin2 `L` s0** (768): its twin values level 0 at −68, a level-0 twin failure. Deliveries (`.venv/bin/python experiments/step4_level_play.py "results/step4/taxi/indiff_twin2/I5_indiff_twin2_L/seed0"`): round 0 at level 0, 1.2 deliveries and 39.3 repeat pickups; at level 1, 2.0 (k1) and 2.2 (k3), against honest 7.1. Its check (2014559) is running.
+- Jobs: 58 + 6 checks. Home 34.8 GB.
+

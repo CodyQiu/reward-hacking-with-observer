@@ -2810,3 +2810,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - The other tomato_large runs (2003961–2003966 and `B1_base_LN+ES10+N4_confirm` 2004619) reach the 48 h limit at about 15:40–17:45 today. Rule 1 resumes them.
 - Jobs: bonus 7 + 1 check (cap 60).
 
+## 2026-11-23, iteration 241 (08:13–08:30): tomato_large `B1_P2swap_LE+N4` s2 converged
+
+- **Check 2014166:** tomato_large `B1_P2swap_LE+N4` s2 at 1536: **0.009 (CONVERGED)**. Corrected once in round 0 (true 65), then honest at 461–464 (target 493, BR 469); received 1,241 per round after the correction against its BR's 1,254. Its BR is corrected once, too.
+- s0 and s1 are at 384 and 336 of 1,536 after 40 h. Job 2003965 reaches the 48 h limit at about 15:40 and is then resumed (rule 1). Rule 4 decides the run when all three seeds are checked.
+- Jobs: bonus 7 (cap 60).
+

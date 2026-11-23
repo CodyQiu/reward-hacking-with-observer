@@ -553,3 +553,8 @@ No regulariser does poorly (a seed not honest by the end):
 - **`H1_indiff_twin2_LE` → 6144** (rule 4, due since iteration 30) is still not submitted: the permission check blocked it, and you have not answered yet (flag at the top).
 - `br_missing` (dry-run): nothing else. Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 32 (08:13–08:30): `H1_base_LE+ES10` another seed finished, check submitted
+
+- `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2014560** (`H1_base_LE+ES10`, a seed newly finished at 6144).
+- `H1_indiff_twin2_LE` → 6144 is still waiting for your permission (flag at the top). Cells DONE: 2 of 5.
+
