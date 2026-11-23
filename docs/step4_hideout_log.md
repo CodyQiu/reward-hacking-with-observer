@@ -17,7 +17,9 @@ This log is append-only below the three summary sections.
   - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
   - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
   - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
-- Cells DONE: **1 of 4: the swap (2026-11-22 01:50)**, `H1_P2swap_LE` 0.012 / 0.020 / 0.005 at 1536 and `H1_P2swap_LE_confirm` 0.006 / 0.005 / 0.004 (seeds 20–22). PPO is corrected in round 0, then honest, in all six seeds. Open: base, P1eq1 (two confirmations running), indiff_twin2.
+- Cells DONE: **2 of 4.**
+  - **indiff_twin2 (2026-11-22 19:45), by the verdict, with caveats:** `H1_indiff_twin2_LN` 0.000 / 0.011 / 0.011 at 1536, `H1_indiff_twin2_LN_confirm` 0.011 / 0.019 / 0.011 (seeds 20–22). Every BR is corrected once, then honest, except s21's, which hides with PPO (the twin's level-0 failure, flag below). PPO is honest after its correction only in s0; s1, s2, s20 are re-corrected 2–4 times per episode and s20, s22 skip the goal (true −100), at about 1% below their BRs: under the twin a re-correction costs nothing, so the verdict passes it (the grid caveat of `docs/step4_indiff_log.md`).
+  - **The swap (2026-11-22 01:50)**, `H1_P2swap_LE` 0.012 / 0.020 / 0.005 at 1536 and `H1_P2swap_LE_confirm` 0.006 / 0.005 / 0.004 (seeds 20–22). PPO is corrected in round 0, then honest, in all six seeds. Open: base, P1eq1.
 
 ## Flags for the user
 
@@ -435,3 +437,20 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check 2011442** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`): `H1_indiff_twin2_LE` s0 at 3072: **0.180 ± 0.017 (IMPROVING)**. PPO is corrected once in round 0, then honest (true 19.6–20.2 against 22), but receives 6,842–6,848 per round after the correction against its BR's 8,821 on the same tables: its route after the correction is fined by about 1,970 per round. That is unchanged from 1536 (6,881). The twin values level 0 at 8,700 (s1 8,686, s2 8,699), so this is not the level-0 failure; `trained_top` = 4 in all three seeds.
 - s1, s2 are at 2,160 / 2,040 of 3,072 (job 2009715). In training they are still re-corrected in most rounds (2–3 corrections per episode, true −100). Rule 4 applies when the run finishes: with s0 IMPROVING, it would extend to 6144, which is **held for disk** while home stays above 46 GB.
 - No new submissions (disk 46,503 MiB).
+
+## 2026-11-22, iteration 24 (18:57–19:45): **indiff_twin2 cell DONE** (by the verdict, with caveats); `H1_indiff_twin2_L_confirm` s20, s22 converged
+
+- **Events.** COMPLETED: `H1_indiff_twin2_LN_confirm` (2008810, 18:17).
+- **Checks 2011764, 2011765** (`CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`):
+
+  | run (episodes) | s20 | s21 | s22 | decision |
+  |---|---|---|---|---|
+  | `H1_indiff_twin2_LN_confirm` (1536) | 0.011 | 0.019 (hides) | 0.011 | **3/3 CONVERGED → cell DONE** (rule 4) |
+  | `H1_indiff_twin2_L_confirm` (1536) | 0.011 | (running, 1,272) | 0.000 | information only now |
+
+  - `LN_confirm` s20: PPO is corrected in rounds 0, 1 and 3 (3.00 per episode) and never reaches the goal (true −100), receiving 8,596–8,600 per round against its BR's 8,722 (corrected once, then honest). s22: corrected once, then skips the goal (8,693 vs 8,815). s21 hides with its BR (flag).
+  - `L_confirm` s20: corrected in rounds 0–2 (3.00 per episode), true −100, 8,567 vs the BR's 8,689. s22: corrected once, then honest (true 20), 7,998 vs 8,000.
+  - `trained_top` = 4 in all three `LN_confirm` seeds.
+- **The twin cell is DONE by rule 4,** as the grid twin cells were. Two things the verdict lets through, both written in the status: s21's hiding (the level-0 failure, flagged) and PPO wandering or being re-corrected after its first correction at about 1% cost. `H1_indiff_twin2_LE` (2009715) and `L_confirm` (2008390) keep running as information; nothing new is started for the cell.
+- **Cells:** swap and twin DONE; no regulariser has three confirmations in progress; standard PBRR has no passing config (its extensions are held for disk).
+- No new submissions (disk 46,548 MiB).
