@@ -2848,3 +2848,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Check 2018668:** `B1_P2swap_LE+N4` s0 at 1536 **0.010 (CONVERGED)**: corrected once, then honest at 481–482 (BR 489). s2 0.009 (earlier). s1 is at 1,104/1,536 (resumed). Rule 4 decides the run when s1 is checked.
 
+## 2026-11-24, iteration 248 (02:31–02:45): tomato_large `B1_P2swap_LE+AN` s0 converged
+
+- **Check 2018784:** `B1_P2swap_LE+AN` s0 at 1536 **0.017 (CONVERGED)**: corrected once, then honest at 461–466 (BR 488). s1 (1,464) and s2 (768) are still training (resumed).
+

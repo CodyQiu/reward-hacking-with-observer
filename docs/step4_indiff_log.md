@@ -2672,3 +2672,8 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - The Boat Race exploration runs `+N4`, `+ES10+N4` are pending (Priority); `+ENT3`, `+ES10` are running.
 - Jobs: 43 in total. Home 35.6 GB.
 
+## 2026-11-24, iteration 161 (02:31–02:45): checks for AS `L_confirm` and Boat Race `practice_LN_confirm`
+
+- `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019093** (AS `I6_indiff_twin3_L_confirm`, finished: the AS pure cell's first confirmation) and **2019094** (Boat Race `practice_LN_confirm`, finished seeds; its s20 decides the Boat Race practice cell's last confirmation).
+- Jobs: 43 in total. Home 35.6 GB.
+
