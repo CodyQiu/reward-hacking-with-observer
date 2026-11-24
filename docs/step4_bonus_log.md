@@ -2831,3 +2831,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - At about 150 episodes per 48 h, this confirmation needs about nine more resumes; each is logged as it comes.
 - Jobs: bonus 8 (cap 60).
 
+## 2026-11-23, iteration 244 (20:00–20:15): tomato_large `B1_P2swap_LE+EP` seeds finished, check submitted
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018026** (`B1_P2swap_LE+EP`, finished seeds; a tomato_large check, 12 h limit).
+- Jobs: bonus 8 (cap 60).
+

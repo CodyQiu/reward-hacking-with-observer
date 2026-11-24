@@ -626,3 +626,10 @@ No regulariser does poorly (a seed not honest by the end):
 - **Checks submitted:** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2017921** (`H1_indiff_twin3_LN` s2, finished at 18:48) and **2017920** (`H1_base_LE+ES10` s2, which reached 12288; s0, s1 at 10,608 / 10,008).
 - Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 43 (20:00–20:15): **twin3 cell: `H1_indiff_twin3_LN` 3/3 → `confirm`**; `H1_base_LE+ES10` s2 ends at the cap (0.119, PLATEAU)
+
+- **Check 2017921:** `H1_indiff_twin3_LN` s2 0.011, so **3/3** (0.011 ×3). All three are corrected once in round 0, then skip the goal (the grid caveat, about 1%). Every BR is corrected once, then honest. Twin level 0 at 8,699–8,700, and no seed hides.
+- **Rule 4:** dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin3_LN` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin3_LN_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True twin.minibatches=4 twin.rounds=100 episodes=1536 anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600` (its `overrides.json`). Submitted → **2018029**. Its seeds 20–22 include s21, whose twin2 twin failed at level 0.
+- **Check 2017920:** `H1_base_LE+ES10` s2 at 12288 (the cap): **0.119 (PLATEAU)**. It hides at the hideout (true −32), receiving 5,466 against its BR's 6,500. s0 (11,280) and s1 (10,992) are still training. Rule 4 decides the run when they finish. The standard-PBRR cell's open path is `H1_base_LE+ENT3_confirm` (2016007).
+- Cells DONE: 2 of 5. Jobs: hideout 8 (cap 24).
+
