@@ -651,3 +651,8 @@ No regulariser does poorly (a seed not honest by the end):
 - The twin3 cell now has two confirmations running: `H1_indiff_twin3_LN_confirm` (2018029) and `L_confirm` (2018669). `H1_indiff_twin3_LE` (2014063) is still training.
 - Cells DONE: 2 of 5. Jobs: hideout 7 (cap 24).
 
+## 2026-11-24, iteration 47 (00:07–00:20): `H1_indiff_twin3_LE` seeds finished, check submitted
+
+- `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018783** (`H1_indiff_twin3_LE`, finished seeds).
+- Cells DONE: 2 of 5.
+
