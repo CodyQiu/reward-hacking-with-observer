@@ -619,3 +619,10 @@ No regulariser does poorly (a seed not honest by the end):
 - `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2017864** (`H1_indiff_twin3_LN`, finished seeds). These are the first hideout twin3 checks. Twin level 0 in all nine `H1_indiff_twin3_*` seeds was 8,606–8,700 at iteration 34.
 - Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 42 (19:11–19:20): first twin3 hideout check: `H1_indiff_twin3_LN` s0, s1 0.011 (twin priced at M; no hiding)
+
+- **Check 2017864:** `H1_indiff_twin3_LN` s0 and s1 at 1536: **0.011 / 0.011 (CONVERGED).** Corrected once in round 0, then they skip the goal (true −100; the grid caveat), receiving 8,576 against their BRs' 8,698. Every BR is corrected once, then honest.
+  - Twin level 0: 8,699.6 / 8,699.7 / 8,699.1 (M 8,700). This is the config whose twin2 confirmation lost s21 to a level-0 failure (twin at 20, PPO hid). **P1 holds here, and no seed hides.**
+- **Checks submitted:** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2017921** (`H1_indiff_twin3_LN` s2, finished at 18:48) and **2017920** (`H1_base_LE+ES10` s2, which reached 12288; s0, s1 at 10,608 / 10,008).
+- Cells DONE: 2 of 5.
+

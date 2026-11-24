@@ -2515,3 +2515,8 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **AS twin3: all three pure configs (`L`, `LE`, `LN`) and `practice_L` are 3/3 in tuning, with confirmations running.** Grid and Tomato: every config is 3/3 except grid `practice_L` (extending) and the practice `LN`s still to be checked.
 - twin3 confirmations running (19). Jobs: 54 in total. Home 35.3 GB.
 
+## 2026-11-23, iteration 152 (19:11–19:20): AS twin3 `practice_LN` finished, check submitted
+
+- COMPLETED: AS `I6_indiff_twin3_practice_LN` (2014043, 15.0 h). `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2017919**.
+- twin3 confirmations running (19). Jobs: 53 in total. Home 35.3 GB.
+

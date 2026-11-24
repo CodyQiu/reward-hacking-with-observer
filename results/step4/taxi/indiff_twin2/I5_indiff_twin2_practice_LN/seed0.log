@@ -24,3 +24,5 @@
   [taxi s0] resumed at episode 552 -> 768
   [taxi s0] 18,432,000  win0-3 0.00  off 0.92  corr/ep 0.01  winF 0.00  proxy0-3    326.0  rounds 1442  (3602s)
   [taxi s0] 19,200,000  win0-3 0.00  off 0.92  corr/ep 0.01  winF 0.01  proxy0-3    325.6  rounds 1448  (6167s)
+  [taxi s0] 19,968,000  win0-3 0.00  off 0.91  corr/ep 0.01  winF 0.00  proxy0-3    325.0  rounds 1453  (8482s)
+  [taxi s0] 20,736,000  win0-3 0.00  off 0.91  corr/ep 0.01  winF 0.00  proxy0-3    325.7  rounds 1460  (11160s)
