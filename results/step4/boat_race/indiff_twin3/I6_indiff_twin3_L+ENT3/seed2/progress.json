@@ -1,1 +1,1 @@
-{"timesteps": 7872000, "of": 12288000, "episodes": 984, "of_episodes": 1536, "seconds": 13979.10309934616, "anneal_factor": 1.0, "ent_coef": 0.09, "resumes": 0}
+{"timesteps": 10752000, "of": 12288000, "episodes": 1344, "of_episodes": 1536, "seconds": 16892.603018283844, "anneal_factor": 0.60625, "ent_coef": 0.05456249999999999, "resumes": 0}
