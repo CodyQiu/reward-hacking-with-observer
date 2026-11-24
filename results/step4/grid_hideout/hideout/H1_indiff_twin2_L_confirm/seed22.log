@@ -127,3 +127,6 @@
   [grid_hideout s22] 24,192,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2189.5  rounds 4600  (27608s)
   [grid_hideout s22] 24,384,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2188.5  rounds 4624  (28053s)
   [grid_hideout s22] 24,576,000  win0-3 0.25  off 0.30  corr/ep 1.00  winF 0.00  proxy0-3   2189.8  rounds 4648  (28447s)
+  [grid_hideout s22] resumed at episode 3072 -> 6144
+  [grid_hideout s22] 24,768,000  win0-3 0.25  off 0.29  corr/ep 1.00  winF 0.00  proxy0-3   2184.2  rounds 4672  (519s)
+  [grid_hideout s22] 24,960,000  win0-3 0.25  off 0.29  corr/ep 1.00  winF 0.00  proxy0-3   2132.5  rounds 4698  (1014s)
