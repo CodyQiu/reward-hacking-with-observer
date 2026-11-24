@@ -633,3 +633,8 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check 2017920:** `H1_base_LE+ES10` s2 at 12288 (the cap): **0.119 (PLATEAU)**. It hides at the hideout (true −32), receiving 5,466 against its BR's 6,500. s0 (11,280) and s1 (10,992) are still training. Rule 4 decides the run when they finish. The standard-PBRR cell's open path is `H1_base_LE+ENT3_confirm` (2016007).
 - Cells DONE: 2 of 5. Jobs: hideout 8 (cap 24).
 
+## 2026-11-23, iteration 44 (20:50–21:05): checks for `H1_indiff_twin3_L` and `H1_base_LE+ES10`
+
+- `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018322** (`H1_base_LE+ES10`, a seed newly at 12288) and **2018323** (`H1_indiff_twin3_L`, finished seeds).
+- Cells DONE: 2 of 5.
+
