@@ -2874,3 +2874,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Ended:** `B1_base_LN+ES10+N4_confirm` (2017862, seeds 20–22 at 1536, 14.6 h); `B1_P2swap_LE+EP` s1, s2 finished (s0 at 1,008 of 1,536; job 2017330 still running).
 - **Checks:** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019570** (`B1_P2swap_LE+EP` s1, s2), **2019571** (`B1_base_LN+ES10+N4_confirm`). Checks 2019166 (`LE+AN`) and 2019241 (`LE+N4`) have been waiting on priority since 03:50.
 - No new quota errors (flag at the top stays open).
+
+## 2026-11-24, iteration 252 (11:58–12:10): tomato_large `B1_P2swap_LE+AN` s1 converged
+
+- **Check 2019166:** `B1_P2swap_LE+AN` **s1 at 1536: 0.018 (CONVERGED)**. Corrected once (round 0), then honest at 457–464 (BR 478); received 1,232–1,233 against the BR's 1,258. s0 is 0.017 (iteration 248).
+- s2 is at 1,344 of 1,536 (job 2017328 running). Rule 4 waits for it.
+- Checks 2019241 (`LE+N4`), 2019570 (`LE+EP`) and 2019571 (`base_LN+ES10+N4_confirm`) are still pending on priority.
