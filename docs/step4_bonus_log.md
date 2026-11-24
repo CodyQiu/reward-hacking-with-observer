@@ -2816,3 +2816,11 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - s0 and s1 are at 384 and 336 of 1,536 after 40 h. Job 2003965 reaches the 48 h limit at about 15:40 and is then resumed (rule 1). Rule 4 decides the run when all three seeds are checked.
 - Jobs: bonus 7 (cap 60).
 
+## 2026-11-23, iteration 242 (15:51–16:20): six tomato_large swap runs stopped by the 48 h limit, resumed
+
+- **TIMEOUT at 15:46:55 (sacct):** `B1_P2swap_LE+EP`, `+AN`, `+ENT3`, `+ES10`, `+N4`, `+ES10+N4` (2003961–2003966). These are 48 h limit stops, not incidents.
+- **Rule 1.** Dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume` lists these six and also the runs killed in the 2026-11-18 quota incident (tomato `B1_P1eq1_LN_confirm`, `B1_base_LN+ES10+N4+ENT10` / `+ES30`; tomato_large `B1_P1eq1_LN+ES10*`, `B1_P2swap_LE+GL` / `+LR` / `+NET` / `+RS`, `B1_base_L` / `LE` / `LN+ES10` / `LN+N4`). The quota-incident runs stay held for the user (flag), so only the six were submitted, each as printed (`submit.sh 48 --env tomato_large --run-id <run> --seeds <unfinished> --results-dir results/step4/tomato_large/bonus --resume`):
+  - `+AN` → **2017328**, `+ENT3` → **2017329**, `+EP` → **2017330**, `+ES10+N4` → **2017331**, `+ES10` → **2017332**, `+N4` (s0, s1) → **2017333**.
+- `B1_base_LN+ES10+N4_confirm` (2004619) reaches its limit at about 17:50.
+- Jobs: bonus 7 (cap 60).
+

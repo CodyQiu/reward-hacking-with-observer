@@ -608,3 +608,9 @@ No regulariser does poorly (a seed not honest by the end):
 - `H1_indiff_twin2_L_confirm` (2013782, 14:26) has finished at 3072. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2016719** (s21). s20 0.011 and s22 0.000 are already in. If s21 is CONVERGED, the twin2 cell is DONE (with `H1_indiff_twin2_L` 3/3 in tuning).
 - Running: `H1_base_LE+ENT3_confirm` (2016007), `H1_base_LE+ES10` → 12288 (2015428), `H1_indiff_twin2_LE` → 6144 (2015429), `H1_indiff_twin3_*` (2014062–64). Cells DONE: 2 of 5.
 
+## 2026-11-23, iteration 40 (15:51–16:20): `H1_indiff_twin2_L_confirm` s21 still short at 3072 → extend 6144
+
+- **Check 2016719:** `H1_indiff_twin2_L_confirm` s21 at 3072: **0.108 (IMPROVING)**, down from 0.137 at 1536. It is corrected in every round 0–3, never reaches the goal (true −100), and receives 8,224–8,259 against its BR's 8,695. s20 0.011, s22 0.000.
+- **Rule 4:** a seed is IMPROVING, so extend 2×. Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_indiff_twin2_L_confirm 6144` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_L_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144`. Submitted → **2017346**.
+- Cells DONE: 2 of 5. Jobs: hideout 7 (cap 24).
+
