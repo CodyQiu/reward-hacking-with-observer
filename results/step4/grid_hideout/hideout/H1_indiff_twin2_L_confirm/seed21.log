@@ -129,3 +129,6 @@
   [grid_hideout s21] 24,576,000  win0-3 0.25  off 0.27  corr/ep 4.00  winF 0.11  proxy0-3   1917.5  rounds 12504  (46426s)
   [grid_hideout s21] resumed at episode 3072 -> 6144
   [grid_hideout s21] 24,768,000  win0-3 0.23  off 0.26  corr/ep 4.00  winF 0.03  proxy0-3   1785.0  rounds 12600  (953s)
+  [grid_hideout s21] 24,960,000  win0-3 0.14  off 0.23  corr/ep 4.00  winF 0.07  proxy0-3   1487.6  rounds 12696  (1963s)
+  [grid_hideout s21] 25,152,000  win0-3 0.15  off 0.24  corr/ep 4.00  winF 0.02  proxy0-3   1545.5  rounds 12792  (3003s)
+  [grid_hideout s21] 25,344,000  win0-3 0.16  off 0.23  corr/ep 4.00  winF 0.05  proxy0-3   1506.9  rounds 12888  (4047s)
