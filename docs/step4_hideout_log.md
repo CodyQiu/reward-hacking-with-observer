@@ -673,3 +673,8 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check submitted:** `H1_indiff_twin2_LE` (extension to 6144, 2015429) has finished seeds. `CAMPAIGN=hideout ... br_missing submit` → **2019095**.
 - Cells DONE: 2 of 5. Jobs: hideout 6 (cap 24).
 
+## 2026-11-24, iteration 51 (03:17–03:30): `H1_indiff_twin2_LE` s0 converged at 6144 (honest after its correction)
+
+- **Check 2019095:** `H1_indiff_twin2_LE` s0 at 6144: **0.000 (CONVERGED)**. Corrected once, then honest (true 22), receiving 8,821 = its BR's. At 3072 it was 0.180 (honest but paid 22% less). s1 (4,416) and s2 (4,344) are still extending to 6144.
+- Cells DONE: 2 of 5.
+
