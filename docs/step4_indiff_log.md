@@ -413,6 +413,12 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 ## Flags for the user
 
+- **NEW (2026-11-24 04:10): a job hit `Disk quota exceeded` at 03:43, although `du` shows home at 35.7 GB.** Bonus job 2017333 (tomato_large `B1_P2swap_LE+N4`, resumed seeds 0, 1) trained both seeds to the end ("seed 0 exit 0", "seed 1 exit 0"; all three seeds have `metrics.json`). Then it failed on the final append to `results/step4/tomato_large/bonus/runs.csv`: `OSError: [Errno 122] Disk quota exceeded` (sacct FAILED 1:0). No training data was lost, so nothing is resubmitted; only that run's `runs.csv` row is missing.
+  - Writes work again: a 50 MB probe at 04:04 succeeded. No other job failed.
+  - `du -s ~` is 35,687 MiB: the repo 19.5 GB, other projects about 16 GB. The quota is about 50 GB (the 2026-11-18 incident). So the server's accounting must differ from `du`.
+  - **My guess (untested; I cannot see the quota from here):** ZFS snapshots on the TrueNAS home still hold the roughly 12.7 GB of `.git` objects deleted on 2026-11-23. Bursts of checkpoint writes (tomato_large `logs.npz` up to about 115 MB, written atomically as temp files) can then reach the real limit.
+  - **More jobs may fail the same way.** Could you check your real quota usage (for example with SRCC or the FarmShare portal), or free space elsewhere in home (229-next-token 5.1 GB, CS197-master-repo 6.6 GB, ska-distill 3.3 GB)? I am not deleting anything outside this repo, and the jobs keep running.
+
 - **NEW (2026-11-23 10:05): indiff_twin3, first Taxi seeds. The twin still values level 0 at about −100, and now the agent stops exploiting altogether.** P3 (Taxi) is not met so far.
   - `I6_indiff_twin3_L` s0 and s1 finished 768 episodes in about 5–6 h; the twin2 Taxi runs took 28–40 h, because they were corrected often. Both seeds end with 0 corrections and nothing exploited off the window.
   - s0 is honest but weak: 2.4 deliveries per round at every level, 0 repeat pickups, true about −20 (honest 125). s1 does nothing: 0 deliveries, true −93.
@@ -2685,4 +2691,11 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - AS `I6_indiff_twin3_L_confirm` s21, s22 0.000. s20 finished at 02:42, after the check started → **2019164** (`CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit`).
   - Boat Race `practice_LN_confirm` s21, s22 0.000; s20 is still training.
 - Jobs: 42 in total. Home 35.7 GB.
+
+## 2026-11-24, iteration 163 (04:03–04:15): grid `L_confirm`, `practice_LN` finished (information); disk-quota error on a bonus job (flag)
+
+- COMPLETED: grid `I6_indiff_twin3_L_confirm` (2016720) and `practice_LN` (2014037). Both cells are DONE, so these are information only. Checks: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019239**, **2019240**.
+- AS `L_confirm` s20's check (2019164) is still queued.
+- **Flag at the top:** a bonus job failed at 03:43 on `Disk quota exceeded` while `du` showed 35.7 GB (details in `docs/step4_bonus_log.md`, iteration 250).
+- Jobs: 44 in total. Home 35.7 GB by `du`.
 
