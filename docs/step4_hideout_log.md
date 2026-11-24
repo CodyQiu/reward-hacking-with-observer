@@ -684,3 +684,9 @@ No regulariser does poorly (a seed not honest by the end):
 - `H1_indiff_twin2_L_confirm` (2017346, extended to 6144): s22 finished; s20, s21 at 5,304 / 4,680.
 - Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019572**.
 - Still running: `H1_base_LE+ENT3_confirm` (2016007), `H1_indiff_twin2_LE` (2015429), `H1_indiff_twin3_LE` (extend 3072, 2019096), `H1_indiff_twin3_L_confirm` (2018669), `H1_indiff_twin3_LN_confirm` (2018029). Cells DONE: 2 of 5.
+
+## 2026-11-24, iteration 53 (10:22–10:40): `H1_indiff_twin2_L_confirm` s22 converged at 6144
+
+- **Check 2019572:** `H1_indiff_twin2_L_confirm` **s22 at 6144: 0.000**, CONVERGED. Corrected once in round 0, then honest (true 20 ×4); twin level 0 at 8,698.7 (M 8,700).
+- The same check reports s20 and s21 at their earlier 3072 checkpoints (0.011 / 0.108); both are still training to 6144 (5,304 / 4,680 at 09:33). Rule 4 waits for them.
+- Cells DONE: 2 of 5.
