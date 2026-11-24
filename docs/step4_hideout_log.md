@@ -661,3 +661,8 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check 2018783:** `H1_indiff_twin3_LE` s0 **0.011**, s2 **0.011** (CONVERGED). s0 is re-corrected in every round (true −100); s2 is corrected in rounds 0–1, then not (true −100, the goal skipped). Both receive about 8,695 against their BRs' 8,820: the grid caveat. s1 is at 1,440/1,536.
 - Cells DONE: 2 of 5. The twin3 cell has two confirmations running (`H1_indiff_twin3_LN_confirm` 2018029, `L_confirm` 2018669).
 
+## 2026-11-24, iteration 49 (01:42–02:00): `H1_indiff_twin3_LE` finished, s1 check submitted
+
+- `H1_indiff_twin3_LE` (2014063, 01:26, 21.2 h) finished. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018977** (s1). If it is CONVERGED, `LE` is 3/3 and goes to `confirm`.
+- Cells DONE: 2 of 5.
+

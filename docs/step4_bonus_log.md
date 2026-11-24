@@ -2844,3 +2844,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018784** (`B1_P2swap_LE+AN`).
 
+## 2026-11-24, iteration 247 (01:42–02:00): tomato_large `B1_P2swap_LE+N4` s0 converged
+
+- **Check 2018668:** `B1_P2swap_LE+N4` s0 at 1536 **0.010 (CONVERGED)**: corrected once, then honest at 481–482 (BR 489). s2 0.009 (earlier). s1 is at 1,104/1,536 (resumed). Rule 4 decides the run when s1 is checked.
+
