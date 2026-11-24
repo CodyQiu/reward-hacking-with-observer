@@ -678,3 +678,9 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check 2019095:** `H1_indiff_twin2_LE` s0 at 6144: **0.000 (CONVERGED)**. Corrected once, then honest (true 22), receiving 8,821 = its BR's. At 3072 it was 0.180 (honest but paid 22% less). s1 (4,416) and s2 (4,344) are still extending to 6144.
 - Cells DONE: 2 of 5.
 
+
+## 2026-11-24, iteration 52 (09:33–09:50): `H1_indiff_twin2_L_confirm` s22 finished; check submitted
+
+- `H1_indiff_twin2_L_confirm` (2017346, extended to 6144): s22 finished; s20, s21 at 5,304 / 4,680.
+- Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019572**.
+- Still running: `H1_base_LE+ENT3_confirm` (2016007), `H1_indiff_twin2_LE` (2015429), `H1_indiff_twin3_LE` (extend 3072, 2019096), `H1_indiff_twin3_L_confirm` (2018669), `H1_indiff_twin3_LN_confirm` (2018029). Cells DONE: 2 of 5.

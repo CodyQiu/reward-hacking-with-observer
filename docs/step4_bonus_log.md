@@ -2868,3 +2868,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - The seeds are complete (`metrics.json` in seed0–seed2). Nothing is resubmitted; only the `runs.csv` row is missing. Flag at the top: the quota is near its limit by the server's accounting, though `du` reads 35.7 GB.
 - **Check submitted:** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019241** (`B1_P2swap_LE+N4` s1). If it is CONVERGED, the run is 3/3 (s0 0.010, s2 0.009) and goes to `confirm`.
 
+
+## 2026-11-24, iteration 251 (09:33–09:50): tomato_large base `LN+ES10+N4_confirm` finished; checks submitted
+
+- **Ended:** `B1_base_LN+ES10+N4_confirm` (2017862, seeds 20–22 at 1536, 14.6 h); `B1_P2swap_LE+EP` s1, s2 finished (s0 at 1,008 of 1,536; job 2017330 still running).
+- **Checks:** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019570** (`B1_P2swap_LE+EP` s1, s2), **2019571** (`B1_base_LN+ES10+N4_confirm`). Checks 2019166 (`LE+AN`) and 2019241 (`LE+N4`) have been waiting on priority since 03:50.
+- No new quota errors (flag at the top stays open).
