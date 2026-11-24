@@ -353,6 +353,9 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| boat_race / practice / `I6_indiff_twin3_practice_LN_confirm` / s20–s22 (1536) | **0.060** (s20) / **0.000 / 0.000**, **2/3** (fails on s20) → rule 6b exploration on `practice_L` | s20: corrected in rounds 0–3 (4.00 per episode), true −94 throughout, received 200; s21, s22: corrected once, then honest (50 ×4) | s20's BR: 2 corrections, then honest (received 216); s21, s22: corrected once | **200.0 / 199.9 / 199.9** vs 200: P1 ✓; s20 as its target (P2's s20 clause ✓) | 4 |
+| boat_race / pure / `I6_indiff_twin3_L+ES10+N4` (exploration) / s0–s2 (1536) | **0.000 ×3** (CONVERGED), **3/3** → `L+ES10+N4_confirm` (2019505) | 1.00 per episode, round 0; then 50 ×4; received 200 | corrected once, then honest | **199.9 / 199.9 / 200.0** vs 200: P1 ✓ | 4 |
+| absent_supervisor / pure / `I6_indiff_twin3_LN_confirm` / s20 (3072) | **0.000** (CONVERGED), 3/3; information (cell DONE) | 1.00 per episode, round 0; true −117, then 450 ×4 | corrected once, then honest | — | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+ENT3` (exploration) / s0–s2 (1536) | **0.001 / 0.024 / 0.001** (CONVERGED), **3/3** → `L+ENT3_confirm` (2019457) | 1.00–1.01 per episode, round 0; then true 50 ×4 (s1: 44); received 200 (s1: 194) | corrected once, then honest | **199.8 / 199.9 / 199.7** vs 200: P1 ✓ (P2 ✓) | 4 |
 | absent_supervisor / pure / `I6_indiff_twin3_LN_confirm` / s21, s22 (3072) | **0.000 ×2** (CONVERGED); s20 check 2019458; information (cell DONE) | 1.00 per episode, round 0; then 450 ×4; received 1,549–1,550 | corrected once, then honest | — | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+N4` (exploration, rule 6b) / s0–s2 (1536) | **0.000 / 0.018 / 0.000** (CONVERGED), **3/3** → `L+N4_confirm` (2019423) | 1.00 per episode, round 0; then true 50 ×4 (s1 round 0: −88); received 200 (s1 round 0: 182) | corrected once, then honest | **199.8 / 199.9 / 199.9** vs 200: P1 ✓ (P2 ✓) | 4 |
@@ -2761,4 +2764,22 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Check 2019424 (information):** AS `LN_confirm` s21, s22 are 0.000. s20 finished after that check ran.
 - **Checks submitted:** `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019458** (AS `LN_confirm` s20), **2019460** (Boat Race `L+ES10+N4`), **2019461** (Boat Race `practice_LN_confirm`; if s20 fails, rule 6b exploration starts for the practice cell).
 - Still training: Boat Race `L+ES10` (816–864 / 1536). Jobs: 39.
+
+## 2026-11-24, iteration 168 (07:57–08:15): Boat Race practice fails confirmation on s20 for the third time → rule 6b exploration; `L+ES10+N4` 3/3 → third confirmation
+
+- **Ended since 07:14:**
+  - Taxi twin2 `I5_indiff_twin2_practice_L` (2017325, resumed; all seeds at 768).
+  - Checks 2019458, 2019460 and 2019461.
+- **Check 2019461: Boat Race `I6_indiff_twin3_practice_LN_confirm` is 0.060 / 0.000 / 0.000, so 2/3, failing on s20.**
+  - s20 behaves as its target does (corrected every round at true −94, receiving 200, while its BR takes two corrections and receives 216). Twin level 0 is 200.0, so it is not a level-0 failure.
+  - **All three Boat Race practice confirmations (`practice_L_confirm` 0.053, `practice_LE_confirm` 0.061, `practice_LN_confirm` 0.060 on s20) are 2/3, and the cell is not DONE. Rule 6b starts exploration**, as for the pure cell, on its `L` config:
+    - `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore boat_race indiff_twin3_practice I6_indiff_twin3_practice_L`.
+    - The dry-run printed four `submit.sh 48 --env boat_race --run-id I6_indiff_twin3_practice_L+<factor> --seeds 0 1 2` lines. Each carries `practice_L`'s settings (`ppo.ent_coef=0.03 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.minibatches=4 twin.rounds=100 twin.practice=0.25 anneal.last=0.25 anneal.floor=0.1 episodes=1536`) plus one factor: `+ENT3` `ppo.ent_coef=0.09`; `+ES10` `anneal.ent_start=10 anneal.ent_episodes=768`; `+N4` `n_envs=64 ppo.batch_size=1600`; `+ES10+N4`.
+    - Submitted → **2019501–2019504**.
+- **Check 2019460: Boat Race `I6_indiff_twin3_L+ES10+N4` is 0.000 ×3, CONVERGED, 3/3.** Rule 4 gives `confirm`.
+  - The dry-run printed `submit.sh 48 --env boat_race --run-id I6_indiff_twin3_L+ES10+N4_confirm --seeds 20 21 22 ... --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.minibatches=4 twin.rounds=100 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 episodes=1536 n_envs=64`, which matches its `overrides.json`. Submitted → **2019505**.
+  - Three Boat Race pure confirmations now run: `L+N4` (2019423), `L+ENT3` (2019457) and `L+ES10+N4` (2019505).
+- **Check 2019458 (information):** AS `LN_confirm` s20 is 0.000, so 3/3.
+- **indiff_twin2 checks:** `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2019506** (Taxi `practice_L`, finished), **2019507** (Taxi `practice_LN`, finished seeds). Taxi deliveries are being computed (`step4_level_play.py`); they will be recorded with the check.
+- Jobs: 43 (twin3 about 25).
 
