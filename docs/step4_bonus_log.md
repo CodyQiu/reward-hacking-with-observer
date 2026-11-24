@@ -2890,3 +2890,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **2017330** (tomato_large `B1_P2swap_LE+EP`, resumed): seeds 0–2 trained to 1536 and exited 0. All have `metrics.json`. The job then failed at 12:47 on the `runs.csv` append (`OSError: [Errno 122] Disk quota exceeded`). The row was written twice. This is the same failure as 2017333 at 03:43. Flag updated; nothing resubmitted (no data lost).
 - `B1_P2swap_LE+EP` s0 (training log): win0-3 0.25, corrections 1.00 per episode. Check 2019570 (pending on priority) covers the finished seeds when it runs.
 - Checks 2019241, 2019570 and 2019571 are still pending on priority.
+
+## 2026-11-24, iteration 254 (15:20–15:30): tomato_large `B1_P2swap_LE+AN` finished; check submitted
+
+- **Ended:** `B1_P2swap_LE+AN` (2017328, resumed; s2 finished at 14:46; exit 0, no quota error).
+- **Check:** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020160** (s2; s0 0.017 and s1 0.018 already CONVERGED).
