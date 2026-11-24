@@ -14,6 +14,10 @@ Procedure: `docs/step4_bonus.md` (with the criteria, rules and commands of `docs
   - **My guess (untested; I cannot see the quota from here):** ZFS snapshots on the TrueNAS home still hold the roughly 12.7 GB of `.git` objects deleted on 2026-11-23. Bursts of checkpoint writes (tomato_large `logs.npz` up to about 115 MB, written atomically as temp files) can then reach the real limit.
   - **More jobs may fail the same way.** Could you check your real quota usage (for example with SRCC or the FarmShare portal), or free space elsewhere in home (229-next-token 5.1 GB, CS197-master-repo 6.6 GB, ska-distill 3.3 GB)? I am not deleting anything outside this repo, and the jobs keep running.
 
+  - **UPDATE (2026-11-24 13:40): a second job failed the same way.** Bonus job 2017330 (tomato_large `B1_P2swap_LE+EP`, resumed) trained all three seeds to the end ("exit 0"; all have `metrics.json`). It failed at 12:47 on the same `runs.csv` append (`OSError: [Errno 122] Disk quota exceeded`, sacct FAILED 1:0, on rye-02).
+    - The row did reach the file, but **twice** (two identical `B1_P2swap_LE+EP (resumed)` rows; the close after the write raised). The 03:43 failure did the same: two `B1_P2swap_LE+N4 (resumed)` rows. I am leaving `runs.csv` as it is (no edits to run registries).
+    - `du -sh ~` is 35 GB again, and a write probe succeeds right after. Nothing is resubmitted: no data was lost.
+    - Both failures are in tomato_large bonus jobs, at the moment they finish, while about 35 other jobs write checkpoints.
 - **NEW (2026-11-21): the disk-quota incident of 2026-11-18 15:11 killed 13 bonus runs and one check. I have not resumed the runs, and am waiting for you.** The home directory hit its quota (about 50 GB; the old `.git` held 19 GB of checkpoint history), and every job that wrote after that failed (109 FAILED in sacct across all campaigns). Nothing ran from then until 2026-11-21. You re-cloned the repo shallow (`5fb1619`); home is at 42 GB of about 50 now, `.git` 12 GB. I check the space every iteration and stop submitting at 46 GB.
   - Killed runs, with episodes done per seed at their last checkpoint (all intact on disk; `CAMPAIGN=bonus ... resume submit` would continue them, together with the held Tomato `B1_P1eq1_LN_confirm`):
     - tomato_large base: `B1_base_L` (5784 / 5808 / 5712 of its extension), `B1_base_LE` (s1 at 1032 of 1536; s0, s2 finished), `B1_base_LN+N4` (2184 ×3), `B1_base_LN+ES10` (720 / 312 / 1032).
@@ -2880,3 +2884,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Check 2019166:** `B1_P2swap_LE+AN` **s1 at 1536: 0.018 (CONVERGED)**. Corrected once (round 0), then honest at 457–464 (BR 478); received 1,232–1,233 against the BR's 1,258. s0 is 0.017 (iteration 248).
 - s2 is at 1,344 of 1,536 (job 2017328 running). Rule 4 waits for it.
 - Checks 2019241 (`LE+N4`), 2019570 (`LE+EP`) and 2019571 (`base_LN+ES10+N4_confirm`) are still pending on priority.
+
+## 2026-11-24, iteration 253 (13:32–13:45): job 2017330 FAILED on `Disk quota exceeded` after all seeds finished (flag)
+
+- **2017330** (tomato_large `B1_P2swap_LE+EP`, resumed): seeds 0–2 trained to 1536 and exited 0. All have `metrics.json`. The job then failed at 12:47 on the `runs.csv` append (`OSError: [Errno 122] Disk quota exceeded`). The row was written twice. This is the same failure as 2017333 at 03:43. Flag updated; nothing resubmitted (no data lost).
+- `B1_P2swap_LE+EP` s0 (training log): win0-3 0.25, corrections 1.00 per episode. Check 2019570 (pending on priority) covers the finished seeds when it runs.
+- Checks 2019241, 2019570 and 2019571 are still pending on priority.

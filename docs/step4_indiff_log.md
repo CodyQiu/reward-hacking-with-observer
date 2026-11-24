@@ -453,6 +453,10 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
   - **My guess (untested; I cannot see the quota from here):** ZFS snapshots on the TrueNAS home still hold the roughly 12.7 GB of `.git` objects deleted on 2026-11-23. Bursts of checkpoint writes (tomato_large `logs.npz` up to about 115 MB, written atomically as temp files) can then reach the real limit.
   - **More jobs may fail the same way.** Could you check your real quota usage (for example with SRCC or the FarmShare portal), or free space elsewhere in home (229-next-token 5.1 GB, CS197-master-repo 6.6 GB, ska-distill 3.3 GB)? I am not deleting anything outside this repo, and the jobs keep running.
 
+  - **UPDATE (2026-11-24 13:40): a second job failed the same way.** Bonus job 2017330 (tomato_large `B1_P2swap_LE+EP`, resumed) trained all three seeds to the end ("exit 0"; all have `metrics.json`). It failed at 12:47 on the same `runs.csv` append (`OSError: [Errno 122] Disk quota exceeded`, sacct FAILED 1:0, on rye-02).
+    - The row did reach the file, but **twice** (two identical `B1_P2swap_LE+EP (resumed)` rows; the close after the write raised). The 03:43 failure did the same: two `B1_P2swap_LE+N4 (resumed)` rows. I am leaving `runs.csv` as it is (no edits to run registries).
+    - `du -sh ~` is 35 GB again, and a write probe succeeds right after. Nothing is resubmitted: no data was lost.
+    - Both failures are in tomato_large bonus jobs, at the moment they finish, while about 35 other jobs write checkpoints.
 - **NEW (2026-11-23 10:05): indiff_twin3, first Taxi seeds. The twin still values level 0 at about −100, and now the agent stops exploiting altogether.** P3 (Taxi) is not met so far.
   - `I6_indiff_twin3_L` s0 and s1 finished 768 episodes in about 5–6 h; the twin2 Taxi runs took 28–40 h, because they were corrected often. Both seeds end with 0 corrections and nothing exploited off the window.
   - s0 is honest but weak: 2.4 deliveries per round at every level, 0 repeat pickups, true about −20 (honest 125). s1 does nothing: 0 deliveries, true −93.
@@ -2875,3 +2879,9 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Boat Race `L+ENT3_confirm` is now 2 of 3 converged (s21 0.025, s22 0.001). s20, the seed that failed every earlier Boat Race confirmation, is at 1,296 of 1,536** (about 40 min) and decides the pure cell. `L+N4_confirm` s20 is at 600.
 - Still pending on priority: `L+ES10_confirm`, `L+ES10+N4_confirm`, the practice exploration (2019501–2019504), and 4 checks. Nothing else ended. Jobs: 36.
 
+
+## 2026-11-24, iteration 175 (13:32–13:45): Boat Race s20 heads for the same failure in two more confirmations
+
+- **Training logs, s20:** `L+ENT3_confirm` (1,512 of 1,536) and `L+N4_confirm` (672) are both corrected in every audited round (win0-3 1.00, 4.00 corrections per episode, final window 1.00, proxy about 198–200). That is the same behaviour as s20 in `L_confirm`, `LE_confirm` and `LN_confirm`, and as s20's exact target. Checks come when the seeds finish. If they fail, all confirmations so far (5 configs) fail only on s20.
+- Bonus job 2017330 FAILED on `Disk quota exceeded` after all seeds finished. This is the second such case; the quota flag is updated here and in the bonus log.
+- Nothing else ended. Jobs: 35 (6 Boat Race runs pending on priority).
