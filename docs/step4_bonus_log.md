@@ -2824,3 +2824,10 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - `B1_base_LN+ES10+N4_confirm` (2004619) reaches its limit at about 17:50.
 - Jobs: bonus 7 (cap 60).
 
+## 2026-11-23, iteration 243 (18:22–18:35): tomato_large `B1_base_LN+ES10+N4_confirm` stopped by the 48 h limit, resumed
+
+- **TIMEOUT at 17:50:49 (sacct):** `B1_base_LN+ES10+N4_confirm` (2004619), at 144 / 144 / 168 of 1,536 episodes (seeds 20–22). A 48 h limit stop.
+- **Rule 1.** The line from the dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume` was `submit.sh 48 --env tomato_large --run-id B1_base_LN+ES10+N4_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/bonus --resume`. Submitted → **2017862**.
+- At about 150 episodes per 48 h, this confirmation needs about nine more resumes; each is logged as it comes.
+- Jobs: bonus 8 (cap 60).
+

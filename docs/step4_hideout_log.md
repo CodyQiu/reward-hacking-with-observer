@@ -614,3 +614,8 @@ No regulariser does poorly (a seed not honest by the end):
 - **Rule 4:** a seed is IMPROVING, so extend 2×. Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_indiff_twin2_L_confirm 6144` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_L_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144`. Submitted → **2017346**.
 - Cells DONE: 2 of 5. Jobs: hideout 7 (cap 24).
 
+## 2026-11-23, iteration 41 (18:22–18:35): first `H1_indiff_twin3_LN` seeds finished, check submitted
+
+- `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2017864** (`H1_indiff_twin3_LN`, finished seeds). These are the first hideout twin3 checks. Twin level 0 in all nine `H1_indiff_twin3_*` seeds was 8,606–8,700 at iteration 34.
+- Cells DONE: 2 of 5.
+
