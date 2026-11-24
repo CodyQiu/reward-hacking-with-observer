@@ -2836,3 +2836,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018026** (`B1_P2swap_LE+EP`, finished seeds; a tomato_large check, 12 h limit).
 - Jobs: bonus 8 (cap 60).
 
+## 2026-11-23, iteration 245 (23:15–23:35): tomato_large `B1_P2swap_LE+N4` resumed seeds finished, check submitted
+
+- `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2018668** (`B1_P2swap_LE+N4`, the resumed seeds that finished).
+

@@ -644,3 +644,10 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check 2018323:** `H1_indiff_twin3_L` s2 0.011 (corrected once, then re-corrected in rounds 1–3 and skips the goal; received 8,563–8,567 against its BR's 8,685, the grid caveat). s0 and s1 are still training.
 - Cells DONE: 2 of 5. Jobs: hideout 6 (cap 24).
 
+## 2026-11-23, iteration 46 (23:15–23:35): **twin3 cell: `H1_indiff_twin3_L` 3/3 → `confirm`**
+
+- **Check 2018482:** `H1_indiff_twin3_L` at 1536: **0.013 / 0.011 / 0.011, 3/3.** Corrected in every round 0–3 and never reaches the goal (true −100), receiving 8,563–8,613 against their BRs' 8,685–8,735 (corrected once, then honest): the grid caveat, about 1%. Twin level 0 at 8,679–8,700, and no seed hides.
+- **Rule 4:** dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin3_L` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin3_L_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True twin.minibatches=4 twin.rounds=100 episodes=1536 anneal.last=0.25 anneal.floor=0.1` (its `overrides.json`). Submitted → **2018669**.
+- The twin3 cell now has two confirmations running: `H1_indiff_twin3_LN_confirm` (2018029) and `L_confirm` (2018669). `H1_indiff_twin3_LE` (2014063) is still training.
+- Cells DONE: 2 of 5. Jobs: hideout 7 (cap 24).
+
