@@ -2902,3 +2902,8 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - Boat Race `L+N4_confirm` is running (s20 matching its target). `L+ES10_confirm`, `L+ES10+N4_confirm` and the practice exploration (2019501–2019504) are still pending on priority. tomato_large `practice_LN`'s check 2019530 is pending as well.
 - Hideout and bonus checks are logged in their logs. Jobs: 37.
+
+## 2026-11-24, iteration 178 (16:07–16:20): the hideout grid's twin3 cell is DONE (hideout log)
+
+- `H1_indiff_twin3_L_confirm` 0.013 / 0.011 / 0.011, with `H1_indiff_twin3_L` 3/3, so the hideout twin3 cell is DONE (`docs/step4_hideout_log.md`, iteration 55). No seed hides.
+- **twin3 cells in the main suite: still 6 of 12.** Boat Race `L+N4_confirm` is running; `L+ES10_confirm`, `L+ES10+N4_confirm` and the practice exploration are pending on priority.

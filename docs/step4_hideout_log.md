@@ -17,7 +17,12 @@ This log is append-only below the three summary sections.
   - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
   - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
   - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
-- Cells DONE: **2 of 5** (swap, no regulariser). Open: standard PBRR (base); indiff_twin2, reopened on 2026-11-23 under the user's level-0 rule (below); and **indiff_twin3** (new on 2026-11-23: the twin trained enough, `docs/step4_indiff.md`). Its runs are `H1_indiff_twin3_L` / `LE` / `LN` → 2014062 / 2014063 / 2014064, and the level-0 rule applies to it too.
+- Cells DONE: **3 of 5** (swap, no regulariser, indiff_twin3). Open: standard PBRR (base); indiff_twin2, reopened on 2026-11-23 under the user's level-0 rule (below).
+  - **indiff_twin3 (2026-11-24 16:10):** config `H1_indiff_twin3_L` (`g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True twin.minibatches=4 twin.rounds=100`, plus the grid's L settings), 1536 episodes. Tuning seeds 0–2: 0.013 / 0.011 / 0.011. Confirmation `H1_indiff_twin3_L_confirm`, seeds 20–22: 0.013 / 0.011 / 0.011.
+    - **Behaviour:** no seed hides. Every seed is corrected in round 0. s22 (and all tuning seeds but one) is never corrected again; s20 is re-corrected in round 1, s21 in every round 0–3.
+    - None reaches the goal after its correction (true −100, the grid caveat). They receive 7,536–8,588 per round, about 1–1.6% below their BRs (7,661–8,704; corrected once, then honest).
+    - Twin level 0: 8,179 / 8,696 / 8,693 in confirmation (8,679–8,700 in tuning) against M = 8,700. s20's twin is 6% low, so P1's 2% clause fails for s20, but it is far from a level-0 failure, and no seed hides (P1's hiding clause ✓).
+    - The prediction (`docs/step4_hideout.md`: the twin is corrected in round 0, then honest) holds up to the grid caveat, as in every grid twin cell.
   - **No regulariser (2026-11-22 23:20):** config `H1_P1eq1_L+N4` (`g.use_regularization=False anneal.last=0.25 anneal.floor=0.1 n_envs=64 ppo.batch_size=1600`; an exploration run, rule 6b), 6144 episodes. Tuning seeds 0–2: 0.000 / 0.000 / 0.014; confirmation `H1_P1eq1_L+N4_confirm` seeds 20–22: 0.000 / 0.000 / 0.025.
     - **Behaviour:** in all six seeds PPO is corrected once in round 0 (true −100), then honest (true 22 ×4), receiving 48,500–51,100 per round after the correction (no regulariser raises the honest transitions, so the corrected round pays about 5.7× the exploit). This is the exact prediction for this setting (corrected, then honest; `docs/step4_hideout.md`). In s2 and s22 the BR would take a second correction in round 1 (true −42 in that round), because the second fit raises honest play further; PPO does not, at 1.4–2.5% below.
     - It took 6144 episodes and 64 envs: `L`, `LE`, `LN` and four other exploration configs did not converge 3/3 in both tuning and confirmation (details below).
@@ -695,3 +700,15 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Ended:** `H1_indiff_twin3_L_confirm` (2018669, seeds 20–22 at 1536, 15.1 h). Finished seeds of running jobs: `H1_base_LE+ENT3_confirm` s22 (6144; s20, s21 at 4,368 / 3,840), `H1_indiff_twin2_L_confirm` s20 (6144; s21 at 5,448; s22 checked), `H1_indiff_twin3_LN_confirm` s21, s22 (1536; s20 at 1,224).
 - **Checks:** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020156** (`base_LE+ENT3_confirm`), **2020157** (`indiff_twin2_L_confirm`), **2020158** (`indiff_twin3_LN_confirm`), **2020159** (`indiff_twin3_L_confirm`; decides the twin3 cell with `L` 3/3).
+
+## 2026-11-24, iteration 55 (16:07–16:20): **indiff_twin3 cell DONE** (3 of 5); twin2 `L_confirm` s20 converged at 6144; base `LE+ENT3_confirm` s22 0.760
+
+- **Check 2020159: `H1_indiff_twin3_L_confirm` is 0.013 / 0.011 / 0.011, CONVERGED, 3/3.** With `H1_indiff_twin3_L` 3/3 in tuning, **the twin3 cell is DONE** (rule 4). Summary in the status.
+  - No seed hides, and every twin is trained (8,179–8,696). The cell counts under the user's level-0 rule.
+  - Rule 6b: nothing new for it. `H1_indiff_twin3_LE` (extending to 3072) and `LN_confirm` are information only now.
+- **Check 2020158 (information):** `H1_indiff_twin3_LN_confirm` s21, s22 0.011 (corrected once; twins 8,676 / 8,586). s20 is at 1,224.
+- **Check 2020157:** `H1_indiff_twin2_L_confirm` **s20 at 6144: 0.011** (CONVERGED; corrected twice, then skips the goal, the grid caveat; twin 8,691). s22 was 0.000 at 6144. s21 (5,448 of 6,144; 0.108 at 3072) decides this confirmation.
+- **Check 2020156:** `H1_base_LE+ENT3_confirm` **s22 at 6144: 0.760**, unconverged. PPO is corrected in every round 0–3, receives −100 per round after the first correction, and never learns to hide. Its BR hides (0 corrections, 6,500 per round, 8,700 in round 4), as standard PBRR is predicted to do.
+  - s20 and s21 are at 4,368 / 3,840. Rule 4 decides when they finish (cap 12,288).
+- Jobs: 33.
+
