@@ -2973,3 +2973,9 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
   - tomato_large `practice_LE` (1,128–1,296 of 1,536) will stop before it finishes and be resumed.
   - The Taxi twin3 jobs still running (`LE`, `practice_L` / `LE` / `LN`) will be resumed as the user asked.
 - Nothing else ended. Jobs: 34 (the stage-2 hideout runs and the Taxi `LN` extension are pending on priority).
+
+## 2026-11-24, iteration 186 (23:53–00:05): tomato_large twin3 `L` finished (honest after one correction)
+
+- **Ended:** tomato_large `I6_indiff_twin3_L` (2014050, all 3 seeds at 1536, 43.0 h, inside the 48 h limit). Training logs: corrected once per episode, then honest. Twin level 0 at 786.0 / 785.8 / 786.1.
+- **tomato_large twin3: every finished run (`L`, `LE`, `LN`, `practice_L`, `practice_LN`) shows "corrected once, then honest" in its training logs.** Their five checks (2019530, 2020497, 2020622, 2020623, 2020799) are pending on priority; tomato_large checks take 12 h slots.
+- A bonus check that had waited 18 h ran today (2019241), so the queue does move.

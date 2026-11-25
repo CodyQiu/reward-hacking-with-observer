@@ -2895,3 +2895,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Ended:** `B1_P2swap_LE+AN` (2017328, resumed; s2 finished at 14:46; exit 0, no quota error).
 - **Check:** `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020160** (s2; s0 0.017 and s1 0.018 already CONVERGED).
+
+## 2026-11-24, iteration 255 (23:53–00:05): tomato_large `B1_P2swap_LE+N4` 3/3 → `confirm`
+
+- **Check 2019241** (pending on priority since 03:50; ran 21:56–23:17): `B1_P2swap_LE+N4` **s1 at 1536: 0.009 (CONVERGED)**. With s0 0.010 and s2 0.009, the run is **3/3 CONVERGED**. Every seed is corrected once (round 0), then honest at 465–482 (BR 469–489), receiving 1,190–1,241 against the BR's 1,205–1,254.
+- **Rule 4 → confirm.** Dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large 'B1_P2swap_LE+N4'` printed `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE+N4_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/bonus --set ppo.ent_coef=0.1 ppo.batch_size=1600 g.l_minus_on=dispreferred g.epochs=1000 anneal.last=0.25 anneal.floor=0.1 protocol.update_bonus=1.0 episodes=1536 n_envs=64`, which matches its `overrides.json`. Submitted → **2021310**.
+- Still pending on priority: checks 2019570 (`LE+EP`), 2019571 (`base_LN+ES10+N4_confirm`) and 2020160 (`LE+AN` s2). `LE+AN` is 2/3 so far (s0 0.017, s1 0.018).
