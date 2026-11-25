@@ -764,3 +764,13 @@ No regulariser does poorly (a seed not honest by the end):
 - **Ended:** `H1_indiff_twin2_LE` (2015429, all seeds at 6144, 38.0 h). s0 was already checked at 6144 (0.000, iteration 51); s1 and s2 are new.
 - **Check:** dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` printed one line (`step4_br.py results/step4/grid_hideout/hideout/H1_indiff_twin2_LE --finished-only --draws 12`). Submitted → **2021609**.
 - Pending: base stage 2 (2020987–2020989), `H1_indiff_twin2_L_confirm` extension to 12,288 (2020794, running). Cells DONE: 3 of 5.
+
+## 2026-11-25, iteration 63 (02:43–02:55): `H1_indiff_twin2_LE` 3/3 CONVERGED at 6144 → confirm
+
+- **Check 2021609** (`H1_indiff_twin2_LE` at 6144):
+  - s0 **0.000**: corrected once in round 0, then honest (true 22); twin level 0 8,699.5.
+  - s1 **0.027**: corrected in every round 0–3 and never reaches the goal (true −100); it receives 8,309–8,592 against its BR's 8,700–8,720. It does not hide. Twin level 0 8,598.3 (trained).
+  - s2 **0.011**: corrected once (1.48 per episode), then skips the goal (true −100), the grid caveat. Twin level 0 8,699.3.
+  - Every BR is corrected once in round 0, then honest (true 22).
+- **Rule 4:** all three seeds CONVERGED, so confirm. Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin2_LE` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_LE_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True episodes=6144 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03 ...`. Submitted → **2021679**.
+- The twin2 cell now has two confirmations open: `L_confirm` (s21 extending to 12,288, 2020794) and `LE_confirm` (2021679). Cells DONE: 3 of 5. Hideout jobs: 5.

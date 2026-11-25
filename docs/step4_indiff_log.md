@@ -2979,3 +2979,9 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Ended:** tomato_large `I6_indiff_twin3_L` (2014050, all 3 seeds at 1536, 43.0 h, inside the 48 h limit). Training logs: corrected once per episode, then honest. Twin level 0 at 786.0 / 785.8 / 786.1.
 - **tomato_large twin3: every finished run (`L`, `LE`, `LN`, `practice_L`, `practice_LN`) shows "corrected once, then honest" in its training logs.** Their five checks (2019530, 2020497, 2020622, 2020623, 2020799) are pending on priority; tomato_large checks take 12 h slots.
 - A bonus check that had waited 18 h ran today (2019241), so the queue does move.
+
+## 2026-11-25, iteration 187 (02:43–02:55): Boat Race twin3 `practice_L+ES10` finished; check submitted
+
+- **Ended:** Boat Race `I6_indiff_twin3_practice_L+ES10` (2019502, all seeds at 1536, 6.9 h). Twin level 0 at 199.9 in each seed (M(proxy) 200), so no seed is a level-0 twin failure.
+- **Check:** dry-run `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` printed one line, for this run; the five tomato_large checks are still queued. Submitted → **2021685**.
+- Still running: Boat Race `practice_L+ENT3` / `+N4` / `+ES10+N4` (2019501, 2019503, 2019504), pure `L+ES10_confirm` (2019628) and `L+ES10+N4_confirm` (2019505). The Taxi twin3 jobs (2014027, 2014029–31) and tomato_large `practice_LE` (2014054) reach the 48 h limit at about 04:00; they will be resumed.
