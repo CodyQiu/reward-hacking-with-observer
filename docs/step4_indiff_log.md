@@ -355,6 +355,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| boat_race / pure / `I6_indiff_twin3_L+N4_confirm` / s21, s22 (1536) | **0.000 ×2** (CONVERGED); s20 (1,104+) still training, matching its target | 1.00 per episode, round 0; then 50 ×4; received 200 | corrected once, then honest | — | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+ENT3_confirm` / s20 (1536) | **0.061 (PLATEAU)**; with s21 0.025, s22 0.001: **2/3**, fails on s20 → config finished (rule 4) | 4.00 per episode (rounds 0–3), true −94 ×5, received 200: **exactly its target** (target gaps: value 0.001, true 0.000, corrections 0.00) | 4 corrections, honest after round 0 (true 50), received 216 | 200.0 vs 200: P1 ✓; s20 as its target (P2's s20 clause ✓) | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+ENT3_confirm` / s22 (1536) | **0.001** (CONVERGED); with s21 (0.025), 2 of 3 checked; **s20 at 1296 of 1536** | 1.00 per episode, round 0; then 50 ×4; received 200 | corrected once, then honest | — | 4 |
 | taxi / pure / `I6_indiff_twin3_LE` / s1 (768) | **0.599 ± 0.071**; not a level-0 failure (twin 303.9 > honest 125), but **hides: fail** | **0 (hides)**: true −86 / −87 ×5, received 317–318; deliveries 0.2 (level 0, 40.4 repeat pickups), 0.0 at level 1 (26–32 repeat pickups there) | **2 corrections** (0.97 in round 1), then honest (119 / 124), received 380 / 872 / 901 / 902 / 902 | **303.9** vs 379.7: **P1 ✗**; P3 not met | 4 |
@@ -2915,3 +2916,12 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Taxi `LN` s1 (training log): hides** (audit windows 0.00, off-window 0.94, 0 corrections, final window 1.00). Twin level 0 is −100.0, so it is a **level-0 twin failure**. Check pending.
 - **Checks submitted:** `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020424** (Taxi `LN` s1), **2020425** (Boat Race `L+N4_confirm` s21, s22).
 - Still pending on priority: `L+ES10_confirm`, `L+ES10+N4_confirm`, the practice exploration (2019501–2019504), and the tomato_large and bonus checks. Jobs: 35.
+
+## 2026-11-24, iteration 180 (18:33–18:45): tomato_large twin3 `LN` finished (corrected once, then honest, in all 3 seeds); Boat Race `L+N4_confirm` s21, s22 converged
+
+- **Ended since 17:44:** tomato_large `I6_indiff_twin3_LN` (2014052, all 3 seeds at 1536 after 38 h). Hideout `H1_indiff_twin3_LN_confirm` (hideout log). Checks 2020425 and 2020426.
+- **tomato_large `LN` (training logs):** all 3 seeds are corrected once per episode (audit window 0.25 = round 0 only), then honest (final window 0.00). Twin level 0 at 786.0 / 785.7 / 786.1 against M = 786, so P1 holds.
+  - Check: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020497**. tomato_large checks take a 12 h slot, and 2019530 (`practice_LN`) has been pending on priority since 08:45.
+- **Check 2020425:** Boat Race `L+N4_confirm` s21, s22 are 0.000, CONVERGED. s20 is still training and decides this confirmation; it is matching its target (corrected every round).
+- Jobs: 33.
+

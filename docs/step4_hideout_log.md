@@ -717,3 +717,8 @@ No regulariser does poorly (a seed not honest by the end):
 
 - `H1_indiff_twin3_LE` (2019096) finished its extension to 3072. Twin level 0: 8,698.8 / 8,599.7 / 8,699.1.
 - Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020426** (information only).
+
+## 2026-11-24, iteration 57 (18:33–18:45): twin3 `LE` at 3072 (information); `LN_confirm` finished
+
+- **Check 2020426 (information; the cell is DONE):** `H1_indiff_twin3_LE` at 3072 is 0.011 / **0.116 (IMPROVING)** / 0.011. s1 is corrected in every round, with a receipt that collapses in round 4 (4,601). Rule 6b: nothing new for a DONE cell.
+- `H1_indiff_twin3_LN_confirm` (2018029) finished. Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020498** (s20; information only).
