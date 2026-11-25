@@ -2964,3 +2964,12 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **indiff_twin2 (checks only):** Taxi `I5_indiff_twin2_practice_LN` finished (2017327, resumed, all seeds at 768), and Taxi `I5_indiff_twin2_LE` s2 finished (768; s0, s1 at 384 / 480). `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020992** (`LE` s2), **2020993** (`practice_LN` s2).
 - Hideout: the base cell enters rule 6b stage 2 (hideout log). Jobs: 35.
 
+
+## 2026-11-24, iteration 185 (22:53–23:00): tomato_large twin3 `practice_L` finished (honest after one correction)
+
+- **Ended:** tomato_large `I6_indiff_twin3_practice_L` (2014053, all 3 seeds at 1536, 41.9 h). Training logs: corrected once per episode (round 0), then honest. Twin level 0 at 785.9 / 785.7 / 786.1 (M 786). Check 2020623 is pending on priority and will cover every finished seed when it runs.
+- **tomato_large twin3 so far (training logs):** `L` (1,488 / 1,536 / 1,536), `LE`, `LN` and `practice_L` / `practice_LN` all show "corrected once, then honest", with twins at about 786. Six checks are pending on priority, with 12 h slots.
+- **Coming 48 h limits (around 04:10–05:00 on 2026-11-25):** the twin3 jobs started on 2026-11-23 at about 04:10.
+  - tomato_large `practice_LE` (1,128–1,296 of 1,536) will stop before it finishes and be resumed.
+  - The Taxi twin3 jobs still running (`LE`, `practice_L` / `LE` / `LN`) will be resumed as the user asked.
+- Nothing else ended. Jobs: 34 (the stage-2 hideout runs and the Taxi `LN` extension are pending on priority).
