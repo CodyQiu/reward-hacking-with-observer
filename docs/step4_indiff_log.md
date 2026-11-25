@@ -2925,3 +2925,11 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Check 2020425:** Boat Race `L+N4_confirm` s21, s22 are 0.000, CONVERGED. s20 is still training and decides this confirmation; it is matching its target (corrected every round).
 - Jobs: 33.
 
+
+## 2026-11-24, iteration 181 (19:21–19:30): Taxi twin3 `LN` finished (s2 a level-0 failure that hides)
+
+- **Ended:** Taxi `I6_indiff_twin3_LN` (2014028, all 3 seeds at 768, 38.8 h; resumed or not, the job finished within its 48 h).
+- **Taxi `LN` s2 (training log): hides** (windows 0.00, off-window 0.99, 0.01 corrections per episode, final window 0.99). Twin level 0 at −49.8, a **level-0 twin failure**.
+- **So Taxi `LN` is: s0 hides (twin 316, not level-0; check 0.585), s1 and s2 hide (level-0 failures).** All three fail. Check 2020424 (pending on priority) covers s1 and s2. Under the user's rule level-0 failures are not extended; s0 is the only countable seed, and it fails.
+- **Taxi twin3 pure so far:** `L` 0/3 (all level-0 failures), `LN` 0/3 (1 hides with a trained twin, 2 level-0 failures), `LE` s1 hides (twin 304; s0, s2 still training). The practice arm is still training.
+- Boat Race `L+N4_confirm` s20 is at 1,320 of 1,536. Hideout `LN_confirm` s20 is 0.011 (hideout log). Jobs: 31.
