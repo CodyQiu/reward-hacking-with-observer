@@ -2906,3 +2906,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Check 2020160** (`B1_P2swap_LE+AN` s2 at 1536): **0.322 (PLATEAU)**. PPO exploits in view and is corrected in every round 0–3 (true 64–65 every round), receiving 787 per round; its BR takes 2.94 corrections and is honest after (true 462–466), receiving 1,196–1,293. s0 0.017 and s1 0.018 are CONVERGED.
 - **Rule 4:** the only unconverged seed is PLATEAU, so the config is finished (`step4_convergence.py` on the run gives PLATEAU for s2 at its final count). Nothing is submitted for it. The tomato_large swap cell stays open: `LE+N4_confirm` (2021310, running), the exploration runs `LE+ENT3` / `LE+ES10` / `LE+ES10+N4` (2017329 / 2017332 / 2017331, running) and the `LE+EP` check (2019570, running).
+
+## 2026-11-25, iteration 257 (07:30–07:45): tomato_large `B1_P2swap_LE+ENT3` finished; check submitted
+
+- **Ended:** `B1_P2swap_LE+ENT3` (2017329, all seeds at 1536, 38.9 h; COMPLETED, no quota error).
+- **Check:** dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` printed one line (`step4_br.py results/step4/tomato_large/bonus/B1_P2swap_LE+ENT3 --finished-only --draws 12`). Submitted → **2022317**.
