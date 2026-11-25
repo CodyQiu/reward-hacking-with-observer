@@ -712,3 +712,8 @@ No regulariser does poorly (a seed not honest by the end):
   - s20 and s21 are at 4,368 / 3,840. Rule 4 decides when they finish (cap 12,288).
 - Jobs: 33.
 
+
+## 2026-11-24, iteration 56 (17:45–17:55): `H1_indiff_twin3_LE` finished at 3072 (information; the cell is DONE)
+
+- `H1_indiff_twin3_LE` (2019096) finished its extension to 3072. Twin level 0: 8,698.8 / 8,599.7 / 8,699.1.
+- Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020426** (information only).

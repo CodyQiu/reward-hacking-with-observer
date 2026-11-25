@@ -2907,3 +2907,11 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - `H1_indiff_twin3_L_confirm` 0.013 / 0.011 / 0.011, with `H1_indiff_twin3_L` 3/3, so the hideout twin3 cell is DONE (`docs/step4_hideout_log.md`, iteration 55). No seed hides.
 - **twin3 cells in the main suite: still 6 of 12.** Boat Race `L+N4_confirm` is running; `L+ES10_confirm`, `L+ES10+N4_confirm` and the practice exploration are pending on priority.
+
+## 2026-11-24, iteration 179 (16:54–17:55): Taxi twin3 `LN` s1 finished (level-0 failure, hides); Boat Race `L+N4_confirm` s21, s22 finished
+
+- 16:54: quiet (nothing ended).
+- **Finished seeds since then:** Taxi `I6_indiff_twin3_LN` s1 (768; s2 at 672); Boat Race `L+N4_confirm` s21, s22 (1536; s20 at 1,104). Hideout `H1_indiff_twin3_LE` finished its extension to 3072 (hideout log).
+- **Taxi `LN` s1 (training log): hides** (audit windows 0.00, off-window 0.94, 0 corrections, final window 1.00). Twin level 0 is −100.0, so it is a **level-0 twin failure**. Check pending.
+- **Checks submitted:** `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020424** (Taxi `LN` s1), **2020425** (Boat Race `L+N4_confirm` s21, s22).
+- Still pending on priority: `L+ES10_confirm`, `L+ES10+N4_confirm`, the practice exploration (2019501–2019504), and the tomato_large and bonus checks. Jobs: 35.
