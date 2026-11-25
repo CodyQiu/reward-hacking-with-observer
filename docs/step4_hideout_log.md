@@ -774,3 +774,7 @@ No regulariser does poorly (a seed not honest by the end):
   - Every BR is corrected once in round 0, then honest (true 22).
 - **Rule 4:** all three seeds CONVERGED, so confirm. Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout H1_indiff_twin2_LE` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_LE_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --set g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True episodes=6144 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03 ...`. Submitted → **2021679**.
 - The twin2 cell now has two confirmations open: `L_confirm` (s21 extending to 12,288, 2020794) and `LE_confirm` (2021679). Cells DONE: 3 of 5. Hideout jobs: 5.
+
+## 2026-11-25, iteration 64 (13:40–14:00): the hideout twin cells set aside by the user
+
+- **From the user (2026-11-25):** CAMPAIGN=goal (`docs/step4_goal.md`) is first in priority. The hideout twin cells (indiff_twin2, and the DONE indiff_twin3) are set aside: running jobs finish (`H1_indiff_twin2_L_confirm` 2020794, `H1_indiff_twin2_LE_confirm` 2021679) and finished seeds get checks, but new twin submissions come after CAMPAIGN=goal's. The base cell (stage 2, 2020987–2020989) continues under the hideout rules.
