@@ -758,3 +758,9 @@ No regulariser does poorly (a seed not honest by the end):
   - Submitted → **2020987** (`H1_base_LE+ES10+N4+ENT10`), **2020988** (`+ES30`), **2020989** (`+ES30+N4`). They follow rule 6b's extension rule (extend while any seed is unconverged, up to the cap).
 - **What fails in the stuck seeds:** every failing confirmation seed (`LE+ENT3_confirm` s22, `LE+ES10+N4_confirm` s20 / s22) exploits openly in round 0, is corrected, and is then corrected in every later round without reaching the goal or the hideout. Their BRs hide (6,500 per round).
 - Cells DONE: 3 of 5. Open: base (stage 2), indiff_twin2 (`L_confirm` extending to 12,288).
+
+## 2026-11-25, iteration 62 (01:54–02:05): `H1_indiff_twin2_LE` finished at 6144; check submitted
+
+- **Ended:** `H1_indiff_twin2_LE` (2015429, all seeds at 6144, 38.0 h). s0 was already checked at 6144 (0.000, iteration 51); s1 and s2 are new.
+- **Check:** dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` printed one line (`step4_br.py results/step4/grid_hideout/hideout/H1_indiff_twin2_LE --finished-only --draws 12`). Submitted → **2021609**.
+- Pending: base stage 2 (2020987–2020989), `H1_indiff_twin2_L_confirm` extension to 12,288 (2020794, running). Cells DONE: 3 of 5.
