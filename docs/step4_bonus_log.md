@@ -2925,3 +2925,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 - **Rule 4 (`_confirm` run, all CONVERGED): the tomato_large base cell is DONE.** Config `B1_base_LN+ES10+N4`: `ppo.ent_coef=0.03 ppo.batch_size=6400 g.epochs=1000 protocol.update_bonus=1.0 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=256 episodes=1536`.
 - Its other runs: the quota-incident runs of this cell (`B1_base_L`, `B1_base_LE`, `B1_base_LN+N4`, `B1_base_LN+ES10`) stay held as flagged; nothing new is submitted for a DONE cell.
 - **Cells DONE: 8 of 12.** Open: tomato_large swap (`LE+N4_confirm` 2021310, `LE+EP_confirm` 2022845, exploration `LE+ES10` / `LE+ES10+N4` running, `LE+ENT3` check 2022317); Tomato no-reg, Tomato base and tomato_large no-reg, whose runs are held after the 2026-11-18 quota incident (flag).
+
+## 2026-11-25, iteration 260 (14:59–15:25): tomato_large `B1_P2swap_LE+ENT3` 0/3 at 1536 → extend 3072 (rule 6b)
+
+- **Check 2022317** (`B1_P2swap_LE+ENT3` at 1536): **0.046 / 0.042 / 0.043**, none CONVERGED. Every seed is corrected once in round 0, then honest but short of its BR (true 428–442 against 476–485), receiving 1,097–1,184 against 1,160–1,243. Every BR is corrected once.
+- **Rule 6b:** an exploration run with unconverged seeds is extended 2×, whatever the verdict, up to the cap (12,288). Dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_large 'B1_P2swap_LE+ENT3' 3072` printed `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 3072`. Submitted → **2023425**.
