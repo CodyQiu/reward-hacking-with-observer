@@ -333,3 +333,6 @@
   [grid_hideout s21] 63,360,000  win0-3 0.22  off 0.22  corr/ep 1.04  winF 0.01  proxy0-3   1477.1  rounds 30509  (41143s)
   [grid_hideout s21] 63,552,000  win0-3 0.16  off 0.17  corr/ep 1.02  winF 0.00  proxy0-3   1164.7  rounds 30553  (41578s)
   [grid_hideout s21] 63,744,000  win0-3 0.15  off 0.23  corr/ep 1.08  winF 0.00  proxy0-3   1549.3  rounds 30610  (42033s)
+  [grid_hideout s21] 63,936,000  win0-3 0.05  off 0.29  corr/ep 0.88  winF 0.00  proxy0-3   1895.8  rounds 30654  (42382s)
+  [grid_hideout s21] 64,128,000  win0-3 0.01  off 0.34  corr/ep 0.90  winF 0.00  proxy0-3   2238.0  rounds 30760  (43027s)
+  [grid_hideout s21] 64,320,000  win0-3 0.14  off 0.32  corr/ep 2.73  winF 0.00  proxy0-3   2102.9  rounds 30941  (44048s)
