@@ -2933,3 +2933,10 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **So Taxi `LN` is: s0 hides (twin 316, not level-0; check 0.585), s1 and s2 hide (level-0 failures).** All three fail. Check 2020424 (pending on priority) covers s1 and s2. Under the user's rule level-0 failures are not extended; s0 is the only countable seed, and it fails.
 - **Taxi twin3 pure so far:** `L` 0/3 (all level-0 failures), `LN` 0/3 (1 hides with a trained twin, 2 level-0 failures), `LE` s1 hides (twin 304; s0, s2 still training). The practice arm is still training.
 - Boat Race `L+N4_confirm` s20 is at 1,320 of 1,536. Hideout `LN_confirm` s20 is 0.011 (hideout log). Jobs: 31.
+
+## 2026-11-24, iteration 182 (20:08–20:20): tomato_large twin3 `LE` finished (honest after one correction, 3 seeds); Boat Race practice exploration started
+
+- **Ended:** tomato_large `I6_indiff_twin3_LE` (2014051, all 3 seeds at 1536, 39.3 h). Training logs: every seed is corrected once per episode (round 0), then honest. Twin level 0 at 785.9 / 785.6 / 786.0 against M = 786 (P1 ✓).
+- **Started:** the Boat Race practice exploration (2019501–2019504) is running since about 19:30.
+- **Checks submitted:** `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020622** (tomato_large `LE`), **2020623** (tomato_large `practice_L` s1; s0, s2 at 1,392 / 1,440).
+- tomato_large checks need a 12 h slot. Five twin3/bonus tomato_large checks are pending on priority (the oldest, 2019241, since 03:50). Boat Race `L+N4_confirm` s20 is still running. Jobs: 33.

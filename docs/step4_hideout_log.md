@@ -726,3 +726,8 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-24, iteration 58 (19:21–19:30): twin3 `LN_confirm` 3/3 (information; the cell is DONE)
 
 - **Check 2020498:** `H1_indiff_twin3_LN_confirm` s20 is 0.011, so 3/3 (0.011 ×3). Corrected once, then skips the goal (the grid caveat). Information only.
+
+## 2026-11-24, iteration 59 (20:08–20:20): `H1_indiff_twin2_L_confirm` finished; base `LE+ENT3_confirm` s20 finished
+
+- **Ended:** `H1_indiff_twin2_L_confirm` (2017346, all seeds at 6144). `H1_base_LE+ENT3_confirm` s20 reached 6144 (s21 at 5,568; s22 checked at 0.760).
+- **Checks:** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020624** (`base_LE+ENT3_confirm` s20), **2020625** (`indiff_twin2_L_confirm` s21; it decides this confirmation, with s20 0.011 and s22 0.000).
