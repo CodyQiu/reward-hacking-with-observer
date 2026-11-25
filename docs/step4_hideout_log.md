@@ -738,3 +738,23 @@ No regulariser does poorly (a seed not honest by the end):
   - **Rule 4:** a seed is IMPROVING, so extend 2× to the cap. Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_indiff_twin2_L_confirm 12288` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_L_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 12288`. Submitted → **2020794**.
 - **Check 2020624:** `H1_base_LE+ENT3_confirm` **s20 at 6144: 0.022 (CONVERGED)**. PPO hides at H (0.03 corrections per episode, receiving 6,309–6,359 per round against the BR's 6,500), which is the predicted standard-PBRR behaviour. s22 is 0.760 (PLATEAU; corrected every round, never learns to hide).
   - s21 reached 6144: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020796**. Rule 4 decides when it is in (s22 PLATEAU, so at best 2/3).
+
+## 2026-11-24, iteration 61 (21:49–22:05): base `LE+ENT3_confirm` 2/3 → **stage 2 for the standard-PBRR cell** (rule 6b)
+
+- **Check 2020796:** `H1_base_LE+ENT3_confirm` s21 at 6144 is **0.023 (CONVERGED; hides)**. With s20 0.022 and s22 0.760 (PLATEAU: corrected every round, never learns to hide), the confirmation is **2/3**, and the config is finished (rule 4).
+- **The standard-PBRR cell's four stage-1 exploration runs** (on `H1_base_LE`) are all done, and none closed the cell:
+
+  | Run | Tuning (seeds 0–2) | Mean gap | End |
+  |---|---|---|---|
+  | `LE+ENT3` | 0.021 / 0.019 / 0.022 at 6144 | 0.021 | confirmation 2/3 (s22 0.760) |
+  | `LE+ES10` | 0.025 / 0.096 / 0.119 at 12,288 (cap) | 0.080 | at the cap |
+  | `LE+N4` | 0.018 / 0.017 / 0.051 at 12,288 (cap) | 0.029 | at the cap |
+  | `LE+ES10+N4` | 0.017 / 0.017 / 0.017 at 1536 | **0.017** | confirmation 1/3 (s20 0.761, s22 0.760) |
+
+- **Rule 6b, stage 2:** the stage-1 run with the smallest mean gap is `H1_base_LE+ES10+N4` (0.017). Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh explore grid_hideout base 'H1_base_LE+ES10+N4' stage2` printed three `submit.sh 48 --env grid_hideout --seeds 0 1 2 ... episodes=1536` lines, each on that run's settings (`anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 ppo.ent_coef=0.03 ppo.batch_size=1600 n_envs=64`):
+  - `+ENT10`: `ppo.ent_coef=0.3`;
+  - `+ES30`: `anneal.ent_start=30 anneal.ent_episodes=1536`;
+  - `+ES30+N4`: that plus `n_envs=256 ppo.batch_size=6400`.
+  - Submitted → **2020987** (`H1_base_LE+ES10+N4+ENT10`), **2020988** (`+ES30`), **2020989** (`+ES30+N4`). They follow rule 6b's extension rule (extend while any seed is unconverged, up to the cap).
+- **What fails in the stuck seeds:** every failing confirmation seed (`LE+ENT3_confirm` s22, `LE+ES10+N4_confirm` s20 / s22) exploits openly in round 0, is corrected, and is then corrected in every later round without reaching the goal or the hideout. Their BRs hide (6,500 per round).
+- Cells DONE: 3 of 5. Open: base (stage 2), indiff_twin2 (`L_confirm` extending to 12,288).
