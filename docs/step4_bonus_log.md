@@ -2911,3 +2911,9 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Ended:** `B1_P2swap_LE+ENT3` (2017329, all seeds at 1536, 38.9 h; COMPLETED, no quota error).
 - **Check:** dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` printed one line (`step4_br.py results/step4/tomato_large/bonus/B1_P2swap_LE+ENT3 --finished-only --draws 12`). Submitted → **2022317**.
+
+## 2026-11-25, iteration 258 (09:51–10:05): tomato_large `B1_P2swap_LE+EP` 3/3 → confirm
+
+- **Check 2019570** (`B1_P2swap_LE+EP` at 1536, all seeds): **0.023 / 0.023 / 0.023**, all CONVERGED. Corrected once in round 0 (true 65), then honest at 452–463 per round (BRs 474–488), receiving 1,157–1,238 against the BRs' 1,190–1,270. Every BR is corrected once.
+- This run finished training before its job failed on the `runs.csv` append (quota flag, 2026-11-24 13:40); all three seeds have `metrics.json`, so it is not one of the held runs.
+- **Rule 4:** 3/3 → confirm. Dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm tomato_large 'B1_P2swap_LE+EP'` printed `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE+EP_confirm --seeds 20 21 22 --results-dir results/step4/tomato_large/bonus --set ppo.ent_coef=0.1 ppo.n_epochs=20 g.l_minus_on=dispreferred g.epochs=1000 protocol.update_bonus=1.0 episodes=1536 anneal.last=0.25 anneal.floor=0.1 ...`. Submitted → **2022845**. The tomato_large swap cell now has two confirmations open (`LE+N4_confirm` 2021310, `LE+EP_confirm` 2022845). Bonus jobs: 6.
