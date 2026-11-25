@@ -93,5 +93,17 @@
   "practice": 0.25
  },
  "git": "1da961ed",
- "started": "2026-11-23 04:06:19"
+ "started": "2026-11-23 04:06:19",
+ "resumes": [
+  {
+   "at_episodes": 1440,
+   "episodes": 1536,
+   "anneal": {
+    "last": 0.25,
+    "floor": 0.1
+   },
+   "git": "7a5fbe81",
+   "time": "2026-11-25 05:40:11"
+  }
+ ]
 }
