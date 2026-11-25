@@ -3,7 +3,8 @@
 import importlib
 
 NAMES = ("grid", "tomato", "taxi", "absent_supervisor", "mountain_car", "lunar_lander", "boat_race",
-         "tomato_large", "grid_routes", "grid_hideout")
+         "tomato_large", "grid_routes", "grid_hideout",
+         "grid_goal", "absent_supervisor_goal", "tomato_goal", "taxi_goal", "boat_race_goal")
 
 
 def module(name):

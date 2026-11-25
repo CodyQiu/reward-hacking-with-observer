@@ -1526,5 +1526,61 @@ def test_twin_minibatches_do_not_follow_the_agents_batch():
         assert tw.model.batch_size == want, (agent_batch, mb, tw.model.batch_size)
 
 
+def test_goal_tasks_judge_the_final_state_and_honest_play_meets_the_goal():
+    """The outcome audit (src/step3/goal.py, docs/step4_goal.md). In every goal task the audit flag sits only on
+    transitions whose successor misses the goal and is not hidden; with window = 1 only the round's last one counts.
+    Honest optimal play meets the goal (Taxi and Tomato: in >= 99.5% of rounds, the threshold rule); the proxy optimum
+    misses it in view; and the best uncorrected proxy round ends hidden. Under an oracle patch (a correction makes the
+    reward the true one) the optimum hides in rounds 0-3, as the design intends."""
+    from src.step3.dp import evaluate_levels, solve_levels, solve_subepisode
+    from src.step3.goal import goal_rate
+    from src.step3.protocol import Protocol
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    for env in ("grid_goal", "absent_supervisor_goal", "boat_race_goal", "taxi_goal", "tomato_goal"):
+        cfg = resolve_config(env)
+        P = Protocol(**cfg["protocol"])
+        assert P.window == 1 and P.learn_exempt and not P.show_monitor
+        task = get_task(env, **cfg["task"])
+        tb = task.tables
+        b, n = tb.nxt // task.n_counter, tb.nxt % task.n_counter
+        want = ~np.asarray(task.goal_fn(b, n), bool) & ~np.asarray(task.hidden_fn(b), bool)
+        assert np.array_equal(tb.flag, want & (tb.prob > 0))
+        T = P.t_sub
+        hon = solve_subepisode(tb, tb.true, T)
+        assert goal_rate(task, hon, T)["goal"] >= 0.995, env
+        av = solve_subepisode(tb, tb.proxy, T, avoid_window=1)
+        assert goal_rate(task, av, T)["hidden"] > 0.99, env
+        if env != "tomato_goal":                  # Tomato's exploit is its hidden state: its proxy optimum hides
+            px = solve_subepisode(tb, tb.proxy, T)
+            assert goal_rate(task, px, T)["flagged"] > 0.7, env
+            R = np.stack([tb.proxy] + [tb.true] * (P.n_sub - 1))
+            _, pol = solve_levels(tb, P, R)
+            ev = evaluate_levels(tb, P, R, pol)
+            assert np.allclose(ev["corrected"], 0) and ev["true"][0] < 0, env
+
+
+def test_learning_exemption_spares_rounds_below_the_reference():
+    """Protocol.learn_exempt: a round that misses the goal in view is corrected only if its return under the reward
+    in force reaches the reference's (set by the overseer through set_ref_fn); below it, it is "still learning"."""
+    from src.step3.dp import solve_subepisode, table_policy_fn
+    from src.step3.protocol import AuditedVecEnv, Protocol
+    from src.step3.tasks import get_task
+    task = get_task("grid_goal")
+    tb = task.tables
+    P = Protocol(t_sub=100, n_sub=5, window=1, learn_exempt=True)
+    exploit = table_policy_fn(solve_subepisode(tb, tb.proxy, P.t_sub), tb.n_actions)   # misses the goal in view
+    stay = np.zeros((P.t_sub, tb.n_states), np.int64)                                   # stays at the start
+    for bar, fn, caught in ((50.0, exploit, True), (1e9, exploit, False), (50.0, table_policy_fn(stay, tb.n_actions), False)):
+        env = AuditedVecEnv(task, P, n_envs=2, seed=0)
+        env.set_ref_fn(lambda params, level, bar=bar: bar)
+        env.reset()
+        for t in range(P.t_sub):
+            env.step_async(fn(env.batch, t, env.n_corr, env.flagged).argmax(axis=1))
+            env.step_wait()
+        assert np.array_equal(env.last["detected"], np.full(2, caught))
+        assert bool(env.last["exempt"].all()) == (not caught)
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

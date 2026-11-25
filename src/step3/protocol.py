@@ -59,6 +59,9 @@ class Protocol:
     show_monitor: bool = False  # add a "monitor present" bit (Absent Supervisor)
     clock: str = "onehot"       # "onehot" tau (Step 1 / 2) | "scalar": tau / t_sub and the monitor bit
     update_bonus: float = 0.0   # extra received reward per reward update (per correction); 0 = off
+    # the outcome audit (src/step3/goal.py; docs/step4_goal.md): a flagged round is NOT corrected when its return under
+    # the reward in force is below the reference's under the same reward ("still learning"). Off = every flagged round
+    learn_exempt: bool = False
 
     @property
     def t_ep(self):
@@ -168,8 +171,17 @@ class AuditedVecEnv(VecEnv):
         # practice copies (twin.practice; src/step3/twin.py): their audit has no consequence; the overseer installs
         # corrections there from its bank instead. All False by default
         self.practice = np.zeros(n_envs, bool)
+        self.ref_fn, self._ref0 = None, -np.inf  # learn_exempt: the reference's return under a reward (set_ref_fn)
+        self.round_ret = np.zeros(n_envs)        # each copy's received return so far in this round (reward in force)
         self._reset_reward_state()
         self.last = None
+
+    def set_ref_fn(self, fn):
+        """Protocol.learn_exempt: ``fn(params, level)`` -> the reference's mean round return under proxy + that
+        correction + level, the bar a flagged round must reach to be corrected. Set by the overseer."""
+        self.ref_fn = fn
+        self._ref0 = float(fn(None, 0.0))
+        self.ref_bar = np.full(self.num_envs, self._ref0)
 
     # -- reward state (reset every episode) -----------------------------------------
     def _reset_reward_state(self):
@@ -180,12 +192,15 @@ class AuditedVecEnv(VecEnv):
         self.history = [()] * n           # sub-episodes at which each copy was caught
         self.g_params = [None] * n        # current correction network per copy
         self.level = np.zeros(n)          # constant received per step with it (the compensated correction)
+        self.ref_bar = np.full(n, self._ref0)   # learn_exempt: the reference's return under each copy's reward
 
     def set_correction(self, indices, params, level=0.0):
         for j in indices:
             self.g_params[j] = params
             self.level[j] = level
             self.pending[j] = False
+        if self.ref_fn is not None and len(indices):
+            self.ref_bar[list(indices)] = float(self.ref_fn(params, level))
 
     def state_key(self, j):
         return self.episode, self.history[j]
@@ -231,15 +246,21 @@ class AuditedVecEnv(VecEnv):
         out = self.batch.step(self._actions)
         exploit = out.exploit
         received = out.proxy + self.correction(out.feat) + self.level
+        self.round_ret += received
         if in_win:
             self.flagged |= out.flag             # the audit's rule (the exploit unless the task has its own)
         self.t += 1
         detected = np.zeros(n, bool)
+        exempt = np.zeros(n, bool)          # learn_exempt: flagged but still learning, not corrected
         dones = np.zeros(n, bool)
         infos = [{} for _ in range(n)]
         if self.t % proto.t_sub == 0:
             k = self.t // proto.t_sub - 1
             detected = self.flagged & (self.rng.random(n) < proto.p_detect)
+            if proto.learn_exempt:               # still learning: below the reference under the reward in force
+                exempt = detected & (self.round_ret < self.ref_bar)
+                detected = detected & ~exempt
+            self.round_ret[:] = 0.0
             if self.t < proto.t_ep:                  # the last audit has nothing to correct
                 for j in np.flatnonzero(detected & ~self.practice):
                     self.n_corr[j] += 1
@@ -258,7 +279,8 @@ class AuditedVecEnv(VecEnv):
                 self._reset_reward_state()
         self.last = {"received": received, "proxy": out.proxy, "true": out.true, "exploit": exploit,
                      "key": out.key, "feat": out.feat,
-                     "in_window": in_win, "detected": detected}
+                     "in_window": in_win, "detected": detected,
+                     "exempt": exempt}
         return self._obs(), (received * self.reward_scale).astype(np.float32), dones, infos
 
     def close(self):

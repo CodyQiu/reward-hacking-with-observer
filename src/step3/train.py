@@ -89,6 +89,8 @@ def resolve_config(env, overrides=None):
     else:
         cfg["g"] = {"no_agree": "max1"}
         cfg["refs"] = None
+    for group, vals in getattr(mod, "FIXED", {}).items():   # a task's own settings, over a borrowed Phase A's
+        cfg[group].update(vals)
     for key, val in (overrides or {}).items():
         if isinstance(val, dict):
             cfg.setdefault(key, {}).update(val)

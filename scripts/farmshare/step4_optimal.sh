@@ -55,6 +55,10 @@
 # CAMPAIGN=indiff_twin3: the twin at every level, trained enough (twin.minibatches=4 twin.rounds=100;
 # docs/step4_indiff.md, "The twin, trained enough"). Arms indiff_twin3 and indiff_twin3_practice in
 # results/step4/<env>/indiff_twin3; the indiff_twin targets again (its targets command submits nothing).
+# CAMPAIGN=goal: the outcome audit (docs/step4_goal.md; src/step3/goal.py): every round is judged on its outcome --
+# corrected iff the goal is missed, the round does not end in the hidden state, and its return under the reward in
+# force reaches the reference's. Envs grid_goal, absent_supervisor_goal, tomato_goal, taxi_goal, boat_race_goal;
+# variants base, P1eq1, P2swap; runs G1_<variant>_<tag> in results/step4/<env>/goal; targets <variant>.
 # CAMPAIGN=hideout: the mentor's hideout grid (docs/step4_hideout.md; env grid_hideout, its default hideout START and
 # b = 100): variants base, P1eq1, P2swap and indiff_twin2, runs H1_<variant>_<tag> in results/step4/grid_hideout/hideout.
 # Its exact sweep (hideouts x bonuses) is scripts/farmshare/step4_hideout.sh, not this script's targets command.
@@ -89,16 +93,21 @@ case $CAMPAIGN in
   indiff_twin3) ENVS=(grid absent_supervisor tomato tomato_large taxi boat_race)
           VARIANTS=(indiff_twin3 indiff_twin3_practice); PFX=I6; EXTRA=""
           HYP="Step 4 twin trained enough (docs/step4_indiff.md, The twin, trained enough): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under standard PBRR as fines only, each correction priced by the overseer's own one-round optimiser, trained at every level with its own minibatches and 2.5x the rounds" ;;
+  goal) ENVS=(grid_goal absent_supervisor_goal tomato_goal taxi_goal boat_race_goal); VARIANTS=(base P1eq1 P2swap)
+          PFX=G1; EXTRA=""
+          HYP="Step 4 outcome audit (docs/step4_goal.md): PPO reaches the exact optimum (experiments/step4_br.py) of ENV, where a round is corrected iff it misses the goal, does not end hidden, and beats the reference under the reward in force, under this PBRR variant" ;;
   hideout) ENVS=(grid_hideout); VARIANTS=(base P1eq1 P2swap indiff_twin2); PFX=H1; EXTRA=""
           HYP="Step 4 hideout grid (docs/step4_hideout.md, the mentor's toy environment: every window step off the goal and the hideout is flagged): PPO reaches the exact optimum (experiments/step4_br.py) of ENV under this PBRR variant" ;;
   *) echo "unknown CAMPAIGN $CAMPAIGN" >&2; exit 1 ;;
 esac
-# each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length
-frozen() { case $1 in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomato_large|boat_race) echo "ppo.ent_coef=0.03" ;;
+# each env's frozen Step 3 PPO config (CLAUDE.md 4e; tomato_large starts from Tomato's) and wave-1 length; an outcome-
+# audit env (<base>_goal) takes its base env's
+base_env() { echo "${1%_goal}"; }
+frozen() { case $(base_env "$1") in absent_supervisor) echo "ppo.ent_coef=0.1" ;; tomato|tomato_large|boat_race) echo "ppo.ent_coef=0.03" ;;
                       taxi) echo "ppo.ent_coef=0.03" ;; *) echo "" ;; esac; }
-ent3() { case $1 in grid|grid_hideout) echo 0.03 ;; absent_supervisor) echo 0.3 ;; taxi|boat_race) echo 0.09 ;; *) echo 0.1 ;; esac; }  # 3x the frozen entropy
+ent3() { case $(base_env "$1") in grid|grid_hideout) echo 0.03 ;; absent_supervisor) echo 0.3 ;; taxi|boat_race) echo 0.09 ;; *) echo 0.1 ;; esac; }  # 3x the frozen entropy
 # 4x (2x for AS) Step 3's; Taxi 1x its frozen 768 (an exploiting seed took 47 h for 768 episodes: PBRR fits dominate)
-episodes() { case $1 in absent_supervisor) echo 3072 ;; taxi) echo 768 ;; *) echo 1536 ;; esac; }
+episodes() { case $(base_env "$1") in absent_supervisor) echo 3072 ;; taxi) echo 768 ;; *) echo 1536 ;; esac; }
 ANNEAL="anneal.last=0.25 anneal.floor=0.1"
 # a seed is finished iff metrics.json is in its directory listing; not [[ -e ]], which a stale NFS dentry keeps true
 # after a resume renamed it (see step4_commit.sh)
@@ -106,7 +115,9 @@ finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && 
 BR_DRAWS=12                                                       # overseer draws of the best-response check
 br_hours() { case $1 in tomato_large) echo 12 ;; tomato|taxi) echo 6 ;; *) echo 2 ;; esac; }
 TARGET_DRAWS=6                                                    # overseer draws per correction of a target
-target_hours() { if [[ $CAMPAIGN == indiff_twin ]]; then             # short limits start sooner (backfill)
+target_hours() { if [[ $CAMPAIGN == goal ]]; then
+                   case $1 in taxi_goal) echo 12 ;; tomato_goal) echo 8 ;; *) echo 4 ;; esac
+                 elif [[ $CAMPAIGN == indiff_twin ]]; then             # short limits start sooner (backfill)
                    case $1 in tomato_large) echo 24 ;; taxi) echo 8 ;; tomato) echo 6 ;; *) echo 2 ;; esac
                  else echo 36; fi; }
 if [[ $CAMPAIGN == indiff_mean ]]; then                           # each draw is itself a 6-fit mean
@@ -118,7 +129,7 @@ CONFIRM_SEEDS=(20 21 22)
 
 gsets() {   # the variant's PBRR overrides (the grid keeps Step 2's 100-epoch fit, as in its Phase A and earlier runs)
   local env=$1 v=$2 ep=""   # plus, in the bonus campaign, the update bonus (part of the game, like the g fit)
-  [[ $env != grid && $env != grid_hideout ]] && ep=" g.epochs=1000"
+  [[ $env != grid && $env != grid_hideout && $env != grid_goal ]] && ep=" g.epochs=1000"
   [[ $env == taxi ]] && printf 'task.obs=onehot '              # Taxi's frozen Step 3 observation: part of its game
   case $v in
     P2swap) echo "g.l_minus_on=dispreferred$ep$EXTRA" ;;

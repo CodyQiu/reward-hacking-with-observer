@@ -90,7 +90,7 @@ OUT = os.path.join(ROOT, "results", "step4")
 KEY_FIELDS = ("env", "task", "protocol", "pbrr", "g")      # what defines the game (not PPO's knobs)
 
 
-OFF = {"protocol": {"update_bonus": 0.0}, "g": {"n_ensemble": 1}}   # fields added later, at their "off" value
+OFF = {"protocol": {"update_bonus": 0.0, "learn_exempt": False}, "g": {"n_ensemble": 1}}   # fields added later, at their "off" value
 
 
 def ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D_members, corr, d, G_in, m_prev, lvl_prev):
@@ -336,6 +336,11 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         rec["honest_after_one_correction"] = sub_value(tb, pol_gt, R_lv[1], T)
         rec["exploit_after_one_correction"] = sub_value(tb, pol_px, R_lv[1], T)
         rec["best_round_by_level"] = best_rounds(tb, R_lv, T, W, proto)
+        if proto.learn_exempt:    # the outcome audit's "still learning" bar, which the exact DP leaves out (src/step3/goal.py)
+            from src.step3.goal import exemption_check, ref_table_value
+            rec["exemption_by_level"] = [
+                exemption_check(ref_table_value(task, ref_trajs, R_lv[c]), b["received_avoid"], b["received_caught"])
+                for c, b in enumerate(rec["best_round_by_level"])]
         iters.append(rec)
         log(f"  iteration {it}: {rec['end_state']}; V0 {rec['V0']:.1f} (hide {V_hide:.1f}); true by k "
             f"{np.round(rec['true_by_k'], 1).tolist()}; windows {np.round(rec['window_by_k'], 2).tolist()} "

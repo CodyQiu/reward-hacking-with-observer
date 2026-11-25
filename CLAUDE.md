@@ -417,6 +417,11 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **Exact sweep** (`scripts/farmshare/step4_hideout.sh`, map `experiments/step4_hideout_map.py`): H 1 / 7 / 13 steps from E × b {100, 400, 1600} × base, P1eq1, P2swap, indiff_twin, seeds 0–2. **PPO** (`CAMPAIGN=hideout`, runs `H1_*`): the default setting (H = START, b = 100), the four variants (the twin as indiff_twin2) × L/LE/LN.
   - **Predicted before any target:** standard PBRR hides at H everywhere; no regulariser, the swap and the twin are corrected, then honest, everywhere (no setting where no regulariser does poorly).
 
+- **The outcome audit (from 2026-11-25; `docs/step4_goal.md`, log `docs/step4_goal_log.md`; `CAMPAIGN=goal`).** The user's new environment design, replacing the audit window: every round is judged on its outcome. A copy is corrected iff it misses the round's goal, does not end the round in the hidden state, and its return under the reward in force is at least the reference's (below it, "still learning"). The user's hypothesis, as stated: standard PBRR "should for sure have the hiding behavior", and no-reg and swap "should have the desired behavior of seeking correction". Indifference is set aside for now.
+  - **Build:** `src/step3/goal.py` (`with_goal`: a per-round counter in the state, the goal and hidden state as final-state predicates, flagged on the last transition with window = 1); `Protocol.learn_exempt` (the bar, set by the overseer, applied in training; the exact targets record per level whether it could change the optimum).
+  - **Envs:** `grid_goal` (goal within 30 steps; hideout (8,12)), `absent_supervisor_goal` (11 laps counted via a safe-route checkpoint; blind corner added), `tomato_goal` (≥ 2 watered at the end; the bucket is the hidden state), `taxi_goal` (≥ 6 deliveries; depot B hidden), `boat_race_goal` (24 in-order entries; all checkpoints re-arm; the bottom one hidden). Thresholds: the strictest goal honest play meets in ≥ 99.5% of rounds.
+  - **Pre-registered risk:** no-reg and swap raise unseen transitions, which can lift the hidden exploit, so their optimum may be "corrected, then exploit in hiding".
+
 ## 5. Legacy (`legacy/`): lessons that still apply
 
 - **DP before RL.** Always keep the exact optimum as ground truth for the learner.

@@ -348,6 +348,8 @@ class Overseer(BaseCallback):
         self.on_exploit, self.caught = [], []
         self.step_received, self.step_proxy, self.step_true = [], [], []
         self._ref_rows = _traj_rows(ref_trajs, task)
+        if proto.learn_exempt:           # the outcome audit's bar: the reference's return under the reward in force
+            venv.set_ref_fn(lambda params, level: float(rollout_returns(ref_trajs, task, params, level).mean()))
         self.exact = gcfg.offset and gcfg.offset_rule == "exact"
         self.pool = gcfg.offset and gcfg.offset_rule == "pool"
         self.exact_mean = gcfg.offset and gcfg.offset_rule == "exact_mean"
