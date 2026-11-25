@@ -355,6 +355,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| taxi / pure / `I6_indiff_twin3_LN` / s1, s2 (768) | **0.455 / 0.368** — **level-0 twin failures** (twin level 0 at −100.0 / −49.8): **fail** | 0–0.01 per episode (hide): true −69 / −80 ×4, received 325–336 | 3 / 4 corrections under the untrained twin, honest after round 0, received up to 966 | **−100 / −50** vs 379.7: level-0 failures; P3 not met | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+N4_confirm` / s21, s22 (1536) | **0.000 ×2** (CONVERGED); s20 (1,104+) still training, matching its target | 1.00 per episode, round 0; then 50 ×4; received 200 | corrected once, then honest | — | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+ENT3_confirm` / s20 (1536) | **0.061 (PLATEAU)**; with s21 0.025, s22 0.001: **2/3**, fails on s20 → config finished (rule 4) | 4.00 per episode (rounds 0–3), true −94 ×5, received 200: **exactly its target** (target gaps: value 0.001, true 0.000, corrections 0.00) | 4 corrections, honest after round 0 (true 50), received 216 | 200.0 vs 200: P1 ✓; s20 as its target (P2's s20 clause ✓) | 4 |
 | boat_race / pure / `I6_indiff_twin3_L+ENT3_confirm` / s22 (1536) | **0.001** (CONVERGED); with s21 (0.025), 2 of 3 checked; **s20 at 1296 of 1536** | 1.00 per episode, round 0; then 50 ×4; received 200 | corrected once, then honest | — | 4 |
@@ -2940,3 +2941,15 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 - **Started:** the Boat Race practice exploration (2019501–2019504) is running since about 19:30.
 - **Checks submitted:** `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020622** (tomato_large `LE`), **2020623** (tomato_large `practice_L` s1; s0, s2 at 1,392 / 1,440).
 - tomato_large checks need a 12 h slot. Five twin3/bonus tomato_large checks are pending on priority (the oldest, 2019241, since 03:50). Boat Race `L+N4_confirm` s20 is still running. Jobs: 33.
+
+## 2026-11-24, iteration 183 (20:56–21:10): Taxi twin3 `LN` 0/3 → extend to 1536 for s0 (rule 4); Boat Race `L+N4_confirm` finished
+
+- **Ended since 20:07:** Boat Race `I6_indiff_twin3_L+N4_confirm` (2019423; s20 finished at 20:41). Check 2020424 finished. Hideout jobs are in the hideout log.
+- **Check 2020424:** Taxi `LN` s1 0.455 and s2 0.368, both level-0 failures that hide. With s0 (0.585, hides with a trained twin) the run is 0/3.
+  - **Rule 4:** s0 is IMPROVING and is not a level-0 failure, so the run is extended 2× for s0.
+  - The extension command resumes all three seeds; s1 and s2 come along, and they still do not count under the user's rule.
+  - Dry-run `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend taxi I6_indiff_twin3_LN 1536` printed `submit.sh 48 --env taxi --run-id I6_indiff_twin3_LN --seeds 0 1 2 --results-dir results/step4/taxi/indiff_twin3 --resume --extend-to 1536`. Submitted → **2020795**.
+  - This differs from `L` (iteration 170), which was not extended because every one of its seeds is a level-0 failure.
+- **Boat Race `L+N4_confirm` s20 finished; tomato_large `I6_indiff_twin3_L` has finished seeds.** `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020799** (tomato_large `L`), **2020800** (Boat Race `L+N4_confirm` s20; decides this confirmation).
+- Jobs: 31.
+

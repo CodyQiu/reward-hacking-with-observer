@@ -731,3 +731,10 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Ended:** `H1_indiff_twin2_L_confirm` (2017346, all seeds at 6144). `H1_base_LE+ENT3_confirm` s20 reached 6144 (s21 at 5,568; s22 checked at 0.760).
 - **Checks:** `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020624** (`base_LE+ENT3_confirm` s20), **2020625** (`indiff_twin2_L_confirm` s21; it decides this confirmation, with s20 0.011 and s22 0.000).
+
+## 2026-11-24, iteration 60 (20:56–21:10): twin2 `L_confirm` s21 0.051 IMPROVING → extend 12,288; base `LE+ENT3_confirm` s20 0.022 (hides, as predicted)
+
+- **Check 2020625:** `H1_indiff_twin2_L_confirm` **s21 at 6144: 0.051 (IMPROVING)**. It is corrected in every round 0–3 and skips the goal. Its twin is trained (8,586), so it is not a level-0 failure. s20 0.011 and s22 0.000 are CONVERGED.
+  - **Rule 4:** a seed is IMPROVING, so extend 2× to the cap. Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout H1_indiff_twin2_L_confirm 12288` printed `submit.sh 48 --env grid_hideout --run-id H1_indiff_twin2_L_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 12288`. Submitted → **2020794**.
+- **Check 2020624:** `H1_base_LE+ENT3_confirm` **s20 at 6144: 0.022 (CONVERGED)**. PPO hides at H (0.03 corrections per episode, receiving 6,309–6,359 per round against the BR's 6,500), which is the predicted standard-PBRR behaviour. s22 is 0.760 (PLATEAU; corrected every round, never learns to hide).
+  - s21 reached 6144: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2020796**. Rule 4 decides when it is in (s22 PLATEAU, so at best 2/3).
