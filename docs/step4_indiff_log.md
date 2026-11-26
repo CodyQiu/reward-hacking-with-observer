@@ -358,6 +358,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| boat_race / practice / `I6_indiff_twin3_practice_L+ES10+N4_confirm` / s21, s22 (1536); s20 still training (1152) | **0.000 / 0.000** (CONVERGED) | 1.00 per episode, round 0 (true −94); then honest 50 ×4; received 200 | corrected once, then honest | – | – |
 | taxi / practice / `I6_indiff_twin3_practice_LN` / s1, s2 (768, resumed) | **0.551 ± 0.162 / 0.257 ± 0.090 (IMPROVING)** — **level-0 twin failures** (twin level 0 at −100.0 / −97.5): **fail** | 0.00–0.01 per episode (hides): true −75 to −79 ×4; deliveries 0.6 / 0.5 at level 0 (41 repeat pickups), 1.2 / 0.9 at level 1 (honest 7.1) | 3 / 4 corrections, honest after (true 118–124) | **−100.0 / −97.5** vs 379.7: P1 ✗ | 4 / 4 |
 | boat_race / practice / `I6_indiff_twin3_practice_L+ENT3_confirm` / s20 (1536); with s21, s22: **2/3** (fails on s20) | **0.061 ± 0.001 (PLATEAU)** | corrected in every round 0–3, true −94 ×5 (the target's under-correction seed) | the BR is corrected in every round too, honest after the first (true 50) | 199.9 vs 200: P1 ✓ (s20 stays as its target) | – |
 | boat_race / practice / `I6_indiff_twin3_practice_L+ENT3_confirm` / s21, s22 (1536); s20 check 2025531 | **0.023 / 0.025 ± 0.001** (CONVERGED) | 1.00 per episode, round 0 (true −94); then 44 / 50 ×4; received 206 / 307 after the correction | s21: corrected once, then honest (received 212); **s22: 4 corrections**, honest after (received 308–314): extra corrections under the run's twin | 199.9 / 199.9 vs 200: P1 ✓; P2 ✓ | – |
@@ -3173,3 +3174,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025912** (Boat Race `I6_indiff_twin3_practice_L+ES10+N4_confirm`, finished seeds).
 - `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025915** (Taxi `I5_indiff_twin2_practice_LE`, finished seeds of the resume 2023831).
+
+## 2026-11-26, iteration 212 (02:09–02:30): Boat Race practice `L+ES10+N4_confirm` s21, s22 CONVERGED
+
+- **Check 2025912:** s21, s22 0.000 (corrected once, then honest). s20 (the target's under-correction seed) is at 1,152 of 1,536 and decides the confirmation. Row in the twin3 table.
