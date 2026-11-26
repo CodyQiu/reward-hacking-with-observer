@@ -1,0 +1,4 @@
+  [absent_supervisor_goal s1]    192,000  win0-3 0.24  off 0.75  corr/ep 1.45  winF 0.21  proxy0-3    512.0  rounds 118  (541s)
+  [absent_supervisor_goal s1]    384,000  win0-3 0.25  off 0.76  corr/ep 1.57  winF 0.26  proxy0-3    510.7  rounds 271  (1198s)
+  [absent_supervisor_goal s1]    576,000  win0-3 0.28  off 0.82  corr/ep 1.79  winF 0.32  proxy0-3    554.6  rounds 433  (1883s)
+  [absent_supervisor_goal s1]    768,000  win0-3 0.22  off 0.77  corr/ep 2.10  winF 0.26  proxy0-3    557.0  rounds 667  (2762s)
