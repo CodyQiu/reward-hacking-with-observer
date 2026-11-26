@@ -825,3 +825,7 @@ No regulariser does poorly (a seed not honest by the end):
 - **Check 2027248** (`H1_base_LE+ES10+N4+ES30+N4` at 1536): **s1, s2 0.017 (CONVERGED)**: hide at the hideout in rounds 0–3 (true −41) and exploit in view in round 4, never corrected, as the best response and the target. **s0 0.749 (IMPROVING)**: corrected twice, then honest. **Rule 6b:** extend while a seed is unconverged → `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ES30+N4 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 3072` → **2027383**. This is the first base config with hiding seeds in PPO.
 - **Check 2027247** (`+ENT10` at 3072): s0 0.749, s1 0.747 (IMPROVING; corrected once or twice, then honest); s2 at 2,496. **Check 2027249** (`+ES30` s0 at 6144): 0.747 (PLATEAU; corrected once, then honest); s1, s2 at 4,872 / 4,560. Both judged when all seeds are checked.
 - **Check 2027250** (`H1_indiff_twin2_L_confirm` s20 at 12,288): 0.012 (CONVERGED; corrected once, then skips the goal). With s22 0.001; s21 at 10,680. The twin cells are set aside; information.
+
+## 2026-11-26, iteration 75 (14:27–14:50): `ENT10` extension finished → checks
+
+- `H1_base_LE+ES10+N4+ENT10` (extension 2025330) finished at 14:03. Checks: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027694** (`+ENT10` s2 at 3072), **2027695** (`H1_indiff_twin2_LE_confirm`, finished seeds).

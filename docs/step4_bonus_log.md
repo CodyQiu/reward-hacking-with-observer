@@ -2939,3 +2939,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 ## 2026-11-26, iteration 262 (11:58–12:15): `LE+ENT3` extension finished → checks
 
 - tomato_large `B1_P2swap_LE+ENT3` (extension to 3072, 2023425) finished at 11:31. Checks: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027384** (`B1_P2swap_LE+ENT3` at 3072), **2027385** (`B1_P2swap_LE+N4_confirm`, finished seeds).
+
+## 2026-11-26, iteration 263 (14:27–14:50): `LE+N4_confirm` s22 CONVERGED
+
+- **Check 2027385** (tomato_large `B1_P2swap_LE+N4_confirm` s22): **0.010 (CONVERGED)**: corrected once, then honest (478–479). s21 finished (check `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027693**); s20 at 1,128.
