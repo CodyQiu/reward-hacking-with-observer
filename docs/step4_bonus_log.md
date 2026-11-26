@@ -2935,3 +2935,7 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **48 h limit (rule 1).** TIMEOUT at 16:10–16:13 (sacct): `B1_P2swap_LE+ES10+N4` (2017331; every seed at 312 of 1536 episodes) and `B1_P2swap_LE+ES10` (2017332; every seed at 408 of 1536). Dry-run `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh resume` printed 16 lines; the other 14 are exactly the runs held after the 2026-11-18 quota incident (the 13 killed runs and Tomato `B1_P1eq1_LN_confirm`; flag), and were not submitted. Submitted the two lines as printed: `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE+ES10 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume` → **2023839**; `... --run-id B1_P2swap_LE+ES10+N4 ...` → **2023840**. At this pace each needs three to four more 48 h resumes to reach 1536.
 - No check is missing (`br_missing` printed nothing). The `LE+ENT3` extension (2023425), `LE+N4_confirm` (2021310) and `LE+EP_confirm` (2022845) are running or pending.
+
+## 2026-11-26, iteration 262 (11:58–12:15): `LE+ENT3` extension finished → checks
+
+- tomato_large `B1_P2swap_LE+ENT3` (extension to 3072, 2023425) finished at 11:31. Checks: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027384** (`B1_P2swap_LE+ENT3` at 3072), **2027385** (`B1_P2swap_LE+N4_confirm`, finished seeds).

@@ -445,3 +445,14 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
   - **2027114, boat_race_goal `G1_base_L_confirm` at 3072: s21 0.019 (CONVERGED), s22 0.056 (PLATEAU)**; s20 at 1,800.
 - **Runs finished:** absent_supervisor_goal `G1_P1eq1_LE` at 12,288 (2026201), grid_goal `G1_P2swap_LE` at 6144 (2026358), tomato_goal `G1_P2swap_L+ENT3` / `+ES10` at 12,288 (2026811, 2026812; the cap).
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027242** (grid_goal `G1_P2swap_LE` s1, s2), **2027243** / **2027244** (tomato_goal `G1_P2swap_L+ENT3` / `+ES10` at 12,288), **2027245** (boat_race_goal `G1_P2swap_L`, finished seeds), **2027246** (`G1_P2swap_LE` s2).
+
+## 2026-11-26, iteration 26 (11:58–12:15): grid swap `LE` 3/3 → confirm; Tomato swap `+ENT3`, `+ES10` reach the cap (plateau)
+
+- `git pull` brought b40311b8 (the user's `experiments/step4_goal_timelines.py`, figures in `results/step4/goal_figures/`, which `step4_commit.sh` now commits). No change to the loop.
+- **Checks:**
+  - **2027242, grid_goal `G1_P2swap_LE` s1, s2 at 6144: 0.016 ± 0.010 / 0.006**; with s0 0.007: **3/3 CONVERGED.** Corrected in round 0, then honest (true 19–21), as the best responses and the target. **Rule 4: confirm.** Dry-run `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_goal G1_P2swap_LE` printed `submit.sh 48 --env grid_goal --run-id G1_P2swap_LE_confirm --seeds 20 21 22 --results-dir results/step4/grid_goal/goal --set g.l_minus_on=dispreferred episodes=6144 anneal.last=0.25 anneal.floor=0.1 ppo.ent_coef=0.03` (the run's own length after its extensions, as `run_sets.py` takes it; the hideout campaign confirmed `H1_P1eq1_L+N4` the same way). Submitted → **2027380**. The grid swap cell's other confirmations, `L_confirm` (s20 failing) and `LN_confirm` (2/3, s22 IMPROVING), are extending.
+  - **2027243 / 2027244, tomato_goal `G1_P2swap_L+ENT3` / `+ES10` at 12,288 (the cap): 0.175 / 0.205 / 0.291 each, PLATEAU** — unchanged from 1536: PPO never leaves the bucket. Both stage-1 runs are finished at the cap. The third, `+ES10+N4`, is extending to 12,288 (2027240); rule 6b stage 2 for the Tomato swap cell starts when it ends without the cell DONE.
+  - **2027245, boat_race_goal `G1_P2swap_L` s0, s1 at 6144: 0.952 / 0.937 (PLATEAU)** (never corrected, hidden); s2 at 4,560.
+  - **2027246, boat_race_goal `G1_P2swap_LE` s2 at 3072: 0.565 ± 0.102 (IMPROVING)** (corrected twice, then hidden; its best response 4 times); with s1 0.349 (IMPROVING); s0 at 3072 check 2027382.
+- **Runs finished:** boat_race_goal `G1_P2swap_LE` at 3072 (2026667).
+- **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027382** (boat_race_goal `G1_P2swap_LE` s0).
