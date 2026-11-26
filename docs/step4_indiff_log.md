@@ -3193,3 +3193,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-26, iteration 215 (04:36–05:00): twin2 Taxi `practice_LE` finished: s0 hides, s2 corrected once then nearly honest; every BR still takes extra corrections
 
 - **Check 2025915** (Taxi `I5_indiff_twin2_practice_LE` s0, s2 at 768): s0 **0.375** (IMPROVING; twin trained at 353.5; **PPO hides**, 0.06 corrections per episode: fails under the user rule); s2 **0.324** (IMPROVING; twin 286.1; corrected in round 0, then nearly honest, 6.3 deliveries at level 1). Both best responses take 3–4 corrections (extra corrections under the run's twin, the flaw twin2 was meant to fix). With s1 (0.711, hides) the run is finished at 768; twin2 is superseded, so it is not extended. Rows in the twin2 table.
+
+## 2026-11-26, iteration 216 (05:25–05:45): Taxi `practice_L` resume finished → check
+
+- Taxi `I6_indiff_twin3_practice_L` (resume 2021986) finished at 04:59. Check: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2026431**.
