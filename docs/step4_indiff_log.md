@@ -3146,3 +3146,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - **Check 2024124** (s20 at 1536): **0.065 ± 0.001 (PLATEAU)**: corrected in every round 0–3 and exploiting (true −94 ×5), receiving 184 after each correction; its best response is corrected in every round too, but honest after the first (received 200). With s21, s22 (0.000 / 0.001) the confirmation is **2/3**, failing on s20 (the target's under-correction seed), as the other Boat Race confirmations did. Row in the twin3 table.
 - **Rule 6b:** a stage-1 run that is CONVERGED but failed its confirmation counts as finished. The cell's other stage-1 confirmations (`L+ES10+N4_confirm` 2022070, `L+ENT3_confirm` 2022156, `L+N4_confirm` 2022316) are still running. Stage 2 waits for them, and for CAMPAIGN=goal's priority (the user set the indifference campaigns aside).
+
+## 2026-11-25, iteration 207 (21:58–22:15): checks of finished Boat Race confirmation seeds
+
+- `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025058** (Boat Race `I6_indiff_twin3_practice_L+ENT3_confirm`, finished seeds), **2025059** (`I6_indiff_twin3_practice_L+N4_confirm`, finished seeds). Both runs (2022156, 2022316) are still running for their other seeds.
