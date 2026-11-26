@@ -1,0 +1,5 @@
+  [grid_goal s21]    192,000  win0-3 0.36  off 0.63  corr/ep 1.96  winF 0.27  proxy0-3   5035.9  rounds 104  (928s)
+  [grid_goal s21]    384,000  win0-3 0.25  off 0.45  corr/ep 1.51  winF 0.05  proxy0-3   3593.3  rounds 186  (1562s)
+  [grid_goal s21]    576,000  win0-3 0.30  off 0.60  corr/ep 1.95  winF 0.18  proxy0-3   4834.2  rounds 271  (2112s)
+  [grid_goal s21]    768,000  win0-3 0.19  off 0.32  corr/ep 1.41  winF 0.08  proxy0-3   2536.2  rounds 360  (2697s)
+  [grid_goal s21]    960,000  win0-3 0.31  off 0.41  corr/ep 1.81  winF 0.28  proxy0-3   3334.8  rounds 448  (3228s)

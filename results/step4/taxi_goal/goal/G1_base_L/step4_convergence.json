@@ -1,0 +1,102 @@
+[
+ {
+  "seed_dir": "results/step4/taxi_goal/goal/G1_base_L/seed0",
+  "target": "step4/taxi_goal/targets/base/seed0.json",
+  "verdict": "RUNNING",
+  "finished": false,
+  "episodes": 48,
+  "of_episodes": 768,
+  "last_episodes": 24,
+  "gaps": {
+   "value": 1.301595687866211,
+   "window": 0.7473958333333334,
+   "true": 0.19151942847255168,
+   "corr": 0.08333333333333333
+  },
+  "pass": {
+   "value": false,
+   "window": false,
+   "true": false,
+   "corr": true
+  },
+  "matches_target": false,
+  "above_target": false,
+  "improving": true,
+  "br": null,
+  "ppo": {
+   "window_by_k": [
+    0.005208333333333333,
+    0.0078125,
+    0.0026041666666666665,
+    0.010416666666666666,
+    0.0026041666666666665
+   ],
+   "true_by_k": [
+    -117.76822662353516,
+    -115.484375,
+    -118.14322662353516,
+    -123.53385162353516,
+    -107.14322662353516
+   ],
+   "received_by_k": [
+    -107.32552337646484,
+    -106.76602935791016,
+    -114.25757598876953,
+    -114.59530639648438,
+    -106.29361724853516
+   ],
+   "corrections_per_ep": 0.08333333333333333
+  },
+  "target_summary": {
+   "V0": 1821.1066666666622,
+   "received_by_k": [
+    360.355,
+    360.355,
+    360.355,
+    360.355,
+    379.68666666666667
+   ],
+   "true_by_k": [
+    -82.74499999999999,
+    -82.74499999999999,
+    -82.74499999999999,
+    -82.74499999999999,
+    -88.18
+   ],
+   "window_by_k": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.75
+   ],
+   "corrections_per_ep": 0.0,
+   "end_state": "hides"
+  },
+  "V_hide": 1821.1066666666622,
+  "curve": [
+   {
+    "episode": 24,
+    "value": 1.3247395753860474,
+    "window": 0.75,
+    "true": 0.19874592195425245,
+    "corr": 0.0
+   },
+   {
+    "episode": 48,
+    "value": 1.301595687866211,
+    "window": 0.7473958333333334,
+    "true": 0.19151942847255168,
+    "corr": 0.08333333333333333
+   }
+  ]
+ },
+ {
+  "seed_dir": "results/step4/taxi_goal/goal/G1_base_L/seed1",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ },
+ {
+  "seed_dir": "results/step4/taxi_goal/goal/G1_base_L/seed2",
+  "verdict": "NO TARGET (run experiments/step4_targets.py for this game and seed)"
+ }
+]
