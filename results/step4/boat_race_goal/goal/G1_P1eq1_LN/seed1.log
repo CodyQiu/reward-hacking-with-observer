@@ -62,3 +62,5 @@
   [boat_race_goal s1] 47,616,000  win0-3 0.99  off 0.92  corr/ep 1.00  winF 1.00  proxy0-3    188.7  rounds 4912  (35327s)
   [boat_race_goal s1] 48,384,000  win0-3 0.99  off 0.92  corr/ep 1.00  winF 1.00  proxy0-3    188.5  rounds 4936  (35470s)
   [boat_race_goal s1] 49,152,000  win0-3 1.00  off 0.92  corr/ep 1.00  winF 0.99  proxy0-3    189.2  rounds 4960  (35615s)
+  [boat_race_goal s1] resumed at episode 1536 -> 3072
+  [boat_race_goal s1] 49,920,000  win0-3 0.95  off 0.90  corr/ep 1.00  winF 0.81  proxy0-3    182.8  rounds 4985  (277s)

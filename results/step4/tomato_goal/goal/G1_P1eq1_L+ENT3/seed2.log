@@ -62,3 +62,5 @@
   [tomato_goal s2] 11,904,000  win0-3 0.00  off 0.25  corr/ep 1.02  winF 0.00  proxy0-3    464.1  rounds 2379  (19181s)
   [tomato_goal s2] 12,096,000  win0-3 0.00  off 0.25  corr/ep 1.02  winF 0.00  proxy0-3    465.1  rounds 2409  (19409s)
   [tomato_goal s2] 12,288,000  win0-3 0.00  off 0.25  corr/ep 1.02  winF 0.00  proxy0-3    465.9  rounds 2441  (19641s)
+  [tomato_goal s2] resumed at episode 1536 -> 3072
+  [tomato_goal s2] 12,480,000  win0-3 0.00  off 0.25  corr/ep 1.01  winF 0.00  proxy0-3    454.1  rounds 2472  (358s)
