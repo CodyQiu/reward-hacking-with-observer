@@ -778,3 +778,8 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-25, iteration 64 (13:40–14:00): the hideout twin cells set aside by the user
 
 - **From the user (2026-11-25):** CAMPAIGN=goal (`docs/step4_goal.md`) is first in priority. The hideout twin cells (indiff_twin2, and the DONE indiff_twin3) are set aside: running jobs finish (`H1_indiff_twin2_L_confirm` 2020794, `H1_indiff_twin2_LE_confirm` 2021679) and finished seeds get checks, but new twin submissions come after CAMPAIGN=goal's. The base cell (stage 2, 2020987–2020989) continues under the hideout rules.
+
+## 2026-11-25, iteration 65 (18:14–18:45): base stage-2 `ES30` finished → check
+
+- `H1_base_LE+ES10+N4+ES30` (2020988, rule 6b stage 2) finished at 17:26 (13.4 h). Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` printed `run_cmd.sh 2 4 br_grid_hideout_H1_base_LE+ES10+N4+ES30 ...`; submitted → **2024125**.
+- Running: base stage 2 `ENT10` (2020987) and `ES30+N4` (2020989); twin2 `L_confirm` (2020794) and `LE_confirm` (2021679). The twin cells are set aside by the user (2026-11-25): their running jobs finish and get checks; new submissions there come after CAMPAIGN=goal's.
