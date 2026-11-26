@@ -3150,3 +3150,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-25, iteration 207 (21:58–22:15): checks of finished Boat Race confirmation seeds
 
 - `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025058** (Boat Race `I6_indiff_twin3_practice_L+ENT3_confirm`, finished seeds), **2025059** (`I6_indiff_twin3_practice_L+N4_confirm`, finished seeds). Both runs (2022156, 2022316) are still running for their other seeds.
+
+## 2026-11-25, iteration 208 (22:47–23:15): Taxi `practice_LN` finished → check
+
+- Taxi `I6_indiff_twin3_practice_LN` (resume 2021988) finished at 22:45. Check: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025331**.
