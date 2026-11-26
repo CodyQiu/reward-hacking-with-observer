@@ -16,7 +16,7 @@ finished() { local f; for f in "${1%/}"/*; do [[ ${f##*/} == metrics.json ]] && 
 # one path at a time: a missing path (tomato_large before its Phase A) fails the whole git add
 for p in docs/step4_optimal_log.md docs/step4_bonus_log.md docs/step4_noreg_fail_log.md docs/step4_comp_log.md \
          docs/step4_indiff_log.md docs/step4_hideout_log.md docs/step4_goal_log.md \
-         results/step3/tomato_large; do
+         results/step3/tomato_large results/step4/goal_figures; do
   [[ -e $p ]] && git add -A "$p"; done
 for env in grid absent_supervisor tomato tomato_large taxi boat_race grid_hideout \
            grid_goal absent_supervisor_goal tomato_goal taxi_goal boat_race_goal; do
