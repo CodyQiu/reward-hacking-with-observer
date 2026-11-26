@@ -3178,3 +3178,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-26, iteration 212 (02:09–02:30): Boat Race practice `L+ES10+N4_confirm` s21, s22 CONVERGED
 
 - **Check 2025912:** s21, s22 0.000 (corrected once, then honest). s20 (the target's under-correction seed) is at 1,152 of 1,536 and decides the confirmation. Row in the twin3 table.
+
+## 2026-11-26, iteration 213 (02:58–03:20): Boat Race `practice_L+N4_confirm` finished → check
+
+- `I6_indiff_twin3_practice_L+N4_confirm` (2022316) finished at 02:30 (s20). Check: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2026209**. Taxi twin2 `practice_LE` resume (2023831) finished at 02:27; its finished seeds are covered by check 2025915 (pending).

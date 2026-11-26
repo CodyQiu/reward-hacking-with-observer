@@ -806,3 +806,7 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **`H1_base_LE+ES10+N4+ES30` s0 at 3072: 0.747 (PLATEAU)**: corrected in round 0, then honest (true 22), where the best response hides. s1, s2 at 3,024 / 2,880 (their last checks at 1536: 0.761). The run is judged when all three are checked (rule 6b extends while any seed is unconverged).
 - **`H1_indiff_twin2_L_confirm` s22 at 12,288: 0.001 (CONVERGED)**; s20 (11,424) and s21 (9,360) still training. The twin cells are set aside by the user; information.
+
+## 2026-11-26, iteration 71 (02:58–03:20): `ES30` extension finished → checks
+
+- `H1_base_LE+ES10+N4+ES30` (extension 2024281) finished at 02:36 (3072). Checks: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2026210** (`H1_base_LE+ES10+N4+ES30+N4`, finished seeds), **2026211** (`H1_base_LE+ES10+N4+ES30` s1, s2).
