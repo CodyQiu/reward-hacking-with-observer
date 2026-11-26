@@ -1,0 +1,4 @@
+  [tomato_goal s22]    192,000  win0-3 0.79  off 0.73  corr/ep 0.16  winF 0.69  proxy0-3    480.6  rounds 43  (718s)
+  [tomato_goal s22]    384,000  win0-3 0.95  off 0.90  corr/ep 0.11  winF 0.95  proxy0-3    540.2  rounds 77  (1286s)
+  [tomato_goal s22]    576,000  win0-3 0.99  off 0.94  corr/ep 0.04  winF 1.00  proxy0-3    560.6  rounds 91  (1551s)
+  [tomato_goal s22]    768,000  win0-3 0.98  off 0.93  corr/ep 0.05  winF 1.00  proxy0-3    552.7  rounds 105  (1811s)

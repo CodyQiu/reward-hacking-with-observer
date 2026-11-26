@@ -788,3 +788,7 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Check 2024125** (`H1_base_LE+ES10+N4+ES30` at 1536): **0.749 / 0.761 / 0.761, all IMPROVING.** The best response hides (6,500 ×4, then 8,700) in every seed, as the target. PPO s0 is corrected in rounds 0–1, then honest (true 22); s1, s2 are corrected in rounds 0–3 and keep failing the goal (true −100).
 - **Rule 6b:** an exploration run with unconverged seeds is extended 2×, up to the cap (12,288). Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout 'H1_base_LE+ES10+N4+ES30' 3072` printed `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ES30 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 3072`. Submitted → **2024281** (queued behind CAMPAIGN=goal's older jobs).
+
+## 2026-11-25, iteration 67 (21:08–21:40): base stage-2 `ENT10` finished → check
+
+- `H1_base_LE+ES10+N4+ENT10` (2020987, rule 6b stage 2) finished at 20:35 (16.6 h). Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2024807**.

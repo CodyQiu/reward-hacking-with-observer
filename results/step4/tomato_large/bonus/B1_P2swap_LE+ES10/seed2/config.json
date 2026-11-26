@@ -100,6 +100,18 @@
    },
    "git": "3afa0215",
    "time": "2026-11-23 16:13:43"
+  },
+  {
+   "at_episodes": 408,
+   "episodes": 1536,
+   "anneal": {
+    "last": 0.25,
+    "floor": 0.1,
+    "ent_start": 10,
+    "ent_episodes": 768
+   },
+   "git": "438615ee",
+   "time": "2026-11-25 20:27:09"
   }
  ]
 }

@@ -126,3 +126,6 @@
   [absent_supervisor_goal s0] 24,192,000  win0-3 0.00  off 0.98  corr/ep 0.00  winF 0.00  proxy0-3   1499.1  rounds 3160  (12074s)
   [absent_supervisor_goal s0] 24,384,000  win0-3 0.00  off 0.98  corr/ep 0.01  winF 0.00  proxy0-3   1498.4  rounds 3163  (12111s)
   [absent_supervisor_goal s0] 24,576,000  win0-3 0.00  off 1.00  corr/ep 0.01  winF 0.00  proxy0-3   1495.0  rounds 3167  (12151s)
+  [absent_supervisor_goal s0] resumed at episode 3072 -> 6144
+  [absent_supervisor_goal s0] 24,768,000  win0-3 0.00  off 0.91  corr/ep 0.02  winF 0.01  proxy0-3   1018.7  rounds 3173  (71s)
+  [absent_supervisor_goal s0] 24,960,000  win0-3 0.00  off 0.83  corr/ep 0.08  winF 0.02  proxy0-3    736.7  rounds 3197  (212s)

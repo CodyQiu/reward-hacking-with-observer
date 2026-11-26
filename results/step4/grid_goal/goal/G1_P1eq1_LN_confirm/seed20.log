@@ -1,0 +1,4 @@
+  [grid_goal s20]    768,000  win0-3 0.10  off 0.10  corr/ep 0.95  winF 0.00  proxy0-3    742.1  rounds 59  (673s)
+  [grid_goal s20]  1,536,000  win0-3 0.19  off 0.21  corr/ep 1.00  winF 0.00  proxy0-3   1629.2  rounds 93  (1009s)
+  [grid_goal s20]  2,304,000  win0-3 0.21  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   1815.7  rounds 122  (1299s)
+  [grid_goal s20]  3,072,000  win0-3 0.19  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   1770.9  rounds 154  (1592s)
