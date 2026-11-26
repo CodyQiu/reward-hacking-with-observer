@@ -127,3 +127,13 @@
   [boat_race_goal s2] 24,192,000  win0-3 0.74  off 0.94  corr/ep 2.00  winF 1.00  proxy0-3    190.8  rounds 7157  (12915s)
   [boat_race_goal s2] 24,384,000  win0-3 0.73  off 0.94  corr/ep 2.00  winF 1.00  proxy0-3    190.5  rounds 7205  (13073s)
   [boat_race_goal s2] 24,576,000  win0-3 0.74  off 0.94  corr/ep 2.00  winF 1.00  proxy0-3    190.8  rounds 7253  (13231s)
+  [boat_race_goal s2] resumed at episode 3072 -> 6144
+  [boat_race_goal s2] 24,768,000  win0-3 0.61  off 0.84  corr/ep 2.26  winF 0.76  proxy0-3    161.0  rounds 7322  (285s)
+  [boat_race_goal s2] 24,960,000  win0-3 0.71  off 0.90  corr/ep 2.02  winF 0.97  proxy0-3    177.8  rounds 7382  (565s)
+  [boat_race_goal s2] 25,152,000  win0-3 0.71  off 0.84  corr/ep 2.02  winF 0.98  proxy0-3    163.1  rounds 7436  (789s)
+  [boat_race_goal s2] 25,344,000  win0-3 0.78  off 0.89  corr/ep 2.01  winF 0.97  proxy0-3    178.0  rounds 7490  (1015s)
+  [boat_race_goal s2] 25,536,000  win0-3 0.67  off 0.88  corr/ep 2.00  winF 0.95  proxy0-3    174.1  rounds 7539  (1232s)
+  [boat_race_goal s2] 25,728,000  win0-3 0.63  off 0.87  corr/ep 2.03  winF 0.79  proxy0-3    170.9  rounds 7595  (1465s)
+  [boat_race_goal s2] 25,920,000  win0-3 0.66  off 0.89  corr/ep 2.00  winF 0.83  proxy0-3    176.8  rounds 7643  (1665s)
+  [boat_race_goal s2] 26,112,000  win0-3 0.80  off 0.88  corr/ep 2.01  winF 0.89  proxy0-3    172.8  rounds 7699  (1903s)
+  [boat_race_goal s2] 26,304,000  win0-3 0.65  off 0.88  corr/ep 2.02  winF 0.83  proxy0-3    171.5  rounds 7755  (2148s)
