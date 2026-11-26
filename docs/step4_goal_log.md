@@ -12,6 +12,7 @@ This log is append-only below the three summary sections.
 
 ## Status
 
+- **Control, no hidden state** (`docs/step4_goal.md`, "Control: no hidden state", from the user 2026-11-26): 6 target jobs submitted 2026-11-26 13:00 (iteration 27), 2027521–2027526 (Taxi and Boat Race × base, P1eq1, P2swap; targets `<variant>_nohide`). Pending.
 - **Targets:** 15 jobs submitted 2026-11-25 (iteration 0), 2023183–2023197. **All 15 in** (2026-11-26 05:30; iterations 1–19). Comparison with the predictions at the top of "Flags for the user".
 - **PPO wave 1:** 45 runs submitted 2026-11-25 (iteration 0), 2023198–2023242.
 - Cells DONE: **3 of 15.** absent_supervisor_goal base (`G1_base_L`, `ppo.ent_coef=0.1 g.epochs=1000`, 3072 episodes: tuning 0.001 / 0.007 / 0.026, confirmation `G1_base_L_confirm` 0.001 / 0.003 / 0.001; hides in rounds 0–3, never corrected, like its best responses and its target; iteration 14). grid_goal no-reg (`G1_P1eq1_L`, `g.use_regularization=False`, 1536 episodes: tuning 0.001 / 0.001 / 0.003, confirmation `G1_P1eq1_L_confirm` 0.002 / 0.006 / 0.002; corrected in round 0, then honest, like its best responses and its target; iteration 13). tomato_goal base (`G1_base_L`, `ppo.ent_coef=0.03 g.epochs=1000`, 1536 episodes: tuning 0.000 ×3, confirmation 0.000 ×3; ends every round in the bucket, never corrected, like its best responses and its target; iteration 11).
@@ -456,3 +457,12 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
   - **2027246, boat_race_goal `G1_P2swap_LE` s2 at 3072: 0.565 ± 0.102 (IMPROVING)** (corrected twice, then hidden; its best response 4 times); with s1 0.349 (IMPROVING); s0 at 3072 check 2027382.
 - **Runs finished:** boat_race_goal `G1_P2swap_LE` at 3072 (2026667).
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027382** (boat_race_goal `G1_P2swap_LE` s0).
+
+## 2026-11-26, iteration 27 (12:49–13:05): **the no-hidden-state control submitted** (6 target jobs); Boat Race swap `LE` → extend 6144
+
+- `git pull` brought e5cd2d1a (the user's control, `docs/step4_goal.md` "Control: no hidden state": the same Taxi and Boat Race targets with `task.hidden=False`; predictions written before any control target; a new test). **Tests:** `.venv/bin/python tests/test_step4.py`: 55 tests, 0 failed (the new `test_goal_control_without_a_hidden_state` passes); `.venv/bin/python tests/test_step3.py`: 13 tests, 0 failed.
+- **Control.** Dry-run `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh nohide` printed 6 `run_cmd.sh <h> 4 targets_<env>_<variant>_nohide .venv/bin/python -u experiments/step4_targets.py --env <env> --name <variant>_nohide --seeds 0 1 2 20 21 22 --draws 6 --set <variant words> g.epochs=1000 task.hidden=False` lines (12 h for Taxi, 4 h for Boat Race), as the doc says. Submitted → **2027521** (taxi_goal base), **2027522** (taxi_goal P1eq1), **2027523** (taxi_goal P2swap), **2027524** (boat_race_goal base), **2027525** (boat_race_goal P1eq1), **2027526** (boat_race_goal P2swap). Each target lands under `results/step4/<env>/targets/<variant>_nohide/`; they are compared with the doc's predictions when all six are in.
+- **Checks:**
+  - **2027382, boat_race_goal `G1_P2swap_LE` s0 at 3072: 0.373 ± 0.083 (IMPROVING)**; with s1 0.349, s2 0.565 (IMPROVING). Corrected once or twice, then hidden; the best responses take 2–4 corrections. **Rule 4: extend** → `submit.sh 48 --env boat_race_goal --run-id G1_P2swap_LE --seeds 0 1 2 --results-dir results/step4/boat_race_goal/goal --resume --extend-to 6144` → **2027508**.
+- **Runs finished:** grid_goal `G1_base_L+ES10` at 6144 (2026665), tomato_goal `G1_P1eq1_L+ENT3` at 3072 (2026810), boat_race_goal `G1_P1eq1_LN` at 3072 (2026814).
+- **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027509** (grid_goal `G1_P2swap_L_confirm`, finished seeds), **2027510** (grid_goal `G1_base_L+ES10` at 6144), **2027511** (tomato_goal `G1_P1eq1_L+ENT3` at 3072), **2027512** (boat_race_goal `G1_P1eq1_LN` at 3072).

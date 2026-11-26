@@ -127,3 +127,5 @@
   [boat_race_goal s0] 24,192,000  win0-3 0.56  off 0.98  corr/ep 2.01  winF 0.88  proxy0-3    188.7  rounds 7837  (14572s)
   [boat_race_goal s0] 24,384,000  win0-3 0.50  off 0.98  corr/ep 2.01  winF 0.94  proxy0-3    189.2  rounds 7893  (14749s)
   [boat_race_goal s0] 24,576,000  win0-3 0.52  off 0.98  corr/ep 2.01  winF 0.91  proxy0-3    189.2  rounds 7947  (14920s)
+  [boat_race_goal s0] resumed at episode 3072 -> 6144
+  [boat_race_goal s0] 24,768,000  win0-3 0.71  off 0.95  corr/ep 2.03  winF 0.90  proxy0-3    181.7  rounds 8012  (551s)
