@@ -127,3 +127,4 @@
   [grid_goal s0] 24,192,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2187.5  rounds 3618  (13136s)
   [grid_goal s0] 24,384,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2187.8  rounds 3642  (13310s)
   [grid_goal s0] 24,576,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2188.9  rounds 3666  (13493s)
+  [grid_goal s0] resumed at episode 3072 -> 6144

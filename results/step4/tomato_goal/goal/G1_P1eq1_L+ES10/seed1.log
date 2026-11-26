@@ -5,3 +5,8 @@
   [tomato_goal s1]    960,000  win0-3 0.20  off 0.38  corr/ep 0.92  winF 0.04  proxy0-3    365.9  rounds 410  (4755s)
   [tomato_goal s1]  1,152,000  win0-3 0.11  off 0.31  corr/ep 0.97  winF 0.01  proxy0-3    354.5  rounds 492  (5703s)
   [tomato_goal s1]  1,344,000  win0-3 0.05  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3    357.0  rounds 560  (6495s)
+  [tomato_goal s1]  1,536,000  win0-3 0.05  off 0.28  corr/ep 1.00  winF 0.00  proxy0-3    364.9  rounds 619  (7197s)
+  [tomato_goal s1]  1,728,000  win0-3 0.02  off 0.24  corr/ep 1.00  winF 0.00  proxy0-3    368.9  rounds 671  (7823s)
+  [tomato_goal s1]  1,920,000  win0-3 0.01  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3    371.2  rounds 713  (8336s)
+  [tomato_goal s1]  2,112,000  win0-3 0.01  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3    379.0  rounds 755  (8846s)
+  [tomato_goal s1]  2,304,000  win0-3 0.00  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3    384.6  rounds 785  (9215s)
