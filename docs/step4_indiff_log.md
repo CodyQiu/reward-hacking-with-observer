@@ -358,6 +358,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| boat_race / practice / `I6_indiff_twin3_practice_L+N4_confirm` / s20 (1536); with s21, s22: **2/3** (fails on s20) | **0.060 ± 0.001 (PLATEAU)** | corrected in every round 0–3, true −94 ×5 (the target's under-correction seed) | the BR takes 2 corrections, then honest (true 50) | – | – |
 | boat_race / practice / `I6_indiff_twin3_practice_L+ES10+N4_confirm` / s21, s22 (1536); s20 still training (1152) | **0.000 / 0.000** (CONVERGED) | 1.00 per episode, round 0 (true −94); then honest 50 ×4; received 200 | corrected once, then honest | – | – |
 | taxi / practice / `I6_indiff_twin3_practice_LN` / s1, s2 (768, resumed) | **0.551 ± 0.162 / 0.257 ± 0.090 (IMPROVING)** — **level-0 twin failures** (twin level 0 at −100.0 / −97.5): **fail** | 0.00–0.01 per episode (hides): true −75 to −79 ×4; deliveries 0.6 / 0.5 at level 0 (41 repeat pickups), 1.2 / 0.9 at level 1 (honest 7.1) | 3 / 4 corrections, honest after (true 118–124) | **−100.0 / −97.5** vs 379.7: P1 ✗ | 4 / 4 |
 | boat_race / practice / `I6_indiff_twin3_practice_L+ENT3_confirm` / s20 (1536); with s21, s22: **2/3** (fails on s20) | **0.061 ± 0.001 (PLATEAU)** | corrected in every round 0–3, true −94 ×5 (the target's under-correction seed) | the BR is corrected in every round too, honest after the first (true 50) | 199.9 vs 200: P1 ✓ (s20 stays as its target) | – |
@@ -3182,3 +3183,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-26, iteration 213 (02:58–03:20): Boat Race `practice_L+N4_confirm` finished → check
 
 - `I6_indiff_twin3_practice_L+N4_confirm` (2022316) finished at 02:30 (s20). Check: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2026209**. Taxi twin2 `practice_LE` resume (2023831) finished at 02:27; its finished seeds are covered by check 2025915 (pending).
+
+## 2026-11-26, iteration 214 (03:47–04:15): Boat Race practice `L+N4_confirm` 2/3 (fails on s20)
+
+- **Check 2026209** (s20): **0.060 (PLATEAU)**: corrected every round at true −94, the target's under-correction seed. The confirmation is **2/3**. Of the cell's four stage-1 confirmations, three have now failed on s20 (`L+ES10`, `L+ENT3`, `L+N4`); `L+ES10+N4_confirm` s20 is still training. Stage 2 waits for it and for CAMPAIGN=goal's priority.
