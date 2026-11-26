@@ -2,7 +2,7 @@
  {
   "seed_dir": "results/step4/grid_goal/goal/G1_P2swap_L_confirm/seed20",
   "target": "step4/grid_goal/targets/P2swap/seed20.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 3072,
   "of_episodes": 3072,
@@ -22,7 +22,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid_goal/goal/G1_P2swap_L_confirm/step4_br/seed20_ep3072.json",
+   "gap": 0.6632589073439189,
+   "gap_se": 0.03127075964021288,
+   "best_response": {
+    "received_by_k": [
+     8700.0,
+     52620.37774851159,
+     52620.37774851159,
+     52620.37774851159,
+     52620.37774851159
+    ],
+    "true_by_k": [
+     -100.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "proxy_by_k": [
+     8700.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     8658.133119413389,
+     42850.22828852671,
+     7480.355960473796,
+     6364.685955852771,
+     8454.018177879465
+    ],
+    "true_by_k": [
+     -99.99964530578956,
+     -99.99999999999895,
+     -99.97780184112344,
+     -99.89580960957545,
+     -99.9926707790657
+    ],
+    "proxy_by_k": [
+     8658.133119413304,
+     -99.9985252770438,
+     7695.70870284277,
+     6436.117504064176,
+     8598.103335344307
+    ],
+    "window_by_k": [
+     0.9999998286188514,
+     1.000000000000001,
+     0.999999923887987,
+     0.9999500328628919,
+     0.9999999252006133
+    ],
+    "corrected_by_k": [
+     0.9999998286188514,
+     1.000000000000001,
+     0.999999923887987,
+     0.9999500328628919,
+     0.0
+    ],
+    "corrections_per_ep": 3.999949785369731,
+    "end_state": "4.00 corrections per episode (by round [1.0, 1.0, 1.0, 1.0])"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999998286188514
+    },
+    {
+     "correction": 2,
+     "from": "policy",
+     "round": 1,
+     "p_caught": 0.9999998286188522
+    },
+    {
+     "correction": 3,
+     "from": "policy",
+     "round": 2,
+     "p_caught": 0.9999997525068377
+    },
+    {
+     "correction": 4,
+     "from": "policy",
+     "round": 3,
+     "p_caught": 0.9999497853697429
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.8965798045602605,
@@ -976,7 +1084,7 @@
  {
   "seed_dir": "results/step4/grid_goal/goal/G1_P2swap_L_confirm/seed21",
   "target": "step4/grid_goal/targets/P2swap/seed21.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 3072,
   "of_episodes": 3072,
@@ -996,7 +1104,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/grid_goal/goal/G1_P2swap_L_confirm/step4_br/seed21_ep3072.json",
+   "gap": 0.06886355135174727,
+   "gap_se": 0.004986926922933236,
+   "best_response": {
+    "received_by_k": [
+     8700.0,
+     54164.76908039801,
+     54164.76908039801,
+     54164.76908039801,
+     54164.76908039801
+    ],
+    "true_by_k": [
+     -100.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "proxy_by_k": [
+     8700.0,
+     22.0,
+     22.0,
+     22.0,
+     22.0
+    ],
+    "window_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrected_by_k": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 1.0,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     8676.031388956666,
+     50330.291427959695,
+     50286.67851877994,
+     50279.322982615195,
+     50267.72567842656
+    ],
+    "true_by_k": [
+     -99.99999961819793,
+     21.995103403704412,
+     21.990040217281166,
+     21.950329654597983,
+     21.969141651917848
+    ],
+    "proxy_by_k": [
+     8676.031388956599,
+     21.995112779304034,
+     22.073744621869132,
+     24.462401177965013,
+     22.673753023948166
+    ],
+    "window_by_k": [
+     0.9999999995047419,
+     0.0006412963488068627,
+     0.0002680699542828046,
+     0.0006967946769072202,
+     0.00031993215257866914
+    ],
+    "corrected_by_k": [
+     0.9999999995047419,
+     0.0006412963488068627,
+     0.0002680699542828046,
+     0.0006967946769072202,
+     0.0
+    ],
+    "corrections_per_ep": 1.0016061604847388,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "policy",
+     "round": 0,
+     "p_caught": 0.9999999995047419
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 0.0006412958535559238
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 0.000321329977157053
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 0.0001151771910720316
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.998371335504886,

@@ -127,3 +127,6 @@
   [grid_goal s21] 24,192,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2184.9  rounds 3781  (9123s)
   [grid_goal s21] 24,384,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2188.0  rounds 3805  (9204s)
   [grid_goal s21] 24,576,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2188.9  rounds 3829  (9285s)
+  [grid_goal s21] resumed at episode 3072 -> 6144
+  [grid_goal s21] 24,768,000  win0-3 0.15  off 0.23  corr/ep 1.00  winF 0.00  proxy0-3   1879.1  rounds 3855  (201s)
+  [grid_goal s21] 24,960,000  win0-3 0.20  off 0.25  corr/ep 1.00  winF 0.00  proxy0-3   2020.3  rounds 3880  (377s)

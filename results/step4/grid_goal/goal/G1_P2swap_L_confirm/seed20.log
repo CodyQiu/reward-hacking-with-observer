@@ -127,3 +127,6 @@
   [grid_goal s20] 24,192,000  win0-3 0.20  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2087.6  rounds 3925  (9746s)
   [grid_goal s20] 24,384,000  win0-3 0.23  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2089.5  rounds 3949  (9817s)
   [grid_goal s20] 24,576,000  win0-3 0.23  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2090.7  rounds 3973  (9887s)
+  [grid_goal s20] resumed at episode 3072 -> 6144
+  [grid_goal s20] 24,768,000  win0-3 0.14  off 0.26  corr/ep 1.00  winF 0.00  proxy0-3   2056.4  rounds 3997  (175s)
+  [grid_goal s20] 24,960,000  win0-3 0.17  off 0.26  corr/ep 1.00  winF 0.00  proxy0-3   2020.4  rounds 4021  (344s)
