@@ -3168,3 +3168,8 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - **Check 2025331** (Taxi `I6_indiff_twin3_practice_LN` at 768): s0 0.730 (recorded in iteration 201), s1 **0.551**, s2 **0.257**, all IMPROVING. **All three are level-0 twin failures** (twin level 0 at −88.4 / −100.0 / −97.5) and all three hide. Under the user's level-0 rule they fail, the cell stays open, and **the run is not extended** just to replace them. Rows in the twin3 table.
 - **Check 2025531** (Boat Race `practice_L+ENT3_confirm` s20): **0.061 (PLATEAU)**: corrected every round at true −94 (the target's under-correction seed). The confirmation is **2/3**, failing on s20, like `L+ES10_confirm`. `L+ES10+N4_confirm` (2022070) and `L+N4_confirm` (s20 at 1,200) are still running; stage 2 waits for them and for CAMPAIGN=goal's priority.
+
+## 2026-11-26, iteration 211 (01:18–01:40): checks of finished seeds
+
+- `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025912** (Boat Race `I6_indiff_twin3_practice_L+ES10+N4_confirm`, finished seeds).
+- `CAMPAIGN=indiff_twin2 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025915** (Taxi `I5_indiff_twin2_practice_LE`, finished seeds of the resume 2023831).

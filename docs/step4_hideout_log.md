@@ -797,3 +797,7 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Check 2024807** (`H1_base_LE+ES10+N4+ENT10` at 1536): **0.762 / 0.761 / 0.762, all IMPROVING.** PPO is corrected in rounds 0–3 (3.91–4.00 per episode) and keeps failing the goal (true −100); the best response hides (6,500 ×4, then 8,700), as the target.
 - **Rule 6b:** extend 2× → `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout 'H1_base_LE+ES10+N4+ENT10' 3072` printed `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ENT10 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 3072`; submitted → **2025330**.
+
+## 2026-11-26, iteration 69 (01:18–01:40): checks of finished seeds
+
+- `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2025913** (`H1_base_LE+ES10+N4+ES30`, seeds finished at 3072), **2025914** (`H1_indiff_twin2_L_confirm`, finished seeds).
