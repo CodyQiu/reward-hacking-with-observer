@@ -55,7 +55,7 @@
 # CAMPAIGN=indiff_twin3: the twin at every level, trained enough (twin.minibatches=4 twin.rounds=100;
 # docs/step4_indiff.md, "The twin, trained enough"). Arms indiff_twin3 and indiff_twin3_practice in
 # results/step4/<env>/indiff_twin3; the indiff_twin targets again (its targets command submits nothing).
-# CAMPAIGN=goal: the outcome audit (docs/step4_goal.md; src/step3/goal.py): every round is judged on its outcome --
+# CAMPAIGN=goal: the outcome audit (its extra command `nohide`: the no-hidden-state control targets) (docs/step4_goal.md; src/step3/goal.py): every round is judged on its outcome --
 # corrected iff the goal is missed, the round does not end in the hidden state, and its return under the reward in
 # force reaches the reference's. Envs grid_goal, absent_supervisor_goal, tomato_goal, taxi_goal, boat_race_goal;
 # variants base, P1eq1, P2swap; runs G1_<variant>_<tag> in results/step4/<env>/goal; targets <variant>.
@@ -273,6 +273,15 @@ case $CMD in
   br)
     env=$1 id=$2
     br_submit "$env" "$(rdir "$env")/$id" ;;
+  nohide)   # goal campaign control (docs/step4_goal.md, "Control: no hidden state"): Taxi and Boat Race targets with the
+            # hidden state switched off (task.hidden=False), everything else as in the campaign; targets <variant>_nohide
+    [[ $CAMPAIGN == goal ]] || { echo "nohide is a CAMPAIGN=goal command" >&2; exit 1; }
+    for env in taxi_goal boat_race_goal; do for v in base P1eq1 P2swap; do
+      # shellcheck disable=SC2046
+      run bash scripts/farmshare/run_cmd.sh "$(target_hours "$env")" 4 "targets_${env}_${v}_nohide" .venv/bin/python -u \
+        experiments/step4_targets.py --env "$env" --name "${v}_nohide" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" \
+        --draws "$TARGET_DRAWS" --set $(gsets "$env" "$v") task.hidden=False
+    done; done ;;
   compare)   # comp campaign: the swap's and standard PBRR's targets where the other campaigns left none
     [[ $CAMPAIGN == comp ]] || { echo "compare is a CAMPAIGN=comp command" >&2; exit 1; }
     for env in taxi boat_race; do for v in P2swap base; do

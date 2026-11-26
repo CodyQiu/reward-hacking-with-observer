@@ -1582,5 +1582,22 @@ def test_learning_exemption_spares_rounds_below_the_reference():
         assert bool(env.last["exempt"].all()) == (not caught)
 
 
+def test_goal_control_without_a_hidden_state():
+    """The no-hidden-state control (docs/step4_goal.md): with task.hidden=False nothing is hidden in Boat Race and Taxi,
+    every round that misses the goal is flagged, and the best uncorrected proxy round meets the goal."""
+    from src.step3.dp import solve_subepisode
+    from src.step3.goal import goal_rate
+    from src.step3.tasks import get_task
+    for env in ("boat_race_goal", "taxi_goal"):
+        task = get_task(env, hidden=False)
+        tb = task.tables
+        b, n = tb.nxt // task.n_counter, tb.nxt % task.n_counter
+        assert not np.asarray(task.hidden_fn(b)).any()
+        assert np.array_equal(tb.flag, ~np.asarray(task.goal_fn(b, n), bool) & (tb.prob > 0))
+        av = solve_subepisode(tb, tb.proxy, 100, avoid_window=1)
+        r = goal_rate(task, av, 100)
+        assert r["hidden"] == 0 and r["goal"] > 0.99, (env, r)
+
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

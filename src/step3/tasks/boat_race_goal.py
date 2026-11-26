@@ -20,7 +20,9 @@ G_FROM = "boat_race"
 FIXED = {"task": {"finish_only": False}, "protocol": {"window": 1, "learn_exempt": True, "show_monitor": False}}
 
 
-def make_task(goal_entries=24, bonus=6.0, side=5, step_cost=-1.0, finish_only=False, **base_params):
+def make_task(goal_entries=24, bonus=6.0, side=5, step_cost=-1.0, finish_only=False, hidden=True, **base_params):
+    """``hidden`` = False: the control with no hidden state (docs/step4_goal.md, "Control"): the bottom checkpoint is
+    an ordinary visible one, so every round that misses the goal is judged."""
     base = base_mod.make_task(bonus=bonus, side=side, step_cost=step_cost, finish_only=finish_only, **base_params)
     tb, L = base.tables, len(base.checkpoints)
     side = int(side)
@@ -28,7 +30,7 @@ def make_task(goal_entries=24, bonus=6.0, side=5, step_cost=-1.0, finish_only=Fa
     inc = (tb.true > step_cost + 1e-9).astype(np.int64)               # an in-order entry: the true reward pays it
     K = int(goal_entries)
     task = with_goal(base, "boat_race_goal", inc, K, goal_fn=lambda b, n: n >= K,
-                     hidden_fn=lambda b: (b // L) == hide_cell)
+                     hidden_fn=(lambda b: (b // L) == hide_cell) if hidden else (lambda b: np.zeros(np.shape(b), bool)))
     task.ring, task.checkpoints, task.side, task.bonus, task.goal_entries = base.ring, base.checkpoints, side, bonus, K
     return task
 

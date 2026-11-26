@@ -64,6 +64,22 @@ What a correction is does not change: PBRR fitted on the agent's caught rollouts
 
 **Never** tune the environments, thresholds or criteria toward these predictions after seeing a target.
 
+## Control: no hidden state (2026-11-26)
+
+**Why.** The exact targets show that in Taxi and Boat Race, under no-reg and the swap, the best round is an exploit at every correction level 0–4. So the hidden state may not be what makes these methods fail: each correction is local (it fixes the checkpoint or depot it was fitted on), and the raise lifts the other copies of the exploit. The user (2026-11-26): "this means that with or without the hidden exploit, our corrections cannot fix the environment, is that right?" Then: "yep, let's test this out then".
+
+**The control.** The same Taxi and Boat Race targets with the hidden state switched off: `task.hidden=False`. Depot B and the bottom checkpoint become ordinary visible ones, so every round that misses the goal is judged. Everything else is unchanged.
+- Variants: base, P1eq1, P2swap; seeds 0–2 and 20–22; 6 draws.
+- Command: `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh nohide submit`. 6 jobs, targets `<variant>_nohide`.
+- Test: `test_goal_control_without_a_hidden_state`. Without the hidden state, the best uncorrected proxy round meets the goal.
+
+**Predicted (written 2026-11-26, before any control target).**
+- **No-reg and swap:** never honest. They exploit in view, are corrected in every round 0–3, and the true return stays at exploit level: Boat Race about −82 to −100 (honest 50), Taxi about −55 to −88 (honest 125). The failure does not depend on the hidden state.
+- **Standard PBRR:** no confident prediction.
+  - Boat Race: its best round is an exploit at every level with the hidden state, so we expect it to exploit in view and be corrected, though its corrections fine.
+  - Taxi: hiding is no longer available, so it must choose between exploiting in view (and being fined) and honest play.
+- **If no-reg or swap become honest at some level:** then the hidden state, not the repair failure, was what kept them exploiting. The prediction above would be wrong, and the result reported as such.
+
 ## Pipeline (`CAMPAIGN=goal`)
 
 - **Exact targets:** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh targets submit`. 15 jobs: 5 envs × base, P1eq1, P2swap, seeds 0–2 and 20–22, 6 draws. Written to `results/step4/<env>/targets/<variant>/`.
