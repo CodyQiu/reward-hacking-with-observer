@@ -3217,3 +3217,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-26, iteration 220 (12:49–13:05): Boat Race pure stage-2 `ES30` 3/3 → confirm
 
 - **Check 2027386** (Boat Race `I6_indiff_twin3_L+ES10+N4+ES30` at 1536, stage 2): **0.000 ×3, all CONVERGED**: corrected once in round 0, then honest (50 ×4), as every best response. **Rule 4 (via 6b): confirm.** Dry-run `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm boat_race 'I6_indiff_twin3_L+ES10+N4+ES30'` printed `submit.sh 48 --env boat_race --run-id I6_indiff_twin3_L+ES10+N4+ES30_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_twin3 --set ppo.ent_coef=0.03 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.minibatches=4 twin.rounds=100 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=30 anneal.ent_episodes=1536 n_envs=64 episodes=1536`. Submitted → **2027513**, with no CAMPAIGN=goal job pending. s20 (the target's under-correction seed) decides it, as for the stage-1 confirmations.
+
+## 2026-11-26, iteration 221 (13:37–14:00): Boat Race pure stage-2 `ENT10` finished → check
+
+- `I6_indiff_twin3_L+ES10+N4+ENT10` (2022931) finished at 13:03. Check: `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027592**.

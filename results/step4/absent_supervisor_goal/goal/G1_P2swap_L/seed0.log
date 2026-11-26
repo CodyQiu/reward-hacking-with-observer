@@ -250,3 +250,8 @@
   [absent_supervisor_goal s0] 47,808,000  win0-3 0.00  off 0.27  corr/ep 1.11  winF 0.01  proxy0-3    373.0  rounds 17634  (37636s)
   [absent_supervisor_goal s0] 48,000,000  win0-3 0.00  off 0.26  corr/ep 1.05  winF 0.00  proxy0-3    359.3  rounds 17673  (37821s)
   [absent_supervisor_goal s0] 48,192,000  win0-3 0.00  off 0.26  corr/ep 1.05  winF 0.01  proxy0-3    361.0  rounds 17717  (38020s)
+  [absent_supervisor_goal s0] 48,384,000  win0-3 0.01  off 0.26  corr/ep 1.09  winF 0.01  proxy0-3    365.3  rounds 17770  (38255s)
+  [absent_supervisor_goal s0] 48,576,000  win0-3 0.00  off 0.26  corr/ep 1.04  winF 0.00  proxy0-3    357.1  rounds 17809  (38440s)
+  [absent_supervisor_goal s0] 48,768,000  win0-3 0.00  off 0.25  corr/ep 1.03  winF 0.00  proxy0-3    356.2  rounds 17845  (38608s)
+  [absent_supervisor_goal s0] 48,960,000  win0-3 0.00  off 0.26  corr/ep 1.03  winF 0.01  proxy0-3    353.9  rounds 17879  (38771s)
+  [absent_supervisor_goal s0] 49,152,000  win0-3 0.00  off 0.26  corr/ep 1.04  winF 0.00  proxy0-3    359.1  rounds 17916  (38950s)
