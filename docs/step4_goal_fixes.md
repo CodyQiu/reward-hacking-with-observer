@@ -17,7 +17,7 @@ The summary sections below are kept current. The log below them is append-only.
 ## Status
 
 - **Diagnosis:** code in, 10 jobs running (2029894–2029903). Boat Race seed 0 screening done (below).
-- **Candidates:** C1 and C2 pre-registered below; their exact targets are submitted with this commit. C3 is pre-registered and waits for job slots.
+- **Candidates:** C1, C2, C3 and the reference point are pre-registered. Their targets started running at 06:15–06:45 after hours pending; results are landing (below).
 - **Opt-in code:** `GConfig.reg_rows` / `unseen` / `unseen_post` (`src/pbrr_core.py`, `src/step3/pbrr.py`) and the Taxi `g_bit` control. Test: `test_goal_fix_options_are_opt_in_and_change_only_what_they_name`.
 
 ## Diagnosis (with numbers)
@@ -138,6 +138,11 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - AS: as no-reg on these seeds. s2 honest; s0, s1 still farm corrections (the farming route uses rows the reference takes, which C1 does not touch).
   - **Boat Race: fails, 0/3.** After the correction it exploits at the hidden checkpoint (whose step-back is in every seed's reference, so C1 leaves its raise) or farms raised reference rows.
   - **Taxi: corrected in round 0, then meets the goal near honest (true ≥ about 110), 3/3.** Seeds 0–2's references contain no loop dropoff, so every loop copy, depot B's included, is fined like the caught one, while honest pickups and deliveries keep the raise.
+- **Exact results so far (seeds 0–2; R = honest play is the best round at that level):**
+  - **grid:** 3/3 corrected in round 0, then honest (true 22), as no-reg. Best round honest at levels 1–4, except s1 at levels 2–3.
+  - **AS:** identical to no-reg on these seeds. s2 corrected once, then honest; s0 and s1 corrected every round at true 400 (the farming route). No regression.
+  - **Boat Race: fails in 3/3, as predicted.** s0 and s2 are corrected once, then exploit in hiding (true −82); s1 is corrected twice, then the same. The best round is an exploit at every level (true −82 to −100).
+  - Tomato and Taxi: running.
 
 ### C2: swap + pessimistic extrapolation (`P2swap_pess`: `g.l_minus_on=dispreferred g.unseen_post=pess`)
 
@@ -149,12 +154,18 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - AS: s0 honest. For s1 and s2 (the swap exploits in hiding on a −50 route) there is no confident prediction: if that route's transitions are unseen, C2 removes their raise.
   - **Boat Race: fails, 0/3** (screening: the hidden copy at level 1, raise farming at level 2).
   - **Taxi: fails, 0/3.** A loop pays +4 per step, honest play about +1.25. With loop copies at 0 and pickups raised along with honest play, honest wins only if the swap's raise on honest rows exceeds about 5.5 per step. The data ask for less (point 3).
+- **Exact results so far (seeds 0–2):**
+  - **grid:** 3/3 corrected in round 0, then honest, as the swap.
+  - **AS:** identical to the swap. s0 honest; s1 takes the −50 route ending hidden; s2 exploits in hiding (−100). No change, no regression.
+  - **Boat Race: fails in 3/3, as predicted.** 2–3 corrections, then it exploits in hiding (true −100); the best round is an exploit at every level.
+  - Tomato and Taxi: running.
 
 ### C3: contrastive + pessimistic extrapolation (`contrast_pess`: `g.reg_rows=shared g.unseen_post=pess`, standard PBRR otherwise)
 
 - **What it changes.** The user's contrastive idea. Standard PBRR's coefficient, but the regulariser covers only rows that occur in both trajectories of a pair (shared rows, pinned at 0, which also anchors the level). Rows exclusive to the caught play are free to be fined, rows exclusive to the reference free to be raised, and unseen rows get the C1 override.
 - **Fairness:** as C1.
 - **Predicted (before any C3 target):** in all five envs, a correction costs about what standard PBRR's does (the raise on reference-only rows is about 2 per step in the screening), so the optimum avoids correction where it can. It hides in grid, AS, Taxi and Boat Race, as standard PBRR does, and ends in the bucket in Tomato. That fails the user's goal ("after seeking a correction"); it is run because it is the user's suggestion.
+- **Exact results so far:** **grid s0, s1: corrected in round 0, then honest; the best round is honest at levels 1–4. That contradicts the prediction (hides like standard PBRR).** The rest are running.
 
 ### Reference point (set aside by the user): the indifference family (`ref_indiff_twin`: `g.fine_only=True g.offset=True g.offset_rule=twin`)
 
@@ -258,3 +269,11 @@ In Taxi the reward can be repaired by fines alone. The missing piece is a paymen
 
 - No investigation job ran in the last 45 minutes. The cluster is fully allocated (`sinfo`: 20/20 nodes of `normal`), with about 300 jobs from other users queued ahead (`squeue -t PENDING`); all 19 of mine are pending on Priority.
 - Wrote a provisional "Ranked proposals" section from the diagnosis, marked as such.
+
+### 2026-11-27, iteration 6 (06:58–07:15)
+
+- **Jobs started 06:15–06:45:** 13 investigation jobs are running (C1, C2, C3, the Taxi diagnoses for seeds 1–2, the `g_bit` control); 6 are still pending (the reference point and C3 Taxi seeds 1–2).
+- **Landed:** C1 and C2 grid, AS and Boat Race, seeds 0–2; C3 grid seeds 0–1 (results under each candidate).
+  - C1 and C2 change nothing in grid and AS.
+  - Both fail in Boat Race, as predicted.
+  - C3's grid result contradicts its prediction: corrected, then honest.
