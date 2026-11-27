@@ -834,3 +834,7 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Check 2027694** (`H1_base_LE+ES10+N4+ENT10` s2 at 3072): **0.019 (CONVERGED)**: hides at the hideout in rounds 0–3, never corrected, as its best response and target. With s0 0.749, s1 0.747 (IMPROVING; corrected once or twice, then honest). **Rule 6b: extend** → `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ENT10 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144` → **2027816**.
 - **Check 2027695** (`H1_indiff_twin2_LE_confirm` s22 at 6144): 0.000 (CONVERGED); s20, s21 still training. Twin cells set aside; information.
+
+## 2026-11-26, iteration 77 (16:04–16:20): `ES30+N4` extension finished → check
+
+- `H1_base_LE+ES10+N4+ES30+N4` (extension 2027383) finished at 15:30 (3072). Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027914**.

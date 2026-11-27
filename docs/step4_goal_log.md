@@ -514,3 +514,15 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
   - **2027687, grid_goal `G1_P2swap_LN_confirm` s22 at 6144: 0.072 ± 0.004 (IMPROVING)**; s20 finished at 6144 (check 2027810), s21 at 6,072.
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027810** (grid_goal `G1_P2swap_LN_confirm` s20), **2027811** (absent_supervisor_goal `G1_P2swap_LE`, seeds finished at 6144), **2027813** (tomato_goal `G1_P1eq1_L+ENT3`, seeds finished at 6144), **2027814** (tomato_goal `G1_P1eq1_L+ES10+N4`, finished seeds), **2027815** (boat_race_goal `G1_P1eq1_LE` s0).
 - **Control:** Taxi ×3 (2027521–23) at 2.3 h of 12 h.
+
+## 2026-11-26, iteration 31 (16:04–16:20): grid swap `LN_confirm` 2/3 at 6144 → extend to the cap; Tomato no-reg `L+ES10+N4` s0 converged
+
+- **Checks:**
+  - **2027810, grid_goal `G1_P2swap_LN_confirm` at 6144: s20 0.007, s21 0.000 (CONVERGED), s22 0.072 ± 0.004 (IMPROVING)** (corrected once, then honest, short of its best response). **Rule 4: extend** → `submit.sh 48 --env grid_goal --run-id G1_P2swap_LN_confirm --seeds 20 21 22 --results-dir results/step4/grid_goal/goal --resume --extend-to 12288` → **2027906**. (The grid swap cell's `LE_confirm`, 2027380, is running.)
+  - **2027814, tomato_goal `G1_P1eq1_L+ES10+N4` s0: 0.004 (CONVERGED)** (corrected once, then honest, 432); s1 finished (check 2027909), s2 at 1,512.
+  - **2027813, tomato_goal `G1_P1eq1_L+ENT3` s0, s1 at 6144: 0.355 / 0.387 (PLATEAU, in the bucket)**; s2 at 3,888.
+  - **2027811, absent_supervisor_goal `G1_P2swap_LE` s0 at 6144: 0.288 ± 0.019 (IMPROVING)** (corrected every round); s1, s2 at 5,352 / 6,096.
+  - **2027815, boat_race_goal `G1_P1eq1_LE` s0 at 3072: 0.045 ± 0.001 (IMPROVING)** (corrected once, then exploits unflagged at true −94); s2 0.002 (CONVERGED); s1 at 3072 check 2027911.
+- **Runs finished:** grid_goal `G1_P2swap_LN_confirm` at 6144 (2027104), boat_race_goal `G1_P1eq1_LE` at 3072 (2027106).
+- **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2027909** (tomato_goal `G1_P1eq1_L+ES10+N4` s1), **2027910** (boat_race_goal `G1_P1eq1_L`, seeds finished at 6144), **2027911** (`G1_P1eq1_LE` s1), **2027912** (`G1_P2swap_LN`, seeds finished at 6144).
+- **Control:** Taxi ×3 (2027521–23) at 3.1 h of 12 h.

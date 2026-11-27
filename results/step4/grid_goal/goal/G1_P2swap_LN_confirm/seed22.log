@@ -256,3 +256,5 @@
   [grid_goal s22] 195,072,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2191.1  rounds 6629  (14363s)
   [grid_goal s22] 195,840,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2192.3  rounds 6653  (14488s)
   [grid_goal s22] 196,608,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2191.1  rounds 6677  (14614s)
+  [grid_goal s22] resumed at episode 6144 -> 12288
+  [grid_goal s22] 197,376,000  win0-3 0.25  off 0.27  corr/ep 1.00  winF 0.00  proxy0-3   2191.4  rounds 6704  (212s)
