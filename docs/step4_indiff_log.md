@@ -3235,3 +3235,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 
 - **Check 2028420** (`I6_indiff_twin3_practice_LE` s1 at 768): **0.485 ± 0.099 (IMPROVING)**. The twin learned uncorrected play (level 0 277.3 against M(proxy) 379.7, above honest 125), so this is not a level-0 failure, but PPO hides (0.01 corrections per episode, true −89 to −92) and fails by the user's rule. Its best response takes 2.76 corrections, then is honest. Row in the indiff_twin3 table. s0, s2 (at 456, still training) show twin level 0 of 13.3 / 86.8 in their first corrections so far.
 - The campaign is set aside (user, 2026-11-25): no extension or new run. `br_missing` printed nothing else.
+
+## 2026-11-27, iteration 225 (01:28–01:50): Boat Race twin3 `L+ES10+N4+ES30+N4` finished → check
+
+- `I6_indiff_twin3_L+ES10+N4+ES30+N4` (Boat Race, 2022933) finished at 01:27 (1-14:38 elapsed). Check (finished seeds get checks while the campaign is set aside): `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2029639**.
