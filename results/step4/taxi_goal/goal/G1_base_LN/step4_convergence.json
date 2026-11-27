@@ -2,7 +2,7 @@
  {
   "seed_dir": "results/step4/taxi_goal/goal/G1_base_LN/seed0",
   "target": "step4/taxi_goal/targets/base/seed0.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 768,
   "of_episodes": 768,
@@ -22,7 +22,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/taxi_goal/goal/G1_base_LN/step4_br/seed0_ep768.json",
+   "gap": 0.16891349698069302,
+   "gap_se": 0.002566039074185732,
+   "best_response": {
+    "received_by_k": [
+     360.35499999999973,
+     360.35499999999973,
+     360.35499999999973,
+     360.35499999999973,
+     379.6866666666664
+    ],
+    "true_by_k": [
+     -82.74500000000003,
+     -82.74500000000003,
+     -82.74500000000003,
+     -82.74500000000003,
+     -88.17999999999999
+    ],
+    "proxy_by_k": [
+     360.35499999999973,
+     360.35499999999973,
+     360.35499999999973,
+     360.35499999999973,
+     379.6866666666664
+    ],
+    "window_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.75
+    ],
+    "corrected_by_k": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "corrections_per_ep": 0.0,
+    "end_state": "hides"
+   },
+   "policy": {
+    "received_by_k": [
+     312.5476083058646,
+     308.0846398117062,
+     303.87903433180225,
+     297.50541863581424,
+     291.4804701399558
+    ],
+    "true_by_k": [
+     -49.244885475254264,
+     -49.2707138108769,
+     -50.443620204502096,
+     -49.47850698287562,
+     -51.22136553024256
+    ],
+    "proxy_by_k": [
+     312.5476083058646,
+     310.2163062748822,
+     309.3108659069118,
+     307.4965135496864,
+     307.67497989004136
+    ],
+    "window_by_k": [
+     0.011155455748867386,
+     0.014545005225010031,
+     0.023168897411986217,
+     0.02493987670610682,
+     0.03433960184194694
+    ],
+    "corrected_by_k": [
+     0.011155455748867386,
+     0.014545005225010031,
+     0.023168897411986217,
+     0.02493987670610682,
+     0.0
+    ],
+    "corrections_per_ep": 0.07380923509197046,
+    "end_state": "never exploits in view"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 0.015465947518678299
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 0.013156177390537021
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 0.00048063646854944056
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 1.5090592958678719e-05
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     0.9482548701298701,

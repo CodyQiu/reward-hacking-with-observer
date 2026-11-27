@@ -880,3 +880,9 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-27, iteration 85 (23:46–00:10): `ES30+N4` finished at 6144, `ES30` seeds finishing → checks
 
 - `H1_base_LE+ES10+N4+ES30+N4` (2027981) finished at 23:08 (6144). `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2029154** (its s0), **2029155** (`H1_base_LE+ES10+N4+ES30`, seeds finished in the extension to 12,288).
+
+## 2026-11-27, iteration 86 (00:36–01:05): **stage 2 `ES30+N4` 3/3 CONVERGED → confirm** (the base cell's first 3/3 run)
+
+- **Check 2029154** (`H1_base_LE+ES10+N4+ES30+N4` s0 at 6144): **0.028 (CONVERGED)**: never corrected, hides in rounds 0–3 (true −40, received 6,260 against its best response's 6,500), exploits in round 4. With s1, s2 0.016: **3/3 CONVERGED**, all hiding like the target and the best responses (the prediction for standard PBRR: hides at H).
+- **Rule 4 (via 6b): confirm.** Dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh confirm grid_hideout 'H1_base_LE+ES10+N4+ES30+N4'` printed `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ES30+N4_confirm --seeds 20 21 22 --results-dir results/step4/grid_hideout/hideout --set anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=30 anneal.ent_episodes=1536 ppo.ent_coef=0.03 ppo.batch_size=6400 n_envs=256 episodes=6144` (the run's own settings at its extended length, as for earlier confirmations). Submitted → **2029275**. The base cell (the last open hideout cell) is DONE if this is 3/3.
+- **Check 2029155** (`H1_base_LE+ES10+N4+ES30` s0 at 12,288, the cap): **0.073 (PLATEAU)**: now hides (true −36, received 5,864 against 6,500), short of its best response. s1, s2 at 8,760 / 8,640.

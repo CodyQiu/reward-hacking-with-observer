@@ -64,3 +64,7 @@
   [tomato_goal s0] 12,288,000  win0-3 1.00  off 1.01  corr/ep 0.00  winF 1.00  proxy0-3    588.5  rounds 2543  (26642s)
   [tomato_goal s0] resumed at episode 1536 -> 3072
   [tomato_goal s0] 12,480,000  win0-3 0.54  off 0.53  corr/ep 0.09  winF 0.59  proxy0-3    359.1  rounds 2572  (565s)
+  [tomato_goal s0] 12,672,000  win0-3 0.39  off 0.47  corr/ep 0.17  winF 0.44  proxy0-3    323.7  rounds 2625  (1483s)
+  [tomato_goal s0] 12,864,000  win0-3 0.40  off 0.46  corr/ep 0.11  winF 0.44  proxy0-3    323.6  rounds 2657  (2025s)
+  [tomato_goal s0] 13,056,000  win0-3 0.39  off 0.46  corr/ep 0.15  winF 0.45  proxy0-3    318.4  rounds 2695  (2664s)
+  [tomato_goal s0] 13,248,000  win0-3 0.40  off 0.46  corr/ep 0.12  winF 0.41  proxy0-3    319.9  rounds 2730  (3292s)
