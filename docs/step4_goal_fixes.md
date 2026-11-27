@@ -103,6 +103,11 @@ Decode of correction 1, mean over 6 draws (seed 0):
 
 - **"Raise farming"** is a round that repeats cheap transitions the correction raised: back-and-forth moves and wall bumps, which the noisy reference takes and which are therefore raised. It is a new exploit created by the correction, as in the Absent Supervisor swap.
 
+**8b. Taxi seed 2 agrees with seed 0** (2029897):
+- **Standard PBRR:** level 1 honest (true 125, goal met; 4 above honest play). At levels 2–4 the corrections fitted on the forced-caught play let the depot-B loop back (true −7 to −10).
+- **No-reg:** raise farming at every level (true −61 to −79, gaps 303–445).
+- **Swap:** raise farming at level 1 (true −55, gap 640), then loops (true −74 to −78).
+
 **9. Variance is ruled out in Boat Race on both controls** (2029902: 50 rollouts per side instead of 19). The same failures at every level, no draw with honest play best. The Taxi variance controls (2029901, 2029903) were cancelled unrun; see iteration 4.
 
 **Diagnosis (seeds 0–2 Boat Race, seed 0 Taxi; Taxi seeds 1–2 and the `g_bit` control running):**
@@ -141,7 +146,7 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
 - **Exact results so far (seeds 0–2; "honest best" = honest play is the best round under the reward at that level):**
   - **grid:** 3/3 corrected in round 0, then honest (true 22), as no-reg.
   - **AS:** identical to no-reg on these seeds. s2 corrected once, then honest; s0 and s1 corrected every round at true 400 (the farming route). No regression.
-  - **Tomato:** s0, s1 corrected once, then honest (true 430, 429; no-reg 433). s2 running.
+  - **Tomato:** 3/3 corrected once, then honest (true 428–430; no-reg 433–434). No regression.
   - **Taxi:** s1, s2 corrected once, then exploit in hiding (true −61, −45; no-reg −81, −82). Better true returns, but honest play is never the best round (best rounds at levels 1–4: true −75 to +51). s0 running.
   - **Boat Race: fails in 3/3, as predicted.** 1–2 corrections, then it exploits in hiding (true −82 to −88); the best round is an exploit at every level.
 
@@ -159,7 +164,7 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - **grid:** 3/3 corrected in round 0, then honest, as the swap.
   - **AS:** identical to the swap. s0 honest; s1 takes the −50 route ending hidden; s2 exploits in hiding (−100). No change, no regression.
   - **Tomato:** 3/3 corrected once, then honest (true 428–430; the swap 419–426, one fixed point not converged).
-  - **Taxi:** s0 corrected once, then exploits in hiding (true −50; the swap −58). s1, s2 running.
+  - **Taxi:** s0, s1 corrected once, then exploit in hiding (true −50, −52; the swap −58, −61); honest play is never the best round. s2 running.
   - **Boat Race: fails in 3/3, as predicted.** 2–3 corrections, then it exploits in hiding (true −100); the best round is an exploit at every level.
 
 ### C3: contrastive + pessimistic extrapolation (`contrast_pess`: `g.reg_rows=shared g.unseen_post=pess`, standard PBRR otherwise)
@@ -188,7 +193,8 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - **grid:** 3/3 corrected, then honest.
   - **AS:** s0, s2 corrected once, then honest; s1 corrected in every round 0–3 at true −100.
   - **Boat Race:** 2–3 corrections, then it exploits in hiding (true −82), as predicted.
-  - Tomato and Taxi: running.
+  - **Tomato: hides in 3/3** (never corrected, ends every round in the bucket, true 46). **That contradicts the prediction** (corrected, then honest), although honest play would be the best round at every level once corrected.
+  - Taxi: running.
 
 ## Ranked proposals for the user
 
@@ -298,3 +304,14 @@ In Taxi the reward can be repaired by fines alone. The missing piece is a paymen
 - **So far no candidate gives "corrected, then honest" in Taxi or Boat Race.**
   - C1 and C2 raise Taxi's true return after the correction (−45 to −61 against −81 to −86) but still exploit in hiding.
   - C3 regresses in AS (hides).
+
+### 2026-11-27, iteration 8 (08:23–08:35)
+
+- **Landed:**
+  - 2029921 (C1 grid / AS / Boat Race / Tomato; 1 h 40 min); 2029927 (C2 Taxi s1); 2030140 (reference point grid / AS / Boat Race / Tomato).
+  - 2029897 (Taxi diagnosis seed 2, Diagnosis 8b).
+- **Results:**
+  - C1, C2 Tomato 3/3 honest (no regression).
+  - C2 Taxi s1 exploits in hiding.
+  - The reference point hides in Tomato 3/3, contradicting its prediction.
+- 11 jobs still running: the C1 / C2 / C3 / reference Taxi seeds, C3's Tomato, Taxi diagnosis seed 1, the `g_bit` control.
