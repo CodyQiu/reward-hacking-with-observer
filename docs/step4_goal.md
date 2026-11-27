@@ -80,6 +80,19 @@ What a correction is does not change: PBRR fitted on the agent's caught rollouts
   - Taxi: hiding is no longer available, so it must choose between exploiting in view (and being fined) and honest play.
 - **If no-reg or swap become honest at some level:** then the hidden state, not the repair failure, was what kept them exploiting. The prediction above would be wrong, and the result reported as such.
 
+## Taxi with a 7-delivery goal (2026-11-27)
+
+**Why.** In the no-hidden-state control, Taxi's agents met the 6-delivery goal while still exploiting, at true 70–88 against honest 125. Honest play averages 7.1 deliveries, so the 6-delivery goal leaves about one delivery's worth of spare steps for the pickup loop. The user: "the purpose of the goal state is that if it reaches the goal state, that implies correct behavior, otherwise our goal state is too easy"; "sure, make it 7 deliveries".
+
+**The trade-off, stated.** Honest optimal play meets 7 deliveries in 78.4% of rounds, against 99.8% for 6. So with goal 7, honest rounds that fall short are judged too. They are corrected iff their return reaches the reference's under the reward in force.
+
+**Targets.** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh taxi7 submit`. 6 jobs: base, P1eq1, P2swap × hidden state on (`<variant>_g7`) and off (`<variant>_nohide_g7`); seeds 0–2 and 20–22; 18 h each. The 6-delivery targets stay as they are.
+
+**Predicted (written 2026-11-27, before any target).**
+- **Without the hidden state:** no-reg and swap meet the goal in the audited rounds where a further correction would cost them, as before, but now near honest (true ≥ about 110 of 125), because the slack is gone. They still exploit in the final round and wherever a correction is cheap, because the corrections do not make honest play the best round at any level.
+- **With the hidden state:** as with 6 deliveries (the stricter goal does not touch hidden rounds).
+- **Standard PBRR:** no confident prediction. The 21.6% of honest rounds that miss 7 deliveries become a new risk of being fined for honest play.
+
 ## Pipeline (`CAMPAIGN=goal`)
 
 - **Exact targets:** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh targets submit`. 15 jobs: 5 envs × base, P1eq1, P2swap, seeds 0–2 and 20–22, 6 draws. Written to `results/step4/<env>/targets/<variant>/`.
