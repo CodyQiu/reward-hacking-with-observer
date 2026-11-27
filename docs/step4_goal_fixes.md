@@ -66,7 +66,31 @@ So in Boat Race, any rule that treats reference transitions as preferred raises 
 | **no-reg + `unseen_post=pess`** (C1) | bounce bottom, 904 vs 681 | raise farming, 1,062 (true −88) vs 761 | |
 | **swap + `unseen_post=pess`** (C2) | bounce bottom, 589 vs 305 | raise farming, 3,580 vs 613 | |
 
-**Working diagnosis (to be confirmed across seeds by the running jobs):** in Boat Race the failure is (ii) local repair with several exploit copies, compounded by (i) aliasing: the paying entry is an honest row, so it is raised with honest play or fined with it. On top of that, the reference rollouts take the hidden copy's step-back, so it counts as preferred. Once the copies are handled, the raise on reference rows creates new exploits: a round that shuttles over raised transitions the reference took by noise.
+**6. Boat Race, all seeds 0–2, 6 draws** (diagnosis jobs 2029894 and 2029898; the iteration-0 chain, so correction c is fitted on the best caught policy at level c−1). The best round under the mean table at levels 1–4, against honest play under the same table:
+
+| method | seed 0 | seed 1 | seed 2 | single draws with honest play best |
+|---|---|---|---|---|
+| standard PBRR | bounce left, then hidden ×3 (gap to honest 137–144) | left, right, hidden ×2 | left, hidden ×3 | 0 / 72 |
+| no-reg | left, hidden, right, raise farming (gap 328–445) | left, right, farming, farming (251–376) | left, hidden, right, farming (381–435) | 0 / 72 |
+| swap | hidden, right, left, raise farming at 15,811 received (gap 218–15,549) | left, hidden, farming at 4,224, right | left, hidden, farming at 9,878, right | 0 / 72 |
+| **control: no-reg, g also sees the lap index** (`task.g_index=True`) | left, hidden, **honest (true 44, goal met; gap 1)**, **honest (true 50; gap 3)** | left, hidden, right (gap 44), hidden round **2** below honest | left, hidden, **honest (true 50; gap 0)**, hidden round 5 below honest | 0 / 72 |
+| control: swap, lap index | hidden, raise farming (4,351), left, right | same pattern | same pattern | 0 / 72 |
+| control: standard, lap index | left, then hidden ×3 | same | same | 0 / 72 |
+
+Decode of correction 1, mean over 6 draws (seed 0):
+- **Standard PBRR** fines only the caught step-back (−9.4; the top copy −10.6). Every other row stays at 0.
+- **No-reg:**
+  - the caught step-back −3.7 and the aliased caught entry −3.2;
+  - rows only the reference used +8.4 to +9.0;
+  - never-seen step-backs +9.0, and the hidden one (seen in the reference) +8.4.
+- **Swap:** caught rows 0; reference rows +2.3 to +4.4; the never-seen and hidden step-backs +2.5 / +2.8.
+
+**What this says.**
+- **No method's corrections, as they are, ever make honest play the best round**, at any level, in any seed or draw.
+- **With the cell-only reward model, aliasing blocks the no-regulariser.** Once g can tell an in-order entry from a re-entry, the same no-regulariser corrections make the expected corrected reward's best round honest (or within 0–5 of it) after two or three corrections in all three seeds. The swap still farms its raise and standard PBRR still only fines.
+- So in Boat Race, (i) aliasing is necessary for the no-regulariser's failure, and (ii) local repair sets how many corrections the fix takes (one per copy). That feature change is a control, not a fix: it changes what the overseer observes.
+
+**Working diagnosis (Taxi still to be confirmed by the running jobs):** in Boat Race the failure is (ii) local repair with several exploit copies, compounded by (i) aliasing: the paying entry is an honest row, so it is raised with honest play or fined with it. On top of that, the reference rollouts take the hidden copy's step-back, so it counts as preferred. Once the copies are handled, the raise on reference rows creates new exploits: a round that shuttles over raised transitions the reference took by noise.
 
 ## Candidates
 
@@ -114,6 +138,7 @@ Fines only, plus a level payment for being corrected (the twin, `docs/step4_indi
 
 ## Open questions for the user
 
+- **Should the reward model see progress features** (Boat Race's lap index, Taxi's picked-up bit)? In Boat Race that alone lets the no-regulariser's own corrections make honest play best after two or three corrections (Diagnosis 6). It changes what the overseer observes, so it is not done here; it is your call.
 - **Boat Race's reference takes the hidden exploit's transition in every seed** (Diagnosis 4). Any method that trusts the reference raises that transition. Is a cleaner reference acceptable as part of the setup? That would change the setup, so it is not done here.
 
 ---
@@ -145,3 +170,15 @@ Fines only, plus a level payment for being corrected (the twin, `docs/step4_indi
   - **Under C1** the same holds (true −87.2, received 3,209 against honest 2,539). The override also sets the 1,079 move rows no trajectory showed to the caught fine, and honest routes use some of them.
   - So in Taxi the dominant failure at level 1 is the raise creating a new exploit, together with aliasing (honest pickups fined with the loop's). The C1 Taxi prediction stands as written; the full targets decide.
   - **Tooling caveat:** the diagnostic's decode shows g before the override; the best-round numbers use the overridden table.
+
+### 2026-11-27, iteration 2 (03:48–04:10)
+
+- All investigation jobs were pending on Priority (the cluster is full; our running campaigns hold much of the fair share). From 03:30 they start one by one.
+- **Landed:**
+  - 2029894 (Boat Race diagnosis, seeds 0–2; 11.6 min) and 2029898 (the `g_index` control; 11.5 min).
+  - Table in Diagnosis 6. No method makes honest play best at any level, in any seed or draw. With the lap index, no-reg's mean-table best round becomes honest after 2–3 corrections in all three seeds.
+- **Submitted C3** (`contrast_pess`, pre-registered in iteration 1) once slots allowed:
+  - 2030009: grid, AS, Boat Race and Tomato, seeds 0–2, one job;
+  - 2030010–12: Taxi seeds 0 / 1 / 2.
+  - Same commands as C1 / C2 with `--set g.reg_rows=shared g.unseen_post=pess` (+ `g.epochs=1000` outside the grid).
+- 20 investigation jobs queued or running (the cap).
