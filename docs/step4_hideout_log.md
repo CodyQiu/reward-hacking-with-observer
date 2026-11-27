@@ -876,3 +876,7 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Check 2028888** (`H1_base_LE+ES10+N4+ES30+N4` s1, s2 at 6144): **0.016 / 0.016 (CONVERGED)**: never corrected, hide in rounds 0–3 (true −41, received 6,358 per round against the best response's 6,500), exploit in round 4 (8,697), as the target. s0 (0.747 PLATEAU at 3072; corrected once, then honest) is at 5,952 of 6144; the run is 3/3 only if s0 converges.
 - Resume: nothing; `br_missing` printed nothing else.
+
+## 2026-11-27, iteration 85 (23:46–00:10): `ES30+N4` finished at 6144, `ES30` seeds finishing → checks
+
+- `H1_base_LE+ES10+N4+ES30+N4` (2027981) finished at 23:08 (6144). `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2029154** (its s0), **2029155** (`H1_base_LE+ES10+N4+ES30`, seeds finished in the extension to 12,288).
