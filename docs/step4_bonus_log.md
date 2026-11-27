@@ -2949,3 +2949,8 @@ Targets: `results/step4/<env>/targets/<variant>_bonus1/seed<s>.json` (b = 1.0), 
 
 - **Job 2021310** (tomato_large `B1_P2swap_LE+N4_confirm`): all three seeds trained to 1536 ("exit 0"; `metrics.json` present), then the job failed at 16:30 on the final `runs.csv` append (`OSError: [Errno 122] Disk quota exceeded`). The fourth such failure; added to the quota flag at the top. No training data lost, nothing resubmitted. `du -s ~`: 38,594 MiB.
 - Its checks: s22 0.010 (CONVERGED, iteration 263), s21 check 2027693 pending, s20's check follows (`br_missing` next iteration).
+
+## 2026-11-26, iteration 265 (17:41–17:55): `LE+ENT3` at 3072 → extend 6144 (rule 6b); `LE+N4_confirm` s21, s22 CONVERGED
+
+- **Check 2027384** (tomato_large `B1_P2swap_LE+ENT3` at 3072): **s0 0.030 (CONVERGED), s1 0.033, s2 0.031 (IMPROVING)**. Every seed is corrected once in round 0, then honest but short of its best response (true 450–459 against 467–488). **Rule 6b:** an exploration run with unconverged seeds is extended 2× → `submit.sh 48 --env tomato_large --run-id B1_P2swap_LE+ENT3 --seeds 0 1 2 --results-dir results/step4/tomato_large/bonus --resume --extend-to 6144` → **2028139**.
+- **Check 2027693** (`B1_P2swap_LE+N4_confirm` s21): **0.009 (CONVERGED)**; with s22 0.010. s20's check: `CAMPAIGN=bonus EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028140**. If s20 converges, the tomato_large swap cell is DONE (config `B1_P2swap_LE+N4`).
