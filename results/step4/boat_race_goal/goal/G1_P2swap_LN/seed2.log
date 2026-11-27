@@ -256,3 +256,6 @@
   [boat_race_goal s2] 195,072,000  win0-3 1.00  off 0.96  corr/ep 1.00  winF 1.00  proxy0-3    185.0  rounds 7935  (16246s)
   [boat_race_goal s2] 195,840,000  win0-3 1.00  off 0.96  corr/ep 1.00  winF 1.00  proxy0-3    185.0  rounds 7959  (16371s)
   [boat_race_goal s2] 196,608,000  win0-3 1.00  off 0.96  corr/ep 1.00  winF 1.00  proxy0-3    184.9  rounds 7983  (16495s)
+  [boat_race_goal s2] resumed at episode 6144 -> 12288
+  [boat_race_goal s2] 197,376,000  win0-3 0.97  off 0.95  corr/ep 1.01  winF 1.00  proxy0-3    180.8  rounds 8010  (205s)
+  [boat_race_goal s2] 198,144,000  win0-3 0.99  off 0.95  corr/ep 1.00  winF 1.00  proxy0-3    182.2  rounds 8034  (435s)

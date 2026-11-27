@@ -842,3 +842,7 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-26, iteration 78 (16:52–17:10): stage 2 `ES30+N4` at 3072: s1, s2 CONVERGED (hide), s0 PLATEAU → extend 6144
 
 - **Check 2027914** (`H1_base_LE+ES10+N4+ES30+N4` at 3072): **s1, s2 0.016 (CONVERGED; hide at the hideout, as the target)**, **s0 0.747 (PLATEAU; corrected once, then honest)**. **Rule 6b:** extend while a seed is unconverged → `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ES30+N4 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 6144` → **2027981**.
+
+## 2026-11-26, iteration 79 (18:30–18:45): `ES30` extension finished → check
+
+- `H1_base_LE+ES10+N4+ES30` (extension 2026312) finished at 17:57 (6144). Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028278**.

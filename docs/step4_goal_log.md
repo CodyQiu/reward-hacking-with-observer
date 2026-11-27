@@ -547,3 +547,12 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
 - **Runs finished:** boat_race_goal `G1_P2swap_LN` at 6144 (2027241).
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028126** (absent_supervisor_goal `G1_P1eq1_L`, seeds finished at 12,288), **2028138** (boat_race_goal `G1_P2swap_LN` s1).
 - **Control:** Taxi ×3 (2027521–23) at 4.7 h of 12 h.
+
+## 2026-11-26, iteration 34 (18:30–18:45): Boat Race swap `LN` → extend 12,288; 5 checks
+
+- **Checks:**
+  - **2028138, boat_race_goal `G1_P2swap_LN` s1 at 6144: 0.169 ± 0.140 (IMPROVING)**; with s0 0.144, s2 0.063 (IMPROVING). Corrected once, then hidden; best responses 2–3 corrections, then hidden. **Rule 4: extend** → `submit.sh 48 --env boat_race_goal --run-id G1_P2swap_LN --seeds 0 1 2 --results-dir results/step4/boat_race_goal/goal --resume --extend-to 12288` → **2028272**.
+  - **2028126, absent_supervisor_goal `G1_P1eq1_L` at 12,288: s0 0.007 (CONVERGED; corrected twice, then honest), s1 0.035 ± 0.028 (IMPROVING; still hides)**; s2 finished at 12,288 (check 2028273).
+- **Runs finished:** absent_supervisor_goal `G1_P1eq1_L` (2026360), `G1_P1eq1_LN` (2026666) at 12,288, `G1_P2swap_LE` at 6144 (2026361), boat_race_goal `G1_P1eq1_L` at 6144 (2027105), `G1_base_L_confirm` at 3072 (2027014).
+- **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028273** (absent_supervisor_goal `G1_P1eq1_L` s2), **2028274** (`G1_P1eq1_LN` s2), **2028275** (`G1_P2swap_LE` s1), **2028276** (boat_race_goal `G1_P1eq1_L` s2), **2028277** (`G1_base_L_confirm`, seeds finished at 3072).
+- **Control:** Taxi ×3 (2027521–23) at 5.5 h of 12 h.

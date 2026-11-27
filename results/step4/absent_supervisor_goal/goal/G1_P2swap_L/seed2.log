@@ -258,3 +258,11 @@
   [absent_supervisor_goal s2] resumed at episode 6144 -> 12288
   [absent_supervisor_goal s2] 49,344,000  win0-3 0.00  off 0.27  corr/ep 1.07  winF 0.00  proxy0-3    578.2  rounds 18347  (199s)
   [absent_supervisor_goal s2] 49,536,000  win0-3 0.00  off 0.28  corr/ep 1.16  winF 0.00  proxy0-3    521.8  rounds 18400  (449s)
+  [absent_supervisor_goal s2] 49,728,000  win0-3 0.01  off 0.30  corr/ep 1.16  winF 0.00  proxy0-3    433.2  rounds 18445  (665s)
+  [absent_supervisor_goal s2] 49,920,000  win0-3 0.05  off 0.33  corr/ep 1.41  winF 0.01  proxy0-3    387.3  rounds 18513  (961s)
+  [absent_supervisor_goal s2] 50,112,000  win0-3 0.03  off 0.30  corr/ep 1.31  winF 0.00  proxy0-3    351.1  rounds 18573  (1240s)
+  [absent_supervisor_goal s2] 50,304,000  win0-3 0.04  off 0.34  corr/ep 1.55  winF 0.02  proxy0-3    424.9  rounds 18654  (1609s)
+  [absent_supervisor_goal s2] 50,496,000  win0-3 0.01  off 0.35  corr/ep 1.56  winF 0.01  proxy0-3    405.8  rounds 18732  (1958s)
+  [absent_supervisor_goal s2] 50,688,000  win0-3 0.01  off 0.34  corr/ep 1.61  winF 0.00  proxy0-3    412.6  rounds 18832  (2399s)
+  [absent_supervisor_goal s2] 50,880,000  win0-3 0.03  off 0.35  corr/ep 1.51  winF 0.01  proxy0-3    391.7  rounds 18925  (2818s)
+  [absent_supervisor_goal s2] 51,072,000  win0-3 0.02  off 0.32  corr/ep 1.46  winF 0.01  proxy0-3    404.7  rounds 19013  (3203s)
