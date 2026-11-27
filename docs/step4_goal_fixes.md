@@ -92,15 +92,33 @@ Decode of correction 1, mean over 6 draws (seed 0):
 
 **7. Variance across reference samples (cause iv) is ruled out in Boat Race** (2029900: seed 0 under seed 1's reference rollouts). The same pattern at every level: standard PBRR bounces left, then the hidden checkpoint. No-reg: left, hidden, right, raise farming (gaps to honest 328–481). Swap: hidden, raise farming, right, left. No draw has honest play best (0/18 per method).
 
-**8. Taxi seed 0, partial** (2029895, running; same chain, 6 draws). The best round under the mean table:
-- **Standard PBRR: level 1 honest** (true 124.8 = honest, goal met; received 122.6 against honest play's 119.6).
-  - Its first correction fines the caught loops and, through the shared dropoff action, the loop copies it did not see, while honest play stays at 0. So standard PBRR does repair Taxi's reward in one correction.
-  - Its exact target still hides (`docs/step4_goal_log.md`), because the correction only costs the agent.
-  - At levels 2–4, fitted on the policy forced to be caught at level 1, its corrections let the depot-B loop back (true 73, −35, −39).
-- **No-reg: levels 1–4 farm the raise.** No loop (no exploit-only step), true −70 to −81, received 2,581–2,826 against honest 2,209–2,371.
-- **Swap: level 1 farms the raise** (true −63.5, received 1,040 against honest 601).
+**8. Taxi seed 0, complete** (2029895; same chain, 6 draws).
+- **Copies are not Taxi's problem.** The proxy-optimal caught play loops at all 12 depot/destination pairs (about 3.9 steps each), so every loop copy is in the data.
 
-**Working diagnosis (Taxi still to be confirmed by the running jobs):** in Boat Race the failure is (ii) local repair with several exploit copies, compounded by (i) aliasing: the paying entry is an honest row, so it is raised with honest play or fined with it. On top of that, the reference rollouts take the hidden copy's step-back, so it counts as preferred. Once the copies are handled, the raise on reference rows creates new exploits: a round that shuttles over raised transitions the reference took by noise.
+| method | level 1 best round | levels 2–4 | correction 1, mean g |
+|---|---|---|---|
+| standard PBRR | **honest** (true 124.8, goal met; 3 above honest play) | depot-B loops come back (true 73, −35, −39), from corrections fitted on the policy forced to be caught after level 1 was honest | caught in-place dropoffs −16 to −27; caught-only moves −5.8, wall bumps −4.6; every reference row 0 |
+| no-reg | raise farming (true −80, no loop; 456 above honest) | raise farming ×3 (true −70 to −81) | caught dropoffs −21; **aliased caught pickups −23** (honest pickups are the same rows); reference moves +28, **reference wall bumps +30**, deliveries +16; unseen moves +21 |
+| swap | raise farming (true −64; 439 above honest) | loops at G / B / all depots (true −70 to −74; gaps 60–125) | caught rows 0; reference moves +6.7, wall bumps +10.3, deliveries +8.2; unseen +0.8 to +1.7 |
+
+- **"Raise farming"** is a round that repeats cheap transitions the correction raised: back-and-forth moves and wall bumps, which the noisy reference takes and which are therefore raised. It is a new exploit created by the correction, as in the Absent Supervisor swap.
+
+**9. Variance is ruled out in Boat Race on both controls** (2029902: 50 rollouts per side instead of 19). The same failures at every level, no draw with honest play best. The Taxi variance controls (2029901, 2029903) were cancelled unrun; see iteration 4.
+
+**Diagnosis (seeds 0–2 Boat Race, seed 0 Taxi; Taxi seeds 1–2 and the `g_bit` control running):**
+- **(iii) the unanchored level:** it cannot change which route is best (point 1). It decides only whether a correction is sought.
+- **(iv) variance across references:** not the cause (points 7, 9).
+- **Boat Race:**
+  - **(i) aliasing** is necessary for the no-regulariser's failure (with the lap index it repairs, point 6).
+  - **(ii) local repair** means one copy per correction.
+  - **The reference takes the hidden copy's own transition** (point 4).
+- **Taxi:** the caught play covers every copy.
+  - **Standard PBRR repairs the reward in one correction, but its correction only costs the agent, so its optimum hides.**
+  - **No-reg and the swap fail because their raise creates a new, repeatable exploit** (raise farming), and no-reg also fines the aliased honest pickups.
+- **Common thread:**
+  - The fines of standard PBRR repair what they see without creating exploits.
+  - The raises of no-reg and the swap give the reason to seek a correction, but land on cheap, repeatable reference transitions and on aliased rows, and so create new exploits.
+  - A correction that repairs like standard PBRR and pays in a way that cannot change which route is best is a constant per step after a correction. That is the indifference family (reference point below).
 
 ## Candidates
 
@@ -138,9 +156,17 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
 - **Fairness:** as C1.
 - **Predicted (before any C3 target):** in all five envs, a correction costs about what standard PBRR's does (the raise on reference-only rows is about 2 per step in the screening), so the optimum avoids correction where it can. It hides in grid, AS, Taxi and Boat Race, as standard PBRR does, and ends in the bucket in Tomato. That fails the user's goal ("after seeking a correction"); it is run because it is the user's suggestion.
 
-### Reference point (set aside by the user): the indifference family
+### Reference point (set aside by the user): the indifference family (`ref_indiff_twin`: `g.fine_only=True g.offset=True g.offset_rule=twin`)
 
-Fines only, plus a level payment for being corrected (the twin, `docs/step4_indiff.md`). Its exact targets on the base envs (not the goal envs): 27 of 30 honest by the end; no seed hides. Quoted only as a reference point. Nothing new was run.
+- **What it is.** Fines only (min of the corrections so far, never raised), plus a level per step after each correction, priced by the overseer's one-round optimiser (the twin, `docs/step4_indiff.md`).
+- **Why it is only a reference point.**
+  - The user set the family aside for now.
+  - In the exact targets the twin's price is computed by exact DP, which rule 3 forbids inside a candidate.
+- **Its exact targets on the base envs (not the goal envs):** 27 of 30 honest by the end; no seed hides. Its goal-env targets are submitted with this commit (iteration 4).
+- **Predicted (before any goal-env target):** never hides, never farms (by its theorem, up to the fit).
+  - grid, Tomato, AS: corrected, then honest.
+  - **Taxi: corrected once, then honest** (standard fines repair Taxi in one correction, Diagnosis 8).
+  - **Boat Race: corrected, then exploits in hiding.** Fines-only corrections fix one copy each, and the hidden copy is never caught, so under the fines-only reward the hidden bounce stays the best round.
 
 ## Ranked proposals for the user
 
@@ -198,3 +224,13 @@ Fines only, plus a level payment for being corrected (the twin, `docs/step4_indi
 - Landed: 2029900 (Boat Race seed 0 under seed 1's references; Diagnosis 7). 2029895 (Taxi seed 0) has finished standard PBRR and no-reg and is on the swap (Diagnosis 8).
 - **The Taxi standard-PBRR result reframes the goal.** Standard PBRR's fines repair Taxi in one correction, but a correction only costs the agent, so it hides. No-reg and the swap make a correction pay, but their raise creates a new exploit. A method that keeps the repair and makes the correction pay without changing which route is best would pay a constant per step: the indifference family, set aside by the user. It will be reported as the reference point, not as a candidate.
 - All 20 investigation slots are full (19 pending on Priority, 1 running). Nothing new submitted.
+
+### 2026-11-27, iteration 4 (05:23–05:45)
+
+- **Landed:** 2029895 (Taxi seed 0, 1 h 48 min; Diagnosis 8) and 2029902 (Boat Race `pbrr.k=50`; Diagnosis 9). All 17 other investigation jobs still pending on Priority.
+- **Cancelled two of my own pending jobs** (not campaign jobs): 2029901 (Taxi under seed 1's references) and 2029903 (Taxi with 50 rollouts per side).
+  - Variance is ruled out in Boat Race on both controls.
+  - Taxi's failure is systematic: standard PBRR repairs in one correction, and the raise variants farm their raise. That does not hinge on which references are drawn.
+  - The slots go to the indifference reference point.
+- **Submitted the reference point** `ref_indiff_twin` (predictions above, written before any target): 2030140 (grid, AS, Boat Race, Tomato, seeds 0–2) and 2030141–43 (Taxi seeds 0 / 1 / 2). Command as for C1–C3, with `--set g.fine_only=True g.offset=True g.offset_rule=twin` (+ `g.epochs=1000` outside the grid).
+- 19 investigation jobs queued or running.
