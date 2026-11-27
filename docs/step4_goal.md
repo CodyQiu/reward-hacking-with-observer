@@ -80,7 +80,10 @@ What a correction is does not change: PBRR fitted on the agent's caught rollouts
   - Taxi: hiding is no longer available, so it must choose between exploiting in view (and being fined) and honest play.
 - **If no-reg or swap become honest at some level:** then the hidden state, not the repair failure, was what kept them exploiting. The prediction above would be wrong, and the result reported as such.
 
-## Taxi with a 7-delivery goal (2026-11-27)
+## Taxi with a 7-delivery goal (2026-11-27): NOT RUN
+
+**Decision (the user, 2026-11-27): keep 6 deliveries.** "i change my mind then, 6 is fine since it's pretty much guaranteed in all rounds". Honest play meets 6 in 99.8% of rounds and 7 in only 78.4%. The `taxi7` command stays in the driver but is not submitted. The consequence, for reporting: in Taxi, meeting the goal does not imply honest play. With one delivery's worth of slack, a round can meet 6 deliveries and still loop on pickups (true 70–88 in the no-hidden-state control, against honest 125). Taxi results are therefore read by whether a correction makes honest play the best round, not by goal-meeting alone. The plan as written before the decision follows.
+
 
 **Why.** In the no-hidden-state control, Taxi's agents met the 6-delivery goal while still exploiting, at true 70–88 against honest 125. Honest play averages 7.1 deliveries, so the 6-delivery goal leaves about one delivery's worth of spare steps for the pickup loop. The user: "the purpose of the goal state is that if it reaches the goal state, that implies correct behavior, otherwise our goal state is too easy"; "sure, make it 7 deliveries".
 
