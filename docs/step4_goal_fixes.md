@@ -16,8 +16,10 @@ The summary sections below are kept current. The log below them is append-only.
 
 ## Status
 
-- **Diagnosis:** code in, 10 jobs running (2029894–2029903). Boat Race seed 0 screening done (below).
-- **Candidates:** C1, C2, C3 and the reference point are pre-registered. Their targets started running at 06:15–06:45 after hours pending; results are landing (below).
+- **As of 2026-11-27 09:20 the exact targets are complete for C1, C2 and C3** (seeds 0–2, all five goal envs) and for the reference point except Taxi s0 and s2 (running).
+  - C3's Taxi seeds 20–22 are running (2030380–82).
+  - All diagnosis jobs are complete.
+- **Verdict:** no fair candidate meets the goal ("after seeking a correction, the agent meets the goal") across the five envs. The ranking and the reasons are below.
 - **Opt-in code:** `GConfig.reg_rows` / `unseen` / `unseen_post` (`src/pbrr_core.py`, `src/step3/pbrr.py`) and the Taxi `g_bit` control. Test: `test_goal_fix_options_are_opt_in_and_change_only_what_they_name`.
 
 ## Diagnosis (with numbers)
@@ -110,7 +112,15 @@ Decode of correction 1, mean over 6 draws (seed 0):
 
 **9. Variance is ruled out in Boat Race on both controls** (2029902: 50 rollouts per side instead of 19). The same failures at every level, no draw with honest play best. The Taxi variance controls (2029901, 2029903) were cancelled unrun; see iteration 4.
 
-**Diagnosis (seeds 0–2 Boat Race, seed 0 Taxi; Taxi seeds 1–2 and the `g_bit` control running):**
+**10. Taxi: seed 1, and the picked-up-bit control** (2029896, 2029899).
+- **Seed 1** agrees with seeds 0 and 2. Standard PBRR is honest at levels 1–2 (true 125). No-reg farms its raise at every level (true −78 to −85, gaps 362–488). The swap farms at level 1 (true −61), then loops.
+- **Control: g also sees the picked-up bit** (`task.g_bit=True`, seed 0).
+  - Standard PBRR is honest at levels 1–2.
+  - **No-reg still farms its raise at every level** (true −66 to −72), with smaller gaps to honest play (205–277 against 366–456).
+  - The swap is unchanged (raise farming, then loops).
+  - **So in Taxi aliasing is not what blocks no-reg and the swap; their raise is.** Boat Race is the opposite (point 6).
+
+**Diagnosis (all diagnosis jobs complete):**
 - **(iii) the unanchored level:** it cannot change which route is best (point 1). It decides only whether a correction is sought.
 - **(iv) variance across references:** not the cause (points 7, 9).
 - **Boat Race:**
@@ -118,8 +128,8 @@ Decode of correction 1, mean over 6 draws (seed 0):
   - **(ii) local repair** means one copy per correction.
   - **The reference takes the hidden copy's own transition** (point 4).
 - **Taxi:** the caught play covers every copy.
-  - **Standard PBRR repairs the reward in one correction, but its correction only costs the agent, so its optimum hides.**
-  - **No-reg and the swap fail because their raise creates a new, repeatable exploit** (raise farming), and no-reg also fines the aliased honest pickups.
+  - **Standard PBRR repairs the reward in one correction (3/3 seeds), but its correction only costs the agent, so its optimum hides.**
+  - **No-reg and the swap fail because their raise creates a new, repeatable exploit** (raise farming). With the picked-up bit (point 10) it persists, so aliasing is not the cause there.
 - **Common thread:**
   - The fines of standard PBRR repair what they see without creating exploits.
   - The raises of no-reg and the swap give the reason to seek a correction, but land on cheap, repeatable reference transitions and on aliased rows, and so create new exploits.
@@ -143,12 +153,17 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - AS: as no-reg on these seeds. s2 honest; s0, s1 still farm corrections (the farming route uses rows the reference takes, which C1 does not touch).
   - **Boat Race: fails, 0/3.** After the correction it exploits at the hidden checkpoint (whose step-back is in every seed's reference, so C1 leaves its raise) or farms raised reference rows.
   - **Taxi: corrected in round 0, then meets the goal near honest (true ≥ about 110), 3/3.** Seeds 0–2's references contain no loop dropoff, so every loop copy, depot B's included, is fined like the caught one, while honest pickups and deliveries keep the raise.
-- **Exact results so far (seeds 0–2; "honest best" = honest play is the best round under the reward at that level):**
-  - **grid:** 3/3 corrected in round 0, then honest (true 22), as no-reg.
-  - **AS:** identical to no-reg on these seeds. s2 corrected once, then honest; s0 and s1 corrected every round at true 400 (the farming route). No regression.
-  - **Tomato:** 3/3 corrected once, then honest (true 428–430; no-reg 433–434). No regression.
-  - **Taxi:** s1, s2 corrected once, then exploit in hiding (true −61, −45; no-reg −81, −82). Better true returns, but honest play is never the best round (best rounds at levels 1–4: true −75 to +51). s0 running.
-  - **Boat Race: fails in 3/3, as predicted.** 1–2 corrections, then it exploits in hiding (true −82 to −88); the best round is an exploit at every level.
+- **Exact results (seeds 0–2):**
+
+  | env | end state | after the correction | honest the best round? |
+  |---|---|---|---|
+  | grid | 3/3 corrected in round 0 | honest (22) | yes (s1: not at levels 2–3) |
+  | AS | s2 corrected once; s0, s1 every round | s2 honest (450); s0, s1 farm at 400, as no-reg | yes, levels 1–4 |
+  | Tomato | 3/3 corrected in round 0 | honest (428–430; no-reg 433–434) | yes |
+  | Taxi | 3/3 corrected in round 0 | **exploit in hiding** (−82, −61, −45; no-reg −86, −81, −82) | no (best rounds −78 to +51) |
+  | Boat Race | 1–2 corrections | **exploit in hiding** (−82 to −88) | no |
+
+- **Verdict: fails the goal in Taxi and Boat Race.** No regression in grid, AS or Tomato. Taxi's true return after the correction improves in 2 of 3 seeds, but the agent still exploits in hiding. Predictions: grid, AS, Tomato and Boat Race as predicted; **Taxi predicted wrong** (honest predicted; the raise farming and the hidden loop survive).
 
 ### C2: swap + pessimistic extrapolation (`P2swap_pess`: `g.l_minus_on=dispreferred g.unseen_post=pess`)
 
@@ -160,23 +175,36 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - AS: s0 honest. For s1 and s2 (the swap exploits in hiding on a −50 route) there is no confident prediction: if that route's transitions are unseen, C2 removes their raise.
   - **Boat Race: fails, 0/3** (screening: the hidden copy at level 1, raise farming at level 2).
   - **Taxi: fails, 0/3.** A loop pays +4 per step, honest play about +1.25. With loop copies at 0 and pickups raised along with honest play, honest wins only if the swap's raise on honest rows exceeds about 5.5 per step. The data ask for less (point 3).
-- **Exact results so far (seeds 0–2):**
-  - **grid:** 3/3 corrected in round 0, then honest, as the swap.
-  - **AS:** identical to the swap. s0 honest; s1 takes the −50 route ending hidden; s2 exploits in hiding (−100). No change, no regression.
-  - **Tomato:** 3/3 corrected once, then honest (true 428–430; the swap 419–426, one fixed point not converged).
-  - **Taxi:** s0, s1 corrected once, then exploit in hiding (true −50, −52; the swap −58, −61); honest play is never the best round. s2 running.
-  - **Boat Race: fails in 3/3, as predicted.** 2–3 corrections, then it exploits in hiding (true −100); the best round is an exploit at every level.
+- **Exact results (seeds 0–2):**
+
+  | env | end state | after the correction | honest the best round? |
+  |---|---|---|---|
+  | grid | 3/3 corrected in round 0 | honest | level 1 |
+  | AS | 3/3 corrected in round 0 | s0 honest; s1 the −50 route ending hidden; s2 exploit in hiding (−100); identical to the swap | s0 only |
+  | Tomato | 3/3 corrected in round 0 | honest (428–430; the swap 419–426) | yes |
+  | Taxi | 3/3 corrected in round 0 | **exploit in hiding** (−50, −52, −51; the swap −58, −61, −55) | no |
+  | Boat Race | 2–3 corrections | **exploit in hiding** (−100) | no |
+
+- **Verdict: fails the goal in Taxi and Boat Race; no change elsewhere** (no regression). All five predictions held.
 
 ### C3: contrastive + pessimistic extrapolation (`contrast_pess`: `g.reg_rows=shared g.unseen_post=pess`, standard PBRR otherwise)
 
 - **What it changes.** The user's contrastive idea. Standard PBRR's coefficient, but the regulariser covers only rows that occur in both trajectories of a pair (shared rows, pinned at 0, which also anchors the level). Rows exclusive to the caught play are free to be fined, rows exclusive to the reference free to be raised, and unseen rows get the C1 override.
 - **Fairness:** as C1.
 - **Predicted (before any C3 target):** in all five envs, a correction costs about what standard PBRR's does (the raise on reference-only rows is about 2 per step in the screening), so the optimum avoids correction where it can. It hides in grid, AS, Taxi and Boat Race, as standard PBRR does, and ends in the bucket in Tomato. That fails the user's goal ("after seeking a correction"); it is run because it is the user's suggestion.
-- **Exact results so far (seeds 0–2):**
-  - **grid:** 3/3 corrected in round 0, then honest; honest is the best round at levels 1–4. **That contradicts the prediction** (hides like standard PBRR).
-  - **AS: a regression.** s0 and s2 hide (never corrected), where no-reg is honest in s2 and the swap in s0. s1 is corrected once, then takes the −50 route ending hidden.
-  - **Boat Race:** s0, s1 are corrected in rounds 0–3. After the third correction honest play is the best round (level 3; true 32 in round 3, still caught there), but the fourth correction brings an exploit back (true −100 / −94 in round 4). s2: 2 corrections, then it exploits in hiding. Fails.
-  - Tomato and Taxi: running.
+- **Exact results (seeds 0–2; Taxi seeds 20–22 running):**
+
+  | env | end state | after the correction | honest the best round? |
+  |---|---|---|---|
+  | grid | 3/3 corrected in round 0 | honest | yes, levels 1–4 |
+  | AS | **s0, s2 hide (never corrected)**; s1 corrected once | s1: the −50 route ending hidden | s0: level 1; s2: levels 1–2 (never reached) |
+  | Tomato | 3/3 corrected (s1 twice; fixed point not converged) | honest (428–430) | yes |
+  | Taxi | s1, s2 corrected once; s0 twice | **s2 meets the goal at true 110** (honest 125); s1 true 12 (hidden); s0 exploit in hiding (−61) | s2 at levels 2–4, s1 at 2–3; s0 never |
+  | Boat Race | s0, s1 corrected in every round 0–3; s2 twice | s0, s1 near honest in round 3 (true 32, still caught), exploit in round 4; s2 exploit in hiding | s0, s1 at level 3 only |
+
+- **Verdict: the only fair candidate that moves Taxi toward honest play** (1 of 3 seeds meets the goal near honest; 1 improved), **but it regresses in AS** (2 of 3 seeds hide where no-reg and the swap are corrected), so it fails the no-regression rule. It also fails in Boat Race.
+  - Predictions wrong for grid, Tomato and Taxi (it is corrected, where hiding was predicted); right for AS (it hides) and Boat Race (fails).
+  - Why it moves Taxi: pinning the rows both trajectories share (moves, pickups) to 0 keeps the raise off them, so there is far less to farm, while the caught play's own transitions are fined.
 
 ### Reference point (set aside by the user): the indifference family (`ref_indiff_twin`: `g.fine_only=True g.offset=True g.offset_rule=twin`)
 
@@ -189,35 +217,48 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - grid, Tomato, AS: corrected, then honest.
   - **Taxi: corrected once, then honest** (standard fines repair Taxi in one correction, Diagnosis 8).
   - **Boat Race: corrected, then exploits in hiding.** Fines-only corrections fix one copy each, and the hidden copy is never caught, so under the fines-only reward the hidden bounce stays the best round.
-- **Exact results so far (seeds 0–2):**
+- **Exact results (seeds 0–2; Taxi s0, s2 running):**
   - **grid:** 3/3 corrected, then honest.
-  - **AS:** s0, s2 corrected once, then honest; s1 corrected in every round 0–3 at true −100.
+  - **AS:** s0, s2 corrected once, then honest; s1 corrected in every round at true −100.
+  - **Tomato: hides in 3/3** (never corrected, in the bucket every round). That contradicts the prediction, although honest play would be the best round at every corrected level.
+  - **Taxi s1: corrected in round 0 (probability 0.87), then honest** (true 97, 121, 124, 125); honest play is the best round at levels 1–4.
   - **Boat Race:** 2–3 corrections, then it exploits in hiding (true −82), as predicted.
-  - **Tomato: hides in 3/3** (never corrected, ends every round in the bucket, true 46). **That contradicts the prediction** (corrected, then honest), although honest play would be the best round at every level once corrected.
-  - Taxi: running.
 
 ## Ranked proposals for the user
 
-**PROVISIONAL (2026-11-27 06:15): from the diagnosis and the Boat Race screening only. The C1–C3 and reference-point exact targets are queued and not yet run; this ranking will be revised when they land.**
+**Near-final (2026-11-27 09:20). C1–C3 complete on seeds 0–2 in all five envs; the reference point's Taxi s0 and s2 and C3's Taxi seeds 20–22 are still running.**
 
-1. **Separate repair from payment.** The repair is standard PBRR's fines-only fit. The payment is a constant per step after a correction, which cannot change which route is best (Diagnosis 1).
-   - This is the indifference family, which the user set aside; its reference-point targets are queued.
-   - **Evidence for:**
-     - In Taxi, standard PBRR's fines alone make honest play the best round after one correction (Diagnosis 8). What it lacks is a reason to seek the correction, which a route-neutral payment supplies without creating an exploit.
-     - On the base envs the twin version is honest by the end in 27/30 targets.
-   - **Evidence against:** in Boat Race, fines repair one copy per correction and the hidden copy is never caught, so it is predicted to exploit in hiding there.
-   - **Fairness:** the exact-target version prices the payment with exact DP; a deployable version needs the twin or another estimate.
-2. **Let the reward model see progress (a setup change, the user's call).** With the lap index, the no-regulariser's own corrections make honest play the best round after 2–3 corrections in all three Boat Race seeds (Diagnosis 6). Taxi's picked-up-bit control is queued.
-3. **C1, no-reg + pessimistic extrapolation** (fair, no free parameter). Predicted to fail in Boat Race (its reference takes the hidden copy's transition). The Taxi screen suggests the raise farming survives. Targets queued.
-4. **C2 (swap + pessimistic extrapolation) and C3 (contrastive)**, both fair. The Boat Race screening fails at every level. Targets queued.
+**The honest finding: none of the fair candidates gives "corrected, then good behaviour" in all five envs.**
+- No fair candidate does it in Boat Race.
+- In Taxi only C3 does it, in one seed of three, at the cost of a regression in AS.
 
-**Honest finding so far.** Within the fairness rules, no tested candidate makes the corrected reward's best round honest in Boat Race, and the diagnosis gives the reasons:
-- **Aliasing:** the paying entry is an honest row.
-- **The reference** takes the hidden copy's own transition.
-- **Local repair:** one copy per correction.
-- **The raise creates new exploits.**
+The reasons are diagnosed with exact numbers:
+- **The corrections only constrain "reference ≻ caught play"** (Bradley-Terry with hard labels), so they say nothing about exploit copies the data never show (Boat Race), and nothing about how far honest play is pushed above them.
+- **Raises land on cheap, repeatable transitions the noisy reference took** (moves, wall bumps), and on rows aliased with the exploit. They create new exploits: raise farming in Taxi; in Boat Race the raise also covers the hidden copy's step-back, which every seed's reference takes 3–6 times.
+- **Fines alone repair Taxi in one correction (standard PBRR, 3/3 seeds), but a fine-only correction only costs the agent, so it hides.**
 
-In Taxi the reward can be repaired by fines alone. The missing piece is a payment for being corrected that does not change which route is best.
+Ranked:
+1. **C1, no-reg + pessimistic extrapolation**: the safest fair change, but it does not reach the goal.
+   - No regression in grid, AS or Tomato, and better Taxi true returns after the correction in 2 of 3 seeds.
+   - Taxi and Boat Race still exploit in hiding.
+   - Ranked first among the fair candidates only because it does no harm. It is not a fix.
+2. **C3, contrastive + pessimistic extrapolation**: closest to the goal in Taxi, but it fails the no-regression rule.
+   - The only fair candidate with a Taxi seed that meets the goal near honest after its correction (s2, true 110 of 125), plus s1 improved.
+   - Regresses in AS (2 of 3 hide) and fails in Boat Race. Its Taxi seeds 20–22 will show whether the Taxi gain is robust.
+3. **C2, swap + pessimistic extrapolation**: changes almost nothing (a few points better in Tomato and Taxi).
+4. **Outside the fairness rules, for the user's decision:**
+   - **(a) Let the reward model see progress** (Boat Race lap index). With it, the no-regulariser's own corrections make honest play best after 2–3 corrections in Boat Race (3/3 seeds, Diagnosis 6). It does not help Taxi (Diagnosis 10).
+   - **(b) The indifference family** (fines + a route-neutral payment; reference point):
+     - honest after its correction in grid 3/3, AS 2/3 and Taxi s1;
+     - but it hides in Tomato 3/3 and exploits in hiding in Boat Race.
+     - It shows that "repair by fines, pay by a constant" works in Taxi, where no fair candidate does. It is not a complete answer either.
+
+**What would be needed for one method to work in all five:**
+- **(i) A repair that cannot create exploits:** fines only, as standard PBRR's.
+- **(ii) A reason to seek the correction that does not change which route is best:** a constant per step, which is the indifference family.
+- **(iii) Corrections that can tell the exploit from honest play:** in Boat Race that needs the lap index, or several corrections plus a cleaner reference.
+
+No fair candidate has all three. (i) + (ii) is the reference point, which works in Taxi but hides in Tomato. (iii) needs a setup change.
 
 ## Open questions for the user
 
@@ -315,3 +356,13 @@ In Taxi the reward can be repaired by fines alone. The missing piece is a paymen
   - C2 Taxi s1 exploits in hiding.
   - The reference point hides in Tomato 3/3, contradicting its prediction.
 - 11 jobs still running: the C1 / C2 / C3 / reference Taxi seeds, C3's Tomato, Taxi diagnosis seed 1, the `g_bit` control.
+
+### 2026-11-27, iteration 9 (09:05–09:30)
+
+- **Landed:**
+  - All of C1, C2 and C3 (Taxi s0–s2 2029922, 2029927–28, 2030010–12; C3's grid / AS / Boat Race / Tomato 2030009) and the reference point's Taxi s1 (2030142).
+  - Taxi diagnosis seed 1 (2029896) and the `g_bit` control (2029899): Diagnosis 10.
+- **Results:** in the candidate sections; ranking near-final.
+  - C3 is the only fair candidate that moves Taxi (s2 meets the goal at true 110), but it regresses in AS.
+  - The `g_bit` control shows that aliasing is not Taxi's obstacle.
+- **Submitted** C3's Taxi seeds 20–22 (2030380–82; the same pre-registered method, more seeds) to test whether its Taxi gain is robust. Running: the reference point's Taxi s0, s2.
