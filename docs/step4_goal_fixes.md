@@ -90,6 +90,16 @@ Decode of correction 1, mean over 6 draws (seed 0):
 - **With the cell-only reward model, aliasing blocks the no-regulariser.** Once g can tell an in-order entry from a re-entry, the same no-regulariser corrections make the expected corrected reward's best round honest (or within 0–5 of it) after two or three corrections in all three seeds. The swap still farms its raise and standard PBRR still only fines.
 - So in Boat Race, (i) aliasing is necessary for the no-regulariser's failure, and (ii) local repair sets how many corrections the fix takes (one per copy). That feature change is a control, not a fix: it changes what the overseer observes.
 
+**7. Variance across reference samples (cause iv) is ruled out in Boat Race** (2029900: seed 0 under seed 1's reference rollouts). The same pattern at every level: standard PBRR bounces left, then the hidden checkpoint. No-reg: left, hidden, right, raise farming (gaps to honest 328–481). Swap: hidden, raise farming, right, left. No draw has honest play best (0/18 per method).
+
+**8. Taxi seed 0, partial** (2029895, running; same chain, 6 draws). The best round under the mean table:
+- **Standard PBRR: level 1 honest** (true 124.8 = honest, goal met; received 122.6 against honest play's 119.6).
+  - Its first correction fines the caught loops and, through the shared dropoff action, the loop copies it did not see, while honest play stays at 0. So standard PBRR does repair Taxi's reward in one correction.
+  - Its exact target still hides (`docs/step4_goal_log.md`), because the correction only costs the agent.
+  - At levels 2–4, fitted on the policy forced to be caught at level 1, its corrections let the depot-B loop back (true 73, −35, −39).
+- **No-reg: levels 1–4 farm the raise.** No loop (no exploit-only step), true −70 to −81, received 2,581–2,826 against honest 2,209–2,371.
+- **Swap: level 1 farms the raise** (true −63.5, received 1,040 against honest 601).
+
 **Working diagnosis (Taxi still to be confirmed by the running jobs):** in Boat Race the failure is (ii) local repair with several exploit copies, compounded by (i) aliasing: the paying entry is an honest row, so it is raised with honest play or fined with it. On top of that, the reference rollouts take the hidden copy's step-back, so it counts as preferred. Once the copies are handled, the raise on reference rows creates new exploits: a round that shuttles over raised transitions the reference took by noise.
 
 ## Candidates
@@ -182,3 +192,9 @@ Fines only, plus a level payment for being corrected (the twin, `docs/step4_indi
   - 2030010–12: Taxi seeds 0 / 1 / 2.
   - Same commands as C1 / C2 with `--set g.reg_rows=shared g.unseen_post=pess` (+ `g.epochs=1000` outside the grid).
 - 20 investigation jobs queued or running (the cap).
+
+### 2026-11-27, iteration 3 (04:36–04:55)
+
+- Landed: 2029900 (Boat Race seed 0 under seed 1's references; Diagnosis 7). 2029895 (Taxi seed 0) has finished standard PBRR and no-reg and is on the swap (Diagnosis 8).
+- **The Taxi standard-PBRR result reframes the goal.** Standard PBRR's fines repair Taxi in one correction, but a correction only costs the agent, so it hides. No-reg and the swap make a correction pay, but their raise creates a new exploit. A method that keeps the repair and makes the correction pay without changing which route is best would pay a constant per step: the indifference family, set aside by the user. It will be reported as the reference point, not as a candidate.
+- All 20 investigation slots are full (19 pending on Priority, 1 running). Nothing new submitted.
