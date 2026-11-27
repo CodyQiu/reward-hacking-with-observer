@@ -256,3 +256,8 @@
   [grid_hideout s2] 195,072,000  win0-3 0.25  off 0.30  corr/ep 2.07  winF 0.00  proxy0-3   2099.9  rounds 27988  (47465s)
   [grid_hideout s2] 195,840,000  win0-3 0.25  off 0.30  corr/ep 2.02  winF 0.00  proxy0-3   2099.8  rounds 28067  (47664s)
   [grid_hideout s2] 196,608,000  win0-3 0.25  off 0.30  corr/ep 2.02  winF 0.00  proxy0-3   2100.0  rounds 28141  (47852s)
+  [grid_hideout s2] resumed at episode 6144 -> 12288
+  [grid_hideout s2] 197,376,000  win0-3 0.25  off 0.30  corr/ep 2.30  winF 0.00  proxy0-3   2098.4  rounds 28246  (192s)
+  [grid_hideout s2] 198,144,000  win0-3 0.25  off 0.30  corr/ep 3.82  winF 0.00  proxy0-3   2099.9  rounds 28366  (395s)
+  [grid_hideout s2] 198,912,000  win0-3 0.25  off 0.30  corr/ep 3.87  winF 0.00  proxy0-3   2099.6  rounds 28486  (596s)
+  [grid_hideout s2] 199,680,000  win0-3 0.25  off 0.30  corr/ep 3.24  winF 0.00  proxy0-3   2098.6  rounds 28602  (794s)

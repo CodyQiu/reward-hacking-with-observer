@@ -3225,3 +3225,7 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-26, iteration 222 (14:27–14:50): Boat Race pure stage-2 `ENT10` 3/3 → confirm
 
 - **Check 2027592** (`I6_indiff_twin3_L+ES10+N4+ENT10` at 1536): **0.000 ×3, all CONVERGED** (corrected once, then honest). **Rule 4 (via 6b): confirm.** Dry-run printed `submit.sh 48 --env boat_race --run-id I6_indiff_twin3_L+ES10+N4+ENT10_confirm --seeds 20 21 22 --results-dir results/step4/boat_race/indiff_twin3 --set ppo.ent_coef=0.3 ppo.batch_size=1600 g.fine_only=True g.offset=True g.offset_rule=twin g.epochs=1000 twin.all_levels=True twin.minibatches=4 twin.rounds=100 anneal.last=0.25 anneal.floor=0.1 anneal.ent_start=10 anneal.ent_episodes=768 n_envs=64 episodes=1536`. Submitted → **2027691** (no CAMPAIGN=goal job pending).
+
+## 2026-11-26, iteration 223 (19:18–19:50): Taxi twin3 `practice_LE` s1 finished → check
+
+- `I6_indiff_twin3_practice_LE` (Taxi) s1 finished at 768 (s0, s2 at 456). Check (finished seeds get checks while the campaign is set aside): `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028420**.

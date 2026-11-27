@@ -846,3 +846,8 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-26, iteration 79 (18:30–18:45): `ES30` extension finished → check
 
 - `H1_base_LE+ES10+N4+ES30` (extension 2026312) finished at 17:57 (6144). Check: `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028278**.
+
+## 2026-11-26, iteration 80 (19:18–19:50): stage 2 `ES30` at 6144: 0/3, all PLATEAU → extend to the cap
+
+- **Check 2028278** (`H1_base_LE+ES10+N4+ES30` at 6144): **s0 0.747, s1 0.761, s2 0.761, all PLATEAU.** s0 is corrected once, then honest (true 22); s1 is corrected in every round 0–3, s2 in rounds 0–1, and both keep exploiting in view (true −100). Every best response hides (never corrected; received 6,500 ×4, then 8,700). **Rule 6b:** extend while a seed is unconverged, whatever the verdict, up to the cap → dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout 'H1_base_LE+ES10+N4+ES30' 12288` printed `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ES30 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 12288` → **2028393**.
+- `br_missing` printed nothing.
