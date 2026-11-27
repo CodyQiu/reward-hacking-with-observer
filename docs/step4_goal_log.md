@@ -585,3 +585,13 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028628** (absent_supervisor_goal `G1_P2swap_LN` s2 at 12,288), **2028629** (tomato_goal `G1_P2swap_L+ENT3+ES30` s1, s2), **2028632** (boat_race_goal `G1_base_L_confirm` s21, s22 at 6144).
 - Resume: nothing (`resume` printed no goal line).
 - **Control:** Taxi ×3 (2027521–23) at 7.5 h of 12 h.
+
+## 2026-11-26, iteration 37 (21:15–21:35): Tomato swap stage 2 `+ES30` → extend 3072; 3 checks
+
+- **Checks:**
+  - **2028629, tomato_goal `G1_P2swap_L+ENT3+ES30` (rule 6b stage 2) s1, s2 at 1536: 0.205 ± 0.006 / 0.291 ± 0.009 (IMPROVING)**; with s0 0.175. All three end every round in the bucket, never corrected (true 46), the same gaps as every earlier Tomato swap run; the best responses are corrected once (s2: 2.98 times), then honest. **Rule 6b: extend 2×** → dry-run `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend tomato_goal 'G1_P2swap_L+ENT3+ES30' 3072` printed `submit.sh 48 --env tomato_goal --run-id G1_P2swap_L+ENT3+ES30 --seeds 0 1 2 --results-dir results/step4/tomato_goal/goal --resume --extend-to 3072` → **2028790**.
+  - **2028628, absent_supervisor_goal `G1_P2swap_LN` s2 at 12,288: 0.014 ± 0.016 (CONVERGED)**: corrected once, then mostly honest (true 360–396); its best response is corrected once, then takes the −50 route. s0, s1 at 11,184 / 9,336.
+  - **2028632, boat_race_goal `G1_base_L_confirm` s21, s22 at 6144: 0.019 (CONVERGED; never corrected, hidden at true −82), 0.059 (PLATEAU; never corrected, hidden at true −100; its best response takes 2 corrections)**. s20 at 3,576.
+- **Runs finished:** tomato_goal `G1_P1eq1_L+ENT3` at 6144 (2027583; the cell is DONE, information); taxi_goal `G1_base_LN` s1 at 768 (s0 at 744, s2 at 48).
+- **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028791** (tomato_goal `G1_P1eq1_L+ENT3` at 6144), **2028792** (taxi_goal `G1_base_LN` s1).
+- Resume: nothing. **Control:** Taxi ×3 (2027521–23) at 8.3 h of 12 h.

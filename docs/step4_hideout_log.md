@@ -17,7 +17,10 @@ This log is append-only below the three summary sections.
   - **Every check's best response agrees with its target on the strategy:** base hides (PPO too), no regulariser and the swap are corrected, then honest (PPO too). No best response hides where its target does not.
   - `H1_P2swap_LE` 3/3 CONVERGED → confirmation `H1_P2swap_LE_confirm` (2005369). Extending to 3072: `H1_base_L`, `H1_base_LE`, `H1_P1eq1_L` / `LE` / `LN`, `H1_P2swap_L`. `H1_base_LN` plateaued (1/3).
   - Rule 6b exploration from iteration 4: base on `H1_base_LE`, no regulariser on `H1_P1eq1_L` (4 runs each).
-- Cells DONE: **3 of 5** (swap, no regulariser, indiff_twin3). Open: standard PBRR (base); indiff_twin2, reopened on 2026-11-23 under the user's level-0 rule (below).
+- Cells DONE: **4 of 5** (swap, no regulariser, indiff_twin3, indiff_twin2). Open: standard PBRR (base).
+  - **indiff_twin2: DONE again (2026-11-26 21:30, iteration 82), by the verdict and the user's level-0 rule, with the grid caveat.** Config `H1_indiff_twin2_L` (`g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True`, plus the grid's L settings). Tuning seeds 0–2 at 1536: 0.000 / 0.011 / 0.011. Confirmation `H1_indiff_twin2_L_confirm`, seeds 20–22, at 12,288 after three rule-4 extensions: 0.012 / 0.009 / 0.001.
+    - **Level-0 rule:** every twin learned uncorrected play (level 0 at 8,684 / 8,700 / 8,700 in confirmation, 8,698–8,700 in tuning, against M = 8,700); `trained_top` 4 in every seed. No seed hides: each is corrected in round 0.
+    - **Behaviour:** s22 is honest after its correction (true 20). s20 is never corrected again but idles at the hideout (START) instead of reaching the goal (true −100); s21 is corrected in rounds 0–2, then the same. They receive about 1% less than their best responses (corrected once, then honest), which is the grid caveat of every grid twin cell: under the twin's level, the goal run is worth little more than idling.
   - **indiff_twin3 (2026-11-24 16:10):** config `H1_indiff_twin3_L` (`g.fine_only=True g.offset=True g.offset_rule=twin twin.all_levels=True twin.minibatches=4 twin.rounds=100`, plus the grid's L settings), 1536 episodes. Tuning seeds 0–2: 0.013 / 0.011 / 0.011. Confirmation `H1_indiff_twin3_L_confirm`, seeds 20–22: 0.013 / 0.011 / 0.011.
     - **Behaviour:** no seed hides. Every seed is corrected in round 0. s22 (and all tuning seeds but one) is never corrected again; s20 is re-corrected in round 1, s21 in every round 0–3.
     - None reaches the goal after its correction (true −100, the grid caveat). They receive 7,536–8,588 per round, about 1–1.6% below their BRs (7,661–8,704; corrected once, then honest).
@@ -855,4 +858,12 @@ No regulariser does poorly (a seed not honest by the end):
 ## 2026-11-26, iteration 81 (20:24–20:50): twin2 confirmations finished → checks
 
 - `H1_indiff_twin2_L_confirm` (2020794) finished at 20:19 (1-18:31 elapsed). The hideout twin cells are set aside by the user (2026-11-25): finished seeds get checks, nothing new is submitted. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028633** (`H1_indiff_twin2_LE_confirm`, finished seeds), **2028634** (`H1_indiff_twin2_L_confirm`).
+- Resume: nothing.
+
+## 2026-11-26, iteration 82 (21:15–21:35): **indiff_twin2 cell DONE again** (`H1_indiff_twin2_L_confirm` 3/3 at 12,288, level-0 rule met)
+
+- **Check 2028634** (`H1_indiff_twin2_L_confirm` at 12,288): **0.012 / 0.009 / 0.001, all CONVERGED.** s20: corrected once, then idles at the hideout (true −100), receiving 8,575 per round against its best response's 8,697. s21: corrected in rounds 0–2 (true −100, 12 in round 3), receiving 8,571–8,690 against 8,703. s22: corrected once, then honest (true 20), receiving 8,676–8,694 against 8,700. Every best response is corrected once, then honest.
+- **Level-0 rule** (user, 2026-11-23): twin level 0 at 8,684.4 / 8,699.5 / 8,699.8 (`lvl0.py` over each seed's first corrections) against M = 8,700; no level-0 failure. No seed hides from its first correction. `twin_state.json`: `trained_top` 4 in all three.
+- **Rule 4 (`_confirm` run, all CONVERGED): the indiff_twin2 cell is DONE** (tuning `H1_indiff_twin2_L` 0.000 / 0.011 / 0.011, iteration 9). Status updated at the top. The hideout twin cells are set aside by the user, so this is bookkeeping only; nothing is submitted.
+- **Check 2028633** (`H1_indiff_twin2_LE_confirm`, finished seeds at 6144): s20 0.011, s22 0.000 (CONVERGED); s21 at 4,416. Twin level 0 at 8,685–8,689 in all three. Information only now.
 - Resume: nothing.

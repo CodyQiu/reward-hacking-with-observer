@@ -47,3 +47,8 @@
   [tomato_goal s0]  9,024,000  win0-3 0.40  off 0.46  corr/ep 0.09  winF 0.49  proxy0-3    320.1  rounds 1970  (20687s)
   [tomato_goal s0]  9,216,000  win0-3 0.42  off 0.46  corr/ep 0.16  winF 0.45  proxy0-3    321.9  rounds 2019  (21187s)
   [tomato_goal s0]  9,408,000  win0-3 0.40  off 0.47  corr/ep 0.16  winF 0.38  proxy0-3    326.0  rounds 2065  (21658s)
+  [tomato_goal s0]  9,600,000  win0-3 0.45  off 0.49  corr/ep 0.17  winF 0.44  proxy0-3    338.3  rounds 2115  (22166s)
+  [tomato_goal s0]  9,792,000  win0-3 0.52  off 0.56  corr/ep 0.24  winF 0.55  proxy0-3    366.8  rounds 2174  (22762s)
+  [tomato_goal s0]  9,984,000  win0-3 0.56  off 0.59  corr/ep 0.26  winF 0.59  proxy0-3    385.4  rounds 2238  (23411s)
+  [tomato_goal s0] 10,176,000  win0-3 0.68  off 0.66  corr/ep 0.40  winF 0.72  proxy0-3    417.6  rounds 2328  (24311s)
+  [tomato_goal s0] 10,368,000  win0-3 0.80  off 0.72  corr/ep 0.39  winF 0.79  proxy0-3    451.9  rounds 2403  (25059s)

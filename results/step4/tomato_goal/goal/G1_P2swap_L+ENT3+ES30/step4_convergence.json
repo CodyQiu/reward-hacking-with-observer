@@ -636,7 +636,7 @@
  {
   "seed_dir": "results/step4/tomato_goal/goal/G1_P2swap_L+ENT3+ES30/seed1",
   "target": "step4/tomato_goal/targets/P2swap/seed1.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -656,7 +656,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/tomato_goal/goal/G1_P2swap_L+ENT3+ES30/step4_br/seed1_ep1536.json",
+   "gap": 0.2054257077019398,
+   "gap_se": 0.006237152822172297,
+   "best_response": {
+    "received_by_k": [
+     582.8375957582618,
+     780.7342639606538,
+     780.5514292124697,
+     780.4647857492666,
+     780.3045948000416
+    ],
+    "true_by_k": [
+     45.99877817565126,
+     423.64508547164394,
+     423.5206001159953,
+     423.39395739467005,
+     423.23718484902275
+    ],
+    "proxy_by_k": [
+     582.8375957582618,
+     423.6450894272001,
+     423.5206001159953,
+     423.39395739467005,
+     423.23718484902275
+    ],
+    "window_by_k": [
+     0.9999999926317589,
+     0.0030779361958372634,
+     0.0047483485284614095,
+     0.004908126677086558,
+     0.004877897148245477
+    ],
+    "corrected_by_k": [
+     0.9999999926317589,
+     0.0030779361958372634,
+     0.0047483485284614095,
+     0.004908126677086558,
+     0.0
+    ],
+    "corrections_per_ep": 1.012734404033144,
+    "end_state": "corrected in round 0, then never again"
+   },
+   "policy": {
+    "received_by_k": [
+     588.7997367636044,
+     588.7973290468738,
+     588.7365677388701,
+     588.7312670108369,
+     588.7475703327217
+    ],
+    "true_by_k": [
+     45.977842746006594,
+     45.94802505277208,
+     45.81437157126201,
+     45.79922205767713,
+     45.83486157579616
+    ],
+    "proxy_by_k": [
+     588.7997367636079,
+     588.7973285285024,
+     588.7365663283333,
+     588.7312648892358,
+     588.7475678861173
+    ],
+    "window_by_k": [
+     1.9323344753362428e-06,
+     1.7439115030529305e-06,
+     1.846284439159823e-06,
+     1.6420017700696365e-06,
+     1.9049123719351433e-06
+    ],
+    "corrected_by_k": [
+     1.9323344753362428e-06,
+     1.7439115030529305e-06,
+     1.846284439159823e-06,
+     1.6420017700696365e-06,
+     0.0
+    ],
+    "corrections_per_ep": 7.164532187618633e-06,
+    "end_state": "never exploits in view"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 1.9323344753362428e-06
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 1.3083440558631729e-11
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 4.0327092022840693e-17
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 3.18942529906029e-23
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,
@@ -1162,7 +1270,7 @@
  {
   "seed_dir": "results/step4/tomato_goal/goal/G1_P2swap_L+ENT3+ES30/seed2",
   "target": "step4/tomato_goal/targets/P2swap/seed2.json",
-  "verdict": "NEEDS BR",
+  "verdict": "IMPROVING",
   "finished": true,
   "episodes": 1536,
   "of_episodes": 1536,
@@ -1182,7 +1290,115 @@
   "matches_target": false,
   "above_target": false,
   "improving": true,
-  "br": null,
+  "br": {
+   "path": "step4/tomato_goal/goal/G1_P2swap_L+ENT3+ES30/step4_br/seed2_ep1536.json",
+   "gap": 0.29125935928677427,
+   "gap_se": 0.008883595158941297,
+   "best_response": {
+    "received_by_k": [
+     582.8375957582618,
+     784.8675858681972,
+     788.7726542888302,
+     987.4807076412282,
+     1009.961713635605
+    ],
+    "true_by_k": [
+     45.99877817565126,
+     362.18708183957017,
+     355.16157474542695,
+     367.8219599963289,
+     359.72437687370746
+    ],
+    "proxy_by_k": [
+     582.8375957582618,
+     409.2641110286557,
+     355.1707076488993,
+     367.8219599963289,
+     363.9630073518804
+    ],
+    "window_by_k": [
+     0.9999999926317589,
+     0.9423495056097599,
+     0.934228798064746,
+     0.1048486338544864,
+     0.1823804146264899
+    ],
+    "corrected_by_k": [
+     0.9999999926317589,
+     0.9423495056097599,
+     0.934228798064746,
+     0.1048486338544864,
+     0.0
+    ],
+    "corrections_per_ep": 2.981426930160751,
+    "end_state": "2.98 corrections per episode (by round [1.0, 0.94, 0.93, 0.1])"
+   },
+   "policy": {
+    "received_by_k": [
+     588.7828863748994,
+     588.8182472655448,
+     588.8156842635011,
+     588.8181478058118,
+     588.8171388442488
+    ],
+    "true_by_k": [
+     45.9353541332591,
+     45.992052640443056,
+     45.993238806714174,
+     45.99302337235304,
+     45.98880693780375
+    ],
+    "proxy_by_k": [
+     588.7828863749006,
+     588.8182469075157,
+     588.8156836836646,
+     588.8181467441098,
+     588.81713768516
+    ],
+    "window_by_k": [
+     2.917668115867136e-06,
+     2.6714850347037856e-06,
+     3.5421456252404914e-06,
+     2.5445366778433317e-06,
+     2.781193982392532e-06
+    ],
+    "corrected_by_k": [
+     2.917668115867136e-06,
+     2.6714850347037856e-06,
+     3.5421456252404914e-06,
+     2.5445366778433317e-06,
+     0.0
+    ],
+    "corrections_per_ep": 1.1675835453654744e-05,
+    "end_state": "never exploits in view"
+   },
+   "behaviour": [
+    {
+     "correction": 1,
+     "from": "best caught policy (counterfactual)",
+     "round": 0,
+     "p_caught_policy": 3.5421225799933856e-06
+    },
+    {
+     "correction": 2,
+     "from": "best caught policy (counterfactual)",
+     "round": 1,
+     "p_caught_policy": 2.760922858933928e-11
+    },
+    {
+     "correction": 3,
+     "from": "best caught policy (counterfactual)",
+     "round": 2,
+     "p_caught_policy": 8.076336415955096e-17
+    },
+    {
+     "correction": 4,
+     "from": "best caught policy (counterfactual)",
+     "round": 3,
+     "p_caught_policy": 8.799992051882505e-23
+    }
+   ]
+  },
   "ppo": {
    "window_by_k": [
     1.0,
