@@ -52,7 +52,9 @@ def decode_native(i):
     return i // 100, (i // 20) % 5, (i // 4) % 5, i % 4      # row, col, pass_idx, dest_idx
 
 
-def make_task(bonus=10.0, obs="factored"):
+def make_task(bonus=10.0, obs="factored", g_bit=False):
+    """``g_bit`` (opt-in control, docs/step4_goal_fixes.md): the reward model also sees the "picked up before" bit
+    (one-hot over the 1000 env states instead of the 500 native ones). Default False: g sees the native state."""
     env = native_env()
     P, mu_native = env.P, env.initial_state_distrib
     N, A = 500, 6
@@ -89,7 +91,7 @@ def make_task(bonus=10.0, obs="factored"):
     factored = np.concatenate([np.eye(5)[row], np.eye(5)[col], np.eye(5)[pidx], np.eye(4)[didx],
                                (np.arange(S) % 2)[:, None]], axis=1).astype(np.float32)
     phi_obs = factored if obs == "factored" else np.eye(S, dtype=np.float32)
-    phi_g = np.eye(N, dtype=np.float32)[np.arange(S) // 2]
+    phi_g = np.eye(S, dtype=np.float32) if g_bit else np.eye(N, dtype=np.float32)[np.arange(S) // 2]
     tables = TabularTables(nxt=nxt, prob=prob, proxy=proxy, true=true, mu0=mu0, phi_obs=phi_obs,
                            phi_g=phi_g, absorbing=np.zeros(S, bool), n_actions=A, phi_ref=factored)
     move = _shortest_moves(P)

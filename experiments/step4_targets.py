@@ -60,7 +60,7 @@ from step3_ppo import parse_sets  # noqa: E402
 from src.pbrr_core import GConfig, boltzmann_label  # noqa: E402
 from src.step3.dp import (best_round_value, evaluate_levels, round_probs, round_value,  # noqa: E402
                           solve_levels, solve_subepisode, solve_subepisode_caught, table_policy_fn)
-from src.step3.pbrr import (exact_level, fit_correction_rows, g_table, level_offset,  # noqa: E402
+from src.step3.pbrr import (exact_level, fit_correction_rows, g_table, level_offset, unseen_override,  # noqa: E402
                             rollout_returns, rollouts)
 
 
@@ -90,7 +90,8 @@ OUT = os.path.join(ROOT, "results", "step4")
 KEY_FIELDS = ("env", "task", "protocol", "pbrr", "g")      # what defines the game (not PPO's knobs)
 
 
-OFF = {"protocol": {"update_bonus": 0.0, "learn_exempt": False}, "g": {"n_ensemble": 1}}   # fields added later, at their "off" value
+OFF = {"protocol": {"update_bonus": 0.0, "learn_exempt": False},
+       "g": {"n_ensemble": 1, "reg_rows": "traj", "unseen": "none", "unseen_post": "none"}}   # fields added later, at their "off" value
 
 
 def ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D_members, corr, d, G_in, m_prev, lvl_prev):
@@ -129,7 +130,7 @@ def game_key(cfg):
         for f, v in fields.items():
             if key[group].get(f, v) == v:
                 key[group].pop(f, None)
-            else:
+            elif not isinstance(v, str):                    # string-valued fields (reg_rows, unseen) stay strings
                 key[group][f] = float(key[group][f])        # "=1" and "=1.0" are the same game
     return key
 
@@ -278,7 +279,10 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                     Rd = tb.proxy + G_in[d]
                 else:
                     corr[d] = params
-                    Rd = tb.proxy + g_table(params, task)
+                    gt = g_table(params, task)
+                    if gcfg.unseen_post != "none":           # opt-in (docs/step4_goal_fixes.md)
+                        gt = unseen_override(gt, params, D[d], task, gcfg.unseen_post)
+                    Rd = tb.proxy + gt
                 if twin:                                      # priced once every draw of this level is in
                     twin_R.append(Rd)
                     continue

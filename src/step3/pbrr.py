@@ -225,6 +225,8 @@ def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
         coef = 0.0 if cfg.no_agree == "skip" else cfg.push2zero
     else:
         coef = cfg.push2zero / n_agree
+    if cfg.reg_rows != "traj" or cfg.unseen != "none":         # opt-in (docs/step4_goal_fixes.md)
+        return _fit_ext(cfg, task, X, row, traj, cnt, proxy, length, i1, i2, y, reg, coef, n_agree, seed)
 
     R_, T_, N_, P_ = _bucket(len(X)), _bucket(len(row)), _bucket(n_tr, 16), _bucket(P)
     pad = lambda a, m, dt: np.concatenate([np.asarray(a, dt), np.zeros(m - len(a), dt)])
@@ -241,6 +243,166 @@ def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
     info = {"loss": float(final), "n_pairs": P, "n_agree": n_agree, "n_disagree": P - n_agree,
             "reg_coef": float(coef), "n_rows": len(X), "n_trajs": n_tr}
     return params, {**info, "g_rows": g_rows, "rows": X}
+
+
+def _compiled_ext(cfg, has_u):
+    """The fit with the opt-in Step 4 goal-fix terms (GConfig.reg_rows / unseen; docs/step4_goal_fixes.md):
+    the same BCE, a per-row regulariser, and (``has_u``) a prior (g_u - t)^2 on unseen rows XU, with
+    t = (pess) the count-weighted mean g on the rows only dispreferred trajectories contain -- differentiable, so
+    the prior, like the BCE, is unchanged by adding a constant to g (no drift); t = 0 for "zero" (pess = 0),
+    which also anchors g's constant at the unseen rows."""
+    key = ("ext", cfg.lr, cfg.weight_decay, cfg.epochs, bool(has_u))
+    if key in _FIT:
+        return _FIT[key]
+    tx = optax.chain(optax.add_decayed_weights(cfg.weight_decay), optax.adam(cfg.lr)) \
+        if cfg.weight_decay > 0 else optax.adam(cfg.lr)
+
+    def loss(params, X, row, traj, cnt, proxy, i1, i2, y, pmask, reg, coef, n_pairs, XU, umask, excl, ucoef, pess):
+        g = mlp_apply(params, X)
+        R = proxy + jax.ops.segment_sum(cnt * g[row], traj, num_segments=proxy.shape[0])
+        d = R[i2] - R[i1]
+        out = jnp.sum(pmask * (jnp.logaddexp(0.0, d) - y * d)) / n_pairs + coef * jnp.sum(reg * g * g)
+        if has_u:
+            ne = jnp.sum(excl)
+            t = pess * jnp.sum(excl * g) / jnp.maximum(ne, 1e-12)   # differentiable: the prior is shift-invariant
+            gu = mlp_apply(params, XU)
+            out = out + ucoef * jnp.sum(umask * (gu - t) ** 2) / jnp.maximum(jnp.sum(umask), 1.0)
+        return out
+
+    grad = jax.grad(loss)
+
+    @jax.jit
+    def fit(params, *args):
+        state = tx.init(params)
+
+        def body(_, carry):
+            p, s = carry
+            upd, s = tx.update(grad(p, *args), s, p)
+            return optax.apply_updates(p, upd), s
+
+        p, _ = jax.lax.fori_loop(0, cfg.epochs, body, (params, state))
+        return p, loss(p, *args)
+
+    _FIT[key] = fit
+    return fit
+
+
+def _support_rows(task, n, seed):
+    """Up to ``n`` distinct reward-model rows sampled from the task's support (transitions with prob > 0)."""
+    if not hasattr(task, "_support_flat"):
+        keys, prob = task.support_keys(), task.tables.prob
+        task._support_flat = keys.ravel()[prob.ravel() > 0]
+    flat = task._support_flat
+    pick = np.random.default_rng(seed).choice(len(flat), size=min(n, len(flat)), replace=False)
+    return np.unique(task.g_rows_from_keys(flat[pick]).astype(np.float32), axis=0)
+
+
+def _fit_ext(cfg, task, X, row, traj, cnt, proxy, length, i1, i2, y, reg_traj, coef, n_agree, seed):
+    """fit_correction_rows with GConfig.reg_rows / unseen (docs/step4_goal_fixes.md). Same data, labels and
+    coefficient; only the regulariser's rows and the unseen-row prior change."""
+    n_tr, P = len(proxy), len(y)
+    pref_t, disp_t = np.zeros(n_tr, bool), np.zeros(n_tr, bool)
+    lab = y == 1.0
+    pref_t[i2[lab]], pref_t[i1[~lab]] = True, True
+    disp_t[i1[lab]], disp_t[i2[~lab]] = True, True
+    c_pref = np.bincount(row, weights=cnt * pref_t[traj], minlength=len(X))
+    c_disp = np.bincount(row, weights=cnt * disp_t[traj], minlength=len(X))
+    shared = (c_pref > 0) & (c_disp > 0)
+    if cfg.reg_rows == "traj":
+        reg = reg_traj
+    elif cfg.reg_rows == "shared":                    # every pair's two trajectories, on their shared rows only
+        n_both = np.zeros(n_tr)
+        np.add.at(n_both, i1, 1.0)
+        np.add.at(n_both, i2, 1.0)
+        reg = np.bincount(row, weights=cnt * n_both[traj] / length[traj], minlength=len(X)) * shared
+    else:
+        raise ValueError(f"reg_rows={cfg.reg_rows!r}")
+    if not cfg.use_regularization:
+        coef = 0.0
+    excl = c_disp * ((c_disp > 0) & (c_pref == 0))     # count-weighted: the caught play's own transitions
+    has_u = cfg.unseen != "none"
+    if has_u:
+        if cfg.unseen not in ("zero", "pess"):
+            raise ValueError(f"unseen={cfg.unseen!r}")
+        U = _support_rows(task, cfg.unseen_rows, seed)
+        seen = {r.tobytes() for r in np.ascontiguousarray(X.astype(np.float32))}
+        U = U[[r.tobytes() not in seen for r in np.ascontiguousarray(U)]]
+        if len(U) == 0:
+            U = np.zeros((1, X.shape[1]), np.float32)
+            umask = np.zeros(1, np.float32)
+        else:
+            umask = np.ones(len(U), np.float32)
+    else:
+        U, umask = np.zeros((1, X.shape[1]), np.float32), np.zeros(1, np.float32)
+    R_, T_, N_, P_, U_ = _bucket(len(X)), _bucket(len(row)), _bucket(n_tr, 16), _bucket(P), _bucket(len(U))
+    pad = lambda a, m, dt: np.concatenate([np.asarray(a, dt), np.zeros(m - len(a), dt)])
+    Xp = np.zeros((R_, X.shape[1]), np.float32)
+    Xp[:len(X)] = X
+    Up = np.zeros((U_, X.shape[1]), np.float32)
+    Up[:len(U)] = U
+    args = (Xp, pad(row, T_, np.int32), pad(traj, T_, np.int32), pad(cnt, T_, np.float32),
+            pad(proxy, N_, np.float32), pad(i1, P_, np.int32), pad(i2, P_, np.int32),
+            pad(y, P_, np.float32), pad(np.ones(P), P_, np.float32), pad(reg, R_, np.float32),
+            np.float32(coef), np.float32(P), Up, pad(umask, U_, np.float32), pad(excl, R_, np.float32),
+            np.float32(cfg.unseen_coef), np.float32(1.0 if cfg.unseen == "pess" else 0.0))
+    sizes = [X.shape[1]] + [cfg.width] * (cfg.n_layers - 1) + [1]
+    params = mlp_init(jax.random.PRNGKey(seed), sizes, cfg.init)
+    params, final = _compiled_ext(cfg, has_u)(params, *args)
+    g_rows = np.asarray(g_apply(params, jnp.asarray(X)), float)
+    info = {"loss": float(final), "n_pairs": P, "n_agree": n_agree, "n_disagree": P - n_agree,
+            "reg_coef": float(coef), "n_rows": len(X), "n_trajs": n_tr, "n_shared": int(shared.sum()),
+            "n_excl_disp": int((excl > 0).sum()), "n_unseen": int(umask.sum())}
+    return params, {**info, "g_rows": g_rows, "rows": X}
+
+
+def _gid(task, keys):
+    """Reward-model row ids of transition keys: rows with the same features (phi_g(s), a, phi_g(s')) share an id."""
+    if not hasattr(task, "_phi_gid"):
+        _, inv = np.unique(task.tables.phi_g, axis=0, return_inverse=True)
+        task._phi_gid, task._phi_n = inv.reshape(-1).astype(np.int64), int(inv.max()) + 1
+    s, a, s2 = task.decode(np.asarray(keys))
+    pid, n = task._phi_gid, task._phi_n
+    return (pid[s] * task.n_actions + np.asarray(a, np.int64)) * n + pid[s2]
+
+
+def unseen_override(gtab, params, pairs, task, mode="pess"):
+    """GConfig.unseen_post (docs/step4_goal_fixes.md): ``gtab`` (S*A, F), the correction on every transition, with
+    every reward-model row that no trajectory in ``pairs`` contains set to the count-weighted mean g on the rows only
+    dispreferred trajectories contain (the caught play's own transitions; 0 if there are none). Returns a copy."""
+    if mode == "none":
+        return gtab
+    if mode != "pess":
+        raise ValueError(f"unseen_post={mode!r}")
+    trajs, index = [], {}
+    for t1, t2, _ in pairs:
+        for t in (t1, t2):
+            if id(t) not in index:
+                index[id(t)] = len(trajs)
+                trajs.append(t)
+    i1 = np.array([index[id(a)] for a, _, _ in pairs])
+    i2 = np.array([index[id(b)] for _, b, _ in pairs])
+    lab = np.array([y for _, _, y in pairs], float) == 1.0
+    pref_t, disp_t = np.zeros(len(trajs), bool), np.zeros(len(trajs), bool)
+    pref_t[i2[lab]], pref_t[i1[~lab]] = True, True
+    disp_t[i1[lab]], disp_t[i2[~lab]] = True, True
+    keys = np.concatenate([t.keys for t in trajs])
+    tid = np.concatenate([np.full(t.length, i) for i, t in enumerate(trajs)])
+    gid = _gid(task, keys)
+    ug, inv = np.unique(gid, return_inverse=True)
+    c_pref = np.bincount(inv, weights=pref_t[tid].astype(float), minlength=len(ug))
+    c_disp = np.bincount(inv, weights=disp_t[tid].astype(float), minlength=len(ug))
+    excl = (c_disp > 0) & (c_pref == 0)
+    if excl.any():
+        first = np.zeros(len(ug), np.int64)
+        first[inv[::-1]] = np.arange(len(inv))[::-1]                  # one key per row id
+        g_ex = g_on_rows(params, task.g_rows_from_keys(keys[first[excl]]))
+        t = float(np.sum(g_ex * c_disp[excl]) / np.sum(c_disp[excl]))
+    else:
+        t = 0.0
+    seen = np.isin(_gid(task, task.support_keys()), ug)
+    out = np.array(gtab, copy=True)
+    out[~seen] = t
+    return out
 
 
 def g_on_rows(params, X, chunk=65_536):

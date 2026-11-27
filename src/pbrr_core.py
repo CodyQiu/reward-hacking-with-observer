@@ -116,6 +116,25 @@ class GConfig:
     # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
     # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)
     fine_only: bool = False
+    # Step 4 goal fixes (docs/step4_goal_fixes.md; opt-in, the defaults are today's fit exactly). Used by
+    # src/step3/pbrr.fit_correction_rows on tabular tasks only.
+    # reg_rows: which rows the regulariser covers. "traj" (default): the paper's trajectory-level L+ / L- as
+    # configured above. "shared": the contrastive variant -- only rows that occur in both the preferred and the
+    # dispreferred trajectory of some pair are pushed to 0; rows exclusive to one side are left free.
+    reg_rows: str = "traj"
+    # unseen: a prior on rows of the reward model's domain that no trajectory in the data contains (sampled from
+    # the task's support, ``unseen_rows`` keys). "none" (default): no prior, g there is whatever the network
+    # extrapolates. "zero": pulled to 0. "pess" (pessimistic extrapolation): pulled to the mean g on the rows
+    # that occur only in dispreferred trajectories (the caught play's own transitions), so a transition the
+    # data never shows is treated like the misbehaviour the data does show (0 if there is none).
+    unseen: str = "none"
+    unseen_rows: int = 8192
+    unseen_coef: float = 1.0
+    # unseen_post: the same idea applied after the fit, to the correction table (tabular targets only;
+    # src/step3/pbrr.unseen_override): "none" (default) | "pess" -- every reward-model row that no trajectory in the
+    # data contains gets the count-weighted mean g of the rows only dispreferred trajectories contain; rows in the
+    # data keep the fitted g, so nothing else changes.
+    unseen_post: str = "none"
 
     def with_(self, **kw):
         return replace(self, **kw)

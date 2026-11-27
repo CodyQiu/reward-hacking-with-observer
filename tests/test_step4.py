@@ -1599,5 +1599,52 @@ def test_goal_control_without_a_hidden_state():
         assert r["hidden"] == 0 and r["goal"] > 0.99, (env, r)
 
 
+
+def test_goal_fix_options_are_opt_in_and_change_only_what_they_name():
+    """docs/step4_goal_fixes.md: the new GConfig fields default to today's fit (bit-identical), a target's game key is
+    unchanged by them at their defaults, the Taxi g_bit control is off by default, and each option does what it says."""
+    import numpy as np
+    from src.pbrr_core import GConfig, boltzmann_label
+    from src.step3.dp import solve_subepisode, solve_subepisode_caught, table_policy_fn
+    from src.step3.pbrr import fit_correction_rows, g_table, rollouts, unseen_override, _gid
+    from src.step3.protocol import Protocol
+    from src.step3.reference import build_reference
+    from src.step3.tasks import get_task
+    from src.step3.train import resolve_config
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "experiments"))
+    from step4_targets import game_key
+    d = GConfig()
+    assert (d.reg_rows, d.unseen, d.unseen_post) == ("traj", "none", "none")
+    cfg = resolve_config("boat_race_goal", {"seed": 0, "g": {"epochs": 50}})
+    assert game_key(cfg) == game_key(resolve_config("boat_race_goal", {"seed": 0, "g": {
+        "epochs": 50, "reg_rows": "traj", "unseen": "none", "unseen_post": "none"}}))
+    assert game_key(cfg) != game_key(resolve_config("boat_race_goal", {"seed": 0, "g": {"epochs": 50, "unseen_post": "pess"}}))
+    t0, t1 = get_task("taxi_goal"), get_task("taxi_goal", g_bit=True)
+    assert t0.tables.phi_g.shape[1] == 500 and t1.tables.phi_g.shape[1] == 1000
+    task, proto, pb = get_task("boat_race_goal"), Protocol(**cfg["protocol"]), cfg["pbrr"]
+    T, W = proto.t_sub, proto.window
+    ref, _ = build_reference(task, T, {**pb, "seed": pb["ref_seed"]})
+    refs = rollouts(task.make_batch(5, seed=7), ref, proto, np.random.default_rng(7))
+    rng = np.random.default_rng(3)
+    agent = rollouts(task.make_batch(5, seed=8), table_policy_fn(solve_subepisode_caught(task.tables, task.tables.proxy, T, W),
+                                                                 task.n_actions, 0.05), proto, rng)
+    D = [(a, r, boltzmann_label(a, r, rng, 1.0)) for a in agent for r in refs]
+    g = GConfig(**{**cfg["g"], "epochs": 50})
+    p0, _ = fit_correction_rows(D, task, g, seed=1)
+    p1, _ = fit_correction_rows(D, task, g.with_(reg_rows="traj", unseen="none", unseen_post="none"), seed=1)
+    for a, b in zip(p0, p1):                                  # the default path is untouched: identical parameters
+        for x, y in zip(a, b):
+            assert np.array_equal(np.asarray(x), np.asarray(y))
+    gt = g_table(p0, task)
+    assert np.array_equal(unseen_override(gt, p0, D, task, "none"), gt)
+    go = unseen_override(gt, p0, D, task, "pess")
+    keys = np.concatenate([t.keys for pair in D for t in pair[:2]])
+    seen = np.isin(_gid(task, task.support_keys()), np.unique(_gid(task, keys)))
+    assert np.array_equal(go[seen], gt[seen]) and (~seen).any()
+    assert np.allclose(go[~seen], go[~seen].ravel()[0])       # every unseen row gets the same value t
+    for opt in ({"reg_rows": "shared"}, {"unseen": "zero"}, {"unseen": "pess"}):
+        p, info = fit_correction_rows(D, task, g.with_(**opt), seed=1)
+        assert np.isfinite(info["loss"]) and np.all(np.isfinite(g_table(p, task)))
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

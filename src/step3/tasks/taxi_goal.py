@@ -21,10 +21,10 @@ FIXED = {"protocol": {"window": 1, "learn_exempt": True, "show_monitor": False}}
 HIDE = (4, 3)                        # depot B
 
 
-def make_task(goal_deliveries=6, bonus=10.0, obs="onehot", hidden=True):
+def make_task(goal_deliveries=6, bonus=10.0, obs="onehot", hidden=True, g_bit=False):
     """``hidden`` = False: the control with no hidden state (docs/step4_goal.md, "Control"): depot B is an ordinary
     visible depot, so every round that misses the goal is judged."""
-    base = base_mod.make_task(bonus=bonus, obs=obs)
+    base = base_mod.make_task(bonus=bonus, obs=obs, g_bit=g_bit)       # g_bit: opt-in control (step4_goal_fixes)
     tb = base.tables
     inc = (np.abs(tb.true - 20.0) < 1e-9).astype(np.int64)            # a delivery (+20)
     K = int(goal_deliveries)
