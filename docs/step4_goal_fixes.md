@@ -170,7 +170,26 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
 
 ## Ranked proposals for the user
 
-(Pending the C1–C3 targets.)
+**PROVISIONAL (2026-11-27 06:15): from the diagnosis and the Boat Race screening only. The C1–C3 and reference-point exact targets are queued and not yet run; this ranking will be revised when they land.**
+
+1. **Separate repair from payment.** The repair is standard PBRR's fines-only fit. The payment is a constant per step after a correction, which cannot change which route is best (Diagnosis 1).
+   - This is the indifference family, which the user set aside; its reference-point targets are queued.
+   - **Evidence for:**
+     - In Taxi, standard PBRR's fines alone make honest play the best round after one correction (Diagnosis 8). What it lacks is a reason to seek the correction, which a route-neutral payment supplies without creating an exploit.
+     - On the base envs the twin version is honest by the end in 27/30 targets.
+   - **Evidence against:** in Boat Race, fines repair one copy per correction and the hidden copy is never caught, so it is predicted to exploit in hiding there.
+   - **Fairness:** the exact-target version prices the payment with exact DP; a deployable version needs the twin or another estimate.
+2. **Let the reward model see progress (a setup change, the user's call).** With the lap index, the no-regulariser's own corrections make honest play the best round after 2–3 corrections in all three Boat Race seeds (Diagnosis 6). Taxi's picked-up-bit control is queued.
+3. **C1, no-reg + pessimistic extrapolation** (fair, no free parameter). Predicted to fail in Boat Race (its reference takes the hidden copy's transition). The Taxi screen suggests the raise farming survives. Targets queued.
+4. **C2 (swap + pessimistic extrapolation) and C3 (contrastive)**, both fair. The Boat Race screening fails at every level. Targets queued.
+
+**Honest finding so far.** Within the fairness rules, no tested candidate makes the corrected reward's best round honest in Boat Race, and the diagnosis gives the reasons:
+- **Aliasing:** the paying entry is an honest row.
+- **The reference** takes the hidden copy's own transition.
+- **Local repair:** one copy per correction.
+- **The raise creates new exploits.**
+
+In Taxi the reward can be repaired by fines alone. The missing piece is a payment for being corrected that does not change which route is best.
 
 ## Open questions for the user
 
@@ -234,3 +253,8 @@ Each candidate is one `GConfig` setting, the same in all five envs. Sets: the go
   - The slots go to the indifference reference point.
 - **Submitted the reference point** `ref_indiff_twin` (predictions above, written before any target): 2030140 (grid, AS, Boat Race, Tomato, seeds 0–2) and 2030141–43 (Taxi seeds 0 / 1 / 2). Command as for C1–C3, with `--set g.fine_only=True g.offset=True g.offset_rule=twin` (+ `g.epochs=1000` outside the grid).
 - 19 investigation jobs queued or running.
+
+### 2026-11-27, iteration 5 (06:11–06:20)
+
+- No investigation job ran in the last 45 minutes. The cluster is fully allocated (`sinfo`: 20/20 nodes of `normal`), with about 300 jobs from other users queued ahead (`squeue -t PENDING`); all 19 of mine are pending on Priority.
+- Wrote a provisional "Ranked proposals" section from the diagnosis, marked as such.
