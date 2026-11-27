@@ -292,6 +292,16 @@ case $CMD in
         experiments/step4_targets.py --env taxi_goal --name "$name" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" \
         --draws "$TARGET_DRAWS" --set $(gsets taxi_goal "$v") task.goal_deliveries=7 task.hidden=$h
     done; done ;;
+  br10)     # goal campaign: Boat Race with 10 rounds per episode (up to 9 corrections; docs/step4_goal.md, "Boat Race with
+            # 10 rounds"), with and without the hidden state; targets <variant>_k10 and <variant>_nohide_k10
+    [[ $CAMPAIGN == goal ]] || { echo "br10 is a CAMPAIGN=goal command" >&2; exit 1; }
+    for v in base P1eq1 P2swap; do for h in True False; do
+      name="${v}_k10"; [[ $h == False ]] && name="${v}_nohide_k10"
+      # shellcheck disable=SC2046
+      run bash scripts/farmshare/run_cmd.sh 6 4 "targets_boat_race_goal_$name" .venv/bin/python -u \
+        experiments/step4_targets.py --env boat_race_goal --name "$name" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" \
+        --draws "$TARGET_DRAWS" --set $(gsets boat_race_goal "$v") protocol.n_sub=10 task.hidden=$h
+    done; done ;;
   compare)   # comp campaign: the swap's and standard PBRR's targets where the other campaigns left none
     [[ $CAMPAIGN == comp ]] || { echo "compare is a CAMPAIGN=comp command" >&2; exit 1; }
     for env in taxi boat_race; do for v in P2swap base; do

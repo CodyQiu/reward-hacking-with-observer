@@ -96,6 +96,23 @@ What a correction is does not change: PBRR fitted on the agent's caught rollouts
 - **With the hidden state:** as with 6 deliveries (the stricter goal does not touch hidden rounds).
 - **Standard PBRR:** no confident prediction. The 21.6% of honest rounds that miss 7 deliveries become a new risk of being fined for honest play.
 
+## Boat Race with 10 rounds (2026-11-27)
+
+**Why (the user):** "after enough corrections it should be that honest play behavior should be ideal...right? like if we increased episodes to 10+, what do you think?" Then: "run on more sub-episodes now, 10 for boat race hidden and unhidden". With 5 rounds, the best round is an exploit after 1, 2, 3 and 4 corrections under every method (`best_round_by_level`).
+
+**Targets.** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh br10 submit`. 6 jobs: base, P1eq1, P2swap × hidden state on (`<variant>_k10`) and off (`<variant>_nohide_k10`); `protocol.n_sub=10`, so up to 9 corrections per episode. Seeds 0–2 and 20–22, 6 draws. Everything else as in the campaign.
+
+**Two readings per target:**
+- **What the agent chooses:** its end state and true return by round.
+- **Whether the reward ever gets repaired:** `best_round_by_level` at levels 0–9, i.e. is honest play the best round after n corrections. For levels the agent does not reach, the corrections are fitted on the best caught policy, as everywhere.
+
+**Predicted (written 2026-11-27, before any 10-round target).**
+- **Swap:** never honest, with or without the hidden state. Its corrections never fine, they raise transitions the exploits share, and the agent takes a correction only when it pays more. Expected: corrected while each correction pays more, then hides (hidden) or complies in the rounds where the next correction would cost it (no hidden), and exploits in the final round. `best_round_by_level`: an exploit at every level.
+- **No-reg:** never honest as the agent chooses. `best_round_by_level` is an exploit at most levels (aliasing blocks the repair; docs/step4_goal_fixes.md, Diagnosis 6), with no confident prediction at levels 5–9.
+- **Standard PBRR:**
+  - **Hidden state:** it hides; the hidden copy is never fined.
+  - **No hidden state:** its fines repair one checkpoint per correction and create no exploits. So after about 4–5 corrections honest play may become the best round. It is then honest by the end, if the agent accepts those corrections, which cost it. No confident prediction about whether it does.
+
 ## Pipeline (`CAMPAIGN=goal`)
 
 - **Exact targets:** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh targets submit`. 15 jobs: 5 envs × base, P1eq1, P2swap, seeds 0–2 and 20–22, 6 draws. Written to `results/step4/<env>/targets/<variant>/`.
