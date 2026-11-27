@@ -14,6 +14,19 @@ Overnight investigation (from 2026-11-27 02:40), for the outcome-audit campaign 
 
 The summary sections below are kept current. The log below them is append-only.
 
+## Bottom line (2026-11-27 10:40)
+
+- **No fair method found.** Within the fairness rules, none of the three candidates gives "after seeking a correction, the agent meets the goal" in all five envs. C1 (no-reg + pessimistic extrapolation), C2 (swap + the same) and C3 (contrastive + the same) were each run as exact targets, seeds 0–2, all five goal envs.
+  - **Boat Race:** no fair method works. With the cell-only reward model the bonus-paying entry is aliased with honest play, and the reference itself takes the hidden checkpoint's step-back.
+  - **Taxi:** only C3 helps, in 1–2 of 3 seeds, and C3 regresses in AS.
+- **Cause, from exact decodes and controls:**
+  - Fines repair what they see without creating exploits. Standard PBRR makes honest play Taxi's best round after one correction in 3/3 seeds, but its agent hides, because a correction only costs it.
+  - The raises that make a correction worth seeking (no-reg, swap) land on cheap repeatable or aliased transitions, and so create new exploits.
+- **Best fair choice:** C1. It does no harm (grid, AS and Tomato unchanged) but does not reach the goal in Taxi or Boat Race.
+- **Closest to the goal, outside the fairness rules (the user's call):**
+  - **Fines plus a constant per-step payment for being corrected** (the set-aside indifference family): honest after its correction in Taxi 3/3, grid 3/3 and AS 2/3, but it hides in Tomato and fails Boat Race.
+  - **A reward model that sees progress:** in Boat Race, with the lap index, the no-regulariser's own corrections make honest play best after 2–3 corrections.
+
 ## Status
 
 - **As of 2026-11-27 09:50 the exact targets are complete for C1, C2, C3 and the reference point** (seeds 0–2, all five goal envs).
@@ -382,3 +395,11 @@ No fair candidate has all three. (i) + (ii) is the reference point, which works 
 
 - **Landed:** the reference point's Taxi s0, s2 (2030141, 2030143, about 1 h 51 min each). With s1 (iteration 9), Taxi is 3/3 corrected exactly once, then honest.
 - Added the summary table to "Ranked proposals". Running: C3's Taxi seeds 20–22 (2030380–82).
+
+### 2026-11-27, iteration 11 (10:35–10:45)
+
+- **C3's Taxi seeds 20–22** (2030380–82) are on their second fixed-point iteration; about 1.5 h per iteration on today's nodes, against a 4 h job limit. Iteration 0, which is not the target:
+  - s20: corrected once, then true 117.6 (near honest, goal met);
+  - s21: corrected twice, then −70;
+  - s22: corrected once, then 32.
+- Added a "Bottom line" section at the top of the report.
