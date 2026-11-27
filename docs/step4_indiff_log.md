@@ -360,6 +360,7 @@ Same columns as the indiff_pool table above. Targets: `results/step4/<env>/targe
 
 | Env / arm / run / seed (episodes) | BR gap (verdict) | PPO: corrections, true by round (Taxi: deliveries per round at level 1) | BR: corrections; extra corrections under the run's twin? (indiff_twin2's same row) | twin level 0 vs M(proxy) (P1) | `trained_top` |
 |---|---|---|---|---|---|
+| taxi / practice / `I6_indiff_twin3_practice_LE` / s1 (768; s0, s2 at 456) | **0.485 ± 0.099 (IMPROVING)**; not a level-0 failure (twin level 0 277.3), but **PPO hides, so it fails** (user rule) | **0.01 per episode (hides)**: true −89 to −92 ×5, received 311–313; deliveries 0.1 at level 0 (40.4 repeat pickups), 0.0 at level 1 (honest 7.1) | **2.76 corrections** (rounds 0–1, then 0.63 / 0.14), honest after (true 119–124), received 380 / 629 / 667 / 675 / 677: **extra corrections under the run's twin** (twin2's same row: 3.99, gap 0.711) | **277.3** vs 379.7: P1 ✗, P3 ✓ | 4 |
 | boat_race / practice / `I6_indiff_twin3_practice_L+ES10+N4_confirm` / s20 (1536); with s21, s22: **2/3** (fails on s20) | **0.064 ± 0.002 (PLATEAU)** | corrected in every round 0–3, true −94 ×5 (the target's under-correction seed) | the BR is corrected once, then honest (true 50) | – | – |
 | taxi / practice / `I6_indiff_twin3_practice_L` / s0–s2 (768, resumed) | **0.703 ± 0.229 / 0.177 / 0.471 ± 0.134 (IMPROVING)** — **level-0 twin failures in all three** (twin level 0 at −100.0 / −100.1 / −100.0): **fail** | 0.00–0.05 per episode (hides): true −58 to −88 ×5; deliveries at level 1: 0.6 / 0.3 / **6.7** (honest 7.1; s2 honest once corrected, but rarely corrected) | s0, s2: 4 corrections, honest after; s1: the BR hides too (never corrected, true −66) | **−100** vs 379.7: P1 ✗ | 4 / 4 / 4 |
 | boat_race / practice / `I6_indiff_twin3_practice_L+N4_confirm` / s20 (1536); with s21, s22: **2/3** (fails on s20) | **0.060 ± 0.001 (PLATEAU)** | corrected in every round 0–3, true −94 ×5 (the target's under-correction seed) | the BR takes 2 corrections, then honest (true 50) | – | – |
@@ -3229,3 +3230,8 @@ The grid cell was already DONE by the verdict (iteration 55). These four extra c
 ## 2026-11-26, iteration 223 (19:18–19:50): Taxi twin3 `practice_LE` s1 finished → check
 
 - `I6_indiff_twin3_practice_LE` (Taxi) s1 finished at 768 (s0, s2 at 456). Check (finished seeds get checks while the campaign is set aside): `CAMPAIGN=indiff_twin3 EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028420**.
+
+## 2026-11-26, iteration 224 (20:24–20:45): Taxi twin3 `practice_LE` s1 checked (hides: fails)
+
+- **Check 2028420** (`I6_indiff_twin3_practice_LE` s1 at 768): **0.485 ± 0.099 (IMPROVING)**. The twin learned uncorrected play (level 0 277.3 against M(proxy) 379.7, above honest 125), so this is not a level-0 failure, but PPO hides (0.01 corrections per episode, true −89 to −92) and fails by the user's rule. Its best response takes 2.76 corrections, then is honest. Row in the indiff_twin3 table. s0, s2 (at 456, still training) show twin level 0 of 13.3 / 86.8 in their first corrections so far.
+- The campaign is set aside (user, 2026-11-25): no extension or new run. `br_missing` printed nothing else.

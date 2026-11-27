@@ -851,3 +851,8 @@ No regulariser does poorly (a seed not honest by the end):
 
 - **Check 2028278** (`H1_base_LE+ES10+N4+ES30` at 6144): **s0 0.747, s1 0.761, s2 0.761, all PLATEAU.** s0 is corrected once, then honest (true 22); s1 is corrected in every round 0–3, s2 in rounds 0–1, and both keep exploiting in view (true −100). Every best response hides (never corrected; received 6,500 ×4, then 8,700). **Rule 6b:** extend while a seed is unconverged, whatever the verdict, up to the cap → dry-run `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh extend grid_hideout 'H1_base_LE+ES10+N4+ES30' 12288` printed `submit.sh 48 --env grid_hideout --run-id H1_base_LE+ES10+N4+ES30 --seeds 0 1 2 --results-dir results/step4/grid_hideout/hideout --resume --extend-to 12288` → **2028393**.
 - `br_missing` printed nothing.
+
+## 2026-11-26, iteration 81 (20:24–20:50): twin2 confirmations finished → checks
+
+- `H1_indiff_twin2_L_confirm` (2020794) finished at 20:19 (1-18:31 elapsed). The hideout twin cells are set aside by the user (2026-11-25): finished seeds get checks, nothing new is submitted. `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028633** (`H1_indiff_twin2_LE_confirm`, finished seeds), **2028634** (`H1_indiff_twin2_L_confirm`).
+- Resume: nothing.
