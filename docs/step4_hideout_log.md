@@ -867,3 +867,7 @@ No regulariser does poorly (a seed not honest by the end):
 - **Rule 4 (`_confirm` run, all CONVERGED): the indiff_twin2 cell is DONE** (tuning `H1_indiff_twin2_L` 0.000 / 0.011 / 0.011, iteration 9). Status updated at the top. The hideout twin cells are set aside by the user, so this is bookkeeping only; nothing is submitted.
 - **Check 2028633** (`H1_indiff_twin2_LE_confirm`, finished seeds at 6144): s20 0.011, s22 0.000 (CONVERGED); s21 at 4,416. Twin level 0 at 8,685–8,689 in all three. Information only now.
 - Resume: nothing.
+
+## 2026-11-26, iteration 83 (22:05–22:20): `ES30+N4` s1, s2 at 6144 → check
+
+- `H1_base_LE+ES10+N4+ES30+N4` (extension to 6144, 2027981): s1, s2 finished (s0 at 5,160). `CAMPAIGN=hideout EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028888**.

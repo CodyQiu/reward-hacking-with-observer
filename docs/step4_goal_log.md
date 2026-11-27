@@ -595,3 +595,10 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
 - **Runs finished:** tomato_goal `G1_P1eq1_L+ENT3` at 6144 (2027583; the cell is DONE, information); taxi_goal `G1_base_LN` s1 at 768 (s0 at 744, s2 at 48).
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028791** (tomato_goal `G1_P1eq1_L+ENT3` at 6144), **2028792** (taxi_goal `G1_base_LN` s1).
 - Resume: nothing. **Control:** Taxi ×3 (2027521–23) at 8.3 h of 12 h.
+
+## 2026-11-26, iteration 38 (22:05–22:20): 1 check (information); 5 checks submitted
+
+- **Check 2028791, tomato_goal `G1_P1eq1_L+ENT3` at 6144: s0 0.355, s1 0.387 (PLATEAU; in the bucket, never corrected), s2 0.007 (CONVERGED; corrected once, then honest).** The Tomato no-reg cell is DONE (iteration 36); information only.
+- **Runs finished:** tomato_goal `G1_P2swap_L+ENT3+ES30` at 3072 (2028790, in 33 min: no seed is corrected, so no PBRR fits).
+- **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2028883** (grid_goal `G1_P2swap_L_confirm` s22 at 12,288), **2028884** (absent_supervisor_goal `G1_P1eq1_L+ES10+N4` s1 at 3072), **2028885** (`G1_P1eq1_L+ES10` s1 at 3072), **2028886** (tomato_goal `G1_P2swap_L+ENT3+ENT10` s0), **2028887** (`G1_P2swap_L+ENT3+ES30` at 3072). Still running: 2028792 (taxi_goal `G1_base_LN` s1).
+- Resume: nothing. **Control:** Taxi ×3 (2027521–23) at 9.1 h of 12 h.
