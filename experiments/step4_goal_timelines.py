@@ -11,7 +11,8 @@ zooms of 8 episodes at the start, the middle and the end of training. Mean over 
     .venv/bin/python experiments/step4_goal_timelines.py [--envs grid_goal ...] [--variants base P1eq1 P2swap]
     .venv/bin/python experiments/step4_goal_timelines.py --run results/step4/<env>/<campaign>/<run_id>   (one run)
 
-Writes figures/step4_goal_<env>_<variant>_timeline.png and a copy in results/step4/goal_figures/ (committed).
+Writes figures/step4_goal_<env>_<variant>_timeline.png (with --run: step4_goal_<env>_<run_id>_timeline.png) and a
+copy in results/step4/goal_figures/ (committed).
 """
 
 import argparse
@@ -86,7 +87,13 @@ def reference_lines(env):
             (a1["hide_proxy"], "best uncorrected round (exploit, then hidden)")]
 
 
-def draw(run, env, variant, gap=None):
+def figure_name(env, variant, run=None):
+    """The figure's file name: one per cell by default; with ``run`` (``--run`` mode) the run id, so two runs of one
+    cell (e.g. ``G1_stack_P2swap_LN`` and ``G1_stack_P2swap_nohide_LN``) never overwrite each other's figure."""
+    return f"step4_goal_{env}_{os.path.basename(os.path.normpath(run)) if run else variant}_timeline.png"
+
+
+def draw(run, env, variant, gap=None, by_run=False):
     seeds = seed_dirs(run)
     logs = [np.load(os.path.join(s, "logs.npz")) for s in seeds]
     with open(os.path.join(seeds[0], "config.json")) as fh:
@@ -103,7 +110,7 @@ def draw(run, env, variant, gap=None):
     windows = [(0, w, "start of training"), (max(w, n_ep // 2 - w // 2), w, "middle of training"),
                (n_ep - w, w, "end of training")]
     names = [os.path.basename(s)[4:] for s in seeds]
-    fname = f"step4_goal_{env}_{variant}_timeline.png"
+    fname = figure_name(env, variant, run if by_run else None)
     gap_txt = "" if gap is None else f"; mean best-response gap {gap:.3f}"
     path = plot_timeline_split(
         proto, rec, tru, caught, windows, fname,
@@ -133,7 +140,7 @@ def main():
         run = os.path.abspath(args.run)
         env = os.path.basename(os.path.dirname(os.path.dirname(run)))
         variant = os.path.basename(run).split("_")[1] if "_" in os.path.basename(run) else "run"
-        draw(run, env, variant, mean_gap(run))
+        draw(run, env, variant, mean_gap(run), by_run=True)
         return
     for env in args.envs:
         for v in args.variants:

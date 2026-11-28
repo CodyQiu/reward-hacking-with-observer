@@ -1737,5 +1737,16 @@ def test_stacked_swap_target_keeps_every_raise_on_the_goal_grid():
     assert [round(b["true"]) for b in best[1:]] == [22] * (len(best) - 1), [b["true"] for b in best]
     assert out["game"]["g"]["stack"] and out["game"]["g"]["stack_up"]          # (game_key writes them as 1.0)
 
+def test_goal_timeline_names_one_figure_per_run():
+    """--run mode names the figure by the run id: the hidden and no-hidden-state runs of one cell share the run id's
+    second token ("stack"), and used to write the same file. The per-cell name is unchanged."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "experiments"))
+    from step4_goal_timelines import figure_name
+    a = figure_name("tomato_goal", "stack", "results/step4/tomato_goal/goal/G1_stack_P2swap_LN")
+    b = figure_name("tomato_goal", "stack", "results/step4/tomato_goal/goal/G1_stack_P2swap_nohide_LN/")
+    assert a != b, (a, b)
+    assert a == "step4_goal_tomato_goal_G1_stack_P2swap_LN_timeline.png", a
+    assert figure_name("tomato_goal", "P2swap") == "step4_goal_tomato_goal_P2swap_timeline.png"
+
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")
