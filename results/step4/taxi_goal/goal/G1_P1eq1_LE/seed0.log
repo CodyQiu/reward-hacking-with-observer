@@ -7,3 +7,7 @@
   [taxi_goal s0]  1,344,000  win0-3 0.33  off 0.26  corr/ep 0.28  winF 0.32  proxy0-3    -23.2  rounds 407  (79106s)
   [taxi_goal s0]  1,536,000  win0-3 0.24  off 0.29  corr/ep 0.42  winF 0.19  proxy0-3     -9.7  rounds 484  (93414s)
   [taxi_goal s0]  1,728,000  win0-3 0.26  off 0.29  corr/ep 0.51  winF 0.17  proxy0-3     -2.8  rounds 568  (109774s)
+  [taxi_goal s0]  1,920,000  win0-3 0.34  off 0.27  corr/ep 0.40  winF 0.22  proxy0-3    -21.7  rounds 635  (122695s)
+  [taxi_goal s0]  2,112,000  win0-3 0.30  off 0.27  corr/ep 0.44  winF 0.22  proxy0-3    -14.4  rounds 709  (136809s)
+  [taxi_goal s0]  2,304,000  win0-3 0.38  off 0.28  corr/ep 0.46  winF 0.27  proxy0-3     -3.3  rounds 785  (150024s)
+  [taxi_goal s0]  2,496,000  win0-3 0.41  off 0.28  corr/ep 0.40  winF 0.34  proxy0-3     -8.7  rounds 856  (162157s)

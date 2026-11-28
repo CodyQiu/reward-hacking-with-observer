@@ -3,3 +3,6 @@
   [taxi_goal s2]    576,000  win0-3 0.22  off 0.49  corr/ep 0.87  winF 0.20  proxy0-3    109.1  rounds 251  (44936s)
   [taxi_goal s2]    768,000  win0-3 0.27  off 0.52  corr/ep 0.99  winF 0.27  proxy0-3    135.5  rounds 395  (69794s)
   [taxi_goal s2]    960,000  win0-3 0.30  off 0.54  corr/ep 1.18  winF 0.30  proxy0-3    148.7  rounds 581  (102845s)
+  [taxi_goal s2]  1,152,000  win0-3 0.27  off 0.55  corr/ep 1.19  winF 0.26  proxy0-3    153.2  rounds 765  (136094s)
+  [taxi_goal s2]  1,344,000  win0-3 0.42  off 0.53  corr/ep 0.95  winF 0.42  proxy0-3    146.0  rounds 928  (153851s)
+  [taxi_goal s2]  1,536,000  win0-3 0.38  off 0.54  corr/ep 0.89  winF 0.39  proxy0-3    149.5  rounds 1070  (170455s)
