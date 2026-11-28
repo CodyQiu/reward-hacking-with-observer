@@ -1356,3 +1356,10 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
   - **Not converged:** base_stack_nohide s21, s22 (flag).
 - **Bottom line** at the top of "Flags for the user": the stacked swap reaches the goal in grid 12/12, Tomato 12/12 and AS 8/12; in Boat Race 0/12 and Taxi 0/12. Never hides.
 - **PPO:** 7 runs training (4.5 h in); Tomato hidden-state run finished and PLATEAU (iteration 50).
+
+## 2026-11-28, iteration 52 (07:24–07:45): grid stacked-swap PPO without the hidden state finished; corrected in round 0, then honest
+
+- **Ended:** grid_goal `G1_stack_P2swap_nohide_LN` (2033610, 4 h 58 min), 1536 episodes, all three seeds.
+- **Best-response check:** dry-run `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br grid_goal G1_stack_P2swap_nohide_LN` printed one `run_cmd.sh 2 4` line → submitted **2034186**.
+- **Timeline** (`results/step4/goal_figures/step4_goal_grid_goal_G1_stack_P2swap_nohide_LN_timeline.png`): from the middle of training on, every episode is corrected in round 0 (true −100), then honest in rounds 1–4 (true about 20, received 40,000–55,000 per round), like the target (`P2swap_stack_nohide`: corrected in round 0, then honest, 6/6).
+- **Running:** grid hidden-state run (s0 done; s1, s2 at 456 / 432 of 1536), AS ×2 (768–888 of 3072), Tomato no-hidden (480–720 of 1536), Boat Race ×2 (456–936 of 1536). All about 5 h into 48 h.
