@@ -12,6 +12,7 @@ This log is append-only below the three summary sections.
 
 ## Status
 
+- **Boat Race with 10 rounds** (`docs/step4_goal.md`, "Boat Race with 10 rounds", from the user 2026-11-27): 6 target jobs submitted 2026-11-27 16:00 (iteration 44), **2031906–2031911** (base, P1eq1, P2swap × hidden state on `<variant>_k10` / off `<variant>_nohide_k10`; `protocol.n_sub=10`). Pending on priority; given priority over new PPO submissions. Rows will go under "Exact predictions", next to the same cell's 5-round target.
 - **Control, no hidden state** (`docs/step4_goal.md`, "Control: no hidden state", from the user 2026-11-26): 6 target jobs submitted 2026-11-26 13:00 (iteration 27), 2027521–2027526 (Taxi and Boat Race × base, P1eq1, P2swap; targets `<variant>_nohide`). Boat Race ×3 in (iteration 28; rows under "Exact predictions"). Taxi swap and no-reg in (iterations 39–40); Taxi base 5 of 6 seeds in (iteration 41; s22 cut by the job's 12 h limit, flag). **Comparison with the predictions at the top of "Flags for the user".**
 - **Targets:** 15 jobs submitted 2026-11-25 (iteration 0), 2023183–2023197. **All 15 in** (2026-11-26 05:30; iterations 1–19). Comparison with the predictions at the top of "Flags for the user".
 - **PPO wave 1:** 45 runs submitted 2026-11-25 (iteration 0), 2023198–2023242.
@@ -707,3 +708,9 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
 - **Runs finished:** tomato_goal `G1_P2swap_L+ENT3+ES30+N4` at 1536 (2027684).
 - **Checks submitted:** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing submit` → **2029831** (tomato_goal `G1_P2swap_L+ENT3+ES30+N4` s1, s2).
 - No goal submission was pending after these, so the twin3 confirmation was submitted next (`docs/step4_indiff_log.md`, iteration 226). Resume: nothing. 68 jobs in all.
+
+## 2026-11-27, iteration 44 (15:50–16:10): Boat Race with 10 rounds, 6 target jobs submitted
+
+- **New request from the user (2026-11-27):** `git pull --no-rebase --no-edit --ff` brought 360d89ef (`docs/step4_goal.md`, "Boat Race with 10 rounds", with its predictions; `step4_optimal.sh br10`).
+- **Dry-run** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br10` printed 6 `run_cmd.sh 6 4` lines: `experiments/step4_targets.py --env boat_race_goal --name <variant>_k10 | <variant>_nohide_k10 --seeds 0 1 2 20 21 22 --draws 6 --set <variant words> g.epochs=1000 protocol.n_sub=10 task.hidden=True|False` (P1eq1: `g.use_regularization=False`; P2swap: `g.l_minus_on=dispreferred`). 6 h limit; the 5-round Boat Race targets took 10–23 min.
+- **Submitted** (`... br10 submit`): **2031906** (base_k10), **2031907** (base_nohide_k10), **2031908** (P1eq1_k10), **2031909** (P1eq1_nohide_k10), **2031910** (P2swap_k10), **2031911** (P2swap_nohide_k10). All pending on priority. No new PPO submission goes ahead of them. 22 jobs in all.
