@@ -1117,3 +1117,7 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
   - The stacked swap never hides, but is corrected every round and exploits at every level in 12/12. Without the hidden state its true return is lower than refit's in 5/6, because it no longer complies to protect its level.
   - Stacked standard PBRR's fines make honest play the best round at level 4 in 3/6 (hidden) and 4/6 (no hidden) seeds, where refit never did. The agent does not get there.
 - **Fixed points not converged:** Boat Race base_stack s1, s2, s22 and base_stack_nohide s2, s22 (flag). Not rerun.
+- **PPO progress (04:15):**
+  - tomato_goal `G1_stack_P2swap_LN`: s0 finished its 1536 episodes in about 1.5 h; s1 at 1080, s2 at 1008.
+  - The other seven runs are at 96–792 episodes.
+- **Best-response checks:** the dry-run `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh br_missing` lists 35 checks. One is for the stacked runs (`br_tomato_goal_G1_stack_P2swap_LN`). The other 34 are for older G1 runs of this campaign, not part of the stacked task, so I am not submitting them (flag for the user). The stacked runs' checks go through the per-run `br <env> <run_id>` command once all three seeds of a run have finished.
