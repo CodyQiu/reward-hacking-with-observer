@@ -21,6 +21,12 @@ This log is append-only below the three summary sections.
 
 ## Flags for the user
 
+- **NEW (2026-11-28 06:00): Tomato stacked-swap PPO hides, PLATEAU 3/3; rules 5–6b (new configs) not started without you.**
+  - **The run:** `G1_stack_P2swap_LN` (hidden state on, 1536 episodes). In all three seeds it ends every round in the bucket and is never corrected (true 46 per round).
+  - **The best response is corrected in round 0, then honest** (true 420–425), as the exact target (`P2swap_stack`, 6/6).
+  - **Check 2033983:** gaps 0.175 / 0.206 / 0.252, all PLATEAU (`experiments/step4_convergence.py`), so rule 4 says the config is finished and is not extended.
+  - **What the rules say next:** rules 5–6b would start new configs for this cell (wave 2: one factor at a time; then exploration). This task named only the LN runs, so I have started nothing. Say if you want waves 2 / 6b for the stacked cells.
+  - **Same failure as unstacked:** the Tomato swap PPO plateaued in the bucket at the same gaps (0.175 / 0.205 / 0.291). Stacking makes hiding never strictly better in the exact model, but PPO still finds and keeps it.
 - **NEW (2026-11-27 20:00): BOAT RACE WITH 10 ROUNDS IS IN (36 of 36 targets; jobs 2031906–2031911, 28–45 min each). Comparison with the pre-registered predictions** (`docs/step4_goal.md`, "Boat Race with 10 rounds"; tables under "Exact predictions"):
   - **Your question ("after enough corrections honest play should be ideal ... if we increased episodes to 10+"): no, not in Boat Race, up to 9 corrections, for any of the three variants on the path the agent takes.** Honest play is the best round in **2 of 360** (variant × hidden × seed × level) cells. Both are no-reg with the hidden state, at levels the agent never reaches (s20 level 9, s21 level 8; those targets stop at level 1). Standard PBRR without the hidden state does reach level 9, and its best round there is still an exploit. Of the other targets, the deepest is no-reg without the hidden state, s1, at level 7.
   - **Standard PBRR, no hidden state: the prediction is wrong.** Predicted: one checkpoint repaired per correction, so honest play may be the best round after about 4–5 corrections.
@@ -1218,3 +1224,9 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
   - **Fix:** `--run` now names it `step4_goal_<env>_<run_id>_timeline.png` (`figure_name`); the per-cell mode is unchanged.
   - **Test:** `test_goal_timeline_names_one_figure_per_run`. `tests/test_step4.py` 59/59, `tests/test_step3.py` 13/13.
   - The one misnamed figure (drawn minutes earlier, never committed) was deleted and redrawn under the new name.
+
+## 2026-11-28, iteration 50 (05:48–06:10): Tomato stacked-swap PPO checked: PLATEAU 3/3 (flag)
+
+- **Ended:** br 2033983 (tomato_goal `G1_stack_P2swap_LN`, 27 min). Gaps 0.175 (s.e. 0.013) / 0.206 (0.006) / 0.252 (0.006); PPO never exploits in view, i.e. hidden in the bucket every round (true 46). The best response is corrected in round 0, then honest (true 420–425).
+- **Verdict:** `.venv/bin/python experiments/step4_convergence.py results/step4/tomato_goal/goal/G1_stack_P2swap_LN`: PLATEAU in all three seeds. Under rule 4 the config is finished, not extended. Rules 5–6b not started (flag at the top).
+- **Running:** taxi base_stack_nohide s21 and s22 (3 h 10 min of their 4 h limit); 7 PPO runs (3.5 h in).
