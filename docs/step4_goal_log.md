@@ -12,6 +12,7 @@ This log is append-only below the three summary sections.
 
 ## Status
 
+- **Stacked corrections** (`docs/step4_goal.md`, "Stacked corrections", from the user 2026-11-28; commit 90d2556d): 68 jobs submitted 2026-11-28 (iteration 46), **2033603–2033671**: 60 target jobs (`<variant>_stack`, `<variant>_stack_nohide` for P2swap stacked + floored, base stacked, P1eq1 stacked; 5 envs, seeds 0–2 and 20–22, 6 draws; Taxi one job per seed) and 8 PPO runs (`G1_stack_P2swap_LN`, `G1_stack_P2swap_nohide_LN` in grid, AS, Tomato, Boat Race; seeds 0–2). First in priority. Table under "Exact predictions", "Stacked corrections".
 - **Boat Race with 10 rounds** (`docs/step4_goal.md`, "Boat Race with 10 rounds", from the user 2026-11-27): 6 target jobs submitted 2026-11-27 16:00 (iteration 44), **2031906–2031911** (base, P1eq1, P2swap × hidden state on `<variant>_k10` / off `<variant>_nohide_k10`; `protocol.n_sub=10`). **All 36 targets in** (2026-11-27 19:55, iteration 45; every job COMPLETED in 28–45 min). Rows under "Exact predictions"; **comparison with the predictions at the top of "Flags for the user".**
 - **Control, no hidden state** (`docs/step4_goal.md`, "Control: no hidden state", from the user 2026-11-26): 6 target jobs submitted 2026-11-26 13:00 (iteration 27), 2027521–2027526 (Taxi and Boat Race × base, P1eq1, P2swap; targets `<variant>_nohide`). Boat Race ×3 in (iteration 28; rows under "Exact predictions"). Taxi swap and no-reg in (iterations 39–40); Taxi base 5 of 6 seeds in (iteration 41; s22 cut by the job's 12 h limit, flag). **Comparison with the predictions at the top of "Flags for the user".**
 - **Targets:** 15 jobs submitted 2026-11-25 (iteration 0), 2023183–2023197. **All 15 in** (2026-11-26 05:30; iterations 1–19). Comparison with the predictions at the top of "Flags for the user".
@@ -818,3 +819,20 @@ How "ends hidden" is read: the targets store the flag rate per round (`window_by
 - **Recorded:** per variant × hidden × seed under "Exact predictions" (corrections by round, true by round, `best_round_by_level` at levels 0–9, next to the 5-round target). **Comparison with the predictions at the top of "Flags for the user".**
 - **Fixed points not converged:** base_k10 s22, P1eq1_nohide_k10 s2 (flag). Not rerun.
 - Nothing submitted. Tables made with a scratch script that reads `results/step4/boat_race_goal/targets/*_k10/seed*.json`.
+
+## 2026-11-28, iteration 46: stacked corrections, 68 jobs submitted
+
+- **New request from the user (2026-11-28):** `git pull --no-rebase --no-edit --ff` brought 90d2556d (`g.stack`, `g.stack_up`, `protocol.StackCorrection`; `docs/step4_goal.md`, "Stacked corrections", with its predictions; `step4_optimal.sh stack`).
+- **Tests:** `.venv/bin/python tests/test_step4.py`: 58 tests, 0 failed. `.venv/bin/python tests/test_step3.py`: 13 tests, 0 failed.
+- **Dry-run** `CAMPAIGN=goal EXCLUDE=barley-04,wheat-06 bash scripts/farmshare/step4_optimal.sh stack` printed 68 lines.
+  - 24 non-Taxi target jobs: `run_cmd.sh 4 4` (grid, AS, Boat Race) or `8 4` (Tomato), `experiments/step4_targets.py --env <env> --name <variant>_stack[_nohide] --seeds 0 1 2 20 21 22 --draws 6`.
+  - 36 Taxi per-seed jobs: `run_cmd.sh 4 4`, `--seeds <s>`.
+  - 8 PPO runs: `submit.sh 48`, `--results-dir results/step4/<env>/goal`.
+  - Variant words: swap `g.l_minus_on=dispreferred g.stack=True g.stack_up=True`; base `g.stack=True`; no-reg `g.use_regularization=False g.stack=True`. `g.epochs=1000` in every env but the grid (as the unstacked targets). `task.hidden=True|False`.
+  - PPO: each env's G1 base config + LN (`n_envs=64 ppo.batch_size=1600`), `anneal.last=0.25 anneal.floor=0.1`. grid: 1536 episodes. AS: `ppo.ent_coef=0.1`, 3072 episodes. Tomato and Boat Race: `ppo.ent_coef=0.03`, 1536 episodes.
+- **Submitted** (`... stack submit`), all pending on priority at submission. I had 3 jobs running, so slots were not short and everything went in one batch. 71 jobs in all, above this log's 60-job budget, because the user asked for all 68 at once.
+  - grid_goal: 2033603 (grid_goal_P2swap_stack), 2033604 (grid_goal_base_stack), 2033605 (grid_goal_P1eq1_stack), 2033606 (grid_goal:G1_stack_P2swap_LN), 2033607 (grid_goal_P2swap_stack_nohide), 2033608 (grid_goal_base_stack_nohide), 2033609 (grid_goal_P1eq1_stack_nohide), 2033610 (grid_goal:G1_stack_P2swap_nohide_LN).
+  - absent_supervisor_goal: 2033612 (absent_supervisor_goal_P2swap_stack), 2033613 (absent_supervisor_goal_base_stack), 2033614 (absent_supervisor_goal_P1eq1_stack), 2033615 (absent_supervisor_goal:G1_stack_P2swap_LN), 2033616 (absent_supervisor_goal_P2swap_stack_nohide), 2033617 (absent_supervisor_goal_base_stack_nohide), 2033618 (absent_supervisor_goal_P1eq1_stack_nohide), 2033619 (absent_supervisor_goal:G1_stack_P2swap_nohide_LN).
+  - tomato_goal: 2033620 (tomato_goal_P2swap_stack), 2033621 (tomato_goal_base_stack), 2033622 (tomato_goal_P1eq1_stack), 2033623 (tomato_goal:G1_stack_P2swap_LN), 2033624 (tomato_goal_P2swap_stack_nohide), 2033625 (tomato_goal_base_stack_nohide), 2033626 (tomato_goal_P1eq1_stack_nohide), 2033627 (tomato_goal:G1_stack_P2swap_nohide_LN).
+  - taxi_goal: 2033628–2033663 (36 per-seed jobs, in the order P2swap_stack, base_stack, P1eq1_stack, P2swap_stack_nohide, base_stack_nohide, P1eq1_stack_nohide × s0, s1, s2, s20, s21, s22).
+  - boat_race_goal: 2033664 (boat_race_goal_P2swap_stack), 2033665 (boat_race_goal_base_stack), 2033666 (boat_race_goal_P1eq1_stack), 2033667 (boat_race_goal:G1_stack_P2swap_LN), 2033668 (boat_race_goal_P2swap_stack_nohide), 2033669 (boat_race_goal_base_stack_nohide), 2033670 (boat_race_goal_P1eq1_stack_nohide), 2033671 (boat_race_goal:G1_stack_P2swap_nohide_LN).
