@@ -421,6 +421,10 @@ Do not use goal reach as the headline metric. Do not plot an average across roun
   - **Build:** `src/step3/goal.py` (`with_goal`: a per-round counter in the state, the goal and hidden state as final-state predicates, flagged on the last transition with window = 1); `Protocol.learn_exempt` (the bar, set by the overseer, applied in training; the exact targets record per level whether it could change the optimum).
   - **Envs:** `grid_goal` (goal within 30 steps; hideout (8,12)), `absent_supervisor_goal` (11 laps counted via a safe-route checkpoint; blind corner added), `tomato_goal` (≥ 2 watered at the end; the bucket is the hidden state), `taxi_goal` (≥ 6 deliveries; depot B hidden), `boat_race_goal` (24 in-order entries; all checkpoints re-arm; the bottom one hidden). Thresholds: the strictest goal honest play meets in ≥ 99.5% of rounds.
   - **Pre-registered risk:** no-reg and swap raise unseen transitions, which can lift the hidden exploit, so their optimum may be "corrected, then exploit in hiding".
+  - **Stacked corrections (2026-11-28; `docs/step4_goal.md`, "Stacked corrections").** Every earlier Step 2–4 run refit g from scratch at each correction, and the new g replaced the old one. The user and the mentor had meant corrections to stack within an episode.
+    - **`g.stack=True`:** correction c is fitted on top of the one in force (return = proxy + g_{c−1} + Δ_c in the BT fit) and added to it (`protocol.StackCorrection`).
+    - **`g.stack_up=True`:** floors each increment at 0, so with the swap the reward only goes up within an episode. In the exact model, being corrected then never costs, so hiding never pays.
+    - **Runs:** `CAMPAIGN=goal ... stack`: targets for 5 envs × hidden on/off × {swap stacked + floored, standard stacked, no-reg stacked}; stacked swap PPO at LN in 4 envs (no Taxi PPO: too slow when corrected).
 
 ## 5. Legacy (`legacy/`): lessons that still apply
 

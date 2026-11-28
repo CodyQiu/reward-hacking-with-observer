@@ -116,6 +116,13 @@ class GConfig:
     # after correction k is min(0, g_1, ..., g_k) -- no transition is ever raised, and a later correction
     # never relaxes an earlier fine (refits from scratch otherwise can, and the agent can trigger one on purpose)
     fine_only: bool = False
+    # Stacked corrections (2026-11-28; docs/step4_goal.md, "Stacked corrections"; applied by src/step3): each new
+    # correction is fitted ON TOP of the one in force (held fixed inside the fit: a trajectory's return is proxy + the
+    # previous correction + the new increment) and added to it, instead of a refit from scratch that replaces it.
+    # The preference data still accumulate over the episode and everything resets at the episode's end. stack_up
+    # floors each increment at 0, so the reward in force can only go up within an episode.
+    stack: bool = False
+    stack_up: bool = False
     # Step 4 goal fixes (docs/step4_goal_fixes.md; opt-in, the defaults are today's fit exactly). Used by
     # src/step3/pbrr.fit_correction_rows on tabular tasks only.
     # reg_rows: which rows the regulariser covers. "traj" (default): the paper's trajectory-level L+ / L- as

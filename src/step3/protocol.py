@@ -47,7 +47,8 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
 from ..pbrr_core import mlp_apply
 
-__all__ = ["Protocol", "obs_dim", "encode_obs", "AuditedVecEnv", "g_apply", "MinCorrection", "EnsembleCorrection"]
+__all__ = ["Protocol", "obs_dim", "encode_obs", "AuditedVecEnv", "g_apply", "MinCorrection", "EnsembleCorrection",
+           "StackCorrection"]
 
 
 @dataclass(frozen=True)
@@ -133,6 +134,24 @@ class MinCorrection:
         return out
 
 
+class StackCorrection:
+    """The correction in force under GConfig.stack: the previous correction plus an increment fitted on top of it
+    (floored at 0 under GConfig.stack_up, so the reward only goes up). ``prev`` is None (the first correction), a
+    network's parameters, or another correction object."""
+
+    def __init__(self, prev, delta, up=False):
+        self.prev, self.delta, self.up = prev, delta, bool(up)
+
+    def apply(self, X):
+        d = np.asarray(g_apply(self.delta, X), float)
+        if self.up:
+            d = np.maximum(d, 0.0)
+        if self.prev is None:
+            return d
+        base = self.prev.apply(X) if hasattr(self.prev, "apply") else np.asarray(g_apply(self.prev, X), float)
+        return np.asarray(base, float) + d
+
+
 class EnsembleCorrection:
     """The correction in force under GConfig.offset_rule = "exact_mean" (docs/step4_indiff.md, "The average
     correction"): the mean of n networks fitted independently on one catch (each on its own rollouts, labels
@@ -216,7 +235,7 @@ class AuditedVecEnv(VecEnv):
         for p, idx in groups.values():
             X = np.zeros((n, feat.shape[1]), np.float32)
             X[:len(idx)] = feat[idx]
-            g = (p.apply(jnp.asarray(X)) if isinstance(p, (MinCorrection, EnsembleCorrection))
+            g = (p.apply(jnp.asarray(X)) if isinstance(p, (MinCorrection, EnsembleCorrection, StackCorrection))
                  else g_apply(p, jnp.asarray(X)))
             corr[idx] = np.asarray(g, float)[:len(idx)]
         return corr

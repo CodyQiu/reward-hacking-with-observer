@@ -81,7 +81,7 @@ def pool_level(tb, proto, task, ref_trajs, caught, finals, rb_old, rb_new, p_old
     ib, ia = int(np.argmax(vb)), int(np.argmax(va))
     return {"m_hat_before": float(vb[ib]), "m_hat_after": float(va[ia]), "best_before": names[ib],
             "best_after": names[ia]}
-from src.step3.protocol import EnsembleCorrection, MinCorrection, Protocol  # noqa: E402
+from src.step3.protocol import EnsembleCorrection, MinCorrection, Protocol, StackCorrection  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
 from src.step3.train import ROOT, resolve_config  # noqa: E402
@@ -91,7 +91,8 @@ KEY_FIELDS = ("env", "task", "protocol", "pbrr", "g")      # what defines the ga
 
 
 OFF = {"protocol": {"update_bonus": 0.0, "learn_exempt": False},
-       "g": {"n_ensemble": 1, "reg_rows": "traj", "unseen": "none", "unseen_post": "none"}}   # fields added later, at their "off" value
+       "g": {"n_ensemble": 1, "reg_rows": "traj", "unseen": "none", "unseen_post": "none",
+             "stack": False, "stack_up": False}}   # fields added later, at their "off" value
 
 
 def ensemble_draw(task, proto, pb, gcfg, ref_trajs, fn, rng, k, c, D_members, corr, d, G_in, m_prev, lvl_prev):
@@ -230,6 +231,7 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
         rprev = [(tb.prob * tb.proxy).sum(axis=1)] * n_draws if gcfg.offset else None
         corr = [None] * n_draws                               # each draw's correction in force
         G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
+        G_st = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.stack else None   # stacked corrections
         exact = gcfg.offset and gcfg.offset_rule == "exact"   # exact indifference (docs/step4_indiff.md)
         pool = gcfg.offset and gcfg.offset_rule == "pool"     # ... with M estimated from a pool of plays
         ens = gcfg.offset and gcfg.offset_rule == "exact_mean"   # ... priced on the mean of n fits per catch
@@ -271,9 +273,17 @@ def target(cfg, n_draws=6, max_iter=5, eps=0.05, per_draw=True, log=print):
                 agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
                                  t0=k * T, n_corr=c - 1)
                 D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
-                params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)))
+                params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)),
+                                                prev=corr[d] if gcfg.stack else None)
                 corr_old = corr[d]
-                if gcfg.fine_only:                               # fines only, never relaxed (min with the last)
+                if gcfg.stack:                                   # stacked: the increment on top of the correction in force
+                    inc = g_table(params, task)
+                    if gcfg.stack_up:
+                        inc = np.maximum(inc, 0.0)
+                    G_st[d] = (G_st[d] + inc).astype(np.float32)
+                    corr[d] = StackCorrection(corr[d], params, gcfg.stack_up)
+                    Rd = tb.proxy + G_st[d]
+                elif gcfg.fine_only:                               # fines only, never relaxed (min with the last)
                     G_in[d] = np.minimum(G_in[d], g_table(params, task)).astype(np.float32)
                     corr[d] = (corr[d] or MinCorrection(())).then(params)
                     Rd = tb.proxy + G_in[d]

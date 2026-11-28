@@ -42,7 +42,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 
 from ..pbrr_core import GConfig, boltzmann_label, mlp_apply, mlp_init
 from .dp import best_round_value
-from .protocol import EnsembleCorrection, MinCorrection, encode_obs, g_apply
+from .protocol import EnsembleCorrection, MinCorrection, StackCorrection, encode_obs, g_apply
 from .task import exploit_mask
 
 __all__ = ["Rollout", "rollouts", "policy_probs_fn", "fit_correction_rows", "g_on_rows", "rollout_returns",
@@ -188,9 +188,12 @@ def _compiled(cfg):
     return fit
 
 
-def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
+def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0, prev=None):
     """Refit g from scratch on ``pairs`` = [(tau1, tau2, label)] (tau1 from the agent,
-    tau2 from the reference, label 1 = tau2 preferred). Returns (params, info)."""
+    tau2 from the reference, label 1 = tau2 preferred). Returns (params, info).
+
+    ``prev`` (GConfig.stack): the correction in force, held fixed. A trajectory's return in the fit is then
+    proxy + prev + the new network, so the network is the increment on top of ``prev`` (the caller adds it)."""
     if not pairs:
         raise ValueError("no preferences")
     trajs, index = [], {}
@@ -206,6 +209,10 @@ def fit_correction_rows(pairs, task, cfg=GConfig(), seed=0):
     y = np.array([lab for _, _, lab in pairs], float)
     proxy = np.array([t.proxy for t in trajs])
     length = np.array([t.length for t in trajs], float)
+    if prev is not None:                                  # GConfig.stack: fit the increment on top of prev
+        assert not (cfg.fine_only or cfg.offset), "GConfig.stack does not combine with fine_only / offset"
+        g_prev = g_on_rows(prev, X)
+        proxy = proxy + np.bincount(traj, weights=cnt * g_prev[row], minlength=n_tr)
     if cfg.g_floor != "none":
         raise NotImplementedError("g_floor: the protocol applies the raw MLP (protocol.g_apply)")
     n_reg = np.zeros(n_tr)
@@ -409,6 +416,11 @@ def g_on_rows(params, X, chunk=65_536):
     """Evaluate a correction network -- or a MinCorrection, min(0, g_1, ..., g_k), or an EnsembleCorrection
     (offset_rule = "exact_mean") -- on many rows (chunked, padded to fixed shapes)."""
     X = np.asarray(X, np.float32)
+    if isinstance(params, StackCorrection):           # GConfig.stack: the previous correction + the increment
+        d = g_on_rows(params.delta, X, chunk)
+        if params.up:
+            d = np.maximum(d, 0.0)
+        return d if params.prev is None else g_on_rows(params.prev, X, chunk) + d
     if isinstance(params, MinCorrection):
         out = np.zeros(len(X))
         for p in params.params:
@@ -704,8 +716,11 @@ class Overseer(BaseCallback):
                          n_corr=len(history) - 1)
         new = [(a, r, boltzmann_label(a, r, self.rng, self.beta)) for a in agent for r in self.ref_trajs]
         D = D_prev + new
-        params, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)))
+        params, info = fit_correction_rows(D, self.task, self.gcfg, seed=int(self.rng.integers(2 ** 31)),
+                                           prev=old_params if self.gcfg.stack else None)
         self.cache[(episode, history)] = D
+        if self.gcfg.stack:                          # stacked: the increment is added to the correction in force
+            params = StackCorrection(old_params, params, self.gcfg.stack_up)
         new_params = params
         if self.gcfg.fine_only:                      # fines only, never relaxed: min(0, g_1, ..., g_k)
             params = (old_params if old_params is not None else MinCorrection(())).then(params)

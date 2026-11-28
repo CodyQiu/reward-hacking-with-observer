@@ -113,6 +113,45 @@ What a correction is does not change: PBRR fitted on the agent's caught rollouts
   - **Hidden state:** it hides; the hidden copy is never fined.
   - **No hidden state:** its fines repair one checkpoint per correction and create no exploits. So after about 4–5 corrections honest play may become the best round. It is then honest by the end, if the agent accepts those corrections, which cost it. No confident prediction about whether it does.
 
+## Stacked corrections (2026-11-28)
+
+**Why (the user, as stated):** "i assumed we just made corrections stack over sub-episodes, and then it's reset at each episode. that was my understanding, and im sure that's what my mentor intended as well". Then: "im pretty sure he meant the corrections stack...the idea is that if corrections were to stack, then reward would only ever go up across an episode...i thought that's what we've been running all along. but yeah, implement it now for all environments, hidden + unhidden all environments 5 sub-episodes".
+
+**What every earlier run did (Steps 2–4).** Within an episode the preference data accumulate, and at every correction g is refit **from scratch** on all of it. The new g replaces the old one. So corrections did not stack: a later refit can undo an earlier raise. This is the non-monotonicity noted under Step 4 ("refits from scratch are not monotone across corrections"; Boat Race's best round 4,224 → 275).
+
+**The change (`g.stack=True`, opt-in; defaults unchanged).** Correction c is fitted **on top of** the one in force: in the Bradley–Terry fit, a trajectory's return is proxy + g_{c−1} + Δ_c, with g_{c−1} held fixed. The overseer then applies g_c = g_{c−1} + Δ_c (`protocol.StackCorrection`). The data, the labels, the regulariser and its D⁺/D⁻ split are as before; the split now uses the reward in force, proxy + g_{c−1}. Everything still resets at the episode boundary.
+- **`g.stack_up=True` (used with the swap):** each increment is floored at 0 before it is added, so the reward never goes down within an episode, which is the user's "only ever go up". The floor is applied after the fit; the fit itself does not see it. `pbrr_rounds.csv`'s `max_g` / `min_g` are the increment's raw values.
+- **Standard PBRR and no-reg are stacked without the floor:** standard PBRR's increments are fines, which a floor would erase.
+
+**One-draw code check (grid_goal, swap, seed 0, 1 iteration; not a result).** The best round's received value by level:
+- **Refit:** 8,700 → 40,739 (honest) → 8,528 (exploit, true −100) at levels 2–4, because the raise is lost.
+- **Stacked:** 8,700 → 40,739 → 40,739 → 40,739 → 40,739, honest (true 22) at every level.
+- The end state is the same, "corrected in round 0, then never again", because the agent is honest after one correction and never reaches level 2.
+
+**Runs.** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh stack submit`.
+- **Targets:** 5 envs × hidden state on/off × {swap stacked and floored, standard stacked, no-reg stacked}. Named `<variant>_stack` and `<variant>_stack_nohide`; seeds 0–2 and 20–22, 6 draws, 5 rounds. Taxi runs one job per seed.
+- **PPO:** the stacked swap only, at the LN config (the swap's best G1 config in grid, AS, Tomato and Boat Race), seeds 0–2. Runs `G1_stack_P2swap_LN` and `G1_stack_P2swap_nohide_LN`.
+- **No Taxi PPO.** A corrected Taxi seed took 34 h for 72 of 768 episodes in G1, and the stacked swap is expected to be corrected up to 4 times per episode.
+
+**Why hiding should vanish under the stacked swap (a theorem of the exact model, not a prediction).** Under `stack_up` the reward tables are non-decreasing in the correction level, elementwise. By backward induction over rounds, the value at level c + 1 is ≥ the value at level c from every state. So being corrected is never worse than not being corrected, and hiding never pays strictly. Caveat: the learning exemption can still spare a round in PPO.
+
+**Predicted (written 2026-11-28, before any stacked target).**
+- **Stacked swap:**
+  - **Never hides, in any env.** With and without the hidden state the end states match, up to ties.
+  - **Corrected in every round whose best round misses the goal,** so 1–4 corrections per episode.
+  - **Grid and Tomato:** honest after one correction, as before. Stacking only changes levels the agent does not reach.
+  - **Absent Supervisor:** honest by the end in most seeds (≥ 4 of 6). Less confident.
+  - **Boat Race and Taxi:** the open question. Lean: still an exploit after 4 corrections in most seeds, so not honest by the end, with the exploit's true return no worse than under refit.
+    - Each stacked correction patches the exploit found at that level and keeps the earlier patches.
+    - But the raises land on transitions the loops share (checkpoint entries, pickups), which a loop collects more often than an honest lap does.
+  - **No farming once honest is the best round.** Pairs that already agree go to D⁺, so L⁺ holds the increment at 0. In the check above, a further correction raises the best round by under 1. Missing the goal on purpose would cost more than that.
+  - **Received reward grows with every correction** that is still disagreed with.
+- **Stacked standard PBRR:**
+  - **With the hidden state:** hides, as before. Fines that never relax make a correction cost more.
+  - **Without it:** complies in audited rounds where a correction would cost, and exploits in the final round.
+  - **Repair:** whether the stacked fines repair Boat Race and Taxi after 4 corrections (refit could not, even with 9) gets no confident prediction.
+- **Stacked no-reg:** no confident prediction. It raises and fines, so stacking compounds both.
+
 ## Pipeline (`CAMPAIGN=goal`)
 
 - **Exact targets:** `CAMPAIGN=goal bash scripts/farmshare/step4_optimal.sh targets submit`. 15 jobs: 5 envs × base, P1eq1, P2swap, seeds 0–2 and 20–22, 6 draws. Written to `results/step4/<env>/targets/<variant>/`.

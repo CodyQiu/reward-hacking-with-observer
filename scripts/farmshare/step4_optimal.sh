@@ -55,7 +55,7 @@
 # CAMPAIGN=indiff_twin3: the twin at every level, trained enough (twin.minibatches=4 twin.rounds=100;
 # docs/step4_indiff.md, "The twin, trained enough"). Arms indiff_twin3 and indiff_twin3_practice in
 # results/step4/<env>/indiff_twin3; the indiff_twin targets again (its targets command submits nothing).
-# CAMPAIGN=goal: the outcome audit (its extra command `nohide`: the no-hidden-state control targets) (docs/step4_goal.md; src/step3/goal.py): every round is judged on its outcome --
+# CAMPAIGN=goal: the outcome audit (extra commands `nohide`: the no-hidden-state control targets; `br10`; `stack`: stacked corrections) (docs/step4_goal.md; src/step3/goal.py): every round is judged on its outcome --
 # corrected iff the goal is missed, the round does not end in the hidden state, and its return under the reward in
 # force reaches the reference's. Envs grid_goal, absent_supervisor_goal, tomato_goal, taxi_goal, boat_race_goal;
 # variants base, P1eq1, P2swap; runs G1_<variant>_<tag> in results/step4/<env>/goal; targets <variant>.
@@ -301,6 +301,39 @@ case $CMD in
       run bash scripts/farmshare/run_cmd.sh 6 4 "targets_boat_race_goal_$name" .venv/bin/python -u \
         experiments/step4_targets.py --env boat_race_goal --name "$name" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" \
         --draws "$TARGET_DRAWS" --set $(gsets boat_race_goal "$v") protocol.n_sub=10 task.hidden=$h
+    done; done ;;
+  stack)    # goal campaign: stacked corrections (docs/step4_goal.md, "Stacked corrections"): each correction is fitted on
+            # top of the one in force and added to it (g.stack=True); the swap's increments are floored at 0
+            # (g.stack_up=True), so its reward only goes up within an episode. All five envs, with and without the
+            # hidden state, 5 rounds. Targets for the three variants (<variant>_stack[_nohide]; Taxi one job per seed);
+            # PPO for the swap only, at each env's LN config (the swap's best G1 config in grid, AS, Tomato, Boat Race):
+            # runs G1_stack_P2swap_LN and G1_stack_P2swap_nohide_LN. No Taxi PPO: a corrected Taxi seed took 34 h for
+            # 72 of 768 episodes in G1 (PBRR fits dominate), and the stacked swap is expected to be corrected up to 4
+            # times per episode.
+    [[ $CAMPAIGN == goal ]] || { echo "stack is a CAMPAIGN=goal command" >&2; exit 1; }
+    HYP="${HYP}, with stacked corrections (g.stack; the swap's increments floored at 0, g.stack_up)"
+    for env in "${ENVS[@]}"; do for h in True False; do
+      for v in P2swap base P1eq1; do
+        st="g.stack=True"; [[ $v == P2swap ]] && st="g.stack=True g.stack_up=True"
+        name="${v}_stack"; [[ $h == False ]] && name="${v}_stack_nohide"
+        if [[ $env == taxi_goal ]]; then                         # ~1.2-2.5 h per seed
+          for s in "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}"; do
+            # shellcheck disable=SC2046
+            run bash scripts/farmshare/run_cmd.sh 4 4 "targets_${env}_${name}_s$s" .venv/bin/python -u \
+              experiments/step4_targets.py --env "$env" --name "$name" --seeds "$s" --draws "$TARGET_DRAWS" \
+              --set $(gsets "$env" "$v") $st task.hidden=$h
+          done
+          continue
+        fi
+        # shellcheck disable=SC2046
+        run bash scripts/farmshare/run_cmd.sh "$(target_hours "$env")" 4 "targets_${env}_$name" .venv/bin/python -u \
+          experiments/step4_targets.py --env "$env" --name "$name" --seeds "${TUNE_SEEDS[@]}" "${CONFIRM_SEEDS[@]}" \
+          --draws "$TARGET_DRAWS" --set $(gsets "$env" "$v") $st task.hidden=$h
+      done
+      [[ $env == taxi_goal ]] && continue                        # targets only (see above)
+      id="G1_stack_P2swap_LN"; [[ $h == False ]] && id="G1_stack_P2swap_nohide_LN"
+      if [[ -e $(rdir "$env")/$id ]]; then echo "# $env/$id exists: skipped"; continue; fi
+      ppo_submit "$env" "$id" "$(frozen "$env") $(gsets "$env" P2swap) g.stack=True g.stack_up=True task.hidden=$h episodes=$(episodes "$env") $ANNEAL n_envs=64 ppo.batch_size=1600" "${TUNE_SEEDS[@]}"
     done; done ;;
   compare)   # comp campaign: the swap's and standard PBRR's targets where the other campaigns left none
     [[ $CAMPAIGN == comp ]] || { echo "compare is a CAMPAIGN=comp command" >&2; exit 1; }

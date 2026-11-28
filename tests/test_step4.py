@@ -1583,12 +1583,12 @@ def test_learning_exemption_spares_rounds_below_the_reference():
 
 
 def test_goal_control_without_a_hidden_state():
-    """The no-hidden-state control (docs/step4_goal.md): with task.hidden=False nothing is hidden in Boat Race and Taxi,
+    """The no-hidden-state control (docs/step4_goal.md): with task.hidden=False nothing is hidden in any goal env,
     every round that misses the goal is flagged, and the best uncorrected proxy round meets the goal."""
     from src.step3.dp import solve_subepisode
     from src.step3.goal import goal_rate
     from src.step3.tasks import get_task
-    for env in ("boat_race_goal", "taxi_goal"):
+    for env in ("grid_goal", "absent_supervisor_goal", "tomato_goal", "boat_race_goal", "taxi_goal"):
         task = get_task(env, hidden=False)
         tb = task.tables
         b, n = tb.nxt // task.n_counter, tb.nxt % task.n_counter
@@ -1645,6 +1645,97 @@ def test_goal_fix_options_are_opt_in_and_change_only_what_they_name():
     for opt in ({"reg_rows": "shared"}, {"unseen": "zero"}, {"unseen": "pess"}):
         p, info = fit_correction_rows(D, task, g.with_(**opt), seed=1)
         assert np.isfinite(info["loss"]) and np.all(np.isfinite(g_table(p, task)))
+
+
+def test_stacked_corrections_add_up_and_only_raise_under_stack_up():
+    """GConfig.stack (docs/step4_goal.md, "Stacked corrections"): the correction in force is the previous one plus an
+    increment fitted on top of it (protocol.StackCorrection), the same in pbrr.g_on_rows / g_table and in
+    AuditedVecEnv.correction; under stack_up each increment is floored at 0, so the reward never goes down within an
+    episode. The fit sees the correction in force: a previous correction that fines the exploit turns every
+    (exploiter, reference) pair that disagreed with the proxy into one that agrees. Off by default, and the game key
+    drops the fields at False."""
+    import jax
+    import jax.numpy as jnp
+    from src.pbrr_core import GConfig, mlp_init
+    from src.step3.pbrr import fit_correction_rows, g_on_rows, g_table
+    from src.step3.protocol import AuditedVecEnv, Protocol, StackCorrection
+    from src.step3.tasks import get_task
+    assert GConfig().stack is False and GConfig().stack_up is False
+    task = get_task("grid")
+    X = task.g_rows_from_keys(task.support_keys().ravel()[:500])
+    nets = []
+    for i in range(3):                                    # centred random nets: each raises some rows, lowers others
+        p = mlp_init(jax.random.PRNGKey(i), [X.shape[1], 8, 1], "torch_default")
+        W, bias = p[-1]
+        nets.append(p[:-1] + [(W, bias - float(np.median(g_on_rows(p, X))))])
+    g = [g_on_rows(p, X) for p in nets]
+    assert all((x > 0).any() and (x < 0).any() for x in g)
+    up1 = StackCorrection(nets[0], nets[1], up=True)      # first correction a plain net, then a floored increment
+    up2 = StackCorrection(up1, nets[2], up=True)
+    assert np.allclose(g_on_rows(up1, X), g[0] + np.maximum(g[1], 0.0))
+    assert np.allclose(g_on_rows(up2, X), g[0] + np.maximum(g[1], 0.0) + np.maximum(g[2], 0.0))
+    assert (g_on_rows(up2, X) >= g_on_rows(up1, X) - 1e-9).all()
+    st = StackCorrection(StackCorrection(None, nets[0]), nets[1])      # no floor: plain sums
+    assert np.allclose(g_on_rows(st, X), g[0] + g[1])
+    assert np.allclose(np.asarray(up2.apply(X)), g_on_rows(up2, X), atol=1e-5)
+    Gt = [g_table(n, task) for n in nets]
+    assert np.allclose(g_table(up2, task), Gt[0] + np.maximum(Gt[1], 0) + np.maximum(Gt[2], 0), atol=1e-4)
+    env = AuditedVecEnv(task, Protocol(), n_envs=2, seed=0)
+    env.reset()
+    env.set_correction([1], up2, 0.0)
+    assert np.allclose(env.correction(X[:2]), [0.0, g_on_rows(up2, X[1:2])[0]], atol=1e-5)
+    # the fit sees the correction in force
+    from src.step3.dp import solve_subepisode_caught, table_policy_fn
+    from src.step3.pbrr import rollouts
+    from src.step3.reference import build_reference
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid", {"seed": 0})
+    proto, pb = Protocol(**cfg["protocol"]), cfg["pbrr"]
+    ref, _ = build_reference(task, proto.t_sub, {**pb, "seed": pb["ref_seed"]})
+    rng = np.random.default_rng(3)
+    refs = rollouts(task.make_batch(4, seed=7), ref, proto, rng)
+    agent = rollouts(task.make_batch(4, seed=8), table_policy_fn(solve_subepisode_caught(
+        task.tables, task.tables.proxy, proto.t_sub, proto.window), task.n_actions, 0.05), proto, rng)
+    D = [(a, r, 1.0) for a in agent for r in refs]       # the reference preferred in every pair
+    gc = GConfig(**{**cfg["g"], "epochs": 5})
+    _, i0 = fit_correction_rows(D, task, gc, seed=1)
+    Xall = task.g_rows_from_keys(task.support_keys().ravel())  # the grid has one successor per (s, a): rows = table rows
+    on_e = (task.tables.proxy.reshape(-1) > 50) & (task.tables.prob.reshape(-1) > 0)   # arrivals on the exploit
+    valid = task.tables.prob.reshape(-1) > 0
+    col = next(c for c in range(Xall.shape[1]) if np.array_equal(Xall[valid, c] > 0.5, on_e[valid]))
+    W1 = np.zeros((Xall.shape[1], 1), np.float32)
+    W1[col, 0] = 1.0                                        # a net that fines exactly the exploit's arrivals
+    fine = [(jnp.asarray(W1), jnp.zeros(1)), (jnp.full((1, 1), -1e3), jnp.zeros(1))]
+    assert np.allclose(g_table(fine, task).reshape(-1)[valid], np.where(on_e, -1e3, 0.0)[valid])
+    _, i1 = fit_correction_rows(D, task, gc, seed=1, prev=StackCorrection(None, fine))
+    assert i0["n_agree"] == 0 and i1["n_agree"] == len(D), (i0["n_agree"], i1["n_agree"])
+    prev = StackCorrection(None, fine)
+    try:                                                    # the guard: stacking does not combine with fines only
+        fit_correction_rows(D, task, gc.with_(fine_only=True), seed=1, prev=prev)
+        raise AssertionError("stack + fine_only must be refused")
+    except AssertionError as e:
+        assert "does not combine" in str(e)
+    _experiments()
+    from step4_targets import game_key
+    assert game_key(resolve_config("grid", {"seed": 0})) == game_key(
+        resolve_config("grid", {"seed": 0, "g": {"stack": False, "stack_up": False}}))
+    assert game_key(resolve_config("grid", {"seed": 0})) != game_key(resolve_config("grid", {"seed": 0, "g": {"stack": True}}))
+
+
+def test_stacked_swap_target_keeps_every_raise_on_the_goal_grid():
+    """experiments/step4_targets.py with stacked swap corrections floored at 0 (g.stack, g.stack_up), one draw and one
+    iteration on grid_goal: the best round's received value never goes down from one correction level to the next
+    (the reward tables only go up), and after the first correction it is honest (true 22) at every level."""
+    _experiments()
+    from step4_targets import target
+    from src.step3.train import resolve_config
+    cfg = resolve_config("grid_goal", {"seed": 0, "g": {"l_minus_on": "dispreferred", "stack": True, "stack_up": True}})
+    out = target(cfg, n_draws=1, max_iter=1, per_draw=False, log=lambda m: None)
+    best = out["target"]["best_round_by_level"]
+    v = [b["received"] for b in best]
+    assert all(b >= a - 1e-3 for a, b in zip(v, v[1:])), v
+    assert [round(b["true"]) for b in best[1:]] == [22] * (len(best) - 1), [b["true"] for b in best]
+    assert out["game"]["g"]["stack"] and out["game"]["g"]["stack_up"]          # (game_key writes them as 1.0)
 
 if __name__ == "__main__":
     run_tests(globals(), "Step 4 -- PBRR variants and the tabular fit")

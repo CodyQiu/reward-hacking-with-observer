@@ -19,7 +19,9 @@ G_FROM = "grid"                     # g config and reference recipe: the grid's 
 FIXED = {"protocol": {"window": 1, "learn_exempt": True, "show_monitor": False}}
 
 
-def make_task(exploit_bonus=100.0, deadline=30, h_row=8, h_col=12):
+def make_task(exploit_bonus=100.0, deadline=30, h_row=8, h_col=12, hidden=True):
+    """``hidden`` = False: the control with no hidden state (docs/step4_goal.md, "Control"): the hideout is an
+    ordinary cell, so every round that misses the goal is judged."""
     base = base_mod.make_task(exploit_bonus=float(exploit_bonus))
     cfg, tb = base.cfg, base.tables
     goal, hide, deadline = cfg.idx(cfg.goal), cfg.idx((int(h_row), int(h_col))), int(deadline)
@@ -29,7 +31,7 @@ def make_task(exploit_bonus=100.0, deadline=30, h_row=8, h_col=12):
     inc = np.broadcast_to((src != goal)[:, None], tb.nxt.shape).astype(np.int64)   # a step taken before GOAL
     task = with_goal(base, "grid_goal", inc, deadline + 1,
                      goal_fn=lambda b, n: (b == goal) & (n <= deadline),
-                     hidden_fn=lambda b: b == hide)
+                     hidden_fn=(lambda b: b == hide) if hidden else (lambda b: np.zeros(np.shape(b), bool)))
     task.cfg, task.goal_cell, task.hideout, task.exploit_tile, task.deadline = cfg, goal, hide, cfg.idx(cfg.exploit), deadline
     return task
 

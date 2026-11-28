@@ -61,7 +61,7 @@ from src.step3.dp import (best_round_value, evaluate_levels_probs, onehot_probs,
                           value_from_occupancy)
 from src.step3.pbrr import (exact_level, fit_correction_rows, g_table, level_offset, policy_probs_fn,  # noqa: E402
                             rollout_returns, rollouts)
-from src.step3.protocol import MinCorrection, Protocol, encode_obs  # noqa: E402
+from src.step3.protocol import MinCorrection, Protocol, StackCorrection, encode_obs  # noqa: E402
 from src.step3.reference import build_reference  # noqa: E402
 from src.step3.tasks import get_task  # noqa: E402
 
@@ -144,6 +144,7 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print, twin
     rbar_d[:, 0] = (tb.prob * tb.proxy).sum(axis=1)
     corr = [None] * n_draws                                            # each draw's correction in force
     G_in = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.fine_only else None
+    G_st = [np.zeros(tb.proxy.shape, np.float32) for _ in range(n_draws)] if gcfg.stack else None   # stacked corrections
     twin_rule = gcfg.offset and gcfg.offset_rule == "twin"            # priced by the run's own twin (twin_occ)
     assert not twin_rule or twin_occ is not None, "offset_rule=twin: pass the run's twin (twin_occupancy)"
     if twin_rule:
@@ -189,9 +190,17 @@ def best_response(cfg, policy_fn, probs_at, n_draws=6, eps=0.05, log=print, twin
             agent = rollouts(task.make_batch(pb["k"], seed=int(rng.integers(2 ** 31))), fn, proto, rng,
                              t0=k * T, n_corr=c - 1)
             D[d] = D[d] + [(a, r, boltzmann_label(a, r, rng, pb["beta"])) for a in agent for r in ref_trajs]
-            params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)))
+            params, _ = fit_correction_rows(D[d], task, gcfg, seed=int(rng.integers(2 ** 31)),
+                                            prev=corr[d] if gcfg.stack else None)
             corr_old = corr[d]
-            if gcfg.fine_only:                               # fines only, never relaxed (min with the last)
+            if gcfg.stack:                                   # stacked: the increment on top of the correction in force
+                inc = g_table(params, task)
+                if gcfg.stack_up:
+                    inc = np.maximum(inc, 0.0)
+                G_st[d] = (G_st[d] + inc).astype(np.float32)
+                corr[d] = StackCorrection(corr[d], params, gcfg.stack_up)
+                Rd = tb.proxy + G_st[d]
+            elif gcfg.fine_only:                               # fines only, never relaxed (min with the last)
                 G_in[d] = np.minimum(G_in[d], g_table(params, task)).astype(np.float32)
                 corr[d] = (corr[d] or MinCorrection(())).then(params)
                 Rd = tb.proxy + G_in[d]
